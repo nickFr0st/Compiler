@@ -6,6 +6,7 @@
  */
 public class ProgramDriver {
     public static void main(String[] args) {
-        System.out.print("Hello, World");
+        Compiler compiler = new Compiler();
+        compiler.runCompiler("lexicalTest.kxi");
     }
 }

@@ -29,7 +29,9 @@ public class Compiler {
                 }
 
                 StringTokenizer tokenizer = new StringTokenizer(line);
-
+                while (tokenizer.hasMoreTokens()) {
+                    System.out.println(tokenizer.nextElement());
+                }
                 //TODO: all the work
 
                 lineCount++;

@@ -1,16 +1,8 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
-import java.util.logging.MemoryHandler;
-
-/**
- * Created with IntelliJ IDEA.
- * User: Nathanael
- * Date: 10/2/12
- * Time: 9:57 PM
- */
+// Created with IntelliJ IDEA.
+// User: Nathanael
+// Date: 10/2/12
+// Time: 9:57 PM
+// this is a test
 public class Assembler {
     private Set<String> preLoadedOpcodes = new HashSet<String>();
     public int INT = 4;
@@ -20,7 +12,7 @@ public class Assembler {
     public List<Memory> mem = new ArrayList<Memory>();
     HashMap<String, Integer> symbolTable = new HashMap<String, Integer>();
 
-    private final int ADD = 20;
+    private final int ADD=20;
     private final int SUB = 21;
     private final int MUL = 22;
     private final int DIV = 23;
@@ -40,7 +32,7 @@ public class Assembler {
     private final int BRZ = 37;
 
     private void preloadReg() {
-        reg.put("0", "0");
+        reg.put("0","0");
         reg.put("1", "0");
         reg.put("2", "0");
         reg.put("3", "0");

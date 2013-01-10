@@ -11,6 +11,8 @@ import java.util.StringTokenizer;
  * Time: 12:05 PM
  */
 public class Compiler {
+    private List<String> keyWords;
+
     public enum tokenTypesEnum {
         NUMBER,
         CHARACTER,
@@ -32,11 +34,37 @@ public class Compiler {
         EOT
     }
 
-    int lineCount = 0;
-    HashMap<tokenTypesEnum, List<String>> tokenTypes = new HashMap<tokenTypesEnum, List<String>>();
+    protected void setKeyWords() {
+        keyWords = new ArrayList<String>();
+        keyWords.add("atoi");
+        keyWords.add("bool");
+        keyWords.add("class");
+        keyWords.add("char");
+        keyWords.add("cin");
+        keyWords.add("cout");
+        keyWords.add("else");
+        keyWords.add("false");
+        keyWords.add("if");
+        keyWords.add("int");
+        keyWords.add("itoa");
+        keyWords.add("main");
+        keyWords.add("new");
+        keyWords.add("null");
+        keyWords.add("object");
+        keyWords.add("public");
+        keyWords.add("private");
+        keyWords.add("return");
+        keyWords.add("string");
+        keyWords.add("this");
+        keyWords.add("true");
+        keyWords.add("void");
+        keyWords.add("while");
+    }
 
     public void runCompiler(String fileName) {
+        setKeyWords();
         BufferedReader file = null;
+        int lineCount = 0;
 
         try {
             file = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)));
@@ -65,25 +93,15 @@ public class Compiler {
 
                 // break up string by spaces
                 StringTokenizer tokenizer = new StringTokenizer(line);
-                List<String> numberList = new ArrayList<String>();
-                List<String> charList = new ArrayList<String>();
-                List<String> identifierList = new ArrayList<String>();
-
 
                 while (tokenizer.hasMoreTokens()) {
                     String runner = tokenizer.nextElement().toString();
                     if (runner.matches("^[-|\\+]?[0-9]+$")) {
-                        numberList.add(runner);
-                        tokenTypes.put(tokenTypesEnum.NUMBER, numberList);
-                        System.out.println(tokenTypes.get(tokenTypesEnum.NUMBER).get(tokenTypes.get(tokenTypesEnum.NUMBER).size()-1));
+                        System.out.println(runner + ":\t" + tokenTypesEnum.NUMBER);
                     } else if (runner.length() == 1 && runner.matches("^[a-zA-Z]?$")) {
-                        charList.add(runner);
-                        tokenTypes.put(tokenTypesEnum.CHARACTER, charList);
-                        System.out.println(tokenTypes.get(tokenTypesEnum.CHARACTER).get(tokenTypes.get(tokenTypesEnum.CHARACTER).size()-1));
+                        System.out.println(runner + ":\t" + tokenTypesEnum.CHARACTER);
                     } else if (runner.substring(0,1).matches("[a-zA-Z]") && runner.length() < 80) {
-                        identifierList.add(runner);
-                        tokenTypes.put(tokenTypesEnum.IDENTIFIER, identifierList);
-                        System.out.println(tokenTypes.get(tokenTypesEnum.IDENTIFIER).get(tokenTypes.get(tokenTypesEnum.IDENTIFIER).size()-1));
+                        System.out.println(runner + ":\t" + tokenTypesEnum.IDENTIFIER);
                     }
 
                 }

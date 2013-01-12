@@ -232,18 +232,23 @@ public class Compiler {
         if (item.contains(breakDownItem) && item.trim().length() > 0) {
             int size = tokenList.size();
             int breakLength = 1;
+            if (breakDownItem.equals("'")) {
+                breakDownItem = checkForChars(item, breakDownItem);
+            }
             if (breakDownItem.length() > 1) {
                 breakLength = breakDownItem.length();
             }
 
             String temp = item.trim().substring(0, item.indexOf(breakDownItem));
-            for (String s : symbolCheck) {
-                while (temp.contains(s) && temp.length() > 0) {
-                    temp = breakDownToken(temp, s);
+            if (!temp.trim().isEmpty()) {
+                for (String s : symbolCheck) {
+                    while (temp.contains(s) && temp.length() > 0) {
+                        temp = breakDownToken(temp, s);
+                    }
                 }
-            }
-            if (size == tokenList.size()) {
-                tokenList.add(temp);
+                if (size == tokenList.size()) {
+                    tokenList.add(temp);
+                }
             }
             tokenList.add(breakDownItem);
 
@@ -257,7 +262,7 @@ public class Compiler {
                 }
 
                 if (size == tokenList.size()) {
-                    tokenList.add(item.substring(item.indexOf(breakDownItem) + breakLength, item.length()));
+                    tokenList.add(item.substring(item.indexOf(breakDownItem) + 1, item.length()));
                 }
             }
             return item;

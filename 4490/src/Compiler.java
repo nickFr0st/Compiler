@@ -191,8 +191,10 @@ public class Compiler {
                         tokenType = tokenTypesEnum.ARRAY_BEGIN.toString();
                     } else if (token.equals("]")) {
                         tokenType = tokenTypesEnum.ARRAY_END.toString();
-                    } else if (token.matches("[,.:;]")) {
+                    } else if (token.matches("[,.:]")) {
                         tokenType = tokenTypesEnum.PUNCTUATION.toString();
+                    } else if (token.equals(";")) {
+                        tokenType = tokenTypesEnum.EOT.toString();
                     } else if (token.matches("[\\*\\+-/]")) {
                         tokenType = tokenTypesEnum.MATH_OPR.toString();
                     } else if (token.matches("'" + "[a-zA-Z]" + "'")) {
@@ -218,7 +220,7 @@ public class Compiler {
         int index = item.indexOf(breakDownItem);
         if (index < size - 2) {
             if (item.charAt(index + 2) == '\'') {
-                if (item.substring(index+1, index + 2).matches("[a-zA-Z]")) {
+                if (item.substring(index + 1, index + 2).matches("[a-zA-Z]")) {
                     breakDownItem = item.substring(index, index + 3);
                 }
             }
@@ -229,7 +231,10 @@ public class Compiler {
     private String breakDownToken(String item, String breakDownItem) {
         if (item.contains(breakDownItem) && item.trim().length() > 0) {
             int size = tokenList.size();
-//            int breakLength = breakDownItem.length() -1;
+            int breakLength = 1;
+            if (breakDownItem.length() > 1) {
+                breakLength = breakDownItem.length();
+            }
 
             String temp = item.trim().substring(0, item.indexOf(breakDownItem));
             for (String s : symbolCheck) {
@@ -243,17 +248,18 @@ public class Compiler {
             tokenList.add(breakDownItem);
 
             size = tokenList.size();
-            item = item.trim().substring(item.indexOf(breakDownItem) + 1, item.length());
-            for (String s : symbolCheck) {
-                while (item.contains(s) && item.length() > 0) {
-                    item = breakDownToken(item, s);
+            item = item.trim().substring(item.indexOf(breakDownItem) + breakLength, item.length());
+            if (!item.trim().isEmpty()) {
+                for (String s : symbolCheck) {
+                    while (item.contains(s) && item.length() > 0) {
+                        item = breakDownToken(item, s);
+                    }
+                }
+
+                if (size == tokenList.size()) {
+                    tokenList.add(item.substring(item.indexOf(breakDownItem) + breakLength, item.length()));
                 }
             }
-
-            if (size == tokenList.size()) {
-                tokenList.add(item.substring(item.indexOf(breakDownItem) + 1, item.length()));
-            }
-
             return item;
         }
         return item;

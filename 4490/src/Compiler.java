@@ -1,7 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,7 +10,7 @@ import java.util.StringTokenizer;
  */
 public class Compiler {
     private List<String> keyWords;
-    private List<String> tokenList = new ArrayList<String>();
+    private List<String> tokenList;
     private List<String> symbolCheck;
 
     public enum tokenTypesEnum {
@@ -32,7 +31,8 @@ public class Compiler {
         PAREN_CLOSE,
         UNKNOWN,
         EOF,
-        EOT
+        EOT,
+        IO_OPR
     }
 
     protected void setKeyWords() {
@@ -64,23 +64,50 @@ public class Compiler {
 
     protected void setSymbolCheck() {
         symbolCheck = new ArrayList<String>();
+        // boolean operators
+        symbolCheck.add("&&");
+        symbolCheck.add("||");
+
+        // IO operators
+        symbolCheck.add("<<");
+        symbolCheck.add(">>");
+
+        // relational operators
+        symbolCheck.add(":=");
+        symbolCheck.add("<=");
+        symbolCheck.add(">=");
+        symbolCheck.add("==");
         symbolCheck.add("<");
         symbolCheck.add(">");
+        symbolCheck.add("=");
+
+        // Parentheses
         symbolCheck.add(")");
         symbolCheck.add("(");
+
+        // Arrays
         symbolCheck.add("[");
         symbolCheck.add("]");
+
+        // Blocks
         symbolCheck.add("{");
         symbolCheck.add("}");
+
+        // punctuation
+        symbolCheck.add("\"");
+        symbolCheck.add("\'");
         symbolCheck.add(",");
         symbolCheck.add(".");
-        symbolCheck.add(";");
         symbolCheck.add(":");
-        symbolCheck.add("=");
+
+        // math operators
         symbolCheck.add("+");
         symbolCheck.add("-");
         symbolCheck.add("/");
         symbolCheck.add("*");
+
+        // end of line
+        symbolCheck.add(";");
     }
 
     public void runCompiler(String fileName) {
@@ -110,6 +137,7 @@ public class Compiler {
                     line = line.trim().substring(0, line.indexOf("//"));
                 }
 
+                tokenList = new ArrayList<String>();
                 // break up string by spaces
                 String[] tokenizer = line.split("[\\s\t]");
 
@@ -120,7 +148,7 @@ public class Compiler {
 
                     int originalListSize = tokenList.size();
                     for (String s : symbolCheck) {
-                        while (item.contains(s) && item.length() > 1) {
+                        while (item.contains(s) && item.length() > 0) {
                             item = breakDownToken(item, s);
                         }
                     }
@@ -129,44 +157,86 @@ public class Compiler {
                         tokenList.add(item);
                     }
                 }
+
+                for (String token : tokenList) {
+
+                    if (token.trim().isEmpty()) {
+                        continue;
+                    }
+
+                    String tokenType = tokenTypesEnum.UNKNOWN.toString();
+
+                    if (keyWords.contains(token.trim())) {
+                        tokenType = tokenTypesEnum.KEYWORD.toString();
+                    } else if (token.matches("^[-|\\+]?[0-9]+$")) {
+                        tokenType = tokenTypesEnum.NUMBER.toString();
+                    } else if (token.equals("&&") || token.equals("||")) {
+                        tokenType = tokenTypesEnum.BOOLEAN_OPR.toString();
+                    } else if (token.equals(">>") || token.equals("<<")) {
+                        tokenType = tokenTypesEnum.IO_OPR.toString();
+                    } else if (token.equals(":=") || token.equals("<=") || token.equals(">=") || token.equals("==") || token.equals("<") || token.equals(">") || token.equals("=")) {
+                        tokenType = tokenTypesEnum.RELATIONAL_OPR.toString();
+                    } else if (token.equals("(")) {
+                        tokenType = tokenTypesEnum.PAREN_OPEN.toString();
+                    } else if (token.equals(")")) {
+                        tokenType = tokenTypesEnum.PAREN_CLOSE.toString();
+                    } else if (token.equals("{")) {
+                        tokenType = tokenTypesEnum.BLOCK_BEGIN.toString();
+                    } else if (token.equals("}")) {
+                        tokenType = tokenTypesEnum.BLOCK_END.toString();
+                    } else if (token.equals("[")) {
+                        tokenType = tokenTypesEnum.ARRAY_BEGIN.toString();
+                    } else if (token.equals("]")) {
+                        tokenType = tokenTypesEnum.ARRAY_END.toString();
+                    } else if (token.matches("[,.:;]")) {
+                        tokenType = tokenTypesEnum.PUNCTUATION.toString();
+                    } else if (token.matches("[\\*\\+-/]")) {
+                        tokenType = tokenTypesEnum.MATH_OPR.toString();
+                    } else if (token.length() == 1 && token.matches("^[a-zA-Z]?$")) {
+                        tokenType = tokenTypesEnum.CHARACTER.toString();
+                    } else if (token.matches("^[a-zA-Z]+[a-zA-Z0-9_]+$") && token.length() < 80) {
+                        tokenType = tokenTypesEnum.IDENTIFIER.toString();
+                    }
+
+                    System.out.printf("%-15s %s %n", token, tokenType);
+                }
+
                 lineCount++;
             }
 
-            for (String token : tokenList) {
-
-                if (token.trim().isEmpty()) {
-                    continue;
-                }
-
-                if (keyWords.contains(token.trim())) {
-                    System.out.printf("%-15s %s %n", token, tokenTypesEnum.KEYWORD);
-                } else if (token.matches("^[-|\\+]?[0-9]+$")) {
-                    System.out.printf("%-15s %s %n", token, tokenTypesEnum.NUMBER);
-                } else if (token.length() == 1 && token.matches("^[a-zA-Z]?$")) {
-                    System.out.printf("%-15s %s %n", token, tokenTypesEnum.CHARACTER);
-                } else if (token.substring(0, 1).matches("[a-zA-Z]") && token.length() < 80) {
-                    System.out.printf("%-15s %s %n", token, tokenTypesEnum.IDENTIFIER);
-                } else {
-                    System.out.printf("%-15s %s %n", token, tokenTypesEnum.UNKNOWN);
-                }
-            }
         } catch (IOException e) {
-            System.out.println("There was an error reading in the file.  Failed on line " + lineCount);
+            System.out.println("There was an error reading in the file. Failed on line " + lineCount);
             System.exit(0);
         }
     }
 
     private String breakDownToken(String item, String breakDownItem) {
-        if (item.contains(breakDownItem) && item.trim().length() > 1) {
-            tokenList.add(item.trim().substring(0, item.indexOf(breakDownItem)));
-            tokenList.add(breakDownItem);
-            item = item.trim().substring(item.indexOf(breakDownItem)+1, item.length());
+        // TODO: handle characters
+
+        if (item.contains(breakDownItem) && item.trim().length() > 0) {
+            int size = tokenList.size();
+            String temp = item.trim().substring(0, item.indexOf(breakDownItem));
             for (String s : symbolCheck) {
-                while (item.contains(s) && item.length() > 1) {
+                while (temp.contains(s) && temp.length() > 0) {
+                    temp = breakDownToken(temp, s);
+                }
+            }
+            if (size == tokenList.size()) {
+                tokenList.add(temp);
+            }
+            tokenList.add(breakDownItem);
+
+            size = tokenList.size();
+            item = item.trim().substring(item.indexOf(breakDownItem) + 1, item.length());
+            for (String s : symbolCheck) {
+                while (item.contains(s) && item.length() > 0) {
                     item = breakDownToken(item, s);
                 }
             }
-            tokenList.add(item.substring(item.indexOf(breakDownItem)+1, item.length()));
+
+            if (size == tokenList.size()) {
+                tokenList.add(item.substring(item.indexOf(breakDownItem) + 1, item.length()));
+            }
 
             return item;
         }

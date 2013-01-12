@@ -149,6 +149,9 @@ public class Compiler {
                     int originalListSize = tokenList.size();
                     for (String s : symbolCheck) {
                         while (item.contains(s) && item.length() > 0) {
+                            if (s.equals("'")) {
+                                s = checkForChars(item, s);
+                            }
                             item = breakDownToken(item, s);
                         }
                     }
@@ -192,7 +195,7 @@ public class Compiler {
                         tokenType = tokenTypesEnum.PUNCTUATION.toString();
                     } else if (token.matches("[\\*\\+-/]")) {
                         tokenType = tokenTypesEnum.MATH_OPR.toString();
-                    } else if (token.length() == 1 && token.matches("^[a-zA-Z]?$")) {
+                    } else if (token.matches("'" + "[a-zA-Z]" + "'")) {
                         tokenType = tokenTypesEnum.CHARACTER.toString();
                     } else if (token.matches("^[a-zA-Z]+[a-zA-Z0-9_]+$") && token.length() < 80) {
                         tokenType = tokenTypesEnum.IDENTIFIER.toString();
@@ -210,11 +213,24 @@ public class Compiler {
         }
     }
 
-    private String breakDownToken(String item, String breakDownItem) {
-        // TODO: handle characters
+    private String checkForChars(String item, String breakDownItem) {
+        int size = item.length();
+        int index = item.indexOf(breakDownItem);
+        if (index < size - 2) {
+            if (item.charAt(index + 2) == '\'') {
+                if (item.substring(index+1, index + 2).matches("[a-zA-Z]")) {
+                    breakDownItem = item.substring(index, index + 3);
+                }
+            }
+        }
+        return breakDownItem;
+    }
 
+    private String breakDownToken(String item, String breakDownItem) {
         if (item.contains(breakDownItem) && item.trim().length() > 0) {
             int size = tokenList.size();
+//            int breakLength = breakDownItem.length() -1;
+
             String temp = item.trim().substring(0, item.indexOf(breakDownItem));
             for (String s : symbolCheck) {
                 while (temp.contains(s) && temp.length() > 0) {

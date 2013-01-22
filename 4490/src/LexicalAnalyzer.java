@@ -17,7 +17,7 @@ public class LexicalAnalyzer {
     private int lexPtr;
 
     public LexicalAnalyzer() {
-        lexicalList = new ArrayList<Tuple<String, String,Integer>>();
+        lexicalList = new ArrayList<Tuple<String, String, Integer>>();
         lexPtr = 0;
     }
 
@@ -205,9 +205,9 @@ public class LexicalAnalyzer {
                         tokenType = tokenTypesEnum.EOT.toString();
                     } else if (token.matches("[\\*\\+-/]")) {
                         tokenType = tokenTypesEnum.MATH_OPR.toString();
-                    } else if (token.matches("'" + "[a-zA-Z]" + "'")) {
+                    } else if (token.matches("'" + "[\\w]" + "'") || token.matches("'\\" + "\\[\\w]" + "'")) {
                         tokenType = tokenTypesEnum.CHARACTER.toString();
-                    } else if (token.matches("^[a-zA-Z]+[a-zA-Z0-9_]+$") && token.length() < 80) {
+                    } else if (token.matches("^[a-zA-Z]+[a-zA-Z0-9_]*$") && token.length() < 80) {
                         tokenType = tokenTypesEnum.IDENTIFIER.toString();
                     }
 
@@ -226,13 +226,28 @@ public class LexicalAnalyzer {
     private String checkForChars(String item, String breakDownItem) {
         int size = item.length();
         int index = item.indexOf(breakDownItem);
+
+        if (index < size - 3) {
+            if (item.charAt(index + 2) == '\'') {
+                if (item.substring(index + 1, index + 2).matches("[\\w]")) {
+                    breakDownItem = item.substring(index, index + 3);
+                }
+            } else if (item.charAt(index + 1) == '\\' && item.charAt(index + 3) == '\'') {
+                if (item.substring(index + 2, index + 3).matches("[\\w]")) {
+                    breakDownItem = item.substring(index, index + 4);
+                }
+            }
+            return breakDownItem;
+        }
+
         if (index < size - 2) {
             if (item.charAt(index + 2) == '\'') {
-                if (item.substring(index + 1, index + 2).matches("[a-zA-Z]")) {
+                if (item.substring(index + 1, index + 2).matches("[\\w]")) {
                     breakDownItem = item.substring(index, index + 3);
                 }
             }
         }
+
         return breakDownItem;
     }
 

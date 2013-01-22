@@ -3,7 +3,7 @@
 // Date: 10/2/12
 // Time: 9:57 PM
 // this is a test
-'\t'public c lass '\t' Ass't'embler'\t' {
+public class Assembler {
     private Set<String> preLoadedOpcodes = new HashSet<String>();
     public int INT = 4;
     public int INSTRUCTION = 12;

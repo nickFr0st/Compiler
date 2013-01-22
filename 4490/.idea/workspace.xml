@@ -2,18 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/LexicalAnalyzer.java" afterPath="$PROJECT_DIR$/src/LexicalAnalyzer.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358821995646" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358826981235" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358827165745" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
     <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358015897687" ignored="false" />
     <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358011458694" ignored="false" />
     <file path="/LexicalAnalizer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358821966318" ignored="false" />
     <file path="/Tuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358821864977" ignored="false" />
-    <file path="/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358826678167" ignored="false" />
+    <file path="/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358827159545" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,19 +74,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ProgramDriver.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ProgramDriver.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ProgramDriver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="67" selection-start="472" selection-end="472" vertical-scroll-proportion="0.23560767">
+            <state line="13" column="67" selection-start="472" selection-end="472" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/LexicalAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="81" selection-start="583" selection-end="583" vertical-scroll-proportion="0.0">
+            <state line="13" column="138" selection-start="298" selection-end="298" vertical-scroll-proportion="0.23891892">
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#setKeyWords#0;class#LexicalAnalyzer#0" expanded="false" />
@@ -127,8 +128,8 @@
         <option value="$PROJECT_DIR$/src/Compiler.java" />
         <option value="$PROJECT_DIR$/src/LexicalAnalizer.java" />
         <option value="$PROJECT_DIR$/src/Tuple.java" />
-        <option value="$PROJECT_DIR$/src/LexicalAnalyzer.java" />
         <option value="$PROJECT_DIR$/src/ProgramDriver.java" />
+        <option value="$PROJECT_DIR$/src/LexicalAnalyzer.java" />
       </list>
     </option>
   </component>
@@ -401,7 +402,11 @@
       <created>1358826983908</created>
       <updated>1358826983908</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="test">
+      <created>1358827167392</created>
+      <updated>1358827167392</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -472,7 +477,7 @@
     <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed char checking bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="test" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -485,10 +490,10 @@
     <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="test" />
     <MESSAGE value="sdf" />
     <MESSAGE value="removed test comment" />
     <MESSAGE value="fixed char checking bug" />
+    <MESSAGE value="test" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -625,17 +630,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/LexicalAnalyzer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="81" selection-start="583" selection-end="583" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#setKeyWords#0;class#LexicalAnalyzer#0" expanded="false" />
-            <element signature="method#setSymbolCheck#0;class#LexicalAnalyzer#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Tuple.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="14" column="34" selection-start="330" selection-end="330" vertical-scroll-proportion="0.0">
@@ -645,8 +639,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ProgramDriver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="67" selection-start="472" selection-end="472" vertical-scroll-proportion="0.23560767">
+        <state line="13" column="67" selection-start="472" selection-end="472" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/LexicalAnalyzer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="138" selection-start="298" selection-end="298" vertical-scroll-proportion="0.23891892">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#setKeyWords#0;class#LexicalAnalyzer#0" expanded="false" />
+            <element signature="method#setSymbolCheck#0;class#LexicalAnalyzer#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

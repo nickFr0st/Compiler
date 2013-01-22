@@ -22,6 +22,7 @@ public class LexicalAnalyzer {
     }
 
     public enum tokenTypesEnum {
+        //test
         NUMBER,
         CHARACTER,
         IDENTIFIER,

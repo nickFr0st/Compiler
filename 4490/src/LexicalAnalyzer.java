@@ -159,6 +159,7 @@ public class LexicalAnalyzer {
                         while (item.contains(s) && item.length() > 0) {
                             if (s.equals("'")) {
                                 s = checkForChars(item, s);
+                                //ef
                             }
                             item = breakDownToken(item, s);
                         }

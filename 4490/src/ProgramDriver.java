@@ -6,7 +6,12 @@
  */
 public class ProgramDriver {
     public static void main(String[] args) {
-        Compiler compiler = new Compiler();
-        compiler.runCompiler("lexicalTest.kxi");
+        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
+        lexicalAnalyzer.processFile("lexicalTest.kxi");
+
+        while (lexicalAnalyzer.hasNext()) {
+            Tuple<String, String,Integer> temp = lexicalAnalyzer.getNext();
+            System.out.printf("%-15s %s %n", temp.lexi, temp.type);
+        }
     }
 }

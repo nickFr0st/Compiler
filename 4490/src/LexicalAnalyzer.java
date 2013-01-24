@@ -21,7 +21,7 @@ public class LexicalAnalyzer {
         lexPtr = 0;
     }
 
-    public enum tokenTypesEnum {
+    public static enum tokenTypesEnum {
         NUMBER,
         CHARACTER,
         IDENTIFIER,
@@ -185,8 +185,10 @@ public class LexicalAnalyzer {
                         tokenType = tokenTypesEnum.BOOLEAN_OPR.toString();
                     } else if (token.equals(">>") || token.equals("<<")) {
                         tokenType = tokenTypesEnum.IO_OPR.toString();
-                    } else if (token.equals(":=") || token.equals("<=") || token.equals(">=") || token.equals("==") || token.equals("<") || token.equals(">") || token.equals("=")) {
+                    } else if (token.equals(":=") || token.equals("<=") || token.equals(">=") || token.equals("==") || token.equals("<") || token.equals(">")) {
                         tokenType = tokenTypesEnum.RELATIONAL_OPR.toString();
+                    } else if (token.equals("=")) {
+                        tokenType = tokenTypesEnum.ASSIGNMENT_OPR.toString();
                     } else if (token.equals("(")) {
                         tokenType = tokenTypesEnum.PAREN_OPEN.toString();
                     } else if (token.equals(")")) {
@@ -299,6 +301,15 @@ public class LexicalAnalyzer {
 
     public Tuple<String, String, Integer> getNext() {
         return lexicalList.get(lexPtr++);
+    }
+
+    public Tuple<String, String, Integer> peekNext()  {
+        try {
+            Tuple<String, String, Integer> temp = lexicalList.get(lexPtr);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+        return lexicalList.get(lexPtr);
     }
 
     public void clearList() {

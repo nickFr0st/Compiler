@@ -9,9 +9,12 @@ public class ProgramDriver {
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
         lexicalAnalyzer.processFile("lexicalTest.kxi");
 
-        while (lexicalAnalyzer.hasNext()) {
-            Tuple<String, String,Integer> temp = lexicalAnalyzer.getNext();
-            System.out.printf("%-15s %s %n", temp.lexi, temp.type);
+        SyntaxAnalyzer syntaxAnalyzer = new SyntaxAnalyzer(lexicalAnalyzer);
+
+        try {
+            syntaxAnalyzer.evaluate();
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
         }
     }
 }

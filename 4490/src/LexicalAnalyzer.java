@@ -122,7 +122,7 @@ public class LexicalAnalyzer {
         setKeyWords();
         setSymbolCheck();
         BufferedReader file = null;
-        int lineCount = 0;
+        int lineCount = 1;
 
         try {
             file = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)));
@@ -137,6 +137,7 @@ public class LexicalAnalyzer {
             while ((line = file.readLine()) != null) {
                 // check for empty or pure comment lines
                 if (line.trim().isEmpty() || line.trim().startsWith("//")) {
+                    lineCount++;
                     continue;
                 }
 
@@ -151,6 +152,7 @@ public class LexicalAnalyzer {
 
                 for (String item : tokenizer) {
                     if (item.trim().isEmpty()) {
+                        lineCount++;
                         continue;
                     }
 
@@ -305,11 +307,20 @@ public class LexicalAnalyzer {
 
     public Tuple<String, String, Integer> peekNext()  {
         try {
-            Tuple<String, String, Integer> temp = lexicalList.get(lexPtr);
+            lexicalList.get(lexPtr);
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
         return lexicalList.get(lexPtr);
+    }
+
+    public Tuple<String, String, Integer> getPrevious() {
+        try {
+            lexicalList.get(lexPtr -3);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+        return lexicalList.get(lexPtr -3);
     }
 
     public void clearList() {

@@ -15,6 +15,8 @@ public class ProgramDriver {
             syntaxAnalyzer.evaluate();
         } catch (Exception e) {
             System.out.print(e.getMessage());
+            System.exit(0);
         }
+        System.out.println("Success");
     }
 }

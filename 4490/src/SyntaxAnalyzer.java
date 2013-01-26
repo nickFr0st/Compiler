@@ -65,21 +65,21 @@ public class SyntaxAnalyzer {
             throw new IllegalArgumentException("There must be a valid type on both sides of the assignment operator. Line: " + currentLex.lineNum);
         }
 
-        if (isNotValid1(previousLex)) {
+        if (!isPreviousLexiValid(previousLex)) {
             throw new IllegalArgumentException("Left hand side of assignment operation must be an Identifier. Line:" + previousLex.lineNum);
         }
 
-        if (isNotValid2(lexicalAnalyzer.peekPrevious())) {
+        if (!isLHSinValidFormat(lexicalAnalyzer.peekPrevious())) {
             throw new IllegalArgumentException("There can only be one variable or Identifier on the left side of the assignment operator. Line: " + currentLex.lineNum);
         }
 
-        if (isValid1(nextLex)) {
+        if (isRHSinValidFormat(nextLex)) {
             return;
         }
         throw new IllegalArgumentException("Right hand side of assignment operation must be either an Identifier, Number, or Character. Line: " + currentLex.lineNum);
     }
 
-    private boolean isValid1(Tuple<String, String, Integer> nextLex) {
+    private boolean isRHSinValidFormat(Tuple<String, String, Integer> nextLex) {
         if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()))
             return true;
         else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()))
@@ -95,26 +95,26 @@ public class SyntaxAnalyzer {
         return false;
     }
 
-    private boolean isNotValid1(Tuple<String, String, Integer> nextLex) {
+    private boolean isPreviousLexiValid(Tuple<String, String, Integer> nextLex) {
         if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()))
-            return false;
+            return true;
         else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-            return false;
+            return true;
         }else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
-    private boolean isNotValid2(Tuple<String, String, Integer> peekPrevious) {
+    private boolean isLHSinValidFormat(Tuple<String, String, Integer> peekPrevious) {
         if (peekPrevious == null)
-            return false;
+            return true;
         else if (!peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()))
-            return false;
+            return true;
         else if (!peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()))
-            return false;
+            return true;
 
-        return true;
+        return false;
     }
 }

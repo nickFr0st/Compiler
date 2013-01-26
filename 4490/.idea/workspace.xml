@@ -8,7 +8,7 @@
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359234143162" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359235316666" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359235772215" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
     <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358015897687" ignored="false" />
     <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359233220257" ignored="false" />
@@ -89,7 +89,7 @@
       <file leaf-file-name="SyntaxAnalyzer.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/SyntaxAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="49" column="99" selection-start="2051" selection-end="2051" vertical-scroll-proportion="0.2579666">
+            <state line="21" column="9" selection-start="675" selection-end="675" vertical-scroll-proportion="0.4097117">
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#294#326#0" expanded="true" />
@@ -436,7 +436,11 @@
       <created>1359235321017</created>
       <updated>1359235321017</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="gave better names to validators">
+      <created>1359235774493</created>
+      <updated>1359235774493</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -507,7 +511,7 @@
     <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="added logic for checking parens" />
+    <option name="LAST_COMMIT_MESSAGE" value="gave better names to validators" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -528,6 +532,7 @@
     <MESSAGE value="added a syntax analyzer" />
     <MESSAGE value="added some logic, did some refactoring" />
     <MESSAGE value="added logic for checking parens" />
+    <MESSAGE value="gave better names to validators" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -656,7 +661,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/SyntaxAnalyzer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="99" selection-start="2051" selection-end="2051" vertical-scroll-proportion="0.2579666">
+        <state line="21" column="9" selection-start="675" selection-end="675" vertical-scroll-proportion="0.4097117">
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#294#326#0" expanded="true" />

@@ -16,9 +16,9 @@ public class SyntaxAnalyzer {
     }
 
     public void evaluate() throws IllegalArgumentException {
-        Tuple<String, String, Integer> currentLex = null;
+        Tuple<String, String, Integer> currentLex;
         Tuple<String, String, Integer> previousLex = null;
-        Tuple<String, String, Integer> nextLex = null;
+//        Tuple<String, String, Integer> nextLex = null;
 
         while (lexicalAnalyzer.hasNext()) {
 

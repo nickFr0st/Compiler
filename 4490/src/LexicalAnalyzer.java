@@ -87,6 +87,7 @@ public class LexicalAnalyzer {
         symbolCheck.add("==");
         symbolCheck.add("<");
         symbolCheck.add(">");
+        symbolCheck.add("!=");
         symbolCheck.add("=");
 
         // Parentheses
@@ -187,7 +188,7 @@ public class LexicalAnalyzer {
                         tokenType = tokenTypesEnum.BOOLEAN_OPR.toString();
                     } else if (token.equals(">>") || token.equals("<<")) {
                         tokenType = tokenTypesEnum.IO_OPR.toString();
-                    } else if (token.equals(":=") || token.equals("<=") || token.equals(">=") || token.equals("==") || token.equals("<") || token.equals(">")) {
+                    } else if (token.equals(":=") || token.equals("<=") || token.equals(">=") || token.equals("==") || token.equals("<") || token.equals(">") || token.equals("!=")) {
                         tokenType = tokenTypesEnum.RELATIONAL_OPR.toString();
                     } else if (token.equals("=")) {
                         tokenType = tokenTypesEnum.ASSIGNMENT_OPR.toString();
@@ -314,13 +315,31 @@ public class LexicalAnalyzer {
         return lexicalList.get(lexPtr);
     }
 
-    public Tuple<String, String, Integer> getPrevious() {
+    public Tuple<String, String, Integer> peekPrevious() {
         try {
             lexicalList.get(lexPtr -3);
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
         return lexicalList.get(lexPtr -3);
+    }
+
+    public Tuple<String, String, Integer> getPrevious() {
+        try {
+            lexicalList.get(--lexPtr);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+        return lexicalList.get(--lexPtr);
+    }
+
+    public Tuple<String, String, Integer> get(int ptr) {
+        try {
+            lexicalList.get(lexPtr);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+        return lexicalList.get(lexPtr);
     }
 
     public void clearList() {

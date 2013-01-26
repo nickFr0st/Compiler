@@ -1,2 +1,11 @@
-k
-k1 = 3 -2
+a = true;
+b = false;
+
+c = null;
+d = 23;
+e = erge;
+f = (a != b);
+
+if (a || b) {
+	c = 34
+}

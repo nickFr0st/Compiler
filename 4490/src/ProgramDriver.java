@@ -13,7 +13,7 @@ public class ProgramDriver {
 
         try {
             syntaxAnalyzer.evaluate();
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             System.out.print(e.getMessage());
             System.exit(0);
         }

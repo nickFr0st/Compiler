@@ -10,17 +10,17 @@
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359093695137" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359082943565" ignored="false" />
+    <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359234143162" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359226548908" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
     <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358015897687" ignored="false" />
-    <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359093586683" ignored="false" />
+    <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359233220257" ignored="false" />
     <file path="/LexicalAnalizer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358821966318" ignored="false" />
     <file path="/Tuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358821864977" ignored="false" />
-    <file path="/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359093057181" ignored="false" />
+    <file path="/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359228050582" ignored="false" />
     <file path="/SyntacsAnalyer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358913752123" ignored="false" />
     <file path="/SyntaxAnalyer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359012344904" ignored="false" />
-    <file path="/SyntaxAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359093380442" ignored="false" />
+    <file path="/SyntaxAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359235218419" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +35,7 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -70,7 +70,22 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint url="file://$PROJECT_DIR$/src/SyntaxAnalyzer.java" line="71" class="SyntaxAnalyzer" package="">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -83,7 +98,7 @@
       <file leaf-file-name="ProgramDriver.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ProgramDriver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="25" selection-start="519" selection-end="519" vertical-scroll-proportion="0.0">
+            <state line="15" column="41" selection-start="457" selection-end="457" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -92,8 +107,11 @@
       <file leaf-file-name="SyntaxAnalyzer.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/SyntaxAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="84" selection-start="274" selection-end="274" vertical-scroll-proportion="0.26858878">
-              <folding />
+            <state line="25" column="126" selection-start="873" selection-end="873" vertical-scroll-proportion="0.4491654">
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#294#326#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -101,7 +119,7 @@
       <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/LexicalAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="318" column="37" selection-start="10854" selection-end="10854" vertical-scroll-proportion="0.0">
+            <state line="190" column="177" selection-start="5678" selection-end="5678" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -141,9 +159,9 @@
         <option value="$PROJECT_DIR$/src/SyntacsAnalyer.java" />
         <option value="$PROJECT_DIR$/src/SyntaxAnalyer.java" />
         <option value="$PROJECT_DIR$/src/Tuple.java" />
-        <option value="$PROJECT_DIR$/src/SyntaxAnalyzer.java" />
         <option value="$PROJECT_DIR$/src/LexicalAnalyzer.java" />
         <option value="$PROJECT_DIR$/src/ProgramDriver.java" />
+        <option value="$PROJECT_DIR$/src/SyntaxAnalyzer.java" />
       </list>
     </option>
   </component>
@@ -268,9 +286,9 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.searchVisible" value="true" />
-    <property name="dynamic.classpath" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="dynamic.classpath" value="false" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RunManager" selected="Application.ProgramDriver">
     <configuration default="false" name="ProgramDriver" type="Application" factoryName="Application" temporary="true">
@@ -428,7 +446,11 @@
       <created>1359014918048</created>
       <updated>1359014918048</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="added some logic, did some refactoring">
+      <created>1359093851279</created>
+      <updated>1359093851279</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -449,7 +471,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1711111" sideWeight="0.7167199" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28328007" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28328007" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -499,7 +521,7 @@
     <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="added a syntax analyzer" />
+    <option name="LAST_COMMIT_MESSAGE" value="added some logic, did some refactoring" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -518,6 +540,7 @@
     <MESSAGE value="test" />
     <MESSAGE value="reverted" />
     <MESSAGE value="added a syntax analyzer" />
+    <MESSAGE value="added some logic, did some refactoring" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -632,22 +655,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/LexicalAnalyzer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="318" column="37" selection-start="10854" selection-end="10854" vertical-scroll-proportion="0.0">
+        <state line="190" column="177" selection-start="5678" selection-end="5678" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ProgramDriver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="25" selection-start="519" selection-end="519" vertical-scroll-proportion="0.0">
+        <state line="15" column="41" selection-start="457" selection-end="457" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/SyntaxAnalyzer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="84" selection-start="274" selection-end="274" vertical-scroll-proportion="0.26858878">
-          <folding />
+        <state line="25" column="126" selection-start="873" selection-end="873" vertical-scroll-proportion="0.4491654">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#294#326#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -38,7 +38,6 @@ public class LexicalAnalyzer {
         PAREN_OPEN,
         PAREN_CLOSE,
         UNKNOWN,
-        EOF,
         EOT,
         IO_OPR
     }
@@ -152,7 +151,7 @@ public class LexicalAnalyzer {
                 String[] tokenizer = line.split("[\\s\t]");
 
                 for (String item : tokenizer) {
-                    if (item.trim().isEmpty()) {
+                    if (tokenizer.length < 1 && item.trim().isEmpty()) {
                         lineCount++;
                         continue;
                     }
@@ -316,6 +315,15 @@ public class LexicalAnalyzer {
     }
 
     public Tuple<String, String, Integer> peekPrevious() {
+        try {
+            lexicalList.get(lexPtr -2);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+        return lexicalList.get(lexPtr -2);
+    }
+
+    public Tuple<String, String, Integer> peekTwoPrevious() {
         try {
             lexicalList.get(lexPtr -3);
         } catch (IndexOutOfBoundsException e) {

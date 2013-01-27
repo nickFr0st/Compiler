@@ -4,8 +4,9 @@ b = false;
 c = null;
 d = 23;
 e = erge;
-f = (a != b);
+(f.open) = (5 == b);
 
 if (a || b) {
-	c = 34
+	c = 34;
 }
+return (23);

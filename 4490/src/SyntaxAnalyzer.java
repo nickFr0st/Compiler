@@ -25,6 +25,10 @@ public class SyntaxAnalyzer {
 
             currentLex = lexicalAnalyzer.getNext();
 
+            if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.UNKNOWN.name())) {
+                throw new IllegalArgumentException("Unknown object. Line: " + currentLex.lineNum);
+            }
+
             // validate expressions
             if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
                 validateAssignmentOpr(currentLex, previousLex, lexicalAnalyzer.peekNext());

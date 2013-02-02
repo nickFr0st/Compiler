@@ -1,17 +1,29 @@
-a = true;
-b = false;
-
-c = null;
-d = 23;
-e = erge;
-(f.open) = (5 == b);
-
-k = (4 + 6) * (3 - p);
-if (a || b) {
-	c = 34;
-}
-return (23){}
-
-if (true) {
-	cout << 'Y';
+// test class
+class Test {
+	int a = 2;
+	int b = 1;
+	bool y = false;
+	
+	public void doStuff() {
+		int d = b + a;
+		int e =  d - b;
+		
+		if (e != 0) {
+			cout << 'a';
+			cout << '\s';
+			cout << 'i';
+			cout << 's';
+			cout << '\s';
+			cout << 'n';
+			cout << 'o';
+			cout << 't';
+			cout << '\s';
+			cout << '0';
+		}
+		
+		if (e == a && (b > a)) {
+			int k = (4 + 6) * (3 - d);
+		}
+		return;
+	}
 }

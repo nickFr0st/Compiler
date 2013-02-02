@@ -9,7 +9,7 @@
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359234143162" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359833044326" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359841439355" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
     <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358015897687" ignored="false" />
     <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359830609743" ignored="false" />
@@ -18,7 +18,7 @@
     <file path="/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359259934010" ignored="false" />
     <file path="/SyntacsAnalyer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358913752123" ignored="false" />
     <file path="/SyntaxAnalyer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359012344904" ignored="false" />
-    <file path="/SyntaxAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359835875922" ignored="false" />
+    <file path="/SyntaxAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359842137286" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +90,7 @@
       <file leaf-file-name="SyntaxAnalyzer.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/SyntaxAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="120" column="17" selection-start="5288" selection-end="5288" vertical-scroll-proportion="0.3323217">
+            <state line="84" column="0" selection-start="4137" selection-end="4137" vertical-scroll-proportion="0.3323217">
               <folding>
                 <element signature="e#923#955#0" expanded="true" />
               </folding>
@@ -101,7 +101,7 @@
       <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/LexicalAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="202" column="84" selection-start="6534" selection-end="6534" vertical-scroll-proportion="-8.52">
+            <state line="201" column="68" selection-start="6459" selection-end="6459" vertical-scroll-proportion="-11.92">
               <folding />
             </state>
           </provider>
@@ -134,8 +134,8 @@
         <option value="$PROJECT_DIR$/src/SyntaxAnalyer.java" />
         <option value="$PROJECT_DIR$/src/Tuple.java" />
         <option value="$PROJECT_DIR$/src/ProgramDriver.java" />
-        <option value="$PROJECT_DIR$/src/LexicalAnalyzer.java" />
         <option value="$PROJECT_DIR$/src/SyntaxAnalyzer.java" />
+        <option value="$PROJECT_DIR$/src/LexicalAnalyzer.java" />
       </list>
     </option>
   </component>
@@ -414,7 +414,11 @@
       <created>1359833053321</created>
       <updated>1359833053321</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="refactored error messages">
+      <created>1359841444241</created>
+      <updated>1359841444241</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -505,7 +509,7 @@
     <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="re worked how syntax was handled" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactored error messages" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -531,6 +535,7 @@
     <MESSAGE value="added some more logic" />
     <MESSAGE value="now handles unknown objects" />
     <MESSAGE value="re worked how syntax was handled" />
+    <MESSAGE value="refactored error messages" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -652,14 +657,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/LexicalAnalyzer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="202" column="84" selection-start="6534" selection-end="6534" vertical-scroll-proportion="-8.52">
+        <state line="201" column="68" selection-start="6459" selection-end="6459" vertical-scroll-proportion="-11.92">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/SyntaxAnalyzer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="120" column="17" selection-start="5288" selection-end="5288" vertical-scroll-proportion="0.3323217">
+        <state line="84" column="0" selection-start="4137" selection-end="4137" vertical-scroll-proportion="0.3323217">
           <folding>
             <element signature="e#923#955#0" expanded="true" />
           </folding>

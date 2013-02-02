@@ -58,8 +58,9 @@ public class SyntaxAnalyzer {
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                     if (openParens.size() == 0) {
                         errorList +=  "Invalid closing paren on line: " + currentLex.lineNum + "\n";
+                    } else {
+                        openParens.remove(openParens.size() - 1);
                     }
-                    openParens.remove(openParens.size() - 1);
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
                     validateRelationalOpr(currentLex, previousLex, nextLexi);
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
@@ -67,9 +68,10 @@ public class SyntaxAnalyzer {
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
                     if (openBlocks.size() == 0) {
                         errorList += "Invalid closing block on line: " + currentLex.lineNum + "\n";
+                    } else {
+                        openBlocks.remove(openBlocks.size() - 1);
                     }
-                    openBlocks.remove(openBlocks.size() - 1);
-                } else if (currentLex.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR)) {
+                } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
                     validateBooleanOpr(currentLex, previousLex, nextLexi);
                 }
 
@@ -78,7 +80,10 @@ public class SyntaxAnalyzer {
                 if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.KEYWORD.name())) {
                     if (currentLex.lexi.equals("return")) {
                         if (!tempList.get(0).lexi.equals("return")) {
-
+                            errorList += "return must be the first statement on the line. Line: " + currentLex.lineNum + "\n";
+                        }
+                        if (!tempList.get(tempList.size()-1).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                            errorList += "return statement must end with a end of line token (;). Line: " + currentLex.lineNum + "\n";
                         }
                         validateReturnStatement(currentLex, previousLex, nextLexi, peekPrevious);
                     }
@@ -113,9 +118,7 @@ public class SyntaxAnalyzer {
     }
 
     private boolean canAddToList(Tuple<String, String, Integer> temp) {
-        if (temp.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || temp.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()) || temp.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name()))
-            return false;
-        return true;
+        return  !(temp.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || temp.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()) || temp.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name()));
     }
 
     private void validateBooleanOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) {

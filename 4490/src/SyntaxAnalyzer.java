@@ -11,6 +11,7 @@ public class SyntaxAnalyzer {
     private LexicalAnalyzer lexicalAnalyzer;
     private List<Tuple<String, String, Integer>> openParens = new ArrayList<Tuple<String, String, Integer>>();
     private List<Tuple<String, String, Integer>> openBlocks = new ArrayList<Tuple<String, String, Integer>>();
+    String errorList = "";
 
     public SyntaxAnalyzer(LexicalAnalyzer lexicalAnalyzer) {
         this.lexicalAnalyzer = lexicalAnalyzer;
@@ -39,7 +40,7 @@ public class SyntaxAnalyzer {
                 currentLex = tempList.get(i);
 
                 if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.UNKNOWN.name())) {
-                    throw new IllegalArgumentException("Unknown object. Line: " + currentLex.lineNum);
+                    errorList += "Unknown object. Line: " + currentLex.lineNum + "\n";
                 }
 
                 Tuple<String, String, Integer> nextLexi =  (i + 1 == tempList.size() ? null : tempList.get(i+1));
@@ -56,7 +57,7 @@ public class SyntaxAnalyzer {
                     openParens.add(currentLex);
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                     if (openParens.size() == 0) {
-                        throw new IllegalArgumentException("Invalid closing paren on line: " + currentLex.lineNum);
+                        errorList +=  "Invalid closing paren on line: " + currentLex.lineNum + "\n";
                     }
                     openParens.remove(openParens.size() - 1);
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
@@ -65,7 +66,7 @@ public class SyntaxAnalyzer {
                     openBlocks.add(currentLex);
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
                     if (openBlocks.size() == 0) {
-                        throw new IllegalArgumentException("Invalid closing block on line: " + currentLex.lineNum);
+                        errorList += "Invalid closing block on line: " + currentLex.lineNum + "\n";
                     }
                     openBlocks.remove(openBlocks.size() - 1);
                 } else if (currentLex.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR)) {
@@ -76,6 +77,9 @@ public class SyntaxAnalyzer {
                 // validate statements
                 if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.KEYWORD.name())) {
                     if (currentLex.lexi.equals("return")) {
+                        if (!tempList.get(0).lexi.equals("return")) {
+
+                        }
                         validateReturnStatement(currentLex, previousLex, nextLexi, peekPrevious);
                     }
                 }
@@ -91,7 +95,7 @@ public class SyntaxAnalyzer {
             for (Tuple<String, String, Integer> item : openParens) {
                 errorMessage += item.lineNum + ", ";
             }
-            throw new IllegalArgumentException(errorMessage);
+            errorList += errorMessage + "\n";
         }
 
         if (openBlocks.size() > 0) {
@@ -100,7 +104,11 @@ public class SyntaxAnalyzer {
             for (Tuple<String, String, Integer> item : openBlocks) {
                 errorMessage += item.lineNum + ", ";
             }
-            throw new IllegalArgumentException(errorMessage);
+            errorList += errorMessage + "\n";
+        }
+
+        if (!errorList.isEmpty()) {
+            throw new IllegalArgumentException(errorList);
         }
     }
 
@@ -116,11 +124,11 @@ public class SyntaxAnalyzer {
 
     private void validateReturnStatement(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex, Tuple<String, String, Integer> peekPrevious) {
         if (!isReturnValueValid(nextLex)) {
-            throw new IllegalArgumentException("Return statement must either be followed by a value or an end of line token (;). Line: " + currentLex.lineNum);
+            errorList +="Return statement must either be followed by a value or an end of line token (;). Line: " + currentLex.lineNum + "\n";
         }
 
         if (!isLHSinValidFormat(peekPrevious)) {
-            throw new IllegalArgumentException("Only the return statement can occupy the line (there should not be anything before it). Line: " + currentLex.lineNum);
+            errorList += "Only the return statement can occupy the line (there should not be anything before it). Line: " + currentLex.lineNum +"\n";
         }
     }
 
@@ -135,47 +143,47 @@ public class SyntaxAnalyzer {
 
     private void validateRelationalOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) {
         if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
-            throw new IllegalArgumentException("There must be a valid type on both sides of the relational operator. Line: " + currentLex.lineNum);
+            errorList += "There must be a valid type on both sides of the relational operator. Line: " + currentLex.lineNum + "\n";
         }
 
         if (!isLHSinValidFormatRelationShip(previousLex)) {
-            throw new IllegalArgumentException("Left hand side of the relational operator must be an Identifier, Number, or Character. Line: " + previousLex.lineNum);
+            errorList += "Left hand side of the relational operator must be an Identifier, Number, or Character. Line: " + previousLex.lineNum + "\n";
         }
 
         if (isRHSinValidFormatAssignment(nextLex)) {
             return;
         }
-        throw new IllegalArgumentException("Right hand side of relational operatior must be either an Identifier, Number, or Character. Line: " + currentLex.lineNum);
+        errorList += "Right hand side of relational operatior must be either an Identifier, Number, or Character. Line: " + currentLex.lineNum + "\n";
     }
 
     private void validateMathOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) {
         if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
-            throw new IllegalArgumentException("Mathematical operators require a right hand value. Line: " + currentLex.lineNum);
+            errorList += "Mathematical operators require a right hand value. Line: " + currentLex.lineNum + "\n";
         }
 
         if ((previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || previousLex.lexi.equals(")")) && (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || nextLex.lexi.equals("("))) {
             return;
         }
-        throw new IllegalArgumentException("Both side of mathematical operation must be either an Identifier or a Number. Line: " + previousLex.lineNum);
+        errorList += "Both side of mathematical operation must be either an Identifier or a Number. Line: " + previousLex.lineNum + "\n";
     }
 
     private void validateAssignmentOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex, Tuple<String, String, Integer> previousTwoLexi) throws IllegalArgumentException {
         if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
-            throw new IllegalArgumentException("There must be a valid type on both sides of the assignment operator. Line: " + currentLex.lineNum);
+            errorList += "There must be a valid type on both sides of the assignment operator. Line: " + currentLex.lineNum + "\n";
         }
 
         if (!isPreviousLexiValidAssignment(previousLex)) {
-            throw new IllegalArgumentException("Left hand side of assignment operation must be an Identifier. Line: " + previousLex.lineNum);
+            errorList += "Left hand side of assignment operation must be an Identifier. Line: " + previousLex.lineNum + "\n";
         }
 
         if (!isLHSinValidFormatAssignment(previousTwoLexi, previousLex)) {
-            throw new IllegalArgumentException("There can only be one variable or Identifier on the left side of the assignment operator. Line: " + currentLex.lineNum);
+            errorList += "There can only be one variable or Identifier on the left side of the assignment operator. Line: " + currentLex.lineNum + "\n";
         }
 
         if (isRHSinValidFormatAssignment(nextLex)) {
             return;
         }
-        throw new IllegalArgumentException("Right hand side of assignment operation must be either an Identifier, Number, or Character. Line: " + currentLex.lineNum);
+        errorList += "Right hand side of assignment operation must be either an Identifier, Number, or Character. Line: " + currentLex.lineNum + "\n";
     }
 
     private boolean isRHSinValidFormatAssignment(Tuple<String, String, Integer> nextLex) {

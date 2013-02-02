@@ -10,7 +10,7 @@ k = (4 + 6) * (3 - p);
 if (a || b) {
 	c = 34;
 }
-return (23);
+return (23){}
 
 if (true) {
 	cout << 'Y';

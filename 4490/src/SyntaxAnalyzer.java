@@ -19,48 +19,70 @@ public class SyntaxAnalyzer {
     public void evaluate() throws IllegalArgumentException {
         Tuple<String, String, Integer> currentLex;
         Tuple<String, String, Integer> previousLex = null;
-//        Tuple<String, String, Integer> nextLex = null;
 
         while (lexicalAnalyzer.hasNext()) {
+            Tuple<String, String, Integer> temp;
+            List<Tuple<String, String, Integer>> tempList = new ArrayList<Tuple<String, String, Integer>>();
 
-            currentLex = lexicalAnalyzer.getNext();
+            temp = lexicalAnalyzer.getNext();
+            while (canAddToList(temp)) {
+                tempList.add(temp);
+                temp = lexicalAnalyzer.getNext();
+            }
+            tempList.add(temp);
 
-            if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.UNKNOWN.name())) {
-                throw new IllegalArgumentException("Unknown object. Line: " + currentLex.lineNum);
+            if (tempList.isEmpty()) {
+                continue;
             }
 
-            // validate expressions
-            if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
-                validateAssignmentOpr(currentLex, previousLex, lexicalAnalyzer.peekNext());
-            } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
-                validateMathOpr(currentLex, previousLex, lexicalAnalyzer.peekNext());
-            } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-                openParens.add(currentLex);
-            } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                if (openParens.size() == 0) {
-                    throw new IllegalArgumentException("Invalid closing paren on line: " + currentLex.lineNum);
+            for (int i = 0; i < tempList.size(); i++) {
+                currentLex = tempList.get(i);
+
+                if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.UNKNOWN.name())) {
+                    throw new IllegalArgumentException("Unknown object. Line: " + currentLex.lineNum);
                 }
-                openParens.remove(openParens.size() - 1);
-            } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
-                validateRelationalOpr(currentLex, previousLex, lexicalAnalyzer.peekNext());
-            } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
-                openBlocks.add(currentLex);
-            } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
-                if (openBlocks.size() == 0) {
-                    throw new IllegalArgumentException("Invalid closing block on line: " + currentLex.lineNum);
+
+                Tuple<String, String, Integer> nextLexi =  (i + 1 == tempList.size() ? null : tempList.get(i+1));
+                Tuple<String, String, Integer> peekTwoPrevious =  (i - 3 < 0 ? null : tempList.get(i-3));
+                Tuple<String, String, Integer> peekPrevious =  (i - 2 < 0 ? null : tempList.get(i-2));
+
+
+                // validate expressions
+                if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+                    validateAssignmentOpr(currentLex, previousLex, nextLexi, peekTwoPrevious);
+                } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
+                    validateMathOpr(currentLex, previousLex, nextLexi);
+                } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                    openParens.add(currentLex);
+                } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                    if (openParens.size() == 0) {
+                        throw new IllegalArgumentException("Invalid closing paren on line: " + currentLex.lineNum);
+                    }
+                    openParens.remove(openParens.size() - 1);
+                } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
+                    validateRelationalOpr(currentLex, previousLex, nextLexi);
+                } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
+                    openBlocks.add(currentLex);
+                } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
+                    if (openBlocks.size() == 0) {
+                        throw new IllegalArgumentException("Invalid closing block on line: " + currentLex.lineNum);
+                    }
+                    openBlocks.remove(openBlocks.size() - 1);
+                } else if (currentLex.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR)) {
+                    validateBooleanOpr(currentLex, previousLex, nextLexi);
                 }
-                openBlocks.remove(openBlocks.size() - 1);
+
+
+                // validate statements
+                if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.KEYWORD.name())) {
+                    if (currentLex.lexi.equals("return")) {
+                        validateReturnStatement(currentLex, previousLex, nextLexi, peekPrevious);
+                    }
+                }
+
+                previousLex = currentLex;
             }
 
-
-            // validate statements
-            if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.KEYWORD.name())) {
-                if (currentLex.lexi.equals("return")) {
-                    validateReturnStatment(currentLex, previousLex, lexicalAnalyzer.peekNext());
-                }
-            }
-
-            previousLex = currentLex;
         }
 
         if (openParens.size() > 0) {
@@ -82,12 +104,22 @@ public class SyntaxAnalyzer {
         }
     }
 
-    private void validateReturnStatment(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) {
+    private boolean canAddToList(Tuple<String, String, Integer> temp) {
+        if (temp.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || temp.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()) || temp.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name()))
+            return false;
+        return true;
+    }
+
+    private void validateBooleanOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) {
+        //TODO: add logic
+    }
+
+    private void validateReturnStatement(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex, Tuple<String, String, Integer> peekPrevious) {
         if (!isReturnValueValid(nextLex)) {
             throw new IllegalArgumentException("Return statement must either be followed by a value or an end of line token (;). Line: " + currentLex.lineNum);
         }
 
-        if (!isLHSinValidFormat(lexicalAnalyzer.peekPrevious())) {
+        if (!isLHSinValidFormat(peekPrevious)) {
             throw new IllegalArgumentException("Only the return statement can occupy the line (there should not be anything before it). Line: " + currentLex.lineNum);
         }
     }
@@ -102,7 +134,7 @@ public class SyntaxAnalyzer {
     }
 
     private void validateRelationalOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) {
-        if (lexicalAnalyzer.peekNext() == null || lexicalAnalyzer.peekNext().type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
+        if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
             throw new IllegalArgumentException("There must be a valid type on both sides of the relational operator. Line: " + currentLex.lineNum);
         }
 
@@ -117,18 +149,18 @@ public class SyntaxAnalyzer {
     }
 
     private void validateMathOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) {
-        if (lexicalAnalyzer.peekNext() == null || lexicalAnalyzer.peekNext().type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
+        if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
             throw new IllegalArgumentException("Mathematical operators require a right hand value. Line: " + currentLex.lineNum);
         }
 
-        if ((previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) && (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()))) {
+        if ((previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || previousLex.lexi.equals(")")) && (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || nextLex.lexi.equals("("))) {
             return;
         }
         throw new IllegalArgumentException("Both side of mathematical operation must be either an Identifier or a Number. Line: " + previousLex.lineNum);
     }
 
-    private void validateAssignmentOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) throws IllegalArgumentException {
-        if (lexicalAnalyzer.peekNext() == null || lexicalAnalyzer.peekNext().type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
+    private void validateAssignmentOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex, Tuple<String, String, Integer> previousTwoLexi) throws IllegalArgumentException {
+        if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
             throw new IllegalArgumentException("There must be a valid type on both sides of the assignment operator. Line: " + currentLex.lineNum);
         }
 
@@ -136,7 +168,7 @@ public class SyntaxAnalyzer {
             throw new IllegalArgumentException("Left hand side of assignment operation must be an Identifier. Line: " + previousLex.lineNum);
         }
 
-        if (!isLHSinValidFormatAssignment(lexicalAnalyzer.peekTwoPrevious(), previousLex)) {
+        if (!isLHSinValidFormatAssignment(previousTwoLexi, previousLex)) {
             throw new IllegalArgumentException("There can only be one variable or Identifier on the left side of the assignment operator. Line: " + currentLex.lineNum);
         }
 
@@ -197,7 +229,7 @@ public class SyntaxAnalyzer {
         return false;
     }
 
-    private boolean isLHSinValidFormatAssignment(Tuple<String, String, Integer> peekPrevious,Tuple<String, String, Integer> previousLex) {
+    private boolean isLHSinValidFormatAssignment(Tuple<String, String, Integer> peekPrevious, Tuple<String, String, Integer> previousLex) {
         if (peekPrevious == null)
             return true;
         else if (peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()))

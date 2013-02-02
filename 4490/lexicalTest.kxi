@@ -6,7 +6,12 @@ d = 23;
 e = erge;
 (f.open) = (5 == b);
 
+k = (4 + 6) * (3 - p);
 if (a || b) {
 	c = 34;
 }
 return (23);
+
+if (true) {
+	cout << 'Y';
+}

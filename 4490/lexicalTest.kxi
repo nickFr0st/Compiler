@@ -9,6 +9,7 @@ class Test {
 		int e =  d - b;
 		
 		if (e != 0) {
+			cin >> d;
 			cout << 'a';
 			cout << '\s';
 			cout << 'i';

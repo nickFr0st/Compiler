@@ -73,7 +73,10 @@ public class SyntaxAnalyzer {
                     }
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
                     validateBooleanOpr(currentLex, previousLex, nextLexi);
+                } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IO_OPR.name())) {
+                    validateIOOpr(currentLex, previousLex, nextLexi, peekPrevious);
                 }
+
 
 
                 // validate statements
@@ -117,12 +120,65 @@ public class SyntaxAnalyzer {
         }
     }
 
+    private void validateIOOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex, Tuple<String, String, Integer> peekPrevious) {
+        if (currentLex.lexi.equals("<<")) {
+            if (previousLex == null) {
+                errorList += "Must start an ostream operation with 'cout'. Line: " + currentLex.lineNum + "\n";
+            }
+
+            if (!previousLex.lexi.equals("cout")) {
+                errorList += "Must start an ostream operation with 'cout'. Line: " + currentLex.lineNum + "\n";
+            }
+        }
+
+        if (currentLex.lexi.equals(">>")) {
+            if (previousLex == null) {
+                errorList += "Must start an istream operation with 'cin'. Line: " + currentLex.lineNum + "\n";
+            }
+
+            if (!previousLex.lexi.equals("cin")) {
+                errorList += "Must start an istream operation with 'cin'. Line: " + currentLex.lineNum + "\n";
+            }
+        }
+
+        if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+            errorList += "IO operators requires a right hand value. Line: " + currentLex.lineNum + "\n";
+        }
+
+        if (!isLHSinValidFormat(peekPrevious)) {
+            errorList += "Only the IO statement can occupy the line (there should not be anything before it). Line: " + currentLex.lineNum +"\n";
+        }
+
+        if (currentLex.lexi.equals(">>")) {
+            if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
+                return;
+            }
+            errorList += "Right hand side of istream operator must be an Identifier. Line: " + currentLex.lineNum + "\n";
+        } else {
+            if (isRHSinValidFormatAssignment(nextLex)) {
+                return;
+            }
+            errorList += "Right hand side of ostream operator must be either an Identifier, Number, or Character. Line: " + currentLex.lineNum + "\n";
+        }
+    }
+
     private boolean canAddToList(Tuple<String, String, Integer> temp) {
         return  !(temp.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || temp.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()) || temp.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name()));
     }
 
     private void validateBooleanOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) {
-        //TODO: add logic
+        if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
+            errorList += "There must be a valid type on both sides of the boolean operator. Line: " + currentLex.lineNum + "\n";
+        }
+
+        if (!isLHSinValidFormatRelationShip(previousLex)) {
+            errorList += "Left hand side of the boolean operator must be an Identifier, Number, or Character. Line: " + previousLex.lineNum + "\n";
+        }
+
+        if (isRHSinValidFormatAssignment(nextLex)) {
+            return;
+        }
+        errorList += "Right hand side of boolean operator must be either an Identifier, Number, or Character. Line: " + currentLex.lineNum + "\n";
     }
 
     private void validateReturnStatement(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex, Tuple<String, String, Integer> peekPrevious) {

@@ -1,8 +1,13 @@
 // test class
 class Test {
-	int a = 2;
+	int a = 2;// need to test for
 	int b = 1;
 	bool y = false;
+	
+	private int funTest(int j, char k, bool y) {
+		int a = this.a + j;
+		return a;
+	}
 	
 	public void doStuff() {
 		int d = b + a;
@@ -21,10 +26,13 @@ class Test {
 			cout << '\s';
 			cout << '0';
 		}
+		funTest(12);   // need to test for
 		
 		if (e == a && (b > a)) {
 			int k = (4 + 6) * (3 - d);
 		}
 		return;
 	}
+	
+	
 }

@@ -143,7 +143,8 @@ public class LexicalAnalyzer {
 
                 // check for and remove comments
                 if (line.trim().contains("//")) {
-                    line = line.trim().substring(0, line.indexOf("//"));
+                    String[] tempLine = line.split("//");
+                    line = tempLine[0].trim();
                 }
 
                 tokenList = new ArrayList<String>();
@@ -305,7 +306,7 @@ public class LexicalAnalyzer {
         return lexicalList.get(lexPtr++);
     }
 
-    public Tuple<String, String, Integer> peekNext()  {
+    public Tuple<String, String, Integer> peekNext() {
         try {
             lexicalList.get(lexPtr);
         } catch (IndexOutOfBoundsException e) {
@@ -316,20 +317,20 @@ public class LexicalAnalyzer {
 
     public Tuple<String, String, Integer> peekPrevious() {
         try {
-            lexicalList.get(lexPtr -2);
+            lexicalList.get(lexPtr - 2);
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
-        return lexicalList.get(lexPtr -2);
+        return lexicalList.get(lexPtr - 2);
     }
 
     public Tuple<String, String, Integer> peekTwoPrevious() {
         try {
-            lexicalList.get(lexPtr -3);
+            lexicalList.get(lexPtr - 3);
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
-        return lexicalList.get(lexPtr -3);
+        return lexicalList.get(lexPtr - 3);
     }
 
     public Tuple<String, String, Integer> getPrevious() {

@@ -1,4 +1,16 @@
 // test class          also need to check for upper and lowercase identifiers
+class Foo {
+	public int nice;		// need to test
+	
+	public Foo () {			// need to test
+		nice = 6;			
+	}
+	
+	public int crazy() {
+		return 45;
+	}
+}
+
 class Test {
 	int a = 2;   			// need to test
 	int b = 1;
@@ -18,6 +30,8 @@ class Test {
 		cout << foo.nice;	// need to test
 		
 		foo.nice = 23;		// need to test
+		int cool = foo.nice;// need to test
+		cool = foo.crazy();	// need to test
 		
 		cout << foo.nice;	// need to test
 		
@@ -40,13 +54,5 @@ class Test {
 			int k = (4 + 6) * (3 - d);
 		}
 		return;
-	}
-}
-
-class Foo {
-	public int nice;		// need to test
-	
-	public Foo () {			// need to test
-		nice = 6;			
 	}
 }

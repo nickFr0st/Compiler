@@ -143,30 +143,30 @@ public class SyntaxAnalyzer {
                     }
 
 
-//                    if (currentLex.lexi.equals("int") || currentLex.lexi.equals("char") || currentLex.lexi.equals("bool")) {
-//                        if (i != 0) {
-//                            errorList += "Type declaration line must start with the identifier type. Line: " + currentLex.lineNum + "\n";
-//                        }
-//                        if (!tempList.get(tempList.size() - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-//                            errorList += "Type declaration must end with a end of line token (;). Line: " + currentLex.lineNum + "\n";
-//                        }
-//                        if (tempList.size() < 3) {
-//                            errorList += "Missing arguments in type declaration. Line: " + currentLex.lineNum + "\n";
-//                        } else {
-//                            if (!tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
-//                                errorList += "Type name must be an Identifier. Line: " + currentLex.lineNum + "\n";
-//                            }
-//                            if (!Character.isLowerCase(tempList.get(i + 1).lexi.toCharArray()[0])) {
-//                                errorList += "Type name must start with a lowercase letter. Line: " + currentLex.lineNum + "\n";
-//                            }
-//                            if (tempList.size() > 3) {
-//                                if (!tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
-//                                    errorList += "The left hand side of type declaration and assignment must only contain the type name and object name. Line: " + currentLex.lineNum + "\n";
-//                                }
-//                            }
-//                        }
-//
-//                    }
+                    if (currentLex.lexi.equals("int") || currentLex.lexi.equals("char") || currentLex.lexi.equals("bool")) {
+                        if (!isTypeDeclarationValid(tempList.get(0).lexi, i)) {
+                            errorList += "Type declaration line must start with the identifier type. Line: " + currentLex.lineNum + "\n";
+                        } else if (i == 0) {
+                            if (!tempList.get(tempList.size() - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                                errorList += "Type declaration must end with a end of line token (;). Line: " + currentLex.lineNum + "\n";
+                            }
+                            if (tempList.size() < 3) {
+                                errorList += "Missing arguments in type declaration. Line: " + currentLex.lineNum + "\n";
+                            } else {
+                                if (!tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
+                                    errorList += "Type name must be an Identifier. Line: " + currentLex.lineNum + "\n";
+                                }
+                                if (!Character.isLowerCase(tempList.get(i + 1).lexi.toCharArray()[0])) {
+                                    errorList += "Type name must start with a lowercase letter. Line: " + currentLex.lineNum + "\n";
+                                }
+                                if (tempList.size() > 3) {
+                                    if (!tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+                                        errorList += "The left hand side of type declaration and assignment must only contain the type name and object name. Line: " + currentLex.lineNum + "\n";
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     if (currentLex.lexi.equals("void")) {
 
@@ -199,6 +199,15 @@ public class SyntaxAnalyzer {
         if (!errorList.isEmpty()) {
             throw new IllegalArgumentException(errorList);
         }
+    }
+
+    private boolean isTypeDeclarationValid(String lexi, int index) {
+        if (index != 0)
+            if (lexi.equals("private") || lexi.equals("public"))
+                return true;
+            else
+                return false;
+        return true;
     }
 
     private void validateComma(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLexi) {

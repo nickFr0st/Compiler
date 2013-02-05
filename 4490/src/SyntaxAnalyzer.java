@@ -75,6 +75,8 @@ public class SyntaxAnalyzer {
                     validateBooleanOpr(currentLex, previousLex, nextLexi);
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IO_OPR.name())) {
                     validateIOOpr(currentLex, previousLex, nextLexi, peekPrevious);
+                } else if (currentLex.lexi.equals(",")) {
+                    validateComma(currentLex, previousLex, nextLexi);
                 }
 
 
@@ -197,6 +199,28 @@ public class SyntaxAnalyzer {
         if (!errorList.isEmpty()) {
             throw new IllegalArgumentException(errorList);
         }
+    }
+
+    private void validateComma(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLexi) {
+        if (previousLex.equals(null) || nextLexi.equals(null) || nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+            errorList += "There must be a value on both sides of comma. Line: " + currentLex.lineNum + "\n";
+        }
+
+        if ((previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())
+                || previousLex.lexi.equals("true") || previousLex.lexi.equals("false")
+                || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())
+                || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) &&
+                (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())
+                || nextLexi.lexi.equals("true")
+                || nextLexi.lexi.equals("false")
+                || nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())
+                || nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()))
+                || nextLexi.lexi.equals("int")
+                || nextLexi.lexi.equals("char")
+                || nextLexi.lexi.equals("bool")) {
+            return;
+        }
+        errorList += "There must be a value on both sides of comma. Line: " + currentLex.lineNum + "\n";
     }
 
     private boolean isValidType(List<Tuple<String, String, Integer>> tempList, int index) {
@@ -350,7 +374,7 @@ public class SyntaxAnalyzer {
             return true;
         else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()))
             return true;
-        else if (nextLex.lexi.equals("true") || nextLex.lexi.equals("false") || nextLex.lexi.equals("null") || nextLex.lexi.equals("this"))
+        else if (nextLex.lexi.equals("true") || nextLex.lexi.equals("false") || nextLex.lexi.equals("null") || nextLex.lexi.equals("this") || nextLex.lexi.equals("new"))
             return true;
         else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
             return true;

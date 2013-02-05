@@ -50,7 +50,7 @@ public class SyntaxAnalyzer {
 
                 // validate expressions
                 if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
-                    validateAssignmentOpr(currentLex, previousLex, nextLexi, peekTwoPrevious);
+                    validateAssignmentOpr(currentLex, previousLex, nextLexi, peekPrevious);
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
                     validateMathOpr(currentLex, previousLex, nextLexi);
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
@@ -111,12 +111,28 @@ public class SyntaxAnalyzer {
                         }
                     }
 
+                    // TODO: change how this works -> look at in stages
                     if (currentLex.lexi.equals("private") || currentLex.lexi.equals("public")) {
                         if (i != 0) {
                             errorList += "Modifiers must be at the beginning of function declarations. Line: " + currentLex.lineNum + "\n";
                         } else {
                             if (tempList.size() < 6) {
-                                errorList += "There are to few arguments in function declaration. Line: " + currentLex.lineNum + "\n";
+                                if (tempList.size() < 4) {
+                                    errorList += "There are to few arguments in function declaration. Line: " + currentLex.lineNum + "\n";
+                                }
+                                if (tempList.size() == 4) {
+                                    if (tempList.get(1).lexi.equals("int") || tempList.get(1).lexi.equals("char") || tempList.get(1).lexi.equals("bool") || tempList.get(1).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
+                                        if (!tempList.get(2).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
+                                            errorList += "Type name must be an Identifier. Line: " + currentLex.lineNum + "\n";
+                                        }
+                                    } else {
+                                        errorList += "Type declaration needs a valid type. Line: " + currentLex.lineNum + "\n";
+                                    }
+                                }
+                                if (tempList.size() == 5) {
+
+                                }
+
                             } else {
                                 if (!tempList.get(tempList.size() - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
                                     errorList += "Function declaration line must end in a begin block token ({). Line: " + currentLex.lineNum + "\n";
@@ -366,9 +382,9 @@ public class SyntaxAnalyzer {
             errorList += "Left hand side of assignment operation must be an Identifier. Line: " + previousLex.lineNum + "\n";
         }
 
-        if (!isLHSinValidFormatAssignment(previousTwoLexi, previousLex)) {
-            errorList += "There can only be one variable or Identifier on the left side of the assignment operator. Line: " + currentLex.lineNum + "\n";
-        }
+//        if (!isLHSinValidFormatAssignment(previousTwoLexi, previousLex)) {
+//            errorList += "There can only be one variable or Identifier on the left side of the assignment operator. Line: " + currentLex.lineNum + "\n";
+//        }
 
         if (isRHSinValidFormatAssignment(nextLex)) {
             return;
@@ -441,6 +457,8 @@ public class SyntaxAnalyzer {
         else if (peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()))
             return true;
         else if (previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()))
+            return true;
+        else if (previousLex.lexi.equals("."))
             return true;
 
         return false;

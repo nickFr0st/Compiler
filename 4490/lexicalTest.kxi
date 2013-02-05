@@ -7,7 +7,11 @@ class Foo {
 	}
 	
 	public int crazy() {
-		return 45;
+		int i = 0;
+		while (i < 10) {	// need to test while
+			i = i + 1;
+		}
+		return i;
 	}
 }
 
@@ -35,7 +39,7 @@ class Test {
 		
 		cout << foo.nice;	// need to test
 		
-		if (e != 0) {
+		if (e != 0) {		// need to test if
 			cin >> d;
 			cout << 'a';
 			cout << '\s';

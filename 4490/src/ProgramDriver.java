@@ -7,16 +7,11 @@
 public class ProgramDriver {
     public static void main(String[] args) {
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
-        lexicalAnalyzer.processFile("lexicalTest.kxi");
+        lexicalAnalyzer.processFile("testFile.kxi");
 
         SyntaxAnalyzer syntaxAnalyzer = new SyntaxAnalyzer(lexicalAnalyzer);
+        syntaxAnalyzer.evaluate();
 
-        try {
-            syntaxAnalyzer.evaluate();
-        } catch (IllegalArgumentException e) {
-            System.out.print(e.getMessage());
-            System.exit(0);
-        }
         System.out.println("Success");
     }
 }

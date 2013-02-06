@@ -17,7 +17,7 @@ public class SyntaxAnalyzer {
         this.lexicalAnalyzer = lexicalAnalyzer;
     }
 
-    public void evaluate() throws IllegalArgumentException {
+    public void evaluate() {
         Tuple<String, String, Integer> currentLex;
         Tuple<String, String, Integer> previousLex = null;
 
@@ -222,8 +222,13 @@ public class SyntaxAnalyzer {
             errorList += errorMessage + "\n";
         }
 
-        if (!errorList.isEmpty()) {
-            throw new IllegalArgumentException(errorList);
+        try {
+            if (!errorList.isEmpty()) {
+                throw new IllegalArgumentException(errorList);
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.print(e.getMessage());
+            System.exit(0);
         }
     }
 

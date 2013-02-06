@@ -1,9 +1,16 @@
 // test class          also need to check for upper and lowercase identifiers
 class Foo {
-	public int nice;		// need to test
+	public int nice;
 	
-	public Foo () {			// need to test
-		nice = 6;			
+	public Foo () {
+		nice = 6;	
+		//char[] c = new char[10]; // need to handle arrays
+		//c = itoa(nice, c, 10);
+		
+		//char[] h = new char[3];
+		//h[0] = 3;
+		
+		//int hi = atoi(h);
 	}
 	
 	public int crazy() {
@@ -16,12 +23,12 @@ class Foo {
 }
 
 class Test {
-	int a = 2;   			// need to test
+	int a = 2;
 	int b = 1;
 	bool y = false;
 	Foo foo;				// need to test
 	
-	private int funTest(int j, char k, bool y) {
+	private int funTest(int j, Foo k, bool y) {
 		int a = this.a + j;
 		return a;
 	}

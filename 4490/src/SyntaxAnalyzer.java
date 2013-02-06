@@ -111,47 +111,37 @@ public class SyntaxAnalyzer {
                         }
                     }
 
-                    // TODO: change how this works -> look at in stages
+                    // check for valid function, object an class declaration
                     if (currentLex.lexi.equals("private") || currentLex.lexi.equals("public")) {
                         if (i != 0) {
                             errorList += "Modifiers must be at the beginning of function declarations. Line: " + currentLex.lineNum + "\n";
                         } else {
-                            if (tempList.size() < 6) {
-                                if (tempList.size() < 4) {
-                                    errorList += "There are to few arguments in function declaration. Line: " + currentLex.lineNum + "\n";
-                                }
-                                if (tempList.size() == 4) {
-                                    if (tempList.get(1).lexi.equals("int") || tempList.get(1).lexi.equals("char") || tempList.get(1).lexi.equals("bool") || tempList.get(1).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
-                                        if (!tempList.get(2).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
-                                            errorList += "Type name must be an Identifier. Line: " + currentLex.lineNum + "\n";
-                                        }
-                                    } else {
-                                        errorList += "Type declaration needs a valid type. Line: " + currentLex.lineNum + "\n";
-                                    }
-                                }
-                                if (tempList.size() == 5) {
-
-                                }
-
+                            if (tempList.size() < 4) {
+                                errorList += "There are to few arguments in declaration. Line: " + currentLex.lineNum + "\n";
                             } else {
-                                if (!tempList.get(tempList.size() - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
-                                    errorList += "Function declaration line must end in a begin block token ({). Line: " + currentLex.lineNum + "\n";
-                                }
                                 if (!isValidReturnType(tempList.get(1).lexi, tempList.get(i + 1).type)) {
-                                    errorList += "Function must have a valid return type. Line: " + currentLex.lineNum + "\n";
-                                }
-                                if (!tempList.get(2).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
-                                    errorList += "Function name must be an Identifier. Line: " + currentLex.lineNum + "\n";
-                                }
-                                if (!tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-                                    errorList += "An open paren must directly proceed the function name. Line: " + currentLex.lineNum + "\n";
-                                }
-                                if (!tempList.get(tempList.size() - 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                                    errorList += "Must close function argument list before starting function block. Line: " + currentLex.lineNum + "\n";
-                                }
-                                if (!tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                                    if (!isValidType(tempList, 4)) {
-                                        errorList += "Function '" + tempList.get(2).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                                    errorList += "Function or object requires a valid type. Line: " + currentLex.lineNum + "\n";
+                                } else {
+                                    if (!isStepValid(tempList.get(2).type, tempList.get(2).lexi)) {
+                                        errorList += "Missing function name or argument list(also check that functions and variables start with lower case letters). Line: " + currentLex.lineNum + "\n";
+                                    } else if (tempList.get(2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && !tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                                        if (!isValidType(tempList, 3)) {
+                                            errorList += "Function '" + tempList.get(1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                                        }
+                                    } else if (tempList.get(2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) && tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
+                                        // all good
+                                    } else {
+                                        if (tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                                            // all good
+                                        } else if (tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && !tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                                            if (!isValidType(tempList, 4)) {
+                                                errorList += "Function '" + tempList.get(2).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                                            }
+                                        } else if (tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) && tempList.get(5).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
+                                            // all good
+                                        } else {
+                                            errorList += "Function or object has been incorrectly formatted. Line: " + currentLex.lineNum + "\n";
+                                        }
                                     }
                                 }
                             }
@@ -159,7 +149,7 @@ public class SyntaxAnalyzer {
                     }
 
 
-                    if (currentLex.lexi.equals("int") || currentLex.lexi.equals("char") || currentLex.lexi.equals("bool")) {
+                    if ((currentLex.lexi.equals("int") || currentLex.lexi.equals("char") || currentLex.lexi.equals("bool"))) {
                         if (!isTypeDeclarationValid(tempList.get(0).lexi, i)) {
                             errorList += "Type declaration line must start with the identifier type. Line: " + currentLex.lineNum + "\n";
                         } else if (i == 0) {
@@ -187,6 +177,26 @@ public class SyntaxAnalyzer {
                     if (currentLex.lexi.equals("void")) {
 
                     }
+                }
+
+                // todo: need to check for arrays
+                if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && i == 0) {
+                    if (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(currentLex.lexi.toCharArray()[0])) {
+                        errorList += "invalid declaration type. Line: " + currentLex.lineNum + "\n";
+                    }
+                    if (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(nextLexi.lexi.toCharArray()[0])) {
+                        errorList += "Type name must be lowercase. Line: " + currentLex.lineNum + "\n";
+                    }
+                    if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(currentLex.lexi.toCharArray()[0])) {
+                        if (!nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()))
+                        errorList += "object declaration must have a name. Line: " + currentLex.lineNum + "\n";
+                        if (tempList.get(i+2).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                            // all good
+                        } else if (!tempList.get(i+2).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+                            errorList += "Type and alis are the only values that can exist on right hand side of assignment during object declaration. Line: " + currentLex.lineNum + "\n";
+                        }
+                    }
+
                 }
 
                 previousLex = currentLex;
@@ -217,6 +227,10 @@ public class SyntaxAnalyzer {
         }
     }
 
+    private boolean isStepValid(String type, String name) {
+        return ((type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(name.toCharArray()[0])) || type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()));
+    }
+
     private boolean isTypeDeclarationValid(String lexi, int index) {
         if (index != 0)
             if (lexi.equals("private") || lexi.equals("public"))
@@ -236,10 +250,10 @@ public class SyntaxAnalyzer {
                 || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())
                 || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) &&
                 (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())
-                || nextLexi.lexi.equals("true")
-                || nextLexi.lexi.equals("false")
-                || nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())
-                || nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()))
+                        || nextLexi.lexi.equals("true")
+                        || nextLexi.lexi.equals("false")
+                        || nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())
+                        || nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()))
                 || nextLexi.lexi.equals("int")
                 || nextLexi.lexi.equals("char")
                 || nextLexi.lexi.equals("bool")) {
@@ -249,8 +263,12 @@ public class SyntaxAnalyzer {
     }
 
     private boolean isValidType(List<Tuple<String, String, Integer>> tempList, int index) {
-        if (tempList.get(index).lexi.equals("bool") || tempList.get(index).lexi.equals("int") || tempList.get(index).lexi.equals("char") || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
+        if (tempList.get(index).lexi.equals("bool") || tempList.get(index).lexi.equals("int") || tempList.get(index).lexi.equals("char") || (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(tempList.get(index).lexi.toCharArray()[0]))) {
             if (!tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
+                return false;
+            }
+            if (!Character.isLowerCase(tempList.get(index + 1).lexi.toCharArray()[0])) {
+                errorList += "Parameter names must be lowercase. Line: " + tempList.get(index).lineNum + "\n";
                 return false;
             }
             if (tempList.get(index + 2).lexi.equals(",")) {
@@ -265,7 +283,7 @@ public class SyntaxAnalyzer {
     }
 
     private boolean isValidReturnType(String retName, String retType) {
-        return (retName.equals("bool") || retName.equals("int") || retName.equals("char") || retName.equals("void") || retType.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()));
+        return (retName.equals("bool") || retName.equals("int") || retName.equals("char") || retName.equals("void") || (retType.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(retName.toCharArray()[0])));
     }
 
     private void validateIOOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex, Tuple<String, String, Integer> peekPrevious) {

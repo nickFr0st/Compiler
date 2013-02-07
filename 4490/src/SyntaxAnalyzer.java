@@ -41,6 +41,14 @@ public class SyntaxAnalyzer {
 
                 if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.UNKNOWN.name())) {
                     errorList += "Unknown object. Line: " + currentLex.lineNum + "\n";
+                    previousLex = currentLex;
+                    continue;
+                }
+
+                if (currentLex.lexi.equals("object") || currentLex.lexi.equals("string")) {
+                    errorList += currentLex.lexi + " is a reserved word not currently in use by the language. Line: " + currentLex.lineNum + "\n";
+                    previousLex = currentLex;
+                    continue;
                 }
 
                 Tuple<String, String, Integer> nextLexi = (i + 1 == tempList.size() ? null : tempList.get(i + 1));
@@ -77,6 +85,12 @@ public class SyntaxAnalyzer {
                     validateIOOpr(currentLex, previousLex, nextLexi, peekPrevious);
                 } else if (currentLex.lexi.equals(",")) {
                     validateComma(currentLex, previousLex, nextLexi);
+                } else if (currentLex.lexi.equals(".")) {
+                    if ((previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || previousLex.lexi.equals("this")) && nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(nextLexi.lexi.toCharArray()[0])) {
+                        // all good
+                    } else {
+                        errorList += "Invalid call operator. Line: " + currentLex.lineNum + "\n";
+                    }
                 }
 
 
@@ -127,7 +141,7 @@ public class SyntaxAnalyzer {
                                     if (!isStepValid(tempList.get(2).type, tempList.get(2).lexi)) {
                                         errorList += "Missing function name or argument list(also check that functions and variables start with lower case letters). Line: " + currentLex.lineNum + "\n";
                                     } else if (tempList.get(2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && !tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                                        if (!isValidType(tempList, 3)) {
+                                        if (!isValidParameterDeclarationType(tempList, 3)) {
                                             errorList += "Function '" + tempList.get(1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
                                         }
                                     } else if (tempList.get(2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) && tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
@@ -136,7 +150,7 @@ public class SyntaxAnalyzer {
                                         if (tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                                             // all good
                                         } else if (tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && !tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                                            if (!isValidType(tempList, 4)) {
+                                            if (!isValidParameterDeclarationType(tempList, 4)) {
                                                 errorList += "Function '" + tempList.get(2).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
                                             }
                                         } else if (tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) && tempList.get(5).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
@@ -151,9 +165,6 @@ public class SyntaxAnalyzer {
                     }
                 }
 
-                if (currentLex.lexi.equals("void")) {
-
-                }
 
                 /**
                  * validate object type declaration
@@ -191,6 +202,16 @@ public class SyntaxAnalyzer {
                         } else if (tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(i + 1).lexi.toCharArray()[0])) {
                             if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
                                 // all good
+                            } else if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                                if (!tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                                    if (!isValidParameterDeclarationType(tempList, i+2)) {
+                                        errorList += "Function '" + tempList.get(2).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                                    }
+                                } else if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) && tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                                    // all good
+                                } else {
+                                    errorList += "Incorrectly function definition format. Line: " + currentLex.lineNum + "\n";
+                                }
                             } else {
                                 errorList += "Incorrectly formatted object definition. Line: " + currentLex.lineNum + "\n";
                             }
@@ -200,27 +221,50 @@ public class SyntaxAnalyzer {
                     }
                 }
 
-
-                // todo: need to check for arrays
-                if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && i == 0) {
-                    if (Character.isLowerCase(currentLex.lexi.toCharArray()[0])) {
-                        errorList += "invalid declaration type. Line: " + currentLex.lineNum + "\n";
+                /**
+                 * validates function and variable use
+                 */
+                if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && i == 0 && Character.isLowerCase(currentLex.lexi.toCharArray()[0])) {
+                    if (tempList.size() < 4) {
+                        errorList += "Too few arguments. Line: " + currentLex.lineNum + "\n";
+                        previousLex = currentLex;
+                        continue;
                     }
-                    if (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(nextLexi.lexi.toCharArray()[0])) {
-                        errorList += "Type name must be lowercase. Line: " + currentLex.lineNum + "\n";
-                    }
-                    if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(currentLex.lexi.toCharArray()[0])) {
-                        if (!nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()))
-                            errorList += "object declaration must have a name. Line: " + currentLex.lineNum + "\n";
-                        if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                    if (tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                        if (!tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                            if (!isValidCalledParameterType(tempList, i + 2)) {
+                                errorList += "Function '" + tempList.get(0).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                                previousLex = currentLex;
+                                continue;
+                            }
+                        } else if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) && tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                             // all good
-                        } else if (!tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
-                            errorList += "Type and alis are the only values that can exist on right hand side of assignment during object declaration. Line: " + currentLex.lineNum + "\n";
+                        } else {
+                            errorList += "Syntax error on function call format. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+                    } else if (tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+                        // all good
+                    } else if (tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+                        if (tempList.size() < 6) {
+                            errorList += "Too few arguments. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+                        if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && (tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name()) && tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()))) {
+                            // all good
+                        } else {
+                            errorList += "Syntax error on array call format. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+                    } else if (tempList.get(i + 1).lexi.equals(".") && (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(i + 2).lexi.toCharArray()[0]))) {
+                        if (tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+                            // all good
                         }
                     }
-
                 }
-
                 previousLex = currentLex;
             }
 
@@ -289,7 +333,7 @@ public class SyntaxAnalyzer {
         errorList += "There must be a value on both sides of comma. Line: " + currentLex.lineNum + "\n";
     }
 
-    private boolean isValidType(List<Tuple<String, String, Integer>> tempList, int index) {
+    private boolean isValidParameterDeclarationType(List<Tuple<String, String, Integer>> tempList, int index) {
         if (tempList.get(index).lexi.equals("bool") || tempList.get(index).lexi.equals("int") || tempList.get(index).lexi.equals("char") || (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(tempList.get(index).lexi.toCharArray()[0]))) {
             if (!tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
                 return false;
@@ -299,8 +343,21 @@ public class SyntaxAnalyzer {
                 return false;
             }
             if (tempList.get(index + 2).lexi.equals(",")) {
-                return isValidType(tempList, index + 3);
+                return isValidParameterDeclarationType(tempList, index + 3);
             } else if (tempList.get(index + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    private boolean isValidCalledParameterType(List<Tuple<String, String, Integer>> tempList, int index) {
+        if ((tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(index).lexi.toCharArray()[0])) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
+            if (tempList.get(index + 1).lexi.equals(",")) {
+                return isValidCalledParameterType(tempList, index + 2);
+            } else if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 return true;
             } else {
                 return false;
@@ -466,9 +523,10 @@ public class SyntaxAnalyzer {
     private boolean isPreviousLexiValidAssignment(Tuple<String, String, Integer> previousLex) {
         if (previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()))
             return true;
-        else if (previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+        else if (previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()))
             return true;
-        }
+        else if (previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name()))
+            return true;
 
         return false;
     }

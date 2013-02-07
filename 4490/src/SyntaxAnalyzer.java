@@ -50,7 +50,7 @@ public class SyntaxAnalyzer {
 
                 // validate expressions
                 if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
-                    validateAssignmentOpr(currentLex, previousLex, nextLexi, peekPrevious);
+                    validateAssignmentOpr(currentLex, previousLex, nextLexi);
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
                     validateMathOpr(currentLex, previousLex, nextLexi);
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
@@ -111,7 +111,9 @@ public class SyntaxAnalyzer {
                         }
                     }
 
-                    // check for valid function, object an class declaration
+                    /**
+                     *  check for valid function, object an class declarations
+                     **/
                     if (currentLex.lexi.equals("private") || currentLex.lexi.equals("public")) {
                         if (i != 0) {
                             errorList += "Modifiers must be at the beginning of function declarations. Line: " + currentLex.lineNum + "\n";
@@ -147,41 +149,61 @@ public class SyntaxAnalyzer {
                             }
                         }
                     }
+                }
 
+                if (currentLex.lexi.equals("void")) {
 
-                    if ((currentLex.lexi.equals("int") || currentLex.lexi.equals("char") || currentLex.lexi.equals("bool"))) {
-                        if (!isTypeDeclarationValid(tempList.get(0).lexi, i)) {
-                            errorList += "Type declaration line must start with the identifier type. Line: " + currentLex.lineNum + "\n";
-                        } else if (i == 0) {
-                            if (!tempList.get(tempList.size() - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                                errorList += "Type declaration must end with a end of line token (;). Line: " + currentLex.lineNum + "\n";
+                }
+
+                /**
+                 * validate object type declaration
+                 */
+                if (i == 0 && (currentLex.lexi.equals("int") || currentLex.lexi.equals("char") || currentLex.lexi.equals("bool") || (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(currentLex.lexi.toCharArray()[0])))) {
+                    if (tempList.size() < 3) {
+                        errorList += "Incorrect format, too few arguments. Line: " + currentLex.lineNum + "\n";
+                        previousLex = currentLex;
+                        continue;
+                    }
+                    if (!tempList.get(tempList.size() - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                        errorList += "Type declaration must end with a end of line token (;). Line: " + currentLex.lineNum + "\n";
+                    }
+                    if (tempList.size() < 3) {
+                        errorList += "Missing arguments in type declaration. Line: " + currentLex.lineNum + "\n";
+                    } else {
+                        if (tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+                            if (!tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                                errorList += "Incorrectly defined array. Line: " + currentLex.lineNum + "\n";
+                                previousLex = currentLex;
+                                continue;
                             }
-                            if (tempList.size() < 3) {
-                                errorList += "Missing arguments in type declaration. Line: " + currentLex.lineNum + "\n";
-                            } else {
-                                if (!tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
-                                    errorList += "Type name must be an Identifier. Line: " + currentLex.lineNum + "\n";
-                                }
-                                if (!Character.isLowerCase(tempList.get(i + 1).lexi.toCharArray()[0])) {
-                                    errorList += "Type name must start with a lowercase letter. Line: " + currentLex.lineNum + "\n";
-                                }
-                                if (tempList.size() > 3) {
-                                    if (!tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
-                                        errorList += "The left hand side of type declaration and assignment must only contain the type name and object name. Line: " + currentLex.lineNum + "\n";
+                            if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                                if (tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(i + 3).lexi.toCharArray()[0])) {
+                                    if (tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                                        // all good
+                                    }
+                                    if (tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+                                        // all good
+                                    } else {
+                                        errorList += "Incorrectly defined array. Line: " + currentLex.lineNum + "\n";
                                     }
                                 }
                             }
+                        } else if (tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(i + 1).lexi.toCharArray()[0])) {
+                            if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+                                // all good
+                            } else {
+                                errorList += "Incorrectly formatted object definition. Line: " + currentLex.lineNum + "\n";
+                            }
+                        } else {
+                            errorList += "Incorrectly defined object. Line: " + currentLex.lineNum + "\n";
                         }
-                    }
-
-                    if (currentLex.lexi.equals("void")) {
-
                     }
                 }
 
+
                 // todo: need to check for arrays
                 if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && i == 0) {
-                    if (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(currentLex.lexi.toCharArray()[0])) {
+                    if (Character.isLowerCase(currentLex.lexi.toCharArray()[0])) {
                         errorList += "invalid declaration type. Line: " + currentLex.lineNum + "\n";
                     }
                     if (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(nextLexi.lexi.toCharArray()[0])) {
@@ -189,10 +211,10 @@ public class SyntaxAnalyzer {
                     }
                     if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(currentLex.lexi.toCharArray()[0])) {
                         if (!nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()))
-                        errorList += "object declaration must have a name. Line: " + currentLex.lineNum + "\n";
-                        if (tempList.get(i+2).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                            errorList += "object declaration must have a name. Line: " + currentLex.lineNum + "\n";
+                        if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                             // all good
-                        } else if (!tempList.get(i+2).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+                        } else if (!tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
                             errorList += "Type and alis are the only values that can exist on right hand side of assignment during object declaration. Line: " + currentLex.lineNum + "\n";
                         }
                     }
@@ -396,7 +418,7 @@ public class SyntaxAnalyzer {
         errorList += "Both side of mathematical operation must be either an Identifier or a Number. Line: " + previousLex.lineNum + "\n";
     }
 
-    private void validateAssignmentOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex, Tuple<String, String, Integer> previousTwoLexi) throws IllegalArgumentException {
+    private void validateAssignmentOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) throws IllegalArgumentException {
         if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
             errorList += "There must be a valid type on both sides of the assignment operator. Line: " + currentLex.lineNum + "\n";
         }
@@ -404,10 +426,6 @@ public class SyntaxAnalyzer {
         if (!isPreviousLexiValidAssignment(previousLex)) {
             errorList += "Left hand side of assignment operation must be an Identifier. Line: " + previousLex.lineNum + "\n";
         }
-
-//        if (!isLHSinValidFormatAssignment(previousTwoLexi, previousLex)) {
-//            errorList += "There can only be one variable or Identifier on the left side of the assignment operator. Line: " + currentLex.lineNum + "\n";
-//        }
 
         if (isRHSinValidFormatAssignment(nextLex)) {
             return;

@@ -224,6 +224,51 @@ public class SyntaxAnalyzer {
                         }
                     }
 
+                    /**
+                     * validate itoa and atoi
+                     */
+                    if (currentLex.lexi.equals("atoi")) {
+                        if (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                            if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(i + 2).lexi.toCharArray()[0])) {
+                                if (!tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                                    errorList += "Incorrect parameter list for atoi function. Line: " + currentLex.lineNum + "\n";
+                                    previousLex = currentLex;
+                                    continue;
+                                }
+                            } else {
+                                errorList += "Incorrect parameter list for atoi function. Line: " + currentLex.lineNum + "\n";
+                                previousLex = currentLex;
+                                continue;
+                            }
+                        } else {
+                            errorList += "Incorrect parameter list for atoi function. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+                    }
+                    if (currentLex.lexi.equals("itoa")) {
+                        if (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                            if (!tempList.get(i + 2).lexi.equals(")")) {
+                                if (!isValidCalledParameterTypeITOA(tempList, i + 2)) {
+                                    errorList += "Incorrect parameter list for atoi function. Line: " + currentLex.lineNum + "\n";
+                                    previousLex = currentLex;
+                                    continue;
+                                }
+                                if (tempList.get(i + 3).lexi.equals(",") && isValidCalledParameterTypeITOA(tempList, i + 4) && tempList.get(i + 5).lexi.equals(",") && isValidCalledParameterTypeITOALast(tempList, i + 6)) {
+                                    // all good
+                                } else {
+                                    errorList += "Incorrect parameter list for atoi function. Line: " + currentLex.lineNum + "\n";
+                                    previousLex = currentLex;
+                                    continue;
+                                }
+                            }
+                        } else {
+                            errorList += "Incorrect parameter list for atoi function. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+                    }
+
                 }
 
 
@@ -433,12 +478,80 @@ public class SyntaxAnalyzer {
 
     private boolean isValidCalledParameterType(List<Tuple<String, String, Integer>> tempList, int index) {
         if ((tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(index).lexi.toCharArray()[0])) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
+            if (tempList.get(index + 1).lexi.equals(".")) {
+                index = index + 2;
+                if (!isValidCalledParameterType(tempList, index)) {
+                    return false;
+                }
+            }
+            if (tempList.get(index + 1).lexi.equals("(")) {
+                if (!tempList.get(index + 2).lexi.equals(")")) {
+                    index = index + 2;
+                    if (!isValidCalledParameterType(tempList, index)) {
+                        return false;
+                    }
+                } else {
+                    index++;
+                }
+            }
             if (tempList.get(index + 1).lexi.equals(",")) {
                 return isValidCalledParameterType(tempList, index + 2);
             } else if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 return true;
             } else {
                 return false;
+            }
+        }
+        return false;
+    }
+
+    private boolean isValidCalledParameterTypeITOA(List<Tuple<String, String, Integer>> tempList, int index) {
+        if ((tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(index).lexi.toCharArray()[0])) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
+            if (tempList.get(index + 1).lexi.equals(".")) {
+                index = index + 2;
+                if (!isValidCalledParameterTypeITOA(tempList, index)) {
+                    return false;
+                }
+            }
+            if (tempList.get(index + 1).lexi.equals("(")) {
+                if (!tempList.get(index + 2).lexi.equals(")")) {
+                    index = index + 2;
+                    if (!isValidCalledParameterTypeITOA(tempList, index)) {
+                        return false;
+                    }
+                } else {
+                    index++;
+                }
+            } else if (tempList.get(index + 1).lexi.equals(",")) {
+                return true;
+            }
+            if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isValidCalledParameterTypeITOALast(List<Tuple<String, String, Integer>> tempList, int index) {
+        if ((tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(index).lexi.toCharArray()[0])) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
+            if (tempList.get(index + 1).lexi.equals(".")) {
+                index = index + 2;
+                if (!isValidCalledParameterTypeITOALast(tempList, index)) {
+                    return false;
+                }
+            }
+            if (tempList.get(index + 1).lexi.equals("(")) {
+                if (!tempList.get(index + 2).lexi.equals(")")) {
+                    index = index + 2;
+                    if (!isValidCalledParameterTypeITOALast(tempList, index)) {
+                        return false;
+                    }
+                } else {
+                    index++;
+                }
+            }
+            if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                return true;
             }
         }
         return false;
@@ -575,12 +688,11 @@ public class SyntaxAnalyzer {
             return true;
         else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()))
             return true;
-        else if (nextLex.lexi.equals("true") || nextLex.lexi.equals("false") || nextLex.lexi.equals("null") || nextLex.lexi.equals("this") || nextLex.lexi.equals("new"))
+        else if (nextLex.lexi.equals("true") || nextLex.lexi.equals("false") || nextLex.lexi.equals("null") || nextLex.lexi.equals("this") || nextLex.lexi.equals("new") || nextLex.lexi.equals("atoi") || nextLex.lexi.equals("itoa"))
             return true;
         else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
             return true;
-        }
-        else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
+        } else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
             return true;
         }
 

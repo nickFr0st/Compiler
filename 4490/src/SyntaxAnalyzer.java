@@ -8,6 +8,7 @@ import java.util.List;
  * Time: 8:59 PM
  */
 public class SyntaxAnalyzer {
+    // todo: add symbol table
     private LexicalAnalyzer lexicalAnalyzer;
     private List<Tuple<String, String, Integer>> openParens = new ArrayList<Tuple<String, String, Integer>>();
     private List<Tuple<String, String, Integer>> openBlocks = new ArrayList<Tuple<String, String, Integer>>();
@@ -267,6 +268,22 @@ public class SyntaxAnalyzer {
                             previousLex = currentLex;
                             continue;
                         }
+                    }
+
+                    /**
+                     * validate if statement
+                     */
+                    if (currentLex.lexi.equals("if")) {
+                        // todo: add logic
+                        // extract to a method so can be used in the else check
+                    }
+
+                    if (currentLex.lexi.equals("else")) {
+                        // todo: add logic
+                    }
+
+                    if (currentLex.lexi.equals("while")) {
+                        // todo: add logic
                     }
 
                 }
@@ -730,27 +747,6 @@ public class SyntaxAnalyzer {
         else if (peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()))
             return true;
         else if (peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()))
-            return true;
-
-        return false;
-    }
-
-    private boolean isLHSinValidFormatAssignment(Tuple<String, String, Integer> peekPrevious, Tuple<String, String, Integer> previousLex) {
-        if (peekPrevious == null)
-            return true;
-        else if (peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()))
-            return true;
-        else if (peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()))
-            return true;
-        else if (peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()))
-            return true;
-        else if (peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name()))
-            return true;
-        else if (peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()))
-            return true;
-        else if (previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()))
-            return true;
-        else if (previousLex.lexi.equals("."))
             return true;
 
         return false;

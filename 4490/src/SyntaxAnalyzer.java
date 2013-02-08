@@ -52,7 +52,6 @@ public class SyntaxAnalyzer {
                 }
 
                 Tuple<String, String, Integer> nextLexi = (i + 1 == tempList.size() ? null : tempList.get(i + 1));
-                Tuple<String, String, Integer> peekTwoPrevious = (i - 3 < 0 ? null : tempList.get(i - 3));
                 Tuple<String, String, Integer> peekPrevious = (i - 2 < 0 ? null : tempList.get(i - 2));
 
 
@@ -62,8 +61,14 @@ public class SyntaxAnalyzer {
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
                     validateMathOpr(currentLex, previousLex, nextLexi);
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                    if (previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
+                        errorList += "Invalid function call on line: " + currentLex.lineNum + "\n";
+                    }
                     openParens.add(currentLex);
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                    if (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
+                        errorList += "Invalid argument after closing paran. Line: " + currentLex.lineNum + "\n";
+                    }
                     if (openParens.size() == 0) {
                         errorList += "Invalid closing paren on line: " + currentLex.lineNum + "\n";
                     } else {
@@ -86,10 +91,20 @@ public class SyntaxAnalyzer {
                 } else if (currentLex.lexi.equals(",")) {
                     validateComma(currentLex, previousLex, nextLexi);
                 } else if (currentLex.lexi.equals(".")) {
-                    if ((previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || previousLex.lexi.equals("this")) && nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(nextLexi.lexi.toCharArray()[0])) {
-                        // all good
-                    } else {
-                        errorList += "Invalid call operator. Line: " + currentLex.lineNum + "\n";
+                    if (i == 0) {
+                        errorList += "Invalid dot operator. Line: " + currentLex.lineNum + "\n";
+                        previousLex = currentLex;
+                        continue;
+                    }
+                    if (!isLHSofDotValid(tempList, i - 1)) {
+                        errorList += "LHS of dot operator is invalid. Line: " + currentLex.lineNum + "\n";
+                        previousLex = currentLex;
+                        continue;
+                    }
+                    if (!nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || Character.isUpperCase(nextLexi.lexi.toCharArray()[0])) {
+                        errorList += "RHS of dot operator is invalid. Line: " + currentLex.lineNum + "\n";
+                        previousLex = currentLex;
+                        continue;
                     }
                 }
 
@@ -163,20 +178,84 @@ public class SyntaxAnalyzer {
                             }
                         }
                     }
+
+                    /**
+                     * validate new operator
+                     */
+                    if (currentLex.lexi.equals("new")) {
+                        if (!isValidObjectTypeExpression(nextLexi)) {
+                            errorList += "Invalid use of the new operator. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+                        if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                            // all good
+                            previousLex = currentLex;
+                            continue;
+                        }
+                        if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+                            if (tempList.size() < 11) {
+                                errorList += "Invalid array initialization. Line: " + currentLex.lineNum + "\n";
+                                previousLex = currentLex;
+                                continue;
+                            }
+                            if ((tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) && tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name()) && tempList.get(i + 5).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                                // all good
+                            } else {
+                                errorList += "Invalid array initialization. Line: " + currentLex.lineNum + "\n";
+                                previousLex = currentLex;
+                                continue;
+                            }
+                        } else if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                            if (!tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                                if (!isValidCalledParameterType(tempList, i + 3)) {
+                                    errorList += "Function '" + tempList.get(i + 1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                                    previousLex = currentLex;
+                                    continue;
+                                } else {
+                                    // all good
+                                }
+                            }
+
+                        } else {
+                            errorList += "Invalid object initialization. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+                    }
+
                 }
 
 
                 /**
                  * validate object type declaration
                  */
-                if (i == 0 && (currentLex.lexi.equals("int") || currentLex.lexi.equals("char") || currentLex.lexi.equals("bool") || (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(currentLex.lexi.toCharArray()[0])))) {
+                if (i == 0 && (currentLex.lexi.equals("void") || currentLex.lexi.equals("int") || currentLex.lexi.equals("char") || currentLex.lexi.equals("bool") || (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(currentLex.lexi.toCharArray()[0])))) {
                     if (tempList.size() < 3) {
                         errorList += "Incorrect format, too few arguments. Line: " + currentLex.lineNum + "\n";
                         previousLex = currentLex;
                         continue;
                     }
-                    if (!tempList.get(tempList.size() - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                        errorList += "Type declaration must end with a end of line token (;). Line: " + currentLex.lineNum + "\n";
+                    if (tempList.get(i + 1).lexi.equals("main")) {
+                        if (!tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                            errorList += "Main function is missing the argument list. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        } else {
+                            if (tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                                if (!tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
+                                    errorList += "Main function declaration must end with an block begin token ({). Line: " + currentLex.lineNum + "\n";
+                                    previousLex = currentLex;
+                                    continue;
+                                }
+                            } else {
+                                errorList += "Main function declaration must end with an block begin token ({). Line: " + currentLex.lineNum + "\n";
+                                previousLex = currentLex;
+                                continue;
+                            }
+                        }
+                        previousLex = currentLex;
+                        continue;
                     }
                     if (tempList.size() < 3) {
                         errorList += "Missing arguments in type declaration. Line: " + currentLex.lineNum + "\n";
@@ -203,14 +282,14 @@ public class SyntaxAnalyzer {
                             if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
                                 // all good
                             } else if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-                                if (!tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                                    if (!isValidParameterDeclarationType(tempList, i+2)) {
-                                        errorList += "Function '" + tempList.get(2).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                                if (!tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                                    if (!isValidParameterDeclarationType(tempList, i + 3)) {
+                                        errorList += "Function '" + tempList.get(1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
                                     }
-                                } else if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) && tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                                } else if (tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) && (tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name()))) {
                                     // all good
                                 } else {
-                                    errorList += "Incorrectly function definition format. Line: " + currentLex.lineNum + "\n";
+                                    errorList += "Incorrect function definition format. Line: " + currentLex.lineNum + "\n";
                                 }
                             } else {
                                 errorList += "Incorrectly formatted object definition. Line: " + currentLex.lineNum + "\n";
@@ -298,17 +377,16 @@ public class SyntaxAnalyzer {
         }
     }
 
-    private boolean isStepValid(String type, String name) {
-        return ((type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(name.toCharArray()[0])) || type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()));
+    private boolean isLHSofDotValid(List<Tuple<String, String, Integer>> tempList, int index) {
+        return (tempList.get(index).lexi.equals("this") || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name()));
     }
 
-    private boolean isTypeDeclarationValid(String lexi, int index) {
-        if (index != 0)
-            if (lexi.equals("private") || lexi.equals("public"))
-                return true;
-            else
-                return false;
-        return true;
+    private boolean isValidObjectTypeExpression(Tuple<String, String, Integer> lexi) {
+        return (lexi.lexi.equals("char") || lexi.lexi.equals("int") || lexi.lexi.equals("bool") || (lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(lexi.lexi.toCharArray()[0])));
+    }
+
+    private boolean isStepValid(String type, String name) {
+        return ((type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(name.toCharArray()[0])) || type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()));
     }
 
     private void validateComma(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLexi) {
@@ -500,6 +578,9 @@ public class SyntaxAnalyzer {
         else if (nextLex.lexi.equals("true") || nextLex.lexi.equals("false") || nextLex.lexi.equals("null") || nextLex.lexi.equals("this") || nextLex.lexi.equals("new"))
             return true;
         else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+            return true;
+        }
+        else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
             return true;
         }
 

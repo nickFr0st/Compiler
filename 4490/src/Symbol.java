@@ -9,9 +9,9 @@ public class Symbol {
     private String symId;       // unique identifier
     private String value;       // lexi
     private String kind;        // type
-    private String data;        // kind specific data
+    private IData data;        // kind specific data
 
-    public Symbol(String scope, String symId, String value, String kind, String data) {
+    public Symbol(String scope, String symId, String value, String kind, IData data) {
         this.scope = scope;
         this.symId = symId;
         this.value = value;
@@ -51,11 +51,11 @@ public class Symbol {
         this.kind = kind;
     }
 
-    public String getData() {
+    public IData getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(IData data) {
         this.data = data;
     }
 }

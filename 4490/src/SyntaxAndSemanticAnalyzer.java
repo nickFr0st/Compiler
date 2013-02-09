@@ -15,7 +15,8 @@ public class SyntaxAndSemanticAnalyzer {
     private List<Tuple<String, String, Integer>> openBlocks = new ArrayList<Tuple<String, String, Integer>>();
     private String errorList = "";
     private String scope = "g";
-    private int IdCount = 100;
+    private int statemetInr = 1;
+    private int symIdInr = 100;
 
     public SyntaxAndSemanticAnalyzer(LexicalAnalyzer lexicalAnalyzer) {
         this.lexicalAnalyzer = lexicalAnalyzer;
@@ -86,6 +87,9 @@ public class SyntaxAndSemanticAnalyzer {
                     if (openBlocks.size() == 0) {
                         errorList += "Invalid closing block on line: " + currentLex.lineNum + "\n";
                     } else {
+                        if (!scope.equals("g")) {
+                            scope = scope.substring(0,scope.lastIndexOf('.'));
+                        }
                         openBlocks.remove(openBlocks.size() - 1);
                     }
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
@@ -128,6 +132,7 @@ public class SyntaxAndSemanticAnalyzer {
                     }
 
                     if (currentLex.lexi.equals("class")) {
+                        int errCount = errorList.length();
                         if (!tempList.get(0).lexi.equals("class")) {
                             errorList += "class declaration must be the first statement on the line. Line: " + currentLex.lineNum + "\n";
                         }
@@ -144,10 +149,16 @@ public class SyntaxAndSemanticAnalyzer {
                         } else if (!Character.isUpperCase(tempList.get(i + 1).lexi.toCharArray()[0])) {
                             errorList += "class name must start with an uppercase letter. Line: " + currentLex.lineNum + "\n";
                         }
+                        if (errCount != errorList.length()) {
+                            previousLex = currentLex;
+                            continue;
+                        }
+                        symbolTable.put("C" + symIdInr++, new Symbol(scope, "C" + symIdInr, nextLexi.lexi, "Class", new ClassData()));
+                        scope += "." + tempList.get(1).lexi;
                     }
 
                     /**
-                     *  check for valid function, object an class declarations
+                     *  check for valid function, object and class declarations
                      **/
                     if (currentLex.lexi.equals("private") || currentLex.lexi.equals("public")) {
                         if (i != 0) {
@@ -166,15 +177,24 @@ public class SyntaxAndSemanticAnalyzer {
                                             errorList += "Function '" + tempList.get(1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
                                         }
                                     } else if (tempList.get(2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) && tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
+                                        // todo: need fix array list of parameters area
+                                        symbolTable.put("F" + symIdInr++, new Symbol(scope, "F" + symIdInr, tempList.get(1).lexi, "Function", new FunctionData(tempList.get(0).lexi, new ArrayList<String>(), tempList.get(1).lexi)));
+                                        scope += "." + tempList.get(1).lexi;
                                         // all good
                                     } else {
                                         if (tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                                            symbolTable.put("V" + symIdInr++, new Symbol(scope, "V" + symIdInr, tempList.get(2).lexi, "ivar", new VaribleData(tempList.get(1).lexi, tempList.get(0).lexi)));
                                             // all good
                                         } else if (tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && !tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                                             if (!isValidParameterDeclarationType(tempList, 4)) {
                                                 errorList += "Function '" + tempList.get(2).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                                            } else {
+                                                symbolTable.put("F" + symIdInr++, new Symbol(scope, "F" + symIdInr, tempList.get(2).lexi, "Function", new FunctionData(tempList.get(0).lexi, new ArrayList<String>(), tempList.get(1).lexi)));
+                                                scope += "." + tempList.get(2).lexi;
                                             }
                                         } else if (tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) && tempList.get(5).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
+                                            symbolTable.put("F" + symIdInr++, new Symbol(scope, "F" + symIdInr, tempList.get(2).lexi, "Function", new FunctionData(tempList.get(0).lexi, null, tempList.get(1).lexi)));
+                                            scope += "." + tempList.get(2).lexi;
                                             // all good
                                         } else {
                                             errorList += "Function or object has been incorrectly formatted. Line: " + currentLex.lineNum + "\n";

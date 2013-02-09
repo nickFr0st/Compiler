@@ -15,6 +15,10 @@ public class ProgramDriver {
         SyntaxAndSemanticAnalyzer syntaxAnalyzer = new SyntaxAndSemanticAnalyzer(lexicalAnalyzer);
         syntaxAnalyzer.evaluate(symbolTable);
 
+        for (String s : symbolTable.keySet()) {
+            System.out.println(symbolTable.get(s).getValue() + " " + symbolTable.get(s).getScope() + " " + symbolTable.get(s).getSymId() );
+        }
+
         System.out.println("Success");
     }
 }

@@ -1,3 +1,5 @@
+import java.util.LinkedHashMap;
+
 /**
  * Created by IntelliJ IDEA.
  * User: nmalloch
@@ -6,11 +8,12 @@
  */
 public class ProgramDriver {
     public static void main(String[] args) {
+        LinkedHashMap<String, Symbol> symbolTable = new LinkedHashMap<String, Symbol>();
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
         lexicalAnalyzer.processFile("testFile.kxi");
 
-        SyntaxAnalyzer syntaxAnalyzer = new SyntaxAnalyzer(lexicalAnalyzer);
-        syntaxAnalyzer.evaluate();
+        SyntaxAndSemanticAnalyzer syntaxAnalyzer = new SyntaxAndSemanticAnalyzer(lexicalAnalyzer);
+        syntaxAnalyzer.evaluate(symbolTable);
 
         System.out.println("Success");
     }

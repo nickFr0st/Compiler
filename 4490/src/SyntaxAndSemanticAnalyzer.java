@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -7,18 +8,20 @@ import java.util.List;
  * Date: 1/22/13
  * Time: 8:59 PM
  */
-public class SyntaxAnalyzer {
+public class SyntaxAndSemanticAnalyzer {
     // todo: add symbol table
     private LexicalAnalyzer lexicalAnalyzer;
     private List<Tuple<String, String, Integer>> openParens = new ArrayList<Tuple<String, String, Integer>>();
     private List<Tuple<String, String, Integer>> openBlocks = new ArrayList<Tuple<String, String, Integer>>();
-    String errorList = "";
+    private String errorList = "";
+    private String scope = "g";
+    private int IdCount = 100;
 
-    public SyntaxAnalyzer(LexicalAnalyzer lexicalAnalyzer) {
+    public SyntaxAndSemanticAnalyzer(LexicalAnalyzer lexicalAnalyzer) {
         this.lexicalAnalyzer = lexicalAnalyzer;
     }
 
-    public void evaluate() {
+    public void evaluate(LinkedHashMap<String, Symbol> symbolTable) {
         Tuple<String, String, Integer> currentLex;
         Tuple<String, String, Integer> previousLex = null;
 

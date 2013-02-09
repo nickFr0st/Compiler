@@ -2,13 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/SyntaxAnalyzer.java" afterPath="$PROJECT_DIR$/src/SyntaxAnalyzer.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Symbol.java" />
+      <change type="MOVED" beforePath="C:\Users\Nathanael\Documents\GitHub\Compiler\4490\src\SyntaxAnalyzer.java" afterPath="$PROJECT_DIR$/src/SyntaxAndSemanticAnalyzer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ProgramDriver.java" afterPath="$PROJECT_DIR$/src/ProgramDriver.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1360046085315" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1360301151250" ignored="false" />
+    <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1360439840527" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1360435404831" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
     <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358015897687" ignored="false" />
     <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1360434188382" ignored="false" />
@@ -17,7 +19,8 @@
     <file path="/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1360042356589" ignored="false" />
     <file path="/SyntacsAnalyer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358913752123" ignored="false" />
     <file path="/SyntaxAnalyer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359012344904" ignored="false" />
-    <file path="/SyntaxAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1360435213193" ignored="false" />
+    <file path="/SyntaxAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1360439985127" ignored="false" />
+    <file path="/Symbol.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1360439596409" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +71,7 @@
       </breakpoint>
     </breakpoint_any>
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/SyntaxAnalyzer.java" line="591" class="SyntaxAnalyzer" package="">
+      <breakpoint url="file://$PROJECT_DIR$/src/SyntaxAndSemanticAnalyzer.java" line="594" class="SyntaxAnalyzer" package="">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -95,18 +98,31 @@
       <file leaf-file-name="ProgramDriver.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ProgramDriver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="47" selection-start="66" selection-end="66" vertical-scroll-proportion="0.0">
+            <state line="15" column="28" selection-start="531" selection-end="531" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#265#281#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Symbol.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Symbol.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="21" selection-start="437" selection-end="437" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SyntaxAnalyzer.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/SyntaxAnalyzer.java">
+      <file leaf-file-name="SyntaxAndSemanticAnalyzer.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/SyntaxAndSemanticAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="308" column="153" selection-start="19415" selection-end="19415" vertical-scroll-proportion="0.4871795">
+            <state line="17" column="29" selection-start="610" selection-end="610" vertical-scroll-proportion="-0.15384616">
               <folding>
-                <element signature="e#921#953#0" expanded="true" />
+                <element signature="e#367#399#0" expanded="true" />
+                <element signature="e#478#510#0" expanded="true" />
+                <element signature="e#1087#1119#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -115,7 +131,7 @@
       <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/LexicalAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="168" column="73" selection-start="4598" selection-end="4598" vertical-scroll-proportion="0.0">
+            <state line="168" column="0" selection-start="4598" selection-end="4598" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -148,8 +164,12 @@
         <option value="$PROJECT_DIR$/src/SyntaxAnalyer.java" />
         <option value="$PROJECT_DIR$/src/Tuple.java" />
         <option value="$PROJECT_DIR$/src/LexicalAnalyzer.java" />
-        <option value="$PROJECT_DIR$/src/ProgramDriver.java" />
         <option value="$PROJECT_DIR$/src/SyntaxAnalyzer.java" />
+        <option value="$PROJECT_DIR$/src/SyntaxAndSematicAnalyzer.java" />
+        <option value="$PROJECT_DIR$/src/SyntaxAndSymaticAnalyzer.java" />
+        <option value="$PROJECT_DIR$/src/Symbol.java" />
+        <option value="$PROJECT_DIR$/src/ProgramDriver.java" />
+        <option value="$PROJECT_DIR$/src/SyntaxAndSemanticAnalyzer.java" />
       </list>
     </option>
   </component>
@@ -239,6 +259,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="4490" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Complier" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="4490" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -510,7 +544,11 @@
       <created>1360301154502</created>
       <updated>1360301154502</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="validates if, else, and while statements">
+      <created>1360435406832</created>
+      <updated>1360435406832</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -601,7 +639,7 @@
     <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="added some notes" />
+    <option name="LAST_COMMIT_MESSAGE" value="validates if, else, and while statements" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -614,7 +652,6 @@
     <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="removed test comment" />
     <MESSAGE value="fixed char checking bug" />
     <MESSAGE value="test" />
     <MESSAGE value="reverted" />
@@ -639,6 +676,7 @@
     <MESSAGE value="added more validation" />
     <MESSAGE value="handles itoa and atoi" />
     <MESSAGE value="added some notes" />
+    <MESSAGE value="validates if, else, and while statements" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -660,13 +698,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/ProgramDriver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="48" selection-start="255" selection-end="255" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/LexicalAnalyzer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="244" column="0" selection-start="8298" selection-end="8298" vertical-scroll-proportion="0.0">
@@ -677,7 +708,9 @@
     <entry file="file://$PROJECT_DIR$/src/ProgramDriver.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="9" column="48" selection-start="255" selection-end="255" vertical-scroll-proportion="0.0">
-          <folding />
+          <folding>
+            <element signature="e#265#281#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -691,7 +724,9 @@
     <entry file="file://$PROJECT_DIR$/src/ProgramDriver.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="9" column="41" selection-start="248" selection-end="248" vertical-scroll-proportion="0.0">
-          <folding />
+          <folding>
+            <element signature="e#265#281#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -705,7 +740,9 @@
     <entry file="file://$PROJECT_DIR$/src/ProgramDriver.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="9" column="41" selection-start="248" selection-end="248" vertical-scroll-proportion="0.0">
-          <folding />
+          <folding>
+            <element signature="e#265#281#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -719,7 +756,9 @@
     <entry file="file://$PROJECT_DIR$/src/ProgramDriver.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="9" column="41" selection-start="248" selection-end="248" vertical-scroll-proportion="0.0">
-          <folding />
+          <folding>
+            <element signature="e#265#281#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -733,7 +772,9 @@
     <entry file="file://$PROJECT_DIR$/src/ProgramDriver.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="8" column="41" selection-start="204" selection-end="204" vertical-scroll-proportion="0.0">
-          <folding />
+          <folding>
+            <element signature="e#265#281#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -749,25 +790,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/ProgramDriver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="47" selection-start="66" selection-end="66" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/LexicalAnalyzer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="168" column="73" selection-start="4598" selection-end="4598" vertical-scroll-proportion="0.0">
+        <state line="168" column="0" selection-start="4598" selection-end="4598" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/SyntaxAnalyzer.java">
+    <entry file="file://$PROJECT_DIR$/src/Symbol.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="308" column="153" selection-start="19415" selection-end="19415" vertical-scroll-proportion="0.4871795">
+        <state line="14" column="21" selection-start="437" selection-end="437" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ProgramDriver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="28" selection-start="531" selection-end="531" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#921#953#0" expanded="true" />
+            <element signature="e#265#281#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SyntaxAndSemanticAnalyzer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="29" selection-start="610" selection-end="610" vertical-scroll-proportion="-0.15384616">
+          <folding>
+            <element signature="e#367#399#0" expanded="true" />
+            <element signature="e#478#510#0" expanded="true" />
+            <element signature="e#1087#1119#0" expanded="true" />
           </folding>
         </state>
       </provider>

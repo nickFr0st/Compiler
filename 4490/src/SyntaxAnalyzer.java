@@ -110,7 +110,9 @@ public class SyntaxAnalyzer {
                 }
 
 
-                // validate statements
+                /**\
+                 * validate keywords
+                 */
                 if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.KEYWORD.name())) {
                     if (currentLex.lexi.equals("return")) {
                         if (!tempList.get(0).lexi.equals("return")) {
@@ -274,16 +276,80 @@ public class SyntaxAnalyzer {
                      * validate if statement
                      */
                     if (currentLex.lexi.equals("if")) {
-                        // todo: add logic
-                        // extract to a method so can be used in the else check
+                        if (!tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                            errorList += "Invalid if statement argument. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+
+                        if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                            errorList += "Missing if statement arguments. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+
+                        if (!isValidRelationParameterType(tempList, i + 2)) {
+                            errorList += "If statement contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+                        previousLex = currentLex;
+                        continue;
                     }
 
                     if (currentLex.lexi.equals("else")) {
-                        // todo: add logic
+
+                        if (tempList.get(i + 1).lexi.equals("if")) {
+                            if (!tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                                errorList += "Invalid if statement argument. Line: " + currentLex.lineNum + "\n";
+                                previousLex = currentLex;
+                                continue;
+                            }
+
+                            if (tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                                errorList += "Missing if statement arguments. Line: " + currentLex.lineNum + "\n";
+                                previousLex = currentLex;
+                                continue;
+                            }
+
+                            if (!isValidRelationParameterType(tempList, i + 3)) {
+                                errorList += "If statement contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                                previousLex = currentLex;
+                                continue;
+                            }
+                            previousLex = currentLex;
+                            continue;
+                        }
+
+                        if (!tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
+                            errorList += "Invalid else statement. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+                        previousLex = currentLex;
+                        continue;
                     }
 
                     if (currentLex.lexi.equals("while")) {
-                        // todo: add logic
+                        if (!tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                            errorList += "Invalid while argument statement. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+
+                        if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                            errorList += "Missing while statement arguments. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+
+                        if (!isValidRelationParameterType(tempList, i + 2)) {
+                            errorList += "While statement contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+                        previousLex = currentLex;
+                        continue;
                     }
 
                 }
@@ -522,6 +588,47 @@ public class SyntaxAnalyzer {
         return false;
     }
 
+    private boolean isValidRelationParameterType(List<Tuple<String, String, Integer>> tempList, int index) {
+        if ((tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(index).lexi.toCharArray()[0])) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) || tempList.get(index).lexi.equals("true") || tempList.get(index).lexi.equals("false")) {
+            if (tempList.get(index).lexi.equals("(")) {
+                index++;
+            }
+            if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+                if (!tempList.get(index + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
+                    return false;
+                }
+                if (!tempList.get(index + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                    return false;
+                }
+                index = index + 3;
+            }
+            if (tempList.get(index + 1).lexi.equals(".")) {
+                index = index + 2;
+                if (!isValidRelationParameterType(tempList, index)) {
+                    return false;
+                }
+            }
+            if (tempList.get(index + 1).lexi.equals("(")) {
+                if (!tempList.get(index + 2).lexi.equals(")")) {
+                    index = index + 2;
+                    if (!isValidRelationParameterType(tempList, index)) {
+                        return false;
+                    }
+                } else {
+                    index++;
+                }
+            }
+            if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name()) || tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
+                return isValidRelationParameterType(tempList, index + 2);
+            } else if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
     private boolean isValidCalledParameterTypeITOA(List<Tuple<String, String, Integer>> tempList, int index) {
         if ((tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(index).lexi.toCharArray()[0])) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
             if (tempList.get(index + 1).lexi.equals(".")) {
@@ -673,7 +780,7 @@ public class SyntaxAnalyzer {
     }
 
     private void validateMathOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) {
-        if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
+        if (nextLex.equals(null) || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex.equals(null)) {
             errorList += "Mathematical operators require a right hand value. Line: " + currentLex.lineNum + "\n";
         }
 
@@ -723,9 +830,10 @@ public class SyntaxAnalyzer {
             return true;
         else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()))
             return true;
-        else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+        else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()))
             return true;
-        }
+        else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name()))
+            return true;
 
         return false;
     }

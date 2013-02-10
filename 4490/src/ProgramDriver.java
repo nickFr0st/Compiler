@@ -12,11 +12,14 @@ public class ProgramDriver {
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
         lexicalAnalyzer.processFile("testFile.kxi");
 
-        SyntaxAndSemanticAnalyzer syntaxAnalyzer = new SyntaxAndSemanticAnalyzer(lexicalAnalyzer);
-        syntaxAnalyzer.evaluate(symbolTable);
+        SyntaxAndSemanticAnalyzer syntaxAnalyzer = new SyntaxAndSemanticAnalyzer(lexicalAnalyzer, symbolTable);
+        syntaxAnalyzer.evaluate();
 
+        System.out.printf("%-15s %-15s %-15s %-15s", "Type", "Name", "Scope", "Id");
+        System.out.println();
         for (String s : symbolTable.keySet()) {
-            System.out.println(symbolTable.get(s).getValue() + " " + symbolTable.get(s).getScope() + " " + symbolTable.get(s).getSymId() );
+            String s1 = String.format("%-15s %-15s %-15s %-15s", symbolTable.get(s).getKind(), symbolTable.get(s).getValue(), symbolTable.get(s).getScope(), symbolTable.get(s).getSymId());
+            System.out.println(s1);
         }
 
         System.out.println("Success");

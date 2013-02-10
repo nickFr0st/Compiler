@@ -12,4 +12,12 @@ public class VaribleData implements IData {
         this.type = type;
         this.accessMod = accessMod;
     }
+
+    public String getAccessMod() {
+        return accessMod;
+    }
+
+    public String getType() {
+        return type;
+    }
 }

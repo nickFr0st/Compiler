@@ -23,39 +23,19 @@ public class Symbol {
         return scope;
     }
 
-    public void setScope(String scope) {
-        this.scope = scope;
-    }
-
     public String getSymId() {
         return symId;
-    }
-
-    public void setSymId(String symId) {
-        this.symId = symId;
     }
 
     public String getValue() {
         return value;
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
-
     public String getKind() {
         return kind;
     }
 
-    public void setKind(String kind) {
-        this.kind = kind;
-    }
-
     public IData getData() {
         return data;
-    }
-
-    public void setData(IData data) {
-        this.data = data;
     }
 }

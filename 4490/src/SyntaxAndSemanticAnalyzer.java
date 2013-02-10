@@ -13,6 +13,7 @@ public class SyntaxAndSemanticAnalyzer {
     private List<Tuple<String, String, Integer>> openParens = new ArrayList<Tuple<String, String, Integer>>();
     private List<Tuple<String, String, Integer>> openBlocks = new ArrayList<Tuple<String, String, Integer>>();
     private LinkedHashMap<String, Symbol> symbolTable;
+    private List<String> paramIdList = new ArrayList<String>();
     private String errorList = "";
     private String scope = "g";
     private int statementInr = 1;
@@ -186,7 +187,6 @@ public class SyntaxAndSemanticAnalyzer {
                                                 continue;
                                             }
                                         }
-                                        //todo: arrayList
                                         addToSymbolTable("Function", new ArrayList<String>(), tempList.get(2).lexi, tempList.get(0).lexi, "main", currentLex.lineNum);
                                         previousLex = currentLex;
                                         continue;
@@ -202,7 +202,6 @@ public class SyntaxAndSemanticAnalyzer {
                                             errorList += "Function '" + tempList.get(1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
                                         }
                                     } else if (tempList.get(2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) && tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
-                                        // todo: need fix array list of parameters area
                                         addToSymbolTable("Function", new ArrayList<String>(), tempList.get(1).lexi, tempList.get(0).lexi, tempList.get(1).lexi, currentLex.lineNum);
                                         // all good
                                     } else {
@@ -210,11 +209,11 @@ public class SyntaxAndSemanticAnalyzer {
                                             addToSymbolTable("ivar", new ArrayList<String>(), tempList.get(1).lexi, tempList.get(0).lexi, tempList.get(2).lexi, currentLex.lineNum);
                                             // all good
                                         } else if (tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && !tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                                            paramIdList = new ArrayList<String>();
                                             if (!isValidParameterDeclarationType(tempList, 4)) {
                                                 errorList += "Function '" + tempList.get(2).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
                                             } else {
-                                                // todo: need fix array list of parameters area
-                                                addToSymbolTable("Function", new ArrayList<String>(), tempList.get(1).lexi, tempList.get(0).lexi, tempList.get(2).lexi, currentLex.lineNum);
+                                                addToSymbolTable("Function", paramIdList, tempList.get(1).lexi, tempList.get(0).lexi, tempList.get(2).lexi, currentLex.lineNum);
                                             }
                                         } else if (tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) && tempList.get(5).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
                                             addToSymbolTable("Function", new ArrayList<String>(), tempList.get(1).lexi, tempList.get(0).lexi, tempList.get(2).lexi, currentLex.lineNum);
@@ -461,13 +460,13 @@ public class SyntaxAndSemanticAnalyzer {
                                 // all good
                             } else if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
                                 if (!tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                                    paramIdList = new ArrayList<String>();
                                     if (!isValidParameterDeclarationType(tempList, i + 3)) {
                                         errorList += "Function '" + tempList.get(1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
                                     } else {
-                                        addToSymbolTable("Function", new ArrayList<String>(), tempList.get(0).lexi, "private", tempList.get(1).lexi, currentLex.lineNum);
+                                        addToSymbolTable("Function", paramIdList, tempList.get(0).lexi, "private", tempList.get(1).lexi, currentLex.lineNum);
                                     }
                                 } else if (tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) && (tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name()))) {
-                                    // todo: fix array list parameter
                                     addToSymbolTable("Function", new ArrayList<String>(), tempList.get(0).lexi, "private", tempList.get(1).lexi, currentLex.lineNum);
                                     // all good
                                 } else {
@@ -603,8 +602,15 @@ public class SyntaxAndSemanticAnalyzer {
                 return false;
             }
             if (tempList.get(index + 2).lexi.equals(",")) {
-                return isValidParameterDeclarationType(tempList, index + 3);
+                if (isValidParameterDeclarationType(tempList, index + 3)) {
+                    addToSymbolTable("pvar", new ArrayList<String>(), tempList.get(index).lexi, "private", tempList.get(index + 1).lexi, tempList.get(0).lineNum);
+                    paramIdList.add(symbolTable.get("P" + (symIdInr -1)).getSymId());
+                    return true;
+                }
+                return false;
             } else if (tempList.get(index + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                addToSymbolTable("pvar", new ArrayList<String>(), tempList.get(index).lexi, "private", tempList.get(index + 1).lexi, tempList.get(0).lineNum);
+                paramIdList.add(symbolTable.get("P" + (symIdInr -1)).getSymId());
                 return true;
             } else {
                 return false;
@@ -904,20 +910,13 @@ public class SyntaxAndSemanticAnalyzer {
     }
 
     private boolean isLHSinValidFormat(Tuple<String, String, Integer> peekPrevious) {
-        if (peekPrevious == null)
-            return true;
-        else if (peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()))
-            return true;
-        else if (peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()))
-            return true;
-
-        return false;
+        return (peekPrevious == null || peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()) || peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()));
     }
 
     private void addToSymbolTable(String type, List<String> params, String returnType, String accessMod, String value, int lineNum) {
         for (String key : symbolTable.keySet()) {
             Symbol s = symbolTable.get(key);
-            if (s.getScope().equals(scope) && s.getValue().equals(value)) {
+            if (s.getScope().equals(scope) && s.getValue().equals(value) && s.getKind().equals(type)) {
                 errorList += "Found duplicate declaration of '" + value + "'. Line: " + lineNum + "\n";
                 return;
             }
@@ -929,6 +928,8 @@ public class SyntaxAndSemanticAnalyzer {
         } else if (type.equals("Function")) {
             symbolTable.put("F" + symIdInr++, new Symbol(scope, "F" + symIdInr, value, type, new FunctionData(accessMod, params, returnType)));
             scope += "." + value;
+        } else if (type.equals("pvar")) {
+            symbolTable.put("P" + symIdInr++, new Symbol(scope, "P" + symIdInr, value, type, new VaribleData(returnType, accessMod)));
         } else {
             symbolTable.put("V" + symIdInr++, new Symbol(scope, "V" + symIdInr, value, type, new VaribleData(returnType, accessMod)));
         }

@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Created with IntelliJ IDEA.
@@ -8,7 +9,7 @@ import java.util.List;
  * Date: 1/22/13
  * Time: 8:59 PM
  */
-public class SyntaxAndSemanticAnalyzer {
+public class Compiler {
     private LexicalAnalyzer lexicalAnalyzer;
     private List<Tuple<String, String, Integer>> openParens = new ArrayList<Tuple<String, String, Integer>>();
     private List<Tuple<String, String, Integer>> openBlocks = new ArrayList<Tuple<String, String, Integer>>();
@@ -19,7 +20,7 @@ public class SyntaxAndSemanticAnalyzer {
     private int statementInr = 1;
     private int symIdInr = 100;
 
-    public SyntaxAndSemanticAnalyzer(LexicalAnalyzer lexicalAnalyzer, LinkedHashMap<String, Symbol> symbolTable) {
+    public Compiler(LexicalAnalyzer lexicalAnalyzer, LinkedHashMap<String, Symbol> symbolTable) {
         this.lexicalAnalyzer = lexicalAnalyzer;
         this.symbolTable = symbolTable;
     }
@@ -168,29 +169,27 @@ public class SyntaxAndSemanticAnalyzer {
                             if (tempList.size() < 4) {
                                 errorList += "There are to few arguments in declaration. Line: " + currentLex.lineNum + "\n";
                             } else {
-                                if (tempList.get(i + 1).lexi.equals("static") && tempList.get(i + 2).lexi.equals("void")) {
-                                    if (tempList.get(i + 3).lexi.equals("main")) {
-                                        if (!tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-                                            errorList += "Main function is missing the argument list. Line: " + currentLex.lineNum + "\n";
-                                            previousLex = currentLex;
-                                            continue;
-                                        } else {
-                                            if (tempList.get(i + 5).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                                                if (!tempList.get(i + 6).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
-                                                    errorList += "Main function declaration must end with an block begin token ({). Line: " + currentLex.lineNum + "\n";
-                                                    previousLex = currentLex;
-                                                    continue;
-                                                }
-                                            } else {
+                                if (tempList.get(i + 1).lexi.equals("void") && tempList.get(i + 2).lexi.equals("main")) {
+                                    if (!tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                                        errorList += "Main function is missing the argument list. Line: " + currentLex.lineNum + "\n";
+                                        previousLex = currentLex;
+                                        continue;
+                                    } else {
+                                        if (tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                                            if (!tempList.get(i + 5).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
                                                 errorList += "Main function declaration must end with an block begin token ({). Line: " + currentLex.lineNum + "\n";
                                                 previousLex = currentLex;
                                                 continue;
                                             }
+                                        } else {
+                                            errorList += "Main function declaration must end with an block begin token ({). Line: " + currentLex.lineNum + "\n";
+                                            previousLex = currentLex;
+                                            continue;
                                         }
-                                        addToSymbolTable("Function", new ArrayList<String>(), tempList.get(2).lexi, tempList.get(0).lexi, "main", currentLex.lineNum);
-                                        previousLex = currentLex;
-                                        continue;
                                     }
+                                    addToSymbolTable("Function", new ArrayList<String>(), tempList.get(2).lexi, tempList.get(0).lexi, "main", currentLex.lineNum);
+                                    previousLex = currentLex;
+                                    continue;
                                 }
                                 if (!isValidReturnType(tempList.get(1).lexi, tempList.get(i + 1).type)) {
                                     errorList += "Function or object requires a valid type. Line: " + currentLex.lineNum + "\n";
@@ -556,6 +555,46 @@ public class SyntaxAndSemanticAnalyzer {
             System.out.print(e.getMessage());
             System.exit(0);
         }
+
+        // pass two
+        lexicalAnalyzer.resetList();
+
+        while (lexicalAnalyzer.hasNext()) {
+            Tuple<String, String, Integer> temp;
+            List<Tuple<String, String, Integer>> tempList = new ArrayList<Tuple<String, String, Integer>>();
+
+            Stack<Tuple<String, String, Integer>> SAS = new Stack<Tuple<String, String, Integer>>();
+            Stack<Tuple<String, String, Integer>> OS = new Stack<Tuple<String, String, Integer>>();
+
+            temp = lexicalAnalyzer.getNext();
+            while (canAddToList(temp)) {
+                tempList.add(temp);
+                temp = lexicalAnalyzer.getNext();
+            }
+            tempList.add(temp);
+
+            if (tempList.isEmpty()) {
+                continue;
+            }
+
+
+            for (int i = 0; i < tempList.size(); i++) {
+
+
+               if (tempList.get(i).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(i).lexi.toCharArray()[0])) {
+                    SAS.push(tempList.get(i));
+               }
+
+               if (tempList.get(i).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+                   OS.push(tempList.get(i));
+               }
+
+            }
+
+        }
+
+
+
     }
 
     private boolean isLHSofDotValid(List<Tuple<String, String, Integer>> tempList, int index) {
@@ -604,13 +643,13 @@ public class SyntaxAndSemanticAnalyzer {
             if (tempList.get(index + 2).lexi.equals(",")) {
                 if (isValidParameterDeclarationType(tempList, index + 3)) {
                     addToSymbolTable("pvar", new ArrayList<String>(), tempList.get(index).lexi, "private", tempList.get(index + 1).lexi, tempList.get(0).lineNum);
-                    paramIdList.add(symbolTable.get("P" + (symIdInr -1)).getSymId());
+                    paramIdList.add(symbolTable.get("P" + (symIdInr - 1)).getSymId());
                     return true;
                 }
                 return false;
             } else if (tempList.get(index + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 addToSymbolTable("pvar", new ArrayList<String>(), tempList.get(index).lexi, "private", tempList.get(index + 1).lexi, tempList.get(0).lineNum);
-                paramIdList.add(symbolTable.get("P" + (symIdInr -1)).getSymId());
+                paramIdList.add(symbolTable.get("P" + (symIdInr - 1)).getSymId());
                 return true;
             } else {
                 return false;

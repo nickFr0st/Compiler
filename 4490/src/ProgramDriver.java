@@ -12,7 +12,7 @@ public class ProgramDriver {
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
         lexicalAnalyzer.processFile("testFile.kxi");
 
-        SyntaxAndSemanticAnalyzer syntaxAnalyzer = new SyntaxAndSemanticAnalyzer(lexicalAnalyzer, symbolTable);
+        Compiler syntaxAnalyzer = new Compiler(lexicalAnalyzer, symbolTable);
         syntaxAnalyzer.evaluate();
 
 //        System.out.printf("%-15s %-15s %-15s %-15s", "Type", "Name", "Scope", "Id");

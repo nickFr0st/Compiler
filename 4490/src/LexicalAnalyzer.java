@@ -306,49 +306,17 @@ public class LexicalAnalyzer {
         return lexicalList.get(lexPtr++);
     }
 
-    public Tuple<String, String, Integer> peekNext() {
-        try {
-            lexicalList.get(lexPtr);
-        } catch (IndexOutOfBoundsException e) {
-            return null;
-        }
-        return lexicalList.get(lexPtr);
-    }
-
-    public Tuple<String, String, Integer> peekPrevious() {
-        try {
-            lexicalList.get(lexPtr - 2);
-        } catch (IndexOutOfBoundsException e) {
-            return null;
-        }
-        return lexicalList.get(lexPtr - 2);
-    }
-
-    public Tuple<String, String, Integer> peekTwoPrevious() {
-        try {
-            lexicalList.get(lexPtr - 3);
-        } catch (IndexOutOfBoundsException e) {
-            return null;
-        }
-        return lexicalList.get(lexPtr - 3);
-    }
-
-    public Tuple<String, String, Integer> getPrevious() {
-        try {
-            lexicalList.get(--lexPtr);
-        } catch (IndexOutOfBoundsException e) {
-            return null;
-        }
-        return lexicalList.get(--lexPtr);
-    }
-
     public Tuple<String, String, Integer> get(int ptr) {
         try {
-            lexicalList.get(lexPtr);
+            lexicalList.get(ptr);
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
-        return lexicalList.get(lexPtr);
+        return lexicalList.get(ptr);
+    }
+
+    public void resetList() {
+        lexPtr = 0;
     }
 
     public void clearList() {

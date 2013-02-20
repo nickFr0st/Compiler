@@ -558,13 +558,14 @@ public class Compiler {
 
         // pass two
         lexicalAnalyzer.resetList();
+        String Sscope = "g";
 
         while (lexicalAnalyzer.hasNext()) {
             Tuple<String, String, Integer> temp;
             List<Tuple<String, String, Integer>> tempList = new ArrayList<Tuple<String, String, Integer>>();
 
-            Stack<Tuple<String, String, Integer>> SAS = new Stack<Tuple<String, String, Integer>>();
-            Stack<Tuple<String, String, Integer>> OS = new Stack<Tuple<String, String, Integer>>();
+            Stack<SAR> SAS = new Stack<SAR>();
+            Stack<SAR> OS = new Stack<SAR>();
 
             temp = lexicalAnalyzer.getNext();
             while (canAddToList(temp)) {
@@ -577,24 +578,160 @@ public class Compiler {
                 continue;
             }
 
+            int lastOprPrecedence = 0;
 
             for (int i = 0; i < tempList.size(); i++) {
+                Tuple item = tempList.get(i);
+                // setup scope
+                if (tempList.get(tempList.size() - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
+                    if (tempList.get(0).lexi.equals("public") || tempList.get(0).lexi.equals("private")) {
+                        if (!tempList.get(2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                            Sscope += "." + tempList.get(2).lexi;
+                        } else {
+                            Sscope += "." + tempList.get(1).lexi;
+                        }
+                    } else {
+                        if (isValidReturnType(tempList.get(0).lexi, tempList.get(0).type) || tempList.get(0).lexi.equals("class")) {
+                            Sscope += "." + tempList.get(1).lexi;
+                        }
+                    }
+                }
+
+                if (isLettialExpression(tempList.get(i))) {
+                    SAS.push(new SAR(tempList.get(i), Sscope));
+                }
+
+                if (isIdentifierExpression(tempList.get(i))) {
+                    SAR sar = new SAR(tempList.get(i), Sscope);
+
+                    if (iExist(symbolTable, sar)) {
+                        SAS.push(new SAR(tempList.get(i), Sscope));
+                    } else {
+                        errorList += "identifier has not been declared in scope. Line: " + tempList.get(i).lineNum + "\n";
+                        i = tempList.size() - 1;
+                        continue;
+                    }
+                }
+
+                if (isExpressionZ(tempList.get(i))) {
+                    int precedence = setPrecedence(tempList.get(i).lexi);
+
+                    if (item.lexi.equals(")")) {
+                        while (!OS.isEmpty() && !OS.peek().equals("(")) {
+                            if (OS.peek() == null) {
+                                errorList += "Missing opening paren. Line: " + item.lineNum + "\n";
+                                i = tempList.size() - 1;
+                                continue;
+                            }
+                            SAS.push(OS.pop());
+                        }
+                        if (!OS.isEmpty()) {
+                            OS.pop();
+                        }
+                        continue;
+                    }
+
+                    if (item.lexi.equals("]")) {
+                        while (!OS.isEmpty() && !OS.peek().equals("[")) {
+                            if (OS.peek() == null) {
+                                errorList += "Missing opening array. Line: " + item.lineNum + "\n";
+                                i = tempList.size() - 1;
+                                continue;
+                            }
+                            SAS.push(OS.pop());
+                        }
+                        if (!OS.isEmpty()) {
+                            OS.pop();
+                        }
+                        continue;
+                    }
+
+                    if (precedence > lastOprPrecedence) {
+                        OS.push(new SAR(item, Sscope));
+                    } else if (precedence <= lastOprPrecedence) {
+                        if (!OS.isEmpty()) {
+                            SAS.push(OS.pop());
+                        }
+                        OS.push(new SAR(item, Sscope));
+                    }
+
+                    lastOprPrecedence = precedence;
+                }
 
 
-               if (tempList.get(i).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(i).lexi.toCharArray()[0])) {
-                    SAS.push(tempList.get(i));
-               }
+                if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                    while(!OS.isEmpty()) {
+                        SAS.push(OS.pop());
+                    }
+                }
 
-               if (tempList.get(i).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
-                   OS.push(tempList.get(i));
-               }
-
+                // take down scope
+                // todo: this is where we do the method evaluation
+                if (tempList.get(i).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
+                    if (openBlocks.size() == 0) {
+                        errorList += "Invalid closing block on line: " + tempList.get(i).lineNum + "\n";
+                    } else {
+                        if (!Sscope.equals("g")) {
+                            Sscope = Sscope.substring(0, Sscope.lastIndexOf('.'));
+                        }
+                        openBlocks.remove(openBlocks.size() - 1);
+                    }
+                }
             }
 
         }
 
+        try {
+            if (!errorList.isEmpty()) {
+                throw new IllegalArgumentException(errorList);
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.print(e.getMessage());
+            System.exit(0);
+        }
+    }
 
+    private int setPrecedence(String opr) {
+        if (opr.equals(".") || opr.equals("(") || opr.equals("[")) {
+            return 15;
+        } else if (opr.equals(")") || opr.equals("]")) {
+            return 0;
+        } else if (opr.equals("*") || opr.equals("/") || opr.equals("%")) {
+            return 13;
+        } else if (opr.equals("<") || opr.equals(">") || opr.equals("<=") || opr.equals(">=")) {
+            return 9;
+        } else if (opr.equals("==") || opr.equals("!=")) {
+            return 7;
+        } else if (opr.equals("&&")) {
+            return 5;
+        } else if (opr.equals("||")) {
+            return 3;
+        } else if (opr.equals("=")) {
+            return 1;
+        }
+        return 0;
+    }
 
+    private boolean isExpressionZ(Tuple<String, String, Integer> lexi) {
+        return (lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()) || lexi.lexi.equals("."));
+    }
+
+    private boolean iExist(LinkedHashMap<String, Symbol> symbolTable, SAR sar) {
+        for (String key : symbolTable.keySet()) {
+            Symbol s = symbolTable.get(key);
+            if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sar.getScope())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isIdentifierExpression(Tuple<String, String, Integer> lexi) {
+        return (Character.isLowerCase(lexi.lexi.toCharArray()[0]) && lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()));
+    }
+
+    private boolean isLettialExpression(Tuple<String, String, Integer> lexi) {
+        return (lexi.lexi.equals("true") || lexi.lexi.equals("false") || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()) || lexi.lexi.equals("null"));
     }
 
     private boolean isLHSofDotValid(List<Tuple<String, String, Integer>> tempList, int index) {

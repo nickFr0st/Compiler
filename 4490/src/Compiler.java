@@ -556,11 +556,14 @@ public class Compiler {
             System.exit(0);
         }
 
-        // pass two
+        /**
+         *  pass two
+         **/
         lexicalAnalyzer.resetList();
         String Sscope = "g";
 
         while (lexicalAnalyzer.hasNext()) {
+            // setting up items to be parsed
             Tuple<String, String, Integer> temp;
             List<Tuple<String, String, Integer>> tempList = new ArrayList<Tuple<String, String, Integer>>();
 
@@ -580,16 +583,20 @@ public class Compiler {
 
             int lastOprPrecedence = 0;
 
+            // evaluate semantics
             for (int i = 0; i < tempList.size(); i++) {
-                Tuple item = tempList.get(i);
+                Tuple<String, String, Integer> item = tempList.get(i);
                 // setup scope
-                if (tempList.get(tempList.size() - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
+                if (tempList.get(i).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
+                    openBlocks.add(tempList.get(i));
                     if (tempList.get(0).lexi.equals("public") || tempList.get(0).lexi.equals("private")) {
                         if (!tempList.get(2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
                             Sscope += "." + tempList.get(2).lexi;
                         } else {
                             Sscope += "." + tempList.get(1).lexi;
                         }
+                    }else if (tempList.get(0).lexi.trim().equals("if") || tempList.get(0).lexi.trim().equals("else") || tempList.get(0).lexi.trim().equals("while")) {
+                        Sscope += "." + tempList.get(0).lexi;
                     } else {
                         if (isValidReturnType(tempList.get(0).lexi, tempList.get(0).type) || tempList.get(0).lexi.equals("class")) {
                             Sscope += "." + tempList.get(1).lexi;
@@ -597,19 +604,27 @@ public class Compiler {
                     }
                 }
 
-                if (isLettialExpression(tempList.get(i))) {
-                    SAS.push(new SAR(tempList.get(i), Sscope));
+                // get type
+
+                if (isLiteralExpression(tempList.get(i))) {
+                    if (tempList.get(i).lexi.equals("true") || tempList.get(i).lexi.equals("false")) {
+                        SAS.push(new SAR(tempList.get(i), Sscope, "bool"));
+                    } else if (tempList.get(i).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
+                        SAS.push(new SAR(tempList.get(i), Sscope, "int"));
+                    } else if (tempList.get(i).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
+                        SAS.push(new SAR(tempList.get(i), Sscope, "char"));
+                    } else if (tempList.get(i).lexi.equals("null")) {
+                        SAS.push(new SAR(tempList.get(i), Sscope, "null"));
+                    }
                 }
 
                 if (isIdentifierExpression(tempList.get(i))) {
-                    SAR sar = new SAR(tempList.get(i), Sscope);
-
+                    SAR sar = new SAR(tempList.get(i), Sscope, "");
                     if (iExist(symbolTable, sar)) {
-                        SAS.push(new SAR(tempList.get(i), Sscope));
+                        // todo: add type to sar
+                        SAS.push(sar);
                     } else {
                         errorList += "identifier has not been declared in scope. Line: " + tempList.get(i).lineNum + "\n";
-                        i = tempList.size() - 1;
-                        continue;
                     }
                 }
 
@@ -620,39 +635,33 @@ public class Compiler {
                         while (!OS.isEmpty() && !OS.peek().equals("(")) {
                             if (OS.peek() == null) {
                                 errorList += "Missing opening paren. Line: " + item.lineNum + "\n";
-                                i = tempList.size() - 1;
-                                continue;
                             }
                             SAS.push(OS.pop());
                         }
                         if (!OS.isEmpty()) {
                             OS.pop();
                         }
-                        continue;
                     }
 
                     if (item.lexi.equals("]")) {
                         while (!OS.isEmpty() && !OS.peek().equals("[")) {
                             if (OS.peek() == null) {
                                 errorList += "Missing opening array. Line: " + item.lineNum + "\n";
-                                i = tempList.size() - 1;
-                                continue;
                             }
                             SAS.push(OS.pop());
                         }
                         if (!OS.isEmpty()) {
                             OS.pop();
                         }
-                        continue;
                     }
 
                     if (precedence > lastOprPrecedence) {
-                        OS.push(new SAR(item, Sscope));
+                        OS.push(new SAR(item, Sscope, ""));
                     } else if (precedence <= lastOprPrecedence) {
                         if (!OS.isEmpty()) {
-                            SAS.push(OS.pop());
+                            addTempToSAS(OS.pop(), SAS);
                         }
-                        OS.push(new SAR(item, Sscope));
+                        OS.push(new SAR(item, Sscope, ""));
                     }
 
                     lastOprPrecedence = precedence;
@@ -661,9 +670,10 @@ public class Compiler {
 
                 if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                     while(!OS.isEmpty()) {
-                        SAS.push(OS.pop());
+                        addTempToSAS(OS.pop(), SAS);;
                     }
                 }
+
 
                 // take down scope
                 // todo: this is where we do the method evaluation
@@ -689,6 +699,35 @@ public class Compiler {
             System.out.print(e.getMessage());
             System.exit(0);
         }
+    }
+
+    private void addTempToSAS(SAR opr, Stack<SAR> SAS) {
+        if (opr.getLexi().lexi.equals("=")) {
+            if (SAS.size() < 2) {
+                errorList += "Binary operations require both a left and right hand side. Line: " + opr.getLexi().lineNum + "\n";
+                return;
+            }
+            SAR RHS = SAS.pop();
+            SAR LHS = SAS.pop();
+
+            if (!sarEqualAssignment(RHS, LHS)) {
+                errorList += "left and right operand types are incompatible. Line: " + opr.getLexi().lineNum + "\n";
+                return;
+            }
+        }
+    }
+
+    private boolean sarEqualAssignment(SAR rhs, SAR lhs) {
+        if (lhs.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER)) {
+            if (Character.isUpperCase(lhs.getLexi().lexi.toCharArray()[0])) {
+                errorList += "left hand side must be an object of a class or type. Line:" + lhs.getLexi().lineNum + "\n";
+                return false;
+            }
+        }
+        if (!lhs.getType().equals(rhs.getType())) {
+            return false;
+        }
+        return true;
     }
 
     private int setPrecedence(String opr) {
@@ -719,8 +758,21 @@ public class Compiler {
     private boolean iExist(LinkedHashMap<String, Symbol> symbolTable, SAR sar) {
         for (String key : symbolTable.keySet()) {
             Symbol s = symbolTable.get(key);
-            if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sar.getScope())) {
+            String sarScope = sar.getScope();
+            if (sarScope.equals("g")) {
                 return true;
+            }
+
+            while(!sarScope.equals("g")) {
+                if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope)) {
+                    if (s.getData() instanceof VaribleData) {
+                        sar.setType(((VaribleData) s.getData()).getType());
+                    } else if (s.getData() instanceof FunctionData) {
+                        sar.setType(((FunctionData) s.getData()).getReturnType());
+                    }
+                    return true;
+                }
+                sarScope = sarScope.substring(0, sarScope.lastIndexOf("."));
             }
         }
         return false;
@@ -730,7 +782,7 @@ public class Compiler {
         return (Character.isLowerCase(lexi.lexi.toCharArray()[0]) && lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()));
     }
 
-    private boolean isLettialExpression(Tuple<String, String, Integer> lexi) {
+    private boolean isLiteralExpression(Tuple<String, String, Integer> lexi) {
         return (lexi.lexi.equals("true") || lexi.lexi.equals("false") || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()) || lexi.lexi.equals("null"));
     }
 

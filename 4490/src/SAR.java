@@ -7,10 +7,12 @@
 public class SAR {
     private Tuple<String, String, Integer> lexi;
     private String scope;
+    private String type;
 
-    public SAR(Tuple<String, String, Integer> lexi, String scope) {
+    public SAR(Tuple<String, String, Integer> lexi, String scope, String type) {
         this.lexi = lexi;
         this.scope = scope;
+        this.type = type;
     }
 
     public String getScope() {
@@ -19,5 +21,13 @@ public class SAR {
 
     public Tuple<String, String, Integer> getLexi() {
         return lexi;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

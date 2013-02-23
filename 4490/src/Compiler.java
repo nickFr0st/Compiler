@@ -131,7 +131,7 @@ public class Compiler {
                         if (!tempList.get(tempList.size() - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                             errorList += "return statement must end with a end of line token (;). Line: " + currentLex.lineNum + "\n";
                         }
-                        validateReturnStatement(currentLex, previousLex, nextLexi, peekPrevious);
+                        validateReturnStatement(currentLex, nextLexi, peekPrevious);
                     }
 
                     if (currentLex.lexi.equals("class")) {
@@ -584,7 +584,8 @@ public class Compiler {
             int lastOprPrecedence = 0;
 
             // evaluate semantics
-            for (int i = 0; i < tempList.size(); i++) {
+            int i = 0;
+            while (i < tempList.size()) {
                 Tuple<String, String, Integer> item = tempList.get(i);
                 // setup scope
                 if (tempList.get(i).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
@@ -621,7 +622,6 @@ public class Compiler {
                 if (isIdentifierExpression(tempList.get(i))) {
                     SAR sar = new SAR(tempList.get(i), Sscope, "");
                     if (iExist(symbolTable, sar)) {
-                        // todo: add type to sar
                         SAS.push(sar);
                     } else {
                         errorList += "identifier has not been declared in scope. Line: " + tempList.get(i).lineNum + "\n";
@@ -668,15 +668,14 @@ public class Compiler {
                 }
 
 
-                if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                    while(!OS.isEmpty()) {
-                        addTempToSAS(OS.pop(), SAS);;
-                    }
-                }
+                if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()))
+                    while (!OS.isEmpty()) addTempToSAS(OS.pop(), SAS);
 
 
-                // take down scope
-                // todo: this is where we do the method evaluation
+
+                /**
+                 * take down scope
+                 */
                 if (tempList.get(i).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
                     if (openBlocks.size() == 0) {
                         errorList += "Invalid closing block on line: " + tempList.get(i).lineNum + "\n";
@@ -687,6 +686,7 @@ public class Compiler {
                         openBlocks.remove(openBlocks.size() - 1);
                     }
                 }
+                i++;
             }
 
         }
@@ -712,22 +712,18 @@ public class Compiler {
 
             if (!sarEqualAssignment(RHS, LHS)) {
                 errorList += "left and right operand types are incompatible. Line: " + opr.getLexi().lineNum + "\n";
-                return;
             }
         }
     }
 
     private boolean sarEqualAssignment(SAR rhs, SAR lhs) {
-        if (lhs.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER)) {
+        if (lhs.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
             if (Character.isUpperCase(lhs.getLexi().lexi.toCharArray()[0])) {
                 errorList += "left hand side must be an object of a class or type. Line:" + lhs.getLexi().lineNum + "\n";
                 return false;
             }
         }
-        if (!lhs.getType().equals(rhs.getType())) {
-            return false;
-        }
-        return true;
+        return lhs.getType().equals(rhs.getType());
     }
 
     private int setPrecedence(String opr) {
@@ -867,11 +863,7 @@ public class Compiler {
             }
             if (tempList.get(index + 1).lexi.equals(",")) {
                 return isValidCalledParameterType(tempList, index + 2);
-            } else if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                return true;
-            } else {
-                return false;
-            }
+            } else return tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name());
         }
         return false;
     }
@@ -908,11 +900,7 @@ public class Compiler {
             }
             if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name()) || tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
                 return isValidRelationParameterType(tempList, index + 2);
-            } else if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                return true;
-            } else {
-                return false;
-            }
+            } else return tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name());
         }
         return false;
     }
@@ -977,6 +965,7 @@ public class Compiler {
         if (currentLex.lexi.equals("<<")) {
             if (previousLex == null) {
                 errorList += "Must start an ostream operation with 'cout'. Line: " + currentLex.lineNum + "\n";
+                return;
             }
 
             if (!previousLex.lexi.equals("cout")) {
@@ -987,6 +976,7 @@ public class Compiler {
         if (currentLex.lexi.equals(">>")) {
             if (previousLex == null) {
                 errorList += "Must start an istream operation with 'cin'. Line: " + currentLex.lineNum + "\n";
+                return;
             }
 
             if (!previousLex.lexi.equals("cin")) {
@@ -1002,12 +992,11 @@ public class Compiler {
             errorList += "Only the IO statement can occupy the line (there should not be anything before it). Line: " + currentLex.lineNum + "\n";
         }
 
-        if (currentLex.lexi.equals(">>")) {
-            if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
-                return;
+        if (currentLex.lexi.equals(">>"))
+            if (nextLex == null || (!nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && !Character.isLowerCase(nextLex.lexi.toCharArray()[0]))) {
+                errorList += "Right hand side of istream operator must be an Identifier. Line: " + currentLex.lineNum + "\n";
             }
-            errorList += "Right hand side of istream operator must be an Identifier. Line: " + currentLex.lineNum + "\n";
-        } else {
+        else {
             if (isRHSinValidFormatAssignment(nextLex)) {
                 return;
             }
@@ -1022,6 +1011,7 @@ public class Compiler {
     private void validateBooleanOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) {
         if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
             errorList += "There must be a valid type on both sides of the boolean operator. Line: " + currentLex.lineNum + "\n";
+            return;
         }
 
         if (!isLHSinValidFormatRelationShip(previousLex)) {
@@ -1034,7 +1024,7 @@ public class Compiler {
         errorList += "Right hand side of boolean operator must be either an Identifier, Number, or Character. Line: " + currentLex.lineNum + "\n";
     }
 
-    private void validateReturnStatement(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex, Tuple<String, String, Integer> peekPrevious) {
+    private void validateReturnStatement(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> nextLex, Tuple<String, String, Integer> peekPrevious) {
         if (!isReturnValueValid(nextLex)) {
             errorList += "Return statement must either be followed by a value or an end of line token (;). Line: " + currentLex.lineNum + "\n";
         }
@@ -1068,8 +1058,9 @@ public class Compiler {
     }
 
     private void validateMathOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) {
-        if (nextLex.equals(null) || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex.equals(null)) {
+        if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || (previousLex == null)) {
             errorList += "Mathematical operators require a right hand value. Line: " + currentLex.lineNum + "\n";
+            return;
         }
 
         if ((previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || previousLex.lexi.equals(")")) && (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || nextLex.lexi.equals("("))) {
@@ -1081,6 +1072,7 @@ public class Compiler {
     private void validateAssignmentOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) throws IllegalArgumentException {
         if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
             errorList += "There must be a valid type on both sides of the assignment operator. Line: " + currentLex.lineNum + "\n";
+            return;
         }
 
         if (!isPreviousLexiValidAssignment(previousLex)) {

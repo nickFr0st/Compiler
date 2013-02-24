@@ -605,8 +605,6 @@ public class Compiler {
                     }
                 }
 
-                // get type
-
                 if (isLiteralExpression(tempList.get(i))) {
                     if (tempList.get(i).lexi.equals("true") || tempList.get(i).lexi.equals("false")) {
                         SAS.push(new SAR(tempList.get(i), Sscope, "bool"));
@@ -667,10 +665,8 @@ public class Compiler {
                     lastOprPrecedence = precedence;
                 }
 
-
                 if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()))
                     while (!OS.isEmpty()) addTempToSAS(OS.pop(), SAS);
-
 
 
                 /**
@@ -707,13 +703,33 @@ public class Compiler {
                 errorList += "Binary operations require both a left and right hand side. Line: " + opr.getLexi().lineNum + "\n";
                 return;
             }
+
             SAR RHS = SAS.pop();
             SAR LHS = SAS.pop();
 
             if (!sarEqualAssignment(RHS, LHS)) {
                 errorList += "left and right operand types are incompatible. Line: " + opr.getLexi().lineNum + "\n";
             }
+        } else if (opr.getLexi().lexi.equals("+")) {
+            if (SAS.size() < 2) {
+                errorList += "Binary operations require both a left and right hand side. Line: " + opr.getLexi().lineNum + "\n";
+                return;
+            }
+
+            SAR RHS = SAS.pop();
+            SAR LHS = SAS.pop();
+
+            if (!LHS.getType().equals(RHS.getType())) {
+                errorList += "left and right operand types are incompatible. Line: " + opr.getLexi().lineNum + "\n";
+                return;
+            }
+
+            addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", LHS.getLexi().lexi + " + " + RHS.getLexi().lexi, RHS.getLexi().lineNum);
+
+            SAR temp = new SAR(new Tuple<String, String, Integer>(LHS.getLexi().lexi + " + " + RHS.getLexi().lexi, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType());
+            SAS.push(temp);
         }
+
     }
 
     private boolean sarEqualAssignment(SAR rhs, SAR lhs) {
@@ -733,6 +749,8 @@ public class Compiler {
             return 0;
         } else if (opr.equals("*") || opr.equals("/") || opr.equals("%")) {
             return 13;
+        } else if (opr.equals("+") || opr.equals("-")) {
+            return 11;
         } else if (opr.equals("<") || opr.equals(">") || opr.equals("<=") || opr.equals(">=")) {
             return 9;
         } else if (opr.equals("==") || opr.equals("!=")) {

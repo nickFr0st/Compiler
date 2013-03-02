@@ -207,6 +207,9 @@ public class Compiler {
                                         if (tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                                             addToSymbolTable("ivar", new ArrayList<String>(), tempList.get(1).lexi, tempList.get(0).lexi, tempList.get(2).lexi, currentLex.lineNum);
                                             // all good
+                                        } else if (tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+                                            addToSymbolTable("ivar", new ArrayList<String>(), tempList.get(1).lexi, tempList.get(0).lexi, tempList.get(2).lexi, currentLex.lineNum);
+                                            // all good
                                         } else if (tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && !tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                                             paramIdList = new ArrayList<String>();
                                             if (!isValidParameterDeclarationType(tempList, 4)) {
@@ -634,7 +637,7 @@ public class Compiler {
                             if (OS.peek() == null) {
                                 errorList += "Missing opening paren. Line: " + item.lineNum + "\n";
                             }
-                            SAS.push(OS.pop());
+                            addTempToSAS(OS.pop(), SAS);
                         }
                         if (!OS.isEmpty()) {
                             OS.pop();
@@ -646,7 +649,7 @@ public class Compiler {
                             if (OS.peek() == null) {
                                 errorList += "Missing opening array. Line: " + item.lineNum + "\n";
                             }
-                            SAS.push(OS.pop());
+                            addTempToSAS(OS.pop(), SAS);
                         }
                         if (!OS.isEmpty()) {
                             OS.pop();
@@ -697,25 +700,20 @@ public class Compiler {
         }
     }
 
+    private boolean isClassExpression(Tuple<String, String, Integer> lexi) {
+        return (lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(lexi.lexi.toCharArray()[0]));
+    }
+
     private void addTempToSAS(SAR opr, Stack<SAR> SAS) {
         if (opr.getLexi().lexi.equals("=")) {
-            if (SAS.size() < 2) {
-                errorList += "Binary operations require both a left and right hand side. Line: " + opr.getLexi().lineNum + "\n";
-                return;
-            }
-
             SAR RHS = SAS.pop();
             SAR LHS = SAS.pop();
+
 
             if (!sarEqualAssignment(RHS, LHS)) {
                 errorList += "left and right operand types are incompatible. Line: " + opr.getLexi().lineNum + "\n";
             }
-        } else if (opr.getLexi().lexi.equals("+")) {
-            if (SAS.size() < 2) {
-                errorList += "Binary operations require both a left and right hand side. Line: " + opr.getLexi().lineNum + "\n";
-                return;
-            }
-
+        } else if (opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
             SAR RHS = SAS.pop();
             SAR LHS = SAS.pop();
 
@@ -724,9 +722,9 @@ public class Compiler {
                 return;
             }
 
-            addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", LHS.getLexi().lexi + " + " + RHS.getLexi().lexi, RHS.getLexi().lineNum);
+            addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
 
-            SAR temp = new SAR(new Tuple<String, String, Integer>(LHS.getLexi().lexi + " + " + RHS.getLexi().lexi, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType());
+            SAR temp = new SAR(new Tuple<String, String, Integer>("T" + (symIdInr -2), RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType());
             SAS.push(temp);
         }
 
@@ -770,11 +768,19 @@ public class Compiler {
     }
 
     private boolean iExist(LinkedHashMap<String, Symbol> symbolTable, SAR sar) {
+
         for (String key : symbolTable.keySet()) {
             Symbol s = symbolTable.get(key);
             String sarScope = sar.getScope();
             if (sarScope.equals("g")) {
-                return true;
+                if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope)) {
+                    if (s.getData() instanceof VaribleData) {
+                        sar.setType(((VaribleData) s.getData()).getType());
+                    } else if (s.getData() instanceof FunctionData) {
+                        sar.setType(((FunctionData) s.getData()).getReturnType());
+                    }
+                    return true;
+                }
             }
 
             while(!sarScope.equals("g")) {

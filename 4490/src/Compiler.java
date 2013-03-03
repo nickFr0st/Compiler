@@ -599,7 +599,7 @@ public class Compiler {
                         } else {
                             Sscope += "." + tempList.get(1).lexi;
                         }
-                    }else if (tempList.get(0).lexi.trim().equals("if") || tempList.get(0).lexi.trim().equals("else") || tempList.get(0).lexi.trim().equals("while")) {
+                    } else if (tempList.get(0).lexi.trim().equals("if") || tempList.get(0).lexi.trim().equals("else") || tempList.get(0).lexi.trim().equals("while")) {
                         Sscope += "." + tempList.get(0).lexi;
                     } else {
                         if (isValidReturnType(tempList.get(0).lexi, tempList.get(0).type) || tempList.get(0).lexi.equals("class")) {
@@ -618,22 +618,18 @@ public class Compiler {
                     } else if (tempList.get(i).lexi.equals("null")) {
                         SAS.push(new SAR(tempList.get(i), Sscope, "null"));
                     }
-                }
-
-                if (isIdentifierExpression(tempList.get(i))) {
+                } else if (isIdentifierExpression(tempList.get(i))) {
                     SAR sar = new SAR(tempList.get(i), Sscope, "");
                     if (iExist(symbolTable, sar)) {
                         SAS.push(sar);
                     } else {
                         errorList += "identifier has not been declared in scope. Line: " + tempList.get(i).lineNum + "\n";
                     }
-                }
-
-                if (isExpressionZ(tempList.get(i))) {
+                } else if (isExpressionZ(tempList.get(i))) {
                     int precedence = setPrecedence(tempList.get(i).lexi);
 
                     if (item.lexi.equals(")")) {
-                        while (!OS.isEmpty() && !OS.peek().equals("(")) {
+                        while (!OS.peek().getLexi().lexi.equals("(")) {
                             if (OS.peek() == null) {
                                 errorList += "Missing opening paren. Line: " + item.lineNum + "\n";
                             }
@@ -642,10 +638,8 @@ public class Compiler {
                         if (!OS.isEmpty()) {
                             OS.pop();
                         }
-                    }
-
-                    if (item.lexi.equals("]")) {
-                        while (!OS.isEmpty() && !OS.peek().equals("[")) {
+                    } else if (item.lexi.equals("]")) {
+                        while (!OS.peek().getLexi().lexi.equals("[")) {
                             if (OS.peek() == null) {
                                 errorList += "Missing opening array. Line: " + item.lineNum + "\n";
                             }
@@ -654,18 +648,20 @@ public class Compiler {
                         if (!OS.isEmpty()) {
                             OS.pop();
                         }
-                    }
-
-                    if (precedence > lastOprPrecedence) {
+                    } else if (precedence > lastOprPrecedence) {
                         OS.push(new SAR(item, Sscope, ""));
                     } else if (precedence <= lastOprPrecedence) {
                         if (!OS.isEmpty()) {
                             addTempToSAS(OS.pop(), SAS);
                         }
                         OS.push(new SAR(item, Sscope, ""));
+                    } else {
+                        if (item.lexi.equals("(") || item.lexi.equals("[")) {
+                            lastOprPrecedence = 0;
+                        } else {
+                            lastOprPrecedence = precedence;
+                        }
                     }
-
-                    lastOprPrecedence = precedence;
                 }
 
                 if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()))
@@ -706,6 +702,11 @@ public class Compiler {
 
     private void addTempToSAS(SAR opr, Stack<SAR> SAS) {
         if (opr.getLexi().lexi.equals("=")) {
+            if (SAS.size() < 2) {
+                errorList += "missing an operand. Line: " + opr.getLexi().lineNum + "\n";
+                return;
+            }
+
             SAR RHS = SAS.pop();
             SAR LHS = SAS.pop();
 
@@ -714,6 +715,11 @@ public class Compiler {
                 errorList += "left and right operand types are incompatible. Line: " + opr.getLexi().lineNum + "\n";
             }
         } else if (opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
+            if (SAS.size() < 2) {
+                errorList += "missing an operand. Line: " + opr.getLexi().lineNum + "\n";
+                return;
+            }
+
             SAR RHS = SAS.pop();
             SAR LHS = SAS.pop();
 
@@ -724,7 +730,7 @@ public class Compiler {
 
             addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
 
-            SAR temp = new SAR(new Tuple<String, String, Integer>("T" + (symIdInr -2), RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType());
+            SAR temp = new SAR(new Tuple<String, String, Integer>("T" + (symIdInr - 2), RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType());
             SAS.push(temp);
         }
 
@@ -783,7 +789,7 @@ public class Compiler {
                 }
             }
 
-            while(!sarScope.equals("g")) {
+            while (!sarScope.equals("g")) {
                 if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope)) {
                     if (s.getData() instanceof VaribleData) {
                         sar.setType(((VaribleData) s.getData()).getType());
@@ -1019,13 +1025,12 @@ public class Compiler {
         if (currentLex.lexi.equals(">>"))
             if (nextLex == null || (!nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && !Character.isLowerCase(nextLex.lexi.toCharArray()[0]))) {
                 errorList += "Right hand side of istream operator must be an Identifier. Line: " + currentLex.lineNum + "\n";
+            } else {
+                if (isRHSinValidFormatAssignment(nextLex)) {
+                    return;
+                }
+                errorList += "Right hand side of ostream operator must be either an Identifier, Number, or Character. Line: " + currentLex.lineNum + "\n";
             }
-        else {
-            if (isRHSinValidFormatAssignment(nextLex)) {
-                return;
-            }
-            errorList += "Right hand side of ostream operator must be either an Identifier, Number, or Character. Line: " + currentLex.lineNum + "\n";
-        }
     }
 
     private boolean canAddToList(Tuple<String, String, Integer> temp) {

@@ -662,9 +662,11 @@ public class Compiler {
                             lastOprPrecedence = precedence;
                         }
                     }
-                }
-
-                if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()))
+                } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(item.lexi.toCharArray()[0]) && tempList.get(tempList.size() -1).lexi.equals(";")) {
+                        if (!ClassExist(item, Sscope)) {
+                            errorList += "Class does not exist in scope. Line: " + item.lineNum + "\n";
+                        }
+                } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()))
                     while (!OS.isEmpty()) addTempToSAS(OS.pop(), SAS);
 
 
@@ -694,6 +696,23 @@ public class Compiler {
             System.out.print(e.getMessage());
             System.exit(0);
         }
+    }
+
+    private boolean ClassExist(Tuple<String, String, Integer> item, String sscope) {
+        for (String key : symbolTable.keySet()) {
+            Symbol s = symbolTable.get(key);
+            String sarScope = sscope;
+            if (s.getValue().equals(item.lexi) && s.getScope().equals("g"))
+                return true;
+
+            while (!sarScope.equals("g")) {
+                if (s.getValue().equals(item.lexi) && s.getScope().equals(sarScope)) {
+                    return true;
+                }
+                sarScope = sarScope.substring(0, sarScope.lastIndexOf("."));
+            }
+        }
+        return false;
     }
 
     private void addTempToSAS(SAR opr, Stack<SAR> SAS) {

@@ -696,10 +696,6 @@ public class Compiler {
         }
     }
 
-    private boolean isClassExpression(Tuple<String, String, Integer> lexi) {
-        return (lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(lexi.lexi.toCharArray()[0]));
-    }
-
     private void addTempToSAS(SAR opr, Stack<SAR> SAS) {
         if (opr.getLexi().lexi.equals("=")) {
             if (SAS.size() < 2) {
@@ -825,8 +821,9 @@ public class Compiler {
     }
 
     private void validateComma(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLexi) {
-        if (previousLex.equals(null) || nextLexi.equals(null) || nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+        if (previousLex == null || nextLexi == null || nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
             errorList += "There must be a value on both sides of comma. Line: " + currentLex.lineNum + "\n";
+            return;
         }
 
         if ((previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())
@@ -1074,6 +1071,7 @@ public class Compiler {
     private void validateRelationalOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) {
         if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
             errorList += "There must be a valid type on both sides of the relational operator. Line: " + currentLex.lineNum + "\n";
+            return;
         }
 
         if (!isLHSinValidFormatRelationShip(previousLex)) {

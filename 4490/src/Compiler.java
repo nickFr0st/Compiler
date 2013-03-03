@@ -662,10 +662,10 @@ public class Compiler {
                             lastOprPrecedence = precedence;
                         }
                     }
-                } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(item.lexi.toCharArray()[0]) && tempList.get(tempList.size() -1).lexi.equals(";")) {
-                        if (!ClassExist(item, Sscope)) {
-                            errorList += "Class does not exist in scope. Line: " + item.lineNum + "\n";
-                        }
+                } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(item.lexi.toCharArray()[0]) && tempList.get(tempList.size() - 1).lexi.equals(";")) {
+                    if (!ClassExist(item, Sscope)) {
+                        errorList += "Class does not exist in scope. Line: " + item.lineNum + "\n";
+                    }
                 } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()))
                     while (!OS.isEmpty()) addTempToSAS(OS.pop(), SAS);
 

@@ -10,7 +10,7 @@ public class ProgramDriver {
     public static void main(String[] args) {
         LinkedHashMap<String, Symbol> symbolTable = new LinkedHashMap<String, Symbol>();
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
-        lexicalAnalyzer.processFile("testFile.kxi");
+        lexicalAnalyzer.processFile("test2.kxi");
 
         Compiler syntaxAnalyzer = new Compiler(lexicalAnalyzer, symbolTable);
         syntaxAnalyzer.evaluate();

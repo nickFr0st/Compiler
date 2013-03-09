@@ -697,10 +697,7 @@ public class Compiler {
                 } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()))
                     while (!OS.isEmpty()) addTempToSAS(OS.pop(), SAS);
 
-
-                /**
-                 * take down scope
-                 */
+                // take down scope
                 if (tempList.get(i).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
                     if (openBlocks.size() == 0) {
                         errorList += "Invalid closing block on line: " + tempList.get(i).lineNum + "\n";

@@ -750,11 +750,8 @@ public class Compiler {
             }
         }
 
-        if (!found) {
-            return false;
-        }
+        return found && evaluateCallies(foundScope, sar, SAS, tempList);
 
-        return evaluateCallies(foundScope, sar, SAS, tempList);
     }
 
     private boolean evaluateCallies(String foundScope, SAR sar, Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList) {
@@ -765,7 +762,7 @@ public class Compiler {
                 if (s.getData() instanceof VaribleData){
                     if (((VaribleData) s.getData()).getAccessMod().equals("public")) {
                         sar.setType(((VaribleData) s.getData()).getType());
-                        String value = "T" + symIdInr;
+                        String value = "t" + symIdInr;
                         addToSymbolTable("tVar", new ArrayList<String>(), ((VaribleData) s.getData()).getType(), "private", value, sar.getLexi().lineNum);
 
                         Tuple<String, String, Integer> tempLexi = new Tuple<String, String, Integer>(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);

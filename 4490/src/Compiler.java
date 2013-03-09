@@ -19,6 +19,7 @@ public class Compiler {
     private String scope = "g";
     private int statementInr = 1;
     private int symIdInr = 100;
+    private int eIndex = 0;
 
     public Compiler(LexicalAnalyzer lexicalAnalyzer, LinkedHashMap<String, Symbol> symbolTable) {
         this.lexicalAnalyzer = lexicalAnalyzer;
@@ -630,9 +631,11 @@ public class Compiler {
                     SAR sar = new SAR(tempList.get(i), scopePassTwo, "");
                     if (isCalled) {
                         if (!tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-                            if (!rExist(sar, SAS, i)) {
+                            eIndex = i;
+                            if (!rExist(sar, SAS, tempList)) {
                                 errorList += "This is an error for rExist. Line: " + tempList.get(i).lineNum + "\n";
                             }
+                            i = eIndex;
                         } else {
                             // todo: evaluate called function
                         }
@@ -723,7 +726,7 @@ public class Compiler {
         }
     }
 
-    private boolean rExist(SAR sar, Stack<SAR> SAS, int index) {
+    private boolean rExist(SAR sar, Stack<SAR> SAS,List<Tuple<String, String, Integer>> tempList) {
         SAR caller = SAS.pop();
         boolean found = false;
         String foundScope = "";
@@ -751,10 +754,10 @@ public class Compiler {
             return false;
         }
 
-        return evaluateCallies(foundScope, sar, SAS, index);
+        return evaluateCallies(foundScope, sar, SAS, tempList);
     }
 
-    private boolean evaluateCallies(String foundScope, SAR sar, Stack<SAR> SAS, int index) {
+    private boolean evaluateCallies(String foundScope, SAR sar, Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList) {
         for (String key : symbolTable.keySet()) {
             Symbol s = symbolTable.get(key);
 
@@ -767,11 +770,22 @@ public class Compiler {
 
                         Tuple<String, String, Integer> tempLexi = new Tuple<String, String, Integer>(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);
                         SAS.push(new SAR(tempLexi , sar.getScope(), sar.getType()));
+
+                        if (tempList.get(eIndex + 1).lexi.equals(".")) {
+                            eIndex = eIndex + 2;
+                            foundScope = foundScope.substring(0, foundScope.lastIndexOf("."));
+                            SAS.pop();
+                            return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), ""), SAS, tempList);
+                        }
                         return true;
+                    } else {
+                        errorList += "Access Error: " + sar.getLexi().lexi + " is a private variable. Line: " + sar.getLexi().lineNum + "\n";
+                        return false;
                     }
                 }
             }
         }
+        errorList += sar.getLexi().lexi + " does not exist. Line: " + sar.getLexi().lineNum + "\n";
         return false;
     }
 

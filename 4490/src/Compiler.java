@@ -565,6 +565,7 @@ public class Compiler {
          **/
         lexicalAnalyzer.resetList();
         String scopePassTwo = "g";
+        statementInr = 1;
 
         while (lexicalAnalyzer.hasNext()) {
             // setting up items to be parsed
@@ -603,7 +604,7 @@ public class Compiler {
                             scopePassTwo += "." + tempList.get(1).lexi;
                         }
                     } else if (tempList.get(0).lexi.trim().equals("if") || tempList.get(0).lexi.trim().equals("else") || tempList.get(0).lexi.trim().equals("while")) {
-                        scopePassTwo += "." + tempList.get(0).lexi;
+                        scopePassTwo += "." + tempList.get(0).lexi + statementInr++;
                     } else {
                         if (isValidReturnType(tempList.get(0).lexi, tempList.get(0).type) || tempList.get(0).lexi.equals("class")) {
                             scopePassTwo += "." + tempList.get(1).lexi;
@@ -723,7 +724,7 @@ public class Compiler {
         }
     }
 
-    private boolean rExist(SAR sar, Stack<SAR> SAS,List<Tuple<String, String, Integer>> tempList) {
+    private boolean rExist(SAR sar, Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList) {
         SAR caller = SAS.pop();
         boolean found = false;
         String foundScope = "";
@@ -756,14 +757,14 @@ public class Compiler {
             Symbol s = symbolTable.get(key);
 
             if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(foundScope)) {
-                if (s.getData() instanceof VaribleData){
+                if (s.getData() instanceof VaribleData) {
                     if (((VaribleData) s.getData()).getAccessMod().equals("public")) {
                         sar.setType(((VaribleData) s.getData()).getType());
                         String value = "t" + symIdInr;
                         addToSymbolTable("tVar", new ArrayList<String>(), ((VaribleData) s.getData()).getType(), "private", value, sar.getLexi().lineNum);
 
                         Tuple<String, String, Integer> tempLexi = new Tuple<String, String, Integer>(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);
-                        SAS.push(new SAR(tempLexi , sar.getScope(), sar.getType()));
+                        SAS.push(new SAR(tempLexi, sar.getScope(), sar.getType()));
 
                         if (tempList.get(eIndex + 1).lexi.equals(".")) {
                             eIndex = eIndex + 2;

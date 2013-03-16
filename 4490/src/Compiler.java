@@ -635,6 +635,7 @@ public class Compiler {
                         SAS.push(new SAR(tempList.get(i), scopePassTwo, "null"));
                     }
                 } else if (isIdentifierExpression(tempList.get(i))) {
+                    // todo: need to valid functions as well
                     SAR sar = new SAR(tempList.get(i), scopePassTwo, "");
                     if (isCalled) {
                         eIndex = i;
@@ -730,10 +731,6 @@ public class Compiler {
         }
     }
 
-    private boolean rExistFcn(SAR sar, Stack<SAR> sas, List<Tuple<String, String, Integer>> tempList) {
-        return false;
-    }
-
     private boolean rExist(SAR sar, Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList) {
         SAR caller = SAS.pop();
         boolean found = false;
@@ -817,6 +814,12 @@ public class Compiler {
                             }
                             return true;
                         }
+                    } else {
+                        // todo: need logic for functions with parameters
+                        // check for existence of each parameter
+                        // make sure parameter types are the same as in the symbol table version of the function
+                        // if yes return true, else return false
+
                     }
                 }
             }

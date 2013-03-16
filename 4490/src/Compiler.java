@@ -637,15 +637,10 @@ public class Compiler {
                 } else if (isIdentifierExpression(tempList.get(i))) {
                     SAR sar = new SAR(tempList.get(i), scopePassTwo, "");
                     if (isCalled) {
-                        if (!tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-                            eIndex = i;
-                            if (!rExist(sar, SAS, tempList)) {
-                                errorList += "This is an error for rExist. Line: " + tempList.get(i).lineNum + "\n";
-                            }
-                            i = eIndex;
-                        } else {
-                            // todo: evaluate called function
-                        }
+                        eIndex = i;
+                        rExist(sar, SAS, tempList);
+                        i = eIndex;
+
                         if (tempList.get(i + 1).lexi.equals(".")) {
                             i++;
                             continue;
@@ -735,27 +730,40 @@ public class Compiler {
         }
     }
 
+    private boolean rExistFcn(SAR sar, Stack<SAR> sas, List<Tuple<String, String, Integer>> tempList) {
+        return false;
+    }
+
     private boolean rExist(SAR sar, Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList) {
         SAR caller = SAS.pop();
         boolean found = false;
         String foundScope = "";
+        String sarScope = caller.getScope();
 
-        for (String key : symbolTable.keySet()) {
-            Symbol s = symbolTable.get(key);
-            String sarScope = caller.getScope();
-            if (s.getValue().equals(caller.getType()) && s.getScope().equals("g")) {
-                found = true;
-                foundScope = s.getScope() + "." + caller.getType();
-                break;
-            }
+        while (!sarScope.isEmpty()) {
 
-            while (!sarScope.equals("g")) {
+            for (String key : symbolTable.keySet()) {
+                Symbol s = symbolTable.get(key);
+                if (s.getValue().equals(caller.getType()) && s.getScope().equals("g")) {
+                    found = true;
+                    foundScope = s.getScope() + "." + caller.getType();
+                    break;
+                }
+
                 if (s.getValue().equals(caller.getType()) && s.getScope().equals(sarScope)) {
                     found = true;
                     foundScope = s.getScope();
                     break;
                 }
+
+            }
+
+            if (found) break;
+
+            if (sarScope.contains(".")) {
                 sarScope = sarScope.substring(0, sarScope.lastIndexOf("."));
+            } else {
+                sarScope = "";
             }
         }
 
@@ -787,6 +795,28 @@ public class Compiler {
                     } else {
                         errorList += "Access Error: " + sar.getLexi().lexi + " is a private variable. Line: " + sar.getLexi().lineNum + "\n";
                         return false;
+                    }
+                } else if (s.getData() instanceof FunctionData) {
+                    if (((FunctionData) s.getData()).getParameters().size() == 0) {
+                        if (!((FunctionData) s.getData()).getAccessMod().equals("public")) {
+                            errorList += "Access Error: " + sar.getLexi().lexi + " is a private function. Line: " + sar.getLexi().lineNum + "\n";
+                            return false;
+                        } else {
+                            sar.setType(((FunctionData) s.getData()).getReturnType());
+                            String value = "t" + symIdInr;
+                            addToSymbolTable("tVar", new ArrayList<String>(), ((FunctionData) s.getData()).getReturnType(), "private", value, sar.getLexi().lineNum);
+
+                            Tuple<String, String, Integer> tempLexi = new Tuple<String, String, Integer>(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);
+                            SAS.push(new SAR(tempLexi, sar.getScope(), sar.getType()));
+
+                            if (tempList.get(eIndex + 3).lexi.equals(".")) {
+                                eIndex = eIndex + 4;
+                                foundScope = foundScope.substring(0, foundScope.lastIndexOf("."));
+                                SAS.pop();
+                                return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), ""), SAS, tempList);
+                            }
+                            return true;
+                        }
                     }
                 }
             }

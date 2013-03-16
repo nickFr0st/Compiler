@@ -3,14 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Compiler.java" afterPath="$PROJECT_DIR$/src/Compiler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ProgramDriver.java" afterPath="$PROJECT_DIR$/src/ProgramDriver.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449654711" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363460983382" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363468946541" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
-    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363467789468" ignored="false" />
+    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363474890730" ignored="false" />
     <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363454298482" ignored="false" />
     <file path="/LexicalAnalizer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358821966318" ignored="false" />
     <file path="/Tuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358821864977" ignored="false" />
@@ -84,7 +85,36 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint url="file://$PROJECT_DIR$/src/Compiler.java" line="799" class="Compiler" package="">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/Compiler.java" line="778" class="Compiler" package="">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -97,7 +127,7 @@
       <file leaf-file-name="ProgramDriver.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ProgramDriver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="59" selection-start="117" selection-end="117" vertical-scroll-proportion="0.0">
+            <state line="12" column="42" selection-start="392" selection-end="392" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -106,7 +136,7 @@
       <file leaf-file-name="Compiler.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Compiler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="970" column="0" selection-start="56970" selection-end="56970" vertical-scroll-proportion="0.33333334">
+            <state line="819" column="21" selection-start="49303" selection-end="49303" vertical-scroll-proportion="0.7888386">
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#344#376#0" expanded="true" />
@@ -114,7 +144,8 @@
                 <element signature="e#598#606#0" expanded="true" />
                 <element signature="e#1271#1303#0" expanded="true" />
                 <element signature="e#37070#37102#0" expanded="true" />
-                <element signature="e#46918#46943#0" expanded="true" />
+                <element signature="e#46811#46836#0" expanded="true" />
+                <element signature="e#48561#48586#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -132,7 +163,7 @@
       <file leaf-file-name="SAR.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/SAR.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="0" selection-start="553" selection-end="553" vertical-scroll-proportion="0.0">
+            <state line="15" column="0" selection-start="374" selection-end="374" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -676,7 +707,11 @@
       <created>1363460987012</created>
       <updated>1363460987012</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="arrays can now be passed as parameters">
+      <created>1363468949963</created>
+      <updated>1363468949963</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -767,7 +802,7 @@
     <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed parameter scope bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="arrays can now be passed as parameters" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -780,7 +815,6 @@
     <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="added more validation" />
     <MESSAGE value="handles itoa and atoi" />
     <MESSAGE value="added some notes" />
     <MESSAGE value="validates if, else, and while statements" />
@@ -805,6 +839,7 @@
     <MESSAGE value="validation works for calling class objects" />
     <MESSAGE value="cleanup" />
     <MESSAGE value="fixed parameter scope bug" />
+    <MESSAGE value="arrays can now be passed as parameters" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -900,13 +935,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/SAR.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="0" selection-start="553" selection-end="553" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.7.0_10/src.zip!/java/util/Stack.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="83" column="0" selection-start="2073" selection-end="2073" vertical-scroll-proportion="0.0">
@@ -916,14 +944,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ProgramDriver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="59" selection-start="117" selection-end="117" vertical-scroll-proportion="0.0">
+        <state line="12" column="42" selection-start="392" selection-end="392" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SAR.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="0" selection-start="374" selection-end="374" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Compiler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="970" column="0" selection-start="56970" selection-end="56970" vertical-scroll-proportion="0.33333334">
+        <state line="819" column="21" selection-start="49303" selection-end="49303" vertical-scroll-proportion="0.7888386">
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#344#376#0" expanded="true" />
@@ -931,7 +966,8 @@
             <element signature="e#598#606#0" expanded="true" />
             <element signature="e#1271#1303#0" expanded="true" />
             <element signature="e#37070#37102#0" expanded="true" />
-            <element signature="e#46918#46943#0" expanded="true" />
+            <element signature="e#46811#46836#0" expanded="true" />
+            <element signature="e#48561#48586#0" expanded="true" />
           </folding>
         </state>
       </provider>

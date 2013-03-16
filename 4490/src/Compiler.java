@@ -176,7 +176,6 @@ public class Compiler {
                                         previousLex = currentLex;
                                         continue;
                                     } else {
-                                        // todo: add argument list to main method
                                         if (tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                                             if (!tempList.get(i + 5).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
                                                 errorList += "Main function declaration must end with an block begin token ({). Line: " + currentLex.lineNum + "\n";
@@ -184,7 +183,9 @@ public class Compiler {
                                                 continue;
                                             }
                                         } else {
-                                            errorList += "Main function declaration must end with an block begin token ({). Line: " + currentLex.lineNum + "\n";
+                                            if (!isValidParameterDeclarationType(tempList, i + 4)) {
+                                                errorList += "Function 'main' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                                            }
                                             previousLex = currentLex;
                                             continue;
                                         }
@@ -613,7 +614,7 @@ public class Compiler {
                     }
                 }
 
-                if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && (tempList.get(0).lexi.equals("public") || tempList.get(0).lexi.equals("private")|| isValidReturnType(tempList.get(0).lexi, tempList.get(0).type))) {
+                if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && (tempList.get(0).lexi.equals("public") || tempList.get(0).lexi.equals("private") || isValidReturnType(tempList.get(0).lexi, tempList.get(0).type))) {
                     scopePassTwo += "." + tempList.get(2).lexi;
                 }
 
@@ -967,7 +968,18 @@ public class Compiler {
     private boolean isValidParameterDeclarationType(List<Tuple<String, String, Integer>> tempList, int index) {
         if (tempList.get(index).lexi.equals("bool") || tempList.get(index).lexi.equals("int") || tempList.get(index).lexi.equals("char") || (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(tempList.get(index).lexi.toCharArray()[0]))) {
             if (!tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
-                return false;
+                if (!tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+                    return false;
+                }
+                if (!tempList.get(index + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                    return false;
+                }
+
+                if (!tempList.get(index + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
+                    return false;
+                }
+
+                index += 2;
             }
             if (!Character.isLowerCase(tempList.get(index + 1).lexi.toCharArray()[0])) {
                 errorList += "Parameter names must be lowercase. Line: " + tempList.get(index).lineNum + "\n";

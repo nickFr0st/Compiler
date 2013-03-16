@@ -794,26 +794,27 @@ public class Compiler {
                         return false;
                     }
                 } else if (s.getData() instanceof FunctionData) {
+                    if (!((FunctionData) s.getData()).getAccessMod().equals("public")) {
+                        errorList += "Access Error: " + sar.getLexi().lexi + " is a private function. Line: " + sar.getLexi().lineNum + "\n";
+                        return false;
+                    }
+
                     if (((FunctionData) s.getData()).getParameters().size() == 0) {
-                        if (!((FunctionData) s.getData()).getAccessMod().equals("public")) {
-                            errorList += "Access Error: " + sar.getLexi().lexi + " is a private function. Line: " + sar.getLexi().lineNum + "\n";
-                            return false;
-                        } else {
-                            sar.setType(((FunctionData) s.getData()).getReturnType());
-                            String value = "t" + symIdInr;
-                            addToSymbolTable("tVar", new ArrayList<String>(), ((FunctionData) s.getData()).getReturnType(), "private", value, sar.getLexi().lineNum);
+                        sar.setType(((FunctionData) s.getData()).getReturnType());
+                        String value = "t" + symIdInr;
+                        addToSymbolTable("tVar", new ArrayList<String>(), ((FunctionData) s.getData()).getReturnType(), "private", value, sar.getLexi().lineNum);
 
-                            Tuple<String, String, Integer> tempLexi = new Tuple<String, String, Integer>(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);
-                            SAS.push(new SAR(tempLexi, sar.getScope(), sar.getType()));
+                        Tuple<String, String, Integer> tempLexi = new Tuple<String, String, Integer>(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);
+                        SAS.push(new SAR(tempLexi, sar.getScope(), sar.getType()));
 
-                            if (tempList.get(eIndex + 3).lexi.equals(".")) {
-                                eIndex = eIndex + 4;
-                                foundScope = foundScope.substring(0, foundScope.lastIndexOf("."));
-                                SAS.pop();
-                                return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), ""), SAS, tempList);
-                            }
-                            return true;
+                        if (tempList.get(eIndex + 3).lexi.equals(".")) {
+                            eIndex = eIndex + 4;
+                            foundScope = foundScope.substring(0, foundScope.lastIndexOf("."));
+                            SAS.pop();
+                            return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), ""), SAS, tempList);
                         }
+                        return true;
+
                     } else {
                         // todo: need logic for functions with parameters
                         // check for existence of each parameter

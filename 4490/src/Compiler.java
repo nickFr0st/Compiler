@@ -190,6 +190,7 @@ public class Compiler {
                                             continue;
                                         }
                                     }
+                                    // todo: need one of these for a main with params
                                     addToSymbolTable("Function", new ArrayList<String>(), tempList.get(2).lexi, tempList.get(0).lexi, "main", currentLex.lineNum);
                                     previousLex = currentLex;
                                     continue;
@@ -625,21 +626,13 @@ public class Compiler {
                 }
 
                 if (isLiteralExpression(tempList.get(i))) {
-                    if (tempList.get(i).lexi.equals("true") || tempList.get(i).lexi.equals("false")) {
-                        SAS.push(new SAR(tempList.get(i), scopePassTwo, "bool"));
-                    } else if (tempList.get(i).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
-                        SAS.push(new SAR(tempList.get(i), scopePassTwo, "int"));
-                    } else if (tempList.get(i).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
-                        SAS.push(new SAR(tempList.get(i), scopePassTwo, "char"));
-                    } else if (tempList.get(i).lexi.equals("null")) {
-                        SAS.push(new SAR(tempList.get(i), scopePassTwo, "null"));
-                    }
+                    addLiteralExpressionToSAS(scopePassTwo, tempList.get(i), SAS);
                 } else if (isIdentifierExpression(tempList.get(i))) {
                     // todo: need to valid functions as well
                     SAR sar = new SAR(tempList.get(i), scopePassTwo, "");
                     if (isCalled) {
                         eIndex = i;
-                        rExist(sar, SAS, tempList);
+                        rExist(sar, SAS, tempList, scopePassTwo);
                         i = eIndex;
 
                         if (tempList.get(i + 1).lexi.equals(".")) {
@@ -731,7 +724,19 @@ public class Compiler {
         }
     }
 
-    private boolean rExist(SAR sar, Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList) {
+    private void addLiteralExpressionToSAS(String scopePassTwo, Tuple<String, String, Integer> tuple, Stack<SAR> SAS) {
+        if (tuple.lexi.equals("true") || tuple.lexi.equals("false")) {
+            SAS.push(new SAR(tuple, scopePassTwo, "bool"));
+        } else if (tuple.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
+            SAS.push(new SAR(tuple, scopePassTwo, "int"));
+        } else if (tuple.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
+            SAS.push(new SAR(tuple, scopePassTwo, "char"));
+        } else if (tuple.lexi.equals("null")) {
+            SAS.push(new SAR(tuple, scopePassTwo, "null"));
+        }
+    }
+
+    private boolean rExist(SAR sar, Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList, String globalScope) {
         SAR caller = SAS.pop();
         boolean found = false;
         String foundScope = "";
@@ -764,11 +769,11 @@ public class Compiler {
             }
         }
 
-        return found && evaluateCallies(foundScope, sar, SAS, tempList);
+        return found && evaluateCallies(foundScope, sar, SAS, tempList, globalScope);
 
     }
 
-    private boolean evaluateCallies(String foundScope, SAR sar, Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList) {
+    private boolean evaluateCallies(String foundScope, SAR sar, Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList, String globalScope) {
         for (String key : symbolTable.keySet()) {
             Symbol s = symbolTable.get(key);
 
@@ -786,7 +791,7 @@ public class Compiler {
                             eIndex = eIndex + 2;
                             foundScope = foundScope.substring(0, foundScope.lastIndexOf("."));
                             SAS.pop();
-                            return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), ""), SAS, tempList);
+                            return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), ""), SAS, tempList, globalScope);
                         }
                         return true;
                     } else {
@@ -811,12 +816,21 @@ public class Compiler {
                             eIndex = eIndex + 4;
                             foundScope = foundScope.substring(0, foundScope.lastIndexOf("."));
                             SAS.pop();
-                            return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), ""), SAS, tempList);
+                            return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), ""), SAS, tempList, globalScope);
                         }
                         return true;
 
                     } else {
                         // todo: need logic for functions with parameters
+                        sar.setType(((FunctionData) s.getData()).getReturnType());
+                        int index = eIndex + 2;
+                        foundScope = foundScope.substring(0, foundScope.lastIndexOf("."));
+
+                        if (!doParametersExist(SAS, tempList, globalScope, index, ((FunctionData) s.getData()).getParameters(), ((FunctionData) s.getData()).getParameters().size() - 1)) {
+                            return false;
+                        }
+
+                        // todo: now that the parameters have been checked we need to verify the function
                         // check for existence of each parameter
                         // make sure parameter types are the same as in the symbol table version of the function
                         // if yes return true, else return false
@@ -826,6 +840,64 @@ public class Compiler {
             }
         }
         errorList += sar.getLexi().lexi + " does not exist. Line: " + sar.getLexi().lineNum + "\n";
+        return false;
+    }
+
+    private boolean doParametersExist(Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList, String globalScope, int index, List<String> paramList, int pId) {
+        if (isLiteralExpression(tempList.get(index))) {
+            boolean isGood = true;
+            String actualType = "";
+
+            if (tempList.get(index).lexi.equals("true") || tempList.get(index).lexi.equals("false")) {
+                if (!paramList.get(pId).equals("bool")) {
+                    isGood = false;
+                    actualType = tempList.get(index).lexi;
+                } else {
+                    SAS.push(new SAR(tempList.get(index), globalScope, "bool"));
+                }
+            } else if (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
+                if (!paramList.get(pId).equals("int")) {
+                    isGood = false;
+                    actualType = tempList.get(index).type;
+                } else {
+                    SAS.push(new SAR(tempList.get(index), globalScope, "int"));
+                }
+                SAS.push(new SAR(tempList.get(index), globalScope, "int"));
+            } else if (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
+                if (!paramList.get(pId).equals("char")) {
+                    isGood = false;
+                    actualType = tempList.get(index).type;
+                } else {
+                    SAS.push(new SAR(tempList.get(index), globalScope, "char"));
+                }
+                SAS.push(new SAR(tempList.get(index), globalScope, "char"));
+            } else if (tempList.get(index).lexi.equals("null")) {
+                if (!paramList.get(pId).equals("null")) {
+                    isGood = false;
+                    actualType = tempList.get(index).lexi;
+                } else {
+                    SAS.push(new SAR(tempList.get(index), globalScope, "null"));
+                }
+                SAS.push(new SAR(tempList.get(index), globalScope, "null"));
+            }
+
+            if (!isGood) {
+                errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + actualType + "'. Line: " + tempList.get(index).lineNum + "\n";
+                return false;
+            }
+        } else if (isIdentifierExpression(tempList.get(index))) {
+
+            // todo: need to check if type is the right one for the parameter
+            if (iExist(new SAR(tempList.get(index), globalScope, ""))) {
+            }
+        }
+
+        if (tempList.get(index + 1).lexi.equals(",")) {
+            return doParametersExist(SAS, tempList, globalScope, index + 2, paramList, pId - 1);
+        } else if (tempList.get(index + 1).lexi.equals(")")) {
+            return true;
+        }
+
         return false;
     }
 
@@ -943,8 +1015,6 @@ public class Compiler {
                     }
                     return true;
                 }
-
-
             }
 
             if (sarScope.contains(".")) {
@@ -1023,7 +1093,7 @@ public class Compiler {
                 if (isValidParameterDeclarationType(tempList, index + 3)) {
                     scope += "." + tempList.get(2).lexi;
                     addToSymbolTable("pvar", new ArrayList<String>(), tempList.get(index).lexi, "private", tempList.get(index + 1).lexi, tempList.get(0).lineNum);
-                    paramIdList.add(symbolTable.get("P" + (symIdInr - 1)).getSymId());
+                    paramIdList.add(tempList.get(index).lexi);
                     scope = scope.substring(0, scope.lastIndexOf("."));
                     return true;
                 }
@@ -1031,7 +1101,7 @@ public class Compiler {
             } else if (tempList.get(index + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 scope += "." + tempList.get(2).lexi;
                 addToSymbolTable("pvar", new ArrayList<String>(), tempList.get(index).lexi, "private", tempList.get(index + 1).lexi, tempList.get(0).lineNum);
-                paramIdList.add(symbolTable.get("P" + (symIdInr - 1)).getSymId());
+                paramIdList.add(tempList.get(index).lexi);
                 scope = scope.substring(0, scope.lastIndexOf("."));
                 return true;
             } else {

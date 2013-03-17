@@ -186,11 +186,12 @@ public class Compiler {
                                             if (!isValidParameterDeclarationType(tempList, i + 4)) {
                                                 errorList += "Function 'main' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
                                             }
+                                            paramIdList = new ArrayList<String>();
+                                            addToSymbolTable("Function", paramIdList, tempList.get(2).lexi, tempList.get(0).lexi, "main", currentLex.lineNum);
                                             previousLex = currentLex;
                                             continue;
                                         }
                                     }
-                                    // todo: need one of these for a main with params
                                     addToSymbolTable("Function", new ArrayList<String>(), tempList.get(2).lexi, tempList.get(0).lexi, "main", currentLex.lineNum);
                                     previousLex = currentLex;
                                     continue;
@@ -821,20 +822,17 @@ public class Compiler {
                         return true;
 
                     } else {
-                        // todo: need logic for functions with parameters
                         sar.setType(((FunctionData) s.getData()).getReturnType());
                         int index = eIndex + 2;
-                        foundScope = foundScope.substring(0, foundScope.lastIndexOf("."));
+                        //foundScope = foundScope.substring(0, foundScope.lastIndexOf("."));
 
                         if (!doParametersExist(SAS, tempList, globalScope, index, ((FunctionData) s.getData()).getParameters(), ((FunctionData) s.getData()).getParameters().size() - 1)) {
                             return false;
                         }
 
-                        // todo: now that the parameters have been checked we need to verify the function
-                        // check for existence of each parameter
-                        // make sure parameter types are the same as in the symbol table version of the function
-                        // if yes return true, else return false
+                        // todo: need to increase eIndex to see if there is a '.' after object
 
+                        return true;
                     }
                 }
             }
@@ -886,10 +884,58 @@ public class Compiler {
                 return false;
             }
         } else if (isIdentifierExpression(tempList.get(index))) {
+            String sarScope = globalScope;
+            boolean found = false;
+            SAR sar = new SAR(tempList.get(index), globalScope, "");
 
-            // todo: need to check if type is the right one for the parameter
-            if (iExist(new SAR(tempList.get(index), globalScope, ""))) {
+            while (!sarScope.isEmpty()) {
+                for (String key : symbolTable.keySet()) {
+                    Symbol s = symbolTable.get(key);
+                    if (sarScope.equals("g")) {
+                        if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope)) {
+                            if (s.getData() instanceof VaribleData) {
+                                sar.setType(((VaribleData) s.getData()).getType());
+                            } else if (s.getData() instanceof FunctionData) {
+                                sar.setType(((FunctionData) s.getData()).getReturnType());
+                            }
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope)) {
+                        if (s.getData() instanceof VaribleData) {
+                            sar.setType(((VaribleData) s.getData()).getType());
+                        } else if (s.getData() instanceof FunctionData) {
+                            sar.setType(((FunctionData) s.getData()).getReturnType());
+                        }
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) {
+                    break;
+                }
+
+                if (sarScope.contains(".")) {
+                    sarScope = sarScope.substring(0, sarScope.lastIndexOf("."));
+                } else {
+                    sarScope = "";
+                }
             }
+
+            if (!found) {
+                errorList += "variable '" + tempList.get(index).lexi + "' does not exist in scope. Line: " + tempList.get(index).lineNum + "\n";
+                return false;
+            }
+
+            if (paramList.get(pId).equals(sar.getType())) {
+                return true;
+            }
+
+            errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + tempList.get(index).lineNum + "\n";
+            return false;
         }
 
         if (tempList.get(index + 1).lexi.equals(",")) {

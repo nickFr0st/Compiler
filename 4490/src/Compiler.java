@@ -634,7 +634,12 @@ public class Compiler {
                     if (isCalled) {
                         eIndex = i;
                         rExist(sar, SAS, tempList, scopePassTwo);
-                        i = eIndex;
+                        i = eIndex + 1;
+
+                        if (tempList.get(i).lexi.equals(";")) {
+                            cleanupSAS(SAS, OS);
+                            continue;
+                        }
 
                         if (tempList.get(i + 1).lexi.equals(".")) {
                             i++;
@@ -697,7 +702,7 @@ public class Compiler {
                         errorList += "Class does not exist in scope. Line: " + item.lineNum + "\n";
                     }
                 } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()))
-                    while (!OS.isEmpty()) addTempToSAS(OS.pop(), SAS);
+                    cleanupSAS(SAS, OS);
 
                 // take down scope
                 if (tempList.get(i).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
@@ -723,6 +728,10 @@ public class Compiler {
             System.out.print(e.getMessage());
             System.exit(0);
         }
+    }
+
+    private void cleanupSAS(Stack<SAR> SAS, Stack<SAR> OS) {
+        while (!OS.isEmpty()) addTempToSAS(OS.pop(), SAS);
     }
 
     private void addLiteralExpressionToSAS(String scopePassTwo, Tuple<String, String, Integer> tuple, Stack<SAR> SAS) {
@@ -771,7 +780,6 @@ public class Compiler {
         }
 
         return found && evaluateCallies(foundScope, sar, SAS, tempList, globalScope);
-
     }
 
     private boolean evaluateCallies(String foundScope, SAR sar, Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList, String globalScope) {
@@ -824,13 +832,17 @@ public class Compiler {
                     } else {
                         sar.setType(((FunctionData) s.getData()).getReturnType());
                         int index = eIndex + 2;
-                        //foundScope = foundScope.substring(0, foundScope.lastIndexOf("."));
 
                         if (!doParametersExist(SAS, tempList, globalScope, index, ((FunctionData) s.getData()).getParameters(), ((FunctionData) s.getData()).getParameters().size() - 1)) {
                             return false;
                         }
 
-                        // todo: need to increase eIndex to see if there is a '.' after object
+                        if (tempList.get(eIndex + 2).lexi.equals(".")) {
+                            eIndex += 3;
+                            foundScope = foundScope.substring(0, foundScope.lastIndexOf("."));
+                            SAS.pop();
+                            return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), ""), SAS, tempList, globalScope);
+                        }
 
                         return true;
                     }
@@ -842,6 +854,7 @@ public class Compiler {
     }
 
     private boolean doParametersExist(Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList, String globalScope, int index, List<String> paramList, int pId) {
+        eIndex = index;
         if (isLiteralExpression(tempList.get(index))) {
             boolean isGood = true;
             String actualType = "";
@@ -860,7 +873,6 @@ public class Compiler {
                 } else {
                     SAS.push(new SAR(tempList.get(index), globalScope, "int"));
                 }
-                SAS.push(new SAR(tempList.get(index), globalScope, "int"));
             } else if (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
                 if (!paramList.get(pId).equals("char")) {
                     isGood = false;
@@ -868,7 +880,6 @@ public class Compiler {
                 } else {
                     SAS.push(new SAR(tempList.get(index), globalScope, "char"));
                 }
-                SAS.push(new SAR(tempList.get(index), globalScope, "char"));
             } else if (tempList.get(index).lexi.equals("null")) {
                 if (!paramList.get(pId).equals("null")) {
                     isGood = false;
@@ -876,7 +887,6 @@ public class Compiler {
                 } else {
                     SAS.push(new SAR(tempList.get(index), globalScope, "null"));
                 }
-                SAS.push(new SAR(tempList.get(index), globalScope, "null"));
             }
 
             if (!isGood) {
@@ -930,12 +940,10 @@ public class Compiler {
                 return false;
             }
 
-            if (paramList.get(pId).equals(sar.getType())) {
-                return true;
+            if (!paramList.get(pId).equals(sar.getType())) {
+                errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + tempList.get(index).lineNum + "\n";
+                return false;
             }
-
-            errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + tempList.get(index).lineNum + "\n";
-            return false;
         }
 
         if (tempList.get(index + 1).lexi.equals(",")) {

@@ -630,6 +630,7 @@ public class Compiler {
                     addLiteralExpressionToSAS(scopePassTwo, tempList.get(i), SAS);
                 } else if (isIdentifierExpression(tempList.get(i))) {
                     // todo: need to valid functions as well
+                    // functions can not be declared outside of a class
                     SAR sar = new SAR(tempList.get(i), scopePassTwo, "");
                     if (isCalled) {
                         eIndex = i;
@@ -832,10 +833,15 @@ public class Compiler {
                     } else {
                         sar.setType(((FunctionData) s.getData()).getReturnType());
                         int index = eIndex + 2;
+                        String value = "t" + symIdInr;
+                        addToSymbolTable("tVar", new ArrayList<String>(), ((FunctionData) s.getData()).getReturnType(), "private", value, sar.getLexi().lineNum);
 
                         if (!doParametersExist(SAS, tempList, globalScope, index, ((FunctionData) s.getData()).getParameters(), ((FunctionData) s.getData()).getParameters().size() - 1)) {
                             return false;
                         }
+
+                        Tuple<String, String, Integer> tempLexi = new Tuple<String, String, Integer>(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);
+                        SAS.push(new SAR(tempLexi, sar.getScope(), sar.getType()));
 
                         if (tempList.get(eIndex + 2).lexi.equals(".")) {
                             eIndex += 3;
@@ -843,7 +849,6 @@ public class Compiler {
                             SAS.pop();
                             return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), ""), SAS, tempList, globalScope);
                         }
-
                         return true;
                     }
                 }
@@ -855,6 +860,12 @@ public class Compiler {
 
     private boolean doParametersExist(Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList, String globalScope, int index, List<String> paramList, int pId) {
         eIndex = index;
+
+        if (pId < 0) {
+            errorList += "the function being called has too many parameters. Line: " + tempList.get(index).lineNum + "\n";
+            return false;
+        }
+
         if (isLiteralExpression(tempList.get(index))) {
             boolean isGood = true;
             String actualType = "";
@@ -905,8 +916,35 @@ public class Compiler {
                         if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope)) {
                             if (s.getData() instanceof VaribleData) {
                                 sar.setType(((VaribleData) s.getData()).getType());
+
+                                if (((VaribleData) s.getData()).getAccessMod().equals("private") && !globalScope.equals("g")) {
+                                    errorList += "Access Error: " + sar.getLexi().lexi + " is a private variable. Line: " + sar.getLexi().lineNum + "\n";
+                                    return false;
+                                }
+
+                                if (!paramList.get(pId).equals(sar.getType())) {
+                                    errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + tempList.get(index).lineNum + "\n";
+                                    return false;
+                                }
+
                             } else if (s.getData() instanceof FunctionData) {
                                 sar.setType(((FunctionData) s.getData()).getReturnType());
+
+                                if (((FunctionData) s.getData()).getAccessMod().equals("private") && !globalScope.equals("g")) {
+                                    errorList += "Access Error: " + sar.getLexi().lexi + " is a private function. Line: " + sar.getLexi().lineNum + "\n";
+                                    return false;
+                                }
+
+                                if (!paramList.get(pId).equals(sar.getType())) {
+                                    errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + tempList.get(index).lineNum + "\n";
+                                    return false;
+                                }
+
+                                if (((FunctionData) s.getData()).getParameters().size() == 0) {
+                                    //todo: need logic
+                                } else {
+
+                                }
                             }
                             found = true;
                             break;
@@ -916,8 +954,35 @@ public class Compiler {
                     if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope)) {
                         if (s.getData() instanceof VaribleData) {
                             sar.setType(((VaribleData) s.getData()).getType());
+
+                            if (((VaribleData) s.getData()).getAccessMod().equals("private") && !globalScope.equals(sarScope)) {
+                                errorList += "Access Error: " + sar.getLexi().lexi + " is a private variable. Line: " + sar.getLexi().lineNum + "\n";
+                                return false;
+                            }
+
+                            if (!paramList.get(pId).equals(sar.getType())) {
+                                errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + tempList.get(index).lineNum + "\n";
+                                return false;
+                            }
+
                         } else if (s.getData() instanceof FunctionData) {
                             sar.setType(((FunctionData) s.getData()).getReturnType());
+
+                            if (((VaribleData) s.getData()).getAccessMod().equals("private") && !globalScope.equals(sarScope)) {
+                                errorList += "Access Error: " + sar.getLexi().lexi + " is a private function. Line: " + sar.getLexi().lineNum + "\n";
+                                return false;
+                            }
+
+                            if (!paramList.get(pId).equals(sar.getType())) {
+                                errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + tempList.get(index).lineNum + "\n";
+                                return false;
+                            }
+
+                            if (((FunctionData) s.getData()).getParameters().size() == 0) {
+                                //todo: need logic
+                            } else {
+
+                            }
                         }
                         found = true;
                         break;
@@ -939,15 +1004,13 @@ public class Compiler {
                 errorList += "variable '" + tempList.get(index).lexi + "' does not exist in scope. Line: " + tempList.get(index).lineNum + "\n";
                 return false;
             }
-
-            if (!paramList.get(pId).equals(sar.getType())) {
-                errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + tempList.get(index).lineNum + "\n";
-                return false;
-            }
         }
 
         if (tempList.get(index + 1).lexi.equals(",")) {
             return doParametersExist(SAS, tempList, globalScope, index + 2, paramList, pId - 1);
+        } else if (tempList.get(index + 1).lexi.equals(")") && pId != 0) {
+            errorList += "function has too few parameters. Line: " + tempList.get(index).lineNum + "\n";
+            return false;
         } else if (tempList.get(index + 1).lexi.equals(")")) {
             return true;
         }

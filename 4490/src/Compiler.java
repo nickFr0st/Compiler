@@ -639,6 +639,7 @@ public class Compiler {
 
                         if (tempList.get(i).lexi.equals(";")) {
                             cleanupSAS(SAS, OS);
+                            i++;
                             continue;
                         }
 
@@ -827,7 +828,10 @@ public class Compiler {
                             foundScope = foundScope.substring(0, foundScope.lastIndexOf("."));
                             SAS.pop();
                             return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), ""), SAS, tempList, globalScope);
+                        } else {
+                            eIndex = eIndex + 2;
                         }
+
                         return true;
 
                     } else {
@@ -861,53 +865,53 @@ public class Compiler {
     private boolean doParametersExist(Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList, String globalScope, int index, List<String> paramList, int pId) {
         eIndex = index;
 
+        Tuple<String, String, Integer> item = tempList.get(index);
+        if (!isLegalValue(item)) {
+            errorList += "the function being called has too few parameters. Line: " + item.lineNum + "\n";
+
+            System.out.print(errorList);
+            System.exit(0);
+        }
+
         if (pId < 0) {
-            errorList += "the function being called has too many parameters. Line: " + tempList.get(index).lineNum + "\n";
+            errorList += "the function being called has too many parameters. Line: " + item.lineNum + "\n";
             return false;
         }
 
-        if (isLiteralExpression(tempList.get(index))) {
+        if (isLiteralExpression(item)) {
             boolean isGood = true;
             String actualType = "";
 
-            if (tempList.get(index).lexi.equals("true") || tempList.get(index).lexi.equals("false")) {
+            if (item.lexi.equals("true") || item.lexi.equals("false")) {
                 if (!paramList.get(pId).equals("bool")) {
                     isGood = false;
-                    actualType = tempList.get(index).lexi;
-                } else {
-                    SAS.push(new SAR(tempList.get(index), globalScope, "bool"));
+                    actualType = item.lexi;
                 }
-            } else if (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
+            } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
                 if (!paramList.get(pId).equals("int")) {
                     isGood = false;
-                    actualType = tempList.get(index).type;
-                } else {
-                    SAS.push(new SAR(tempList.get(index), globalScope, "int"));
+                    actualType = item.type;
                 }
-            } else if (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
+            } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
                 if (!paramList.get(pId).equals("char")) {
                     isGood = false;
-                    actualType = tempList.get(index).type;
-                } else {
-                    SAS.push(new SAR(tempList.get(index), globalScope, "char"));
+                    actualType = item.type;
                 }
-            } else if (tempList.get(index).lexi.equals("null")) {
+            } else if (item.lexi.equals("null")) {
                 if (!paramList.get(pId).equals("null")) {
                     isGood = false;
-                    actualType = tempList.get(index).lexi;
-                } else {
-                    SAS.push(new SAR(tempList.get(index), globalScope, "null"));
+                    actualType = item.lexi;
                 }
             }
 
             if (!isGood) {
-                errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + actualType + "'. Line: " + tempList.get(index).lineNum + "\n";
+                errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + actualType + "'. Line: " + item.lineNum + "\n";
                 return false;
             }
-        } else if (isIdentifierExpression(tempList.get(index))) {
+        } else if (isIdentifierExpression(item)) {
             String sarScope = globalScope;
             boolean found = false;
-            SAR sar = new SAR(tempList.get(index), globalScope, "");
+            SAR sar = new SAR(item, globalScope, "");
 
             while (!sarScope.isEmpty()) {
                 for (String key : symbolTable.keySet()) {
@@ -922,8 +926,13 @@ public class Compiler {
                                     return false;
                                 }
 
+                                if (tempList.get(index + 1).lexi.equals(".")) {
+                                    // todo need to check for '.'
+                                    //return evaluateCallies(sarScope, sar, SAS, tempList, globalScope);
+                                }
+
                                 if (!paramList.get(pId).equals(sar.getType())) {
-                                    errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + tempList.get(index).lineNum + "\n";
+                                    errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + item.lineNum + "\n";
                                     return false;
                                 }
 
@@ -936,14 +945,14 @@ public class Compiler {
                                 }
 
                                 if (!paramList.get(pId).equals(sar.getType())) {
-                                    errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + tempList.get(index).lineNum + "\n";
+                                    errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + item.lineNum + "\n";
                                     return false;
                                 }
 
                                 if (((FunctionData) s.getData()).getParameters().size() == 0) {
-                                    //todo: need logic
+                                    index += 2;
                                 } else {
-
+                                    return doParametersExist(SAS, tempList, globalScope, index + 2, paramList, ((FunctionData) s.getData()).getParameters().size() - 1);
                                 }
                             }
                             found = true;
@@ -960,28 +969,35 @@ public class Compiler {
                                 return false;
                             }
 
+                            if (tempList.get(index + 1).lexi.equals(".")) {
+                                // todo need to check for '.'
+//                                String newScope = sarScope.substring(0, sarScope.lastIndexOf("."));
+//                                newScope =  newScope + "." + sar.getType();
+//                                return evaluateCallies(newScope, new SAR(tempList.get(index + 2), newScope, ""), SAS, tempList, globalScope);
+                            }
+
                             if (!paramList.get(pId).equals(sar.getType())) {
-                                errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + tempList.get(index).lineNum + "\n";
+                                errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + item.lineNum + "\n";
                                 return false;
                             }
 
                         } else if (s.getData() instanceof FunctionData) {
                             sar.setType(((FunctionData) s.getData()).getReturnType());
 
-                            if (((VaribleData) s.getData()).getAccessMod().equals("private") && !globalScope.equals(sarScope)) {
+                            if (((FunctionData) s.getData()).getAccessMod().equals("private") && !globalScope.equals(sarScope)) {
                                 errorList += "Access Error: " + sar.getLexi().lexi + " is a private function. Line: " + sar.getLexi().lineNum + "\n";
                                 return false;
                             }
 
                             if (!paramList.get(pId).equals(sar.getType())) {
-                                errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + tempList.get(index).lineNum + "\n";
+                                errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + item.lineNum + "\n";
                                 return false;
                             }
 
                             if (((FunctionData) s.getData()).getParameters().size() == 0) {
-                                //todo: need logic
+                                index += 2;
                             } else {
-
+                                return doParametersExist(SAS, tempList, globalScope, index + 2, paramList, ((FunctionData) s.getData()).getParameters().size() - 1);
                             }
                         }
                         found = true;
@@ -1001,7 +1017,7 @@ public class Compiler {
             }
 
             if (!found) {
-                errorList += "variable '" + tempList.get(index).lexi + "' does not exist in scope. Line: " + tempList.get(index).lineNum + "\n";
+                errorList += "variable '" + item.lexi + "' does not exist in scope. Line: " + item.lineNum + "\n";
                 return false;
             }
         }
@@ -1009,13 +1025,17 @@ public class Compiler {
         if (tempList.get(index + 1).lexi.equals(",")) {
             return doParametersExist(SAS, tempList, globalScope, index + 2, paramList, pId - 1);
         } else if (tempList.get(index + 1).lexi.equals(")") && pId != 0) {
-            errorList += "function has too few parameters. Line: " + tempList.get(index).lineNum + "\n";
+            errorList += "function has too few parameters. Line: " + item.lineNum + "\n";
             return false;
         } else if (tempList.get(index + 1).lexi.equals(")")) {
             return true;
         }
 
         return false;
+    }
+
+    private boolean isLegalValue(Tuple<String, String, Integer> item) {
+        return ((item.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(item.lexi.toCharArray()[0])) || item.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || item.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()) || item.lexi.equals("true") || item.lexi.equals("false"));
     }
 
     private boolean ClassExist(Tuple<String, String, Integer> item, String sscope) {
@@ -1172,7 +1192,8 @@ public class Compiler {
         if ((previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())
                 || previousLex.lexi.equals("true") || previousLex.lexi.equals("false")
                 || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())
-                || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) &&
+                || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())
+                || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) &&
                 (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())
                         || nextLexi.lexi.equals("true")
                         || nextLexi.lexi.equals("false")

@@ -431,7 +431,7 @@ public class Compiler {
                         }
 
                         if (!tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
-                            errorList += "Invalid else statement. Line: " + currentLex.lineNum + "\n";
+                            errorList += "Else statement blocks must be contained within block brackets '{}'. Line: " + currentLex.lineNum + "\n";
                             previousLex = currentLex;
                             continue;
                         }
@@ -458,6 +458,13 @@ public class Compiler {
                             previousLex = currentLex;
                             continue;
                         }
+
+                        if (!tempList.get(tempList.size() - 1).lexi.equals("{")) {
+                            errorList += "While statement blocks must be contained within block brackets '{}'. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+
                         scope += ".while" + statementInr++;
                         previousLex = currentLex;
                         continue;
@@ -727,6 +734,10 @@ public class Compiler {
                     isCalled = true;
                     i++;
                     continue;
+                }
+
+                if (item.lexi.equals("while")) {
+                    // todo: need to do stuff with this
                 }
 
                 if (isLiteralExpression(tempList.get(i))) {
@@ -1069,7 +1080,7 @@ public class Compiler {
                         if (s.getData() instanceof VaribleData) {
                             sar.setType(((VaribleData) s.getData()).getType());
 
-                            if (((VaribleData) s.getData()).getAccessMod().equals("private") && !globalScope.equals(sarScope)) {
+                            if (((VaribleData) s.getData()).getAccessMod().equals("private") && !globalScope.contains(sarScope)) {
                                 errorList += "Access Error: " + sar.getLexi().lexi + " is a private variable. Line: " + sar.getLexi().lineNum + "\n";
                                 return false;
                             }
@@ -1174,11 +1185,13 @@ public class Compiler {
             if (!sarEqualAssignment(RHS, LHS)) {
                 errorList += "left and right operand types are incompatible. Line: " + opr.getLexi().lineNum + "\n";
             }
-        } else if (opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
+        } else if (opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
             if (SAS.size() < 2) {
                 errorList += "missing an operand. Line: " + opr.getLexi().lineNum + "\n";
                 return;
             }
+
+            // todo: handle special case with negative numbers
 
             SAR RHS = SAS.pop();
             SAR LHS = SAS.pop();
@@ -1193,7 +1206,6 @@ public class Compiler {
             SAR temp = new SAR(new Tuple<String, String, Integer>("T" + (symIdInr - 2), RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType());
             SAS.push(temp);
         }
-
     }
 
     private boolean sarEqualAssignment(SAR rhs, SAR lhs) {
@@ -1380,40 +1392,57 @@ public class Compiler {
     }
 
     private boolean isValidRelationParameterType(List<Tuple<String, String, Integer>> tempList, int index) {
-        if ((tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(index).lexi.toCharArray()[0])) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) || tempList.get(index).lexi.equals("true") || tempList.get(index).lexi.equals("false")) {
-            if (tempList.get(index).lexi.equals("(")) {
-                index++;
+        if (!validRelationType(tempList, index)) {
+            return false;
+        }
+
+        if (tempList.size() == 5) {
+            if (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
+                return false;
             }
-            if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
-                if (!tempList.get(index + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
-                    return false;
-                }
-                if (!tempList.get(index + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
-                    return false;
-                }
-                index = index + 3;
+        }
+
+        if (tempList.get(index).lexi.equals("(")) {
+            index++;
+        }
+
+        // check if item is an array
+        if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+            if (!tempList.get(index + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
+                return false;
             }
-            if (tempList.get(index + 1).lexi.equals(".")) {
+            if (!tempList.get(index + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                return false;
+            }
+            index = index + 3;
+        }
+
+        if (tempList.get(index + 1).lexi.equals(".")) {
+            index = index + 2;
+            if (!isValidRelationParameterType(tempList, index)) {
+                return false;
+            }
+        }
+
+        if (tempList.get(index + 1).lexi.equals("(")) {
+            if (!tempList.get(index + 2).lexi.equals(")")) {
                 index = index + 2;
                 if (!isValidRelationParameterType(tempList, index)) {
                     return false;
                 }
+            } else {
+                index++;
             }
-            if (tempList.get(index + 1).lexi.equals("(")) {
-                if (!tempList.get(index + 2).lexi.equals(")")) {
-                    index = index + 2;
-                    if (!isValidRelationParameterType(tempList, index)) {
-                        return false;
-                    }
-                } else {
-                    index++;
-                }
-            }
-            if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name()) || tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
-                return isValidRelationParameterType(tempList, index + 2);
-            } else return tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name());
         }
-        return false;
+
+        if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name()) || tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
+            return isValidRelationParameterType(tempList, index + 2);
+        } else return tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name());
+
+    }
+
+    private boolean validRelationType(List<Tuple<String, String, Integer>> tempList, int index) {
+        return (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(index).lexi.toCharArray()[0])) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) || tempList.get(index).lexi.equals("true") || tempList.get(index).lexi.equals("false");
     }
 
     private boolean isValidCalledParameterTypeITOA(List<Tuple<String, String, Integer>> tempList, int index) {

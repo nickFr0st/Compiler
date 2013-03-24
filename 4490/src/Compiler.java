@@ -70,7 +70,7 @@ public class Compiler {
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
                     validateMathOpr(currentLex, previousLex, nextLexi);
                     if (nextLexi.lexi.equals("-")) {
-                        if (tempList.get(i +2) != null && (tempList.get(i +2).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || tempList.get(i +2).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(i +2).lexi.equals("("))) {
+                        if (tempList.get(i + 2) != null && (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(i + 2).lexi.equals("("))) {
                             // all good
                         } else {
                             errorList += "Both side of mathematical operation must be either an Identifier or a Number. Line: " + previousLex.lineNum + "\n";
@@ -102,6 +102,9 @@ public class Compiler {
                             scope = scope.substring(0, scope.lastIndexOf('.'));
                         }
                         openBlocks.remove(openBlocks.size() - 1);
+                        previousLex = currentLex;
+                        i++;
+                        continue;
                     }
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
                     validateBooleanOpr(currentLex, previousLex, nextLexi);
@@ -167,10 +170,49 @@ public class Compiler {
                     /**
                      *  check for valid function, object and class declarations
                      **/
+
+
                     if (currentLex.lexi.equals("private") || currentLex.lexi.equals("public")) {
                         if (i != 0) {
                             errorList += "Modifiers must be at the beginning of function declarations. Line: " + currentLex.lineNum + "\n";
                         } else {
+                            if (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && i == 0) {
+                                if (tempList.get(tempList.size() - 1).lexi.equals("{")) {
+                                    if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                                        if (Character.isLowerCase(nextLexi.lexi.toCharArray()[0])) {
+                                            errorList += "Constructor name must start with a capital letter. Line: " + currentLex.lineNum + "\n";
+                                        }
+
+                                        if (!tempList.get(i + 3).lexi.equals(")")) {
+                                            if (!isValidParameterDeclarationType(tempList, 3)) {
+                                                errorList += "Constructor '" + tempList.get(1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                                            }
+
+                                            if (!tempList.get(i + 4).lexi.equals("{")) {
+                                                errorList += "Constructor '" + tempList.get(1).lexi + "' cannot contain anything between the parameter list and the start block. Line: " + currentLex.lineNum + "\n";
+                                            }
+
+                                            paramIdList = new ArrayList<String>();
+                                            if (!isValidParameterDeclarationType(tempList, i + 4)) {
+                                                errorList += "Constructor '" + tempList.get(1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                                            } else {
+                                                addToSymbolTable("Function", paramIdList, tempList.get(1).lexi, tempList.get(0).lexi, tempList.get(1).lexi, currentLex.lineNum);
+                                            }
+                                        } else {
+                                            if (!tempList.get(i + 4).lexi.equals("{")) {
+                                                errorList += "Constructor '" + tempList.get(1).lexi + "' cannot contain anything between the parameter list and the start block. Line: " + currentLex.lineNum + "\n";
+                                            }
+
+                                            addToSymbolTable("Function", new ArrayList<String>(), tempList.get(1).lexi, tempList.get(0).lexi, tempList.get(1).lexi, currentLex.lineNum);
+                                        }
+                                        i += tempList.size() - 1;
+                                        openBlocks.add(tempList.get(i));
+                                        previousLex = tempList.get(i);
+                                        continue;
+                                    }
+                                }
+                            }
+
                             if (tempList.size() < 4) {
                                 errorList += "There are to few arguments in declaration. Line: " + currentLex.lineNum + "\n";
                             } else {
@@ -206,8 +248,11 @@ public class Compiler {
                                     if (!isStepValid(tempList.get(2).type, tempList.get(2).lexi)) {
                                         errorList += "Missing function name or argument list(also check that functions and variables start with lower case letters). Line: " + currentLex.lineNum + "\n";
                                     } else if (tempList.get(2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && !tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                                        paramIdList = new ArrayList<String>();
                                         if (!isValidParameterDeclarationType(tempList, 3)) {
                                             errorList += "Function '" + tempList.get(1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                                        } else {
+                                            addToSymbolTable("Function", paramIdList, tempList.get(1).lexi, tempList.get(0).lexi, tempList.get(2).lexi, currentLex.lineNum);
                                         }
                                     } else if (tempList.get(2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) && tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
                                         addToSymbolTable("Function", new ArrayList<String>(), tempList.get(1).lexi, tempList.get(0).lexi, tempList.get(1).lexi, currentLex.lineNum);
@@ -350,7 +395,7 @@ public class Compiler {
                             continue;
                         }
 
-                        if (!tempList.get(tempList.size() -1).lexi.equals("{")) {
+                        if (!tempList.get(tempList.size() - 1).lexi.equals("{")) {
                             errorList += "If statement blocks must be contained within block brackets '{}'. Line: " + currentLex.lineNum + "\n";
                             previousLex = currentLex;
                             continue;
@@ -425,7 +470,7 @@ public class Compiler {
                  * validate object type declaration
                  */
                 if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && i == 0) {
-                    if (tempList.get(tempList.size() -1).lexi.equals("{")) {
+                    if (tempList.get(tempList.size() - 1).lexi.equals("{")) {
                         if (tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
                             if (Character.isLowerCase(currentLex.lexi.toCharArray()[0])) {
                                 errorList += "Constructor name must start with a capital letter. Line: " + currentLex.lineNum + "\n";
@@ -435,13 +480,28 @@ public class Compiler {
                                 if (!isValidParameterDeclarationType(tempList, 2)) {
                                     errorList += "Constructor '" + tempList.get(0).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
                                 }
+
+                                if (tempList.get(tempList.size() - 1).lexi.equals("{") && tempList.get(tempList.size() - 2).lexi.equals(")")) {
+                                    // all good
+                                } else {
+                                    errorList += "Constructor '" + tempList.get(0).lexi + "' cannot contain anything between the parameter list and the start block. Line: " + currentLex.lineNum + "\n";
+                                }
+
+                                paramIdList = new ArrayList<String>();
+                                if (!isValidParameterDeclarationType(tempList, i + 3)) {
+                                    errorList += "Constructor '" + tempList.get(0).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                                } else {
+                                    addToSymbolTable("Function", paramIdList, tempList.get(0).lexi, "private", tempList.get(0).lexi, currentLex.lineNum);
+                                }
                             } else {
                                 if (!tempList.get(i + 3).lexi.equals("{")) {
                                     errorList += "Constructor '" + tempList.get(0).lexi + "' cannot contain anything between the parameter list and the start block. Line: " + currentLex.lineNum + "\n";
                                 }
-                            }
 
-                            i += 2;
+                                addToSymbolTable("Function", new ArrayList<String>(), tempList.get(0).lexi, "private", tempList.get(0).lexi, currentLex.lineNum);
+                            }
+                            i += tempList.size() - 1;
+                            openBlocks.add(tempList.get(i));
                             previousLex = tempList.get(i);
                             continue;
                         }
@@ -1518,7 +1578,7 @@ public class Compiler {
             return;
         }
 
-        if (previousLex != null && ((previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || previousLex.lexi.equals(")")) && ( nextLex.lexi.equals("-") || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || nextLex.lexi.equals("(")))) {
+        if (previousLex != null && ((previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || previousLex.lexi.equals(")")) && (nextLex.lexi.equals("-") || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || nextLex.lexi.equals("(")))) {
             return;
         }
         errorList += "Both side of mathematical operation must be either an Identifier or a Number. Line: " + previousLex.lineNum + "\n";

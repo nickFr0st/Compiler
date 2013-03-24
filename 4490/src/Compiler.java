@@ -126,13 +126,10 @@ public class Compiler {
                  */
                 if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.KEYWORD.name())) {
                     if (currentLex.lexi.equals("return")) {
-                        if (!tempList.get(0).lexi.equals("return")) {
-                            errorList += "return must be the first statement on the line. Line: " + currentLex.lineNum + "\n";
-                        }
                         if (!tempList.get(tempList.size() - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                             errorList += "return statement must end with a end of line token (;). Line: " + currentLex.lineNum + "\n";
                         }
-                        validateReturnStatement(currentLex, nextLexi, peekPrevious);
+                        validateReturnStatement(currentLex, nextLexi);
                     }
 
                     if (currentLex.lexi.equals("class")) {
@@ -345,6 +342,13 @@ public class Compiler {
                             previousLex = currentLex;
                             continue;
                         }
+
+                        if (!tempList.get(tempList.size() -1).lexi.equals("{")) {
+                            errorList += "If statement blocks must be contained within block brackets '{}'. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+
                         scope += ".if" + statementInr++;
                         previousLex = currentLex;
                         continue;
@@ -413,6 +417,30 @@ public class Compiler {
                 /**
                  * validate object type declaration
                  */
+                if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && i == 0) {
+                    if (tempList.get(tempList.size() -1).lexi.equals("{")) {
+                        if (tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                            if (Character.isLowerCase(currentLex.lexi.toCharArray()[0])) {
+                                errorList += "Constructor name must start with a capital letter. Line: " + currentLex.lineNum + "\n";
+                            }
+
+                            if (!tempList.get(i + 2).lexi.equals(")")) {
+                                if (!isValidParameterDeclarationType(tempList, 2)) {
+                                    errorList += "Constructor '" + tempList.get(0).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                                }
+                            } else {
+                                if (!tempList.get(i + 3).lexi.equals("{")) {
+                                    errorList += "Constructor '" + tempList.get(0).lexi + "' cannot contain anything between the parameter list and the start block. Line: " + currentLex.lineNum + "\n";
+                                }
+                            }
+
+                            i += 2;
+                            previousLex = tempList.get(i);
+                            continue;
+                        }
+                    }
+                }
+
                 if (i == 0 && (currentLex.lexi.equals("void") || currentLex.lexi.equals("int") || currentLex.lexi.equals("char") || currentLex.lexi.equals("bool") || (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(currentLex.lexi.toCharArray()[0])))) {
                     if (tempList.size() < 3) {
                         errorList += "Incorrect format, too few arguments. Line: " + currentLex.lineNum + "\n";
@@ -492,6 +520,14 @@ public class Compiler {
                  * validates function and variable use
                  */
                 if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && i == 0 && Character.isLowerCase(currentLex.lexi.toCharArray()[0])) {
+                    if (tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
+                        if (Character.isLowerCase(currentLex.lexi.toCharArray()[0])) {
+                            errorList += "Variable type must either be a pre-defined type or start with a capital letter. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+                    }
+
                     if (tempList.size() < 4) {
                         errorList += "Too few arguments. Line: " + currentLex.lineNum + "\n";
                         previousLex = currentLex;
@@ -1429,13 +1465,9 @@ public class Compiler {
         errorList += "Right hand side of boolean operator must be either an Identifier, Number, or Character. Line: " + currentLex.lineNum + "\n";
     }
 
-    private void validateReturnStatement(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> nextLex, Tuple<String, String, Integer> peekPrevious) {
+    private void validateReturnStatement(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> nextLex) {
         if (!isReturnValueValid(nextLex)) {
             errorList += "Return statement must either be followed by a value or an end of line token (;). Line: " + currentLex.lineNum + "\n";
-        }
-
-        if (!isLHSinValidFormat(peekPrevious)) {
-            errorList += "Only the return statement can occupy the line (there should not be anything before it). Line: " + currentLex.lineNum + "\n";
         }
     }
 

@@ -69,6 +69,13 @@ public class Compiler {
                     validateAssignmentOpr(currentLex, previousLex, nextLexi);
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
                     validateMathOpr(currentLex, previousLex, nextLexi);
+                    if (nextLexi.lexi.equals("-")) {
+                        if (tempList.get(i +2) != null && (tempList.get(i +2).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || tempList.get(i +2).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(i +2).lexi.equals("("))) {
+                            // all good
+                        } else {
+                            errorList += "Both side of mathematical operation must be either an Identifier or a Number. Line: " + previousLex.lineNum + "\n";
+                        }
+                    }
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
                     if (previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
                         errorList += "Invalid function call on line: " + currentLex.lineNum + "\n";
@@ -691,7 +698,9 @@ public class Compiler {
                     if (iExist(sar)) {
                         SAS.push(sar);
                     } else {
-                        errorList += "identifier has not been declared in scope. Line: " + tempList.get(i).lineNum + "\n";
+                        errorList += "identifier " + sar.getLexi().lexi + " has not been declared in scope. Line: " + tempList.get(i).lineNum + "\n";
+                        System.out.print(errorList);
+                        System.exit(0);
                     }
                 } else if (isExpressionZ(tempList.get(i))) {
                     int precedence = setPrecedence(tempList.get(i).lexi);
@@ -1496,12 +1505,20 @@ public class Compiler {
     }
 
     private void validateMathOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) {
-        if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || (previousLex == null)) {
+        if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
             errorList += "Mathematical operators require a right hand value. Line: " + currentLex.lineNum + "\n";
             return;
         }
 
-        if ((previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || previousLex.lexi.equals(")")) && (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || nextLex.lexi.equals("("))) {
+        if (currentLex.lexi.equals("-") && previousLex == null) {
+            return;
+        }
+
+        if (currentLex.lexi.equals("-") && previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || previousLex.lexi.equals(")") || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
+            return;
+        }
+
+        if (previousLex != null && ((previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || previousLex.lexi.equals(")")) && ( nextLex.lexi.equals("-") || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || nextLex.lexi.equals("(")))) {
             return;
         }
         errorList += "Both side of mathematical operation must be either an Identifier or a Number. Line: " + previousLex.lineNum + "\n";

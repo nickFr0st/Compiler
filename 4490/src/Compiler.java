@@ -184,16 +184,8 @@ public class Compiler {
                                         }
 
                                         if (!tempList.get(i + 3).lexi.equals(")")) {
-                                            if (!isValidParameterDeclarationType(tempList, 3)) {
-                                                errorList += "Constructor '" + tempList.get(1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
-                                            }
-
-                                            if (!tempList.get(i + 4).lexi.equals("{")) {
-                                                errorList += "Constructor '" + tempList.get(1).lexi + "' cannot contain anything between the parameter list and the start block. Line: " + currentLex.lineNum + "\n";
-                                            }
-
                                             paramIdList = new ArrayList<String>();
-                                            if (!isValidParameterDeclarationType(tempList, i + 4)) {
+                                            if (!isValidParameterDeclarationType(tempList, 3)) {
                                                 errorList += "Constructor '" + tempList.get(1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
                                             } else {
                                                 addToSymbolTable("Function", paramIdList, tempList.get(1).lexi, tempList.get(0).lexi, tempList.get(1).lexi, currentLex.lineNum);
@@ -208,6 +200,9 @@ public class Compiler {
                                         i += tempList.size() - 1;
                                         openBlocks.add(tempList.get(i));
                                         previousLex = tempList.get(i);
+
+                                        int key = 0;
+
                                         continue;
                                     }
                                 }

@@ -283,12 +283,17 @@ public class Compiler {
                      */
                     if (currentLex.lexi.equals("new")) {
                         if (!isValidObjectTypeExpression(nextLexi)) {
+                            if (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(nextLexi.lexi.toCharArray()[0])) {
+                                errorList += "Object must start with a capital letter. Line: " + currentLex.lineNum + "\n";
+                            }
                             errorList += "Invalid use of the new operator. Line: " + currentLex.lineNum + "\n";
                             previousLex = currentLex;
                             continue;
                         }
-                        if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                            // all good
+                        if (!tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                            if (!isValidCalledParameterType(tempList, i + 3)) {
+                                errorList += "Invalid Constructor parameter list. Line: " + currentLex.lineNum + "\n";
+                            }
                             previousLex = currentLex;
                             continue;
                         }
@@ -1440,7 +1445,7 @@ public class Compiler {
     }
 
     private boolean validRelationType(List<Tuple<String, String, Integer>> tempList, int index) {
-        return (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(index).lexi.toCharArray()[0])) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) || tempList.get(index).lexi.equals("true") || tempList.get(index).lexi.equals("false");
+        return (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(index).lexi.toCharArray()[0])) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) || tempList.get(index).lexi.equals("true") || tempList.get(index).lexi.equals("false") || tempList.get(index).lexi.equals("null");
     }
 
     private boolean isValidCalledParameterTypeITOA(List<Tuple<String, String, Integer>> tempList, int index) {

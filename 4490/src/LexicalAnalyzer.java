@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -150,7 +151,31 @@ public class LexicalAnalyzer {
 
                 tokenList = new ArrayList<String>();
                 // break up string by spaces
-                String[] tokenizer = line.split("[\\s\t]");
+                for (int i = 0; i < line.length(); i++){
+                    if (i > 0 && i < line.length()) {
+                        if (line.toCharArray()[i] == ' ' && line.toCharArray()[i -1] == '\'' && line.toCharArray()[i +1] == '\'') {
+                            StringBuilder sb = new StringBuilder(line);
+                            sb.setCharAt(i, 'ƒ');
+                            line = sb.toString();
+                        }
+                    }
+                }
+
+                String[] tokenizer = line.split("[\\s\\t]");
+
+                for (int j = 0; j < tokenizer.length; j++) {
+                    if (tokenizer[j].contains("ƒ")) {
+                        for (int i = 0; i < tokenizer[j].length(); i++){
+                            if (i > 0 && i < tokenizer[j].length()) {
+                                if (tokenizer[j].toCharArray()[i] == 'ƒ' && tokenizer[j].toCharArray()[i -1] == '\'' && tokenizer[j].toCharArray()[i +1] == '\'') {
+                                    StringBuilder sb = new StringBuilder(tokenizer[j]);
+                                    sb.setCharAt(i, ' ');
+                                    tokenizer[j] = sb.toString();
+                                }
+                            }
+                        }
+                    }
+                }
 
                 for (String item : tokenizer) {
                     if (tokenizer.length < 1 && item.trim().isEmpty()) {
@@ -212,7 +237,7 @@ public class LexicalAnalyzer {
                         tokenType = tokenTypesEnum.EOT.toString();
                     } else if (token.matches("[\\*\\+-/]")) {
                         tokenType = tokenTypesEnum.MATH_OPR.toString();
-                    } else if (token.matches("'" + "[\\w><_ ]" + "'") || token.matches("'\\" + "\\[\\w]" + "'")) {
+                    } else if (token.matches("'" + "[\\w><_,: ]" + "'") || token.matches("'\\" + "\\[\\w]" + "'")) {
                         tokenType = tokenTypesEnum.CHARACTER.toString();
                     } else if (token.matches("^[a-zA-Z]+[a-zA-Z0-9_]*$") && token.length() < 80) {
                         tokenType = tokenTypesEnum.IDENTIFIER.toString();
@@ -236,11 +261,11 @@ public class LexicalAnalyzer {
 
         if (index < size - 3) {
             if (item.charAt(index + 2) == '\'') {
-                if (item.substring(index + 1, index + 2).matches("[\\w><_ ]")) {
+                if (item.substring(index + 1, index + 2).matches("[\\w><_,: ]")) {
                     breakDownItem = item.substring(index, index + 3);
                 }
             } else if (item.charAt(index + 1) == '\\' && item.charAt(index + 3) == '\'') {
-                if (item.substring(index + 2, index + 3).matches("[\\w><_ ]")) {
+                if (item.substring(index + 2, index + 3).matches("[\\w><_,: ]")) {
                     breakDownItem = item.substring(index, index + 4);
                 }
             }
@@ -249,7 +274,7 @@ public class LexicalAnalyzer {
 
         if (index < size - 2) {
             if (item.charAt(index + 2) == '\'') {
-                if (item.substring(index + 1, index + 2).matches("[\\w><_ ]")) {  // || item.substring(index + 1, index + 2).matches("[>]")
+                if (item.substring(index + 1, index + 2).matches("[\\w><_,: ]")) {  // || item.substring(index + 1, index + 2).matches("[>]")
                     breakDownItem = item.substring(index, index + 3);
                 }
             }

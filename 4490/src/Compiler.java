@@ -781,7 +781,7 @@ public class Compiler {
                             if (OS.peek() == null) {
                                 errorList += "Missing opening paren. Line: " + item.lineNum + "\n";
                             }
-                            addTempToSAS(OS.pop(), SAS);
+                            addTempToSAS(OS.pop(), SAS, OS);
                         }
                         if (tempList.get(0).lexi.equals("public") || tempList.get(0).lexi.equals("private") || isValidReturnType(tempList.get(0).lexi, tempList.get(0).type)) {
                             scopePassTwo = scopePassTwo.substring(0, scopePassTwo.lastIndexOf("."));
@@ -796,7 +796,7 @@ public class Compiler {
                             if (OS.peek() == null) {
                                 errorList += "Missing opening array. Line: " + item.lineNum + "\n";
                             }
-                            addTempToSAS(OS.pop(), SAS);
+                            addTempToSAS(OS.pop(), SAS, OS);
                         }
                         if (!OS.isEmpty()) {
                             OS.pop();
@@ -805,7 +805,7 @@ public class Compiler {
                         OS.push(new SAR(item, scopePassTwo, ""));
                     } else if (precedence <= lastOprPrecedence) {
                         if (!OS.isEmpty()) {
-                            addTempToSAS(OS.pop(), SAS);
+                            addTempToSAS(OS.pop(), SAS, OS);
                         }
                         OS.push(new SAR(item, scopePassTwo, ""));
                     } else {
@@ -849,7 +849,7 @@ public class Compiler {
     }
 
     private void cleanupSAS(Stack<SAR> SAS, Stack<SAR> OS) {
-        while (!OS.isEmpty()) addTempToSAS(OS.pop(), SAS);
+        while (!OS.isEmpty()) addTempToSAS(OS.pop(), SAS, OS);
     }
 
     private void addLiteralExpressionToSAS(String scopePassTwo, Tuple<String, String, Integer> tuple, Stack<SAR> SAS) {
@@ -1171,7 +1171,7 @@ public class Compiler {
         return false;
     }
 
-    private void addTempToSAS(SAR opr, Stack<SAR> SAS) {
+    private void addTempToSAS(SAR opr, Stack<SAR> SAS, Stack<SAR> OS) {
         if (opr.getLexi().lexi.equals("=")) {
             if (SAS.size() < 2) {
                 errorList += "missing an operand. Line: " + opr.getLexi().lineNum + "\n";
@@ -1185,13 +1185,16 @@ public class Compiler {
             if (!sarEqualAssignment(RHS, LHS)) {
                 errorList += "left and right operand types are incompatible. Line: " + opr.getLexi().lineNum + "\n";
             }
-        } else if (opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
+        } else if (opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
             if (SAS.size() < 2) {
                 errorList += "missing an operand. Line: " + opr.getLexi().lineNum + "\n";
                 return;
             }
 
             // todo: handle special case with negative numbers
+            if (opr.getLexi().lexi.equals("-")) {
+
+            }
 
             SAR RHS = SAS.pop();
             SAR LHS = SAS.pop();

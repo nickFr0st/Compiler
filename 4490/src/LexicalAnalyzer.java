@@ -164,6 +164,7 @@ public class LexicalAnalyzer {
                             if (s.equals("'")) {
                                 s = checkForChars(item, s);
                             }
+
                             item = breakDownToken(item, s);
                         }
                     }
@@ -235,11 +236,11 @@ public class LexicalAnalyzer {
 
         if (index < size - 3) {
             if (item.charAt(index + 2) == '\'') {
-                if (item.substring(index + 1, index + 2).matches("[\\w]") || item.substring(index + 1, index + 2).matches("[>]")) {
+                if (item.substring(index + 1, index + 2).matches("[\\w><_]")) {
                     breakDownItem = item.substring(index, index + 3);
                 }
             } else if (item.charAt(index + 1) == '\\' && item.charAt(index + 3) == '\'') {
-                if (item.substring(index + 2, index + 3).matches("[\\w]") || item.substring(index + 1, index + 2).matches("[>]")) {
+                if (item.substring(index + 2, index + 3).matches("[\\w><_]")) {
                     breakDownItem = item.substring(index, index + 4);
                 }
             }

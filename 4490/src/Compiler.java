@@ -289,7 +289,7 @@ public class Compiler {
                             continue;
                         }
 
-                        if (tempList.get(i - 1).lexi.equals("(") || tempList.get(i - 1).lexi.equals(",") || tempList.get(i - 1).lexi.equals("=") || tempList.get(i -1).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
+                        if (tempList.get(i - 1).lexi.equals("(") || tempList.get(i - 1).lexi.equals(",") || tempList.get(i - 1).lexi.equals("=") || tempList.get(i - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
                             int j = i;
                             if (tempList.get(0).lexi.equals("private") || tempList.get(0).lexi.equals("public"))
                                 j++;
@@ -759,7 +759,7 @@ public class Compiler {
                 }
 
                 if (item.lexi.equals("while")) {
-                    // todo: need to do stuff with this, as well as if and else
+                    // todo: need to do stuff with this, as well as if and else    (params will be handled roughly the same as functions)
                 }
 
                 if (isLiteralExpression(tempList.get(i))) {
@@ -788,13 +788,15 @@ public class Compiler {
                             continue;
                         }
                     }
-                    if (iExist(sar)) {
+                    eIndex = i;
+                    if (iExist(sar, SAS, tempList, scopePassTwo)) {
                         SAS.push(sar);
                     } else {
-                        errorList += "identifier " + sar.getLexi().lexi + " has not been declared in scope. Line: " + tempList.get(i).lineNum + "\n";
+
                         System.out.print(errorList);
                         System.exit(0);
                     }
+                    i = eIndex;
                 } else if (isExpressionZ(tempList.get(i))) {
                     int precedence = setPrecedence(tempList.get(i).lexi);
 
@@ -988,11 +990,11 @@ public class Compiler {
                         sar.setType(((FunctionData) s.getData()).getReturnType());
                         int index = eIndex + 2;
                         String value = "t" + symIdInr;
-                        addToSymbolTable("tVar", new ArrayList<String>(), ((FunctionData) s.getData()).getReturnType(), "private", value, sar.getLexi().lineNum);
 
                         if (!doParametersExist(SAS, tempList, globalScope, index, ((FunctionData) s.getData()).getParameters(), ((FunctionData) s.getData()).getParameters().size() - 1)) {
                             return false;
                         }
+                        addToSymbolTable("tVar", new ArrayList<String>(), ((FunctionData) s.getData()).getReturnType(), "private", value, sar.getLexi().lineNum);
 
                         Tuple<String, String, Integer> tempLexi = new Tuple<String, String, Integer>(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);
                         SAS.push(new SAR(tempLexi, sar.getScope(), sar.getType()));
@@ -1317,7 +1319,7 @@ public class Compiler {
         return (lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()) || lexi.lexi.equals("."));
     }
 
-    private boolean iExist(SAR sar) {
+    private boolean iExist(SAR sar, Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList, String globalScope) {
         String sarScope = sar.getScope();
         while (!sarScope.isEmpty()) {
             for (String key : symbolTable.keySet()) {
@@ -1327,7 +1329,30 @@ public class Compiler {
                         if (s.getData() instanceof VaribleData) {
                             sar.setType(((VaribleData) s.getData()).getType());
                         } else if (s.getData() instanceof FunctionData) {
+
+                            if (globalScope.equals("g") && !sar.getLexi().lexi.equals("main")) {
+                                errorList += "function cannot be declared outside of a class. Line: " + sar.getLexi().lineNum + "\n";
+                                return false;
+                            }
+
+                            // need to do work here
                             sar.setType(((FunctionData) s.getData()).getReturnType());
+                            if (((FunctionData) s.getData()).getParameters().size() == 0) {
+                                if (!tempList.get(eIndex + 1).lexi.equals("(")) {
+                                    errorList += "Invalid function call. Line: " + sar.getLexi().lineNum + "\n";
+                                    return false;
+                                }
+
+                                if (!tempList.get(eIndex + 2).lexi.equals(")")) {
+                                    errorList += "Invalid function call. '" + sar.getLexi().lexi + "' has no parameters. Line: " + sar.getLexi().lineNum + "\n";
+                                    return false;
+                                }
+                            } else {
+                                int index = eIndex;
+                                if (!doParametersExist(SAS, tempList, globalScope, index + 2, ((FunctionData) s.getData()).getParameters(), ((FunctionData) s.getData()).getParameters().size() - 1)) {
+                                    return false;
+                                }
+                            }
                         }
                         return true;
                     }
@@ -1337,6 +1362,7 @@ public class Compiler {
                     if (s.getData() instanceof VaribleData) {
                         sar.setType(((VaribleData) s.getData()).getType());
                     } else if (s.getData() instanceof FunctionData) {
+                        // need to do work here
                         sar.setType(((FunctionData) s.getData()).getReturnType());
                     }
                     return true;
@@ -1349,11 +1375,12 @@ public class Compiler {
                 sarScope = "";
             }
         }
+        errorList += "'" + sar.getLexi().lexi + "' has not been declared in scope. Line: " + tempList.get(eIndex).lineNum + "\n";
         return false;
     }
 
     private boolean isIdentifierExpression(Tuple<String, String, Integer> lexi) {
-        return (Character.isLowerCase(lexi.lexi.toCharArray()[0]) && lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()));
+        return (Character.isLowerCase(lexi.lexi.toCharArray()[0]) && lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || lexi.lexi.equals("main"));
     }
 
     private boolean isLiteralExpression(Tuple<String, String, Integer> lexi) {
@@ -1513,7 +1540,7 @@ public class Compiler {
 
         if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name()) || tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
             return isValidRelationParameterType(tempList, index + 2);
-        } else if(tempList.get(index + 1).lexi.equals(",")) {
+        } else if (tempList.get(index + 1).lexi.equals(",")) {
             return isValidRelationParameterType(tempList, index + 2);
         } else
             return tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name());

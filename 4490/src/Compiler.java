@@ -202,9 +202,6 @@ public class Compiler {
                                         i += tempList.size() - 1;
                                         openBlocks.add(tempList.get(i));
                                         previousLex = tempList.get(i);
-
-                                        int key = 0;
-
                                         continue;
                                     }
                                 }
@@ -783,7 +780,7 @@ public class Compiler {
                             if (OS.peek() == null) {
                                 errorList += "Missing opening paren. Line: " + item.lineNum + "\n";
                             }
-                            addTempToSAS(OS.pop(), SAS, OS);
+                            addTempToSAS(OS.pop(), SAS);
                         }
                         if (tempList.get(0).lexi.equals("public") || tempList.get(0).lexi.equals("private") || isValidReturnType(tempList.get(0).lexi, tempList.get(0).type)) {
                             scopePassTwo = scopePassTwo.substring(0, scopePassTwo.lastIndexOf("."));
@@ -798,7 +795,7 @@ public class Compiler {
                             if (OS.peek() == null) {
                                 errorList += "Missing opening array. Line: " + item.lineNum + "\n";
                             }
-                            addTempToSAS(OS.pop(), SAS, OS);
+                            addTempToSAS(OS.pop(), SAS);
                         }
                         if (!OS.isEmpty()) {
                             OS.pop();
@@ -807,7 +804,7 @@ public class Compiler {
                         pushOS(scopePassTwo, tempList, OS, i, item);
                     } else if (precedence <= lastOprPrecedence) {
                         if (!OS.isEmpty()) {
-                            addTempToSAS(OS.pop(), SAS, OS);
+                            addTempToSAS(OS.pop(), SAS);
                         }
                         pushOS(scopePassTwo, tempList, OS, i, item);
                     } else {
@@ -863,7 +860,7 @@ public class Compiler {
     }
 
     private void cleanupSAS(Stack<SAR> SAS, Stack<SAR> OS) {
-        while (!OS.isEmpty()) addTempToSAS(OS.pop(), SAS, OS);
+        while (!OS.isEmpty()) addTempToSAS(OS.pop(), SAS);
     }
 
     private void addLiteralExpressionToSAS(String scopePassTwo, Tuple<String, String, Integer> tuple, Stack<SAR> SAS) {
@@ -1185,7 +1182,7 @@ public class Compiler {
         return false;
     }
 
-    private void addTempToSAS(SAR opr, Stack<SAR> SAS, Stack<SAR> OS) {
+    private void addTempToSAS(SAR opr, Stack<SAR> SAS) {
         if (opr.getLexi().lexi.equals("=")) {
             if (SAS.size() < 2) {
                 errorList += "missing an operand. Line: " + opr.getLexi().lineNum + "\n";
@@ -1630,13 +1627,14 @@ public class Compiler {
             return;
         }
 
-        if (currentLex.lexi.equals("-") && previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || previousLex.lexi.equals(")") || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
-            return;
-        }
-
         if (previousLex != null && ((previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || previousLex.lexi.equals(")")) && (nextLex.lexi.equals("-") || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || nextLex.lexi.equals("(")))) {
             return;
         }
+
+        if (currentLex.lexi.equals("-") && (previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || previousLex.lexi.equals(")") || previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()))) {
+            return;
+        }
+
         errorList += "Both side of mathematical operation must be either an Identifier or a Number. Line: " + previousLex.lineNum + "\n";
     }
 

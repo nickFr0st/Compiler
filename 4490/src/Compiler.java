@@ -765,7 +765,7 @@ public class Compiler {
                 if (isLiteralExpression(tempList.get(i))) {
                     addLiteralExpressionToSAS(scopePassTwo, tempList.get(i), SAS);
                 } else if (isIdentifierExpression(tempList.get(i))) {
-                    // todo: need to validate functions, arrays and objects  as well
+                    // todo: need to validate functions, arrays and objects as well
                     // functions can not be declared outside of a class
                     SAR sar = new SAR(tempList.get(i), scopePassTwo, "");
                     if (isCalled) {
@@ -1513,7 +1513,10 @@ public class Compiler {
 
         if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name()) || tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
             return isValidRelationParameterType(tempList, index + 2);
-        } else return tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name());
+        } else if(tempList.get(index + 1).lexi.equals(",")) {
+            return isValidRelationParameterType(tempList, index + 2);
+        } else
+            return tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name());
 
     }
 

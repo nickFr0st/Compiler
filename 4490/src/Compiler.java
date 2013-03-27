@@ -283,44 +283,56 @@ public class Compiler {
                      * validate new operator
                      */
                     if (currentLex.lexi.equals("new")) {
-                        int j = i;
-                        if (tempList.get(0).lexi.equals("private") || tempList.get(0).lexi.equals("public"))
-                            j++;
-
-                        if (!isValidObjectTypeExpression(nextLexi)) {
-                            if (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(nextLexi.lexi.toCharArray()[0])) {
-                                errorList += "Object must start with a capital letter. Line: " + currentLex.lineNum + "\n";
-                            }
-                            errorList += "Invalid use of the new operator. Line: " + currentLex.lineNum + "\n";
+                        if (i == 0) {
+                            errorList += "New must be used as an assignment. Line: " + currentLex.lineNum + "\n";
                             previousLex = currentLex;
                             continue;
                         }
 
-                        // handle arrays
-                        if (tempList.get(j + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+                        if (tempList.get(i - 1).lexi.equals("(") || tempList.get(i - 1).lexi.equals(",") || tempList.get(i - 1).lexi.equals("=") || tempList.get(i -1).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
+                            int j = i;
+                            if (tempList.get(0).lexi.equals("private") || tempList.get(0).lexi.equals("public"))
+                                j++;
 
-                            if ((tempList.get(j + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || tempList.get(j + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) && tempList.get(j + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name()) && tempList.get(j + 5).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                                // all good
-                            } else {
-                                errorList += "Invalid array initialization. Line: " + currentLex.lineNum + "\n";
+                            if (!isValidObjectTypeExpression(nextLexi)) {
+                                if (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(nextLexi.lexi.toCharArray()[0])) {
+                                    errorList += "Object must start with a capital letter. Line: " + currentLex.lineNum + "\n";
+                                }
+                                errorList += "Invalid use of the new operator. Line: " + currentLex.lineNum + "\n";
                                 previousLex = currentLex;
                                 continue;
                             }
 
-                            // handle objects
-                        } else if (tempList.get(j + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-                            if (!tempList.get(j + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                                if (!isValidCalledParameterType(tempList, j + 3)) {
-                                    errorList += "Function '" + tempList.get(j + 1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                            // handle arrays
+                            if (tempList.get(j + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+
+                                if ((tempList.get(j + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || tempList.get(j + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) && tempList.get(j + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name()) && tempList.get(j + 5).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                                    // all good
+                                } else {
+                                    errorList += "Invalid array initialization. Line: " + currentLex.lineNum + "\n";
                                     previousLex = currentLex;
                                     continue;
-                                } else {
-                                    // all good
                                 }
-                            }
 
+                                // handle objects
+                            } else if (tempList.get(j + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                                if (!tempList.get(j + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                                    if (!isValidCalledParameterType(tempList, j + 3)) {
+                                        errorList += "Function '" + tempList.get(j + 1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                                        previousLex = currentLex;
+                                        continue;
+                                    } else {
+                                        // all good
+                                    }
+                                }
+
+                            } else {
+                                errorList += "Invalid object initialization. Line: " + currentLex.lineNum + "\n";
+                                previousLex = currentLex;
+                                continue;
+                            }
                         } else {
-                            errorList += "Invalid object initialization. Line: " + currentLex.lineNum + "\n";
+                            errorList += "New must be used as an assignment. Line: " + currentLex.lineNum + "\n";
                             previousLex = currentLex;
                             continue;
                         }
@@ -747,13 +759,13 @@ public class Compiler {
                 }
 
                 if (item.lexi.equals("while")) {
-                    // todo: need to do stuff with this
+                    // todo: need to do stuff with this, as well as if and else
                 }
 
                 if (isLiteralExpression(tempList.get(i))) {
                     addLiteralExpressionToSAS(scopePassTwo, tempList.get(i), SAS);
                 } else if (isIdentifierExpression(tempList.get(i))) {
-                    // todo: need to valid functions as well
+                    // todo: need to validate functions, arrays and objects  as well
                     // functions can not be declared outside of a class
                     SAR sar = new SAR(tempList.get(i), scopePassTwo, "");
                     if (isCalled) {

@@ -733,7 +733,11 @@ public class Compiler {
                 }
 
                 if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && (tempList.get(0).lexi.equals("public") || tempList.get(0).lexi.equals("private") || isValidReturnType(tempList.get(0).lexi, tempList.get(0).type))) {
-                    scopePassTwo += "." + tempList.get(2).lexi;
+                    if (tempList.get(1).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(tempList.get(1).lexi.toCharArray()[0])) {
+                        scopePassTwo += "." + tempList.get(1).lexi;
+                    } else {
+                        scopePassTwo += "." + tempList.get(2).lexi;
+                    }
                 }
 
                 if (item.lexi.equals(".")) {
@@ -1226,6 +1230,21 @@ public class Compiler {
                 SAR RHS = SAS.pop();
                 SAR LHS = SAS.pop();
 
+                if (opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
+                    if (RHS.getLexi().lexi.equals("null")) {
+                        if (LHS.getType().equals("int") || LHS.getType().equals("char") || LHS.getType().equals("bool")) {
+                            errorList += "cannot set raw types to null. Line:" + LHS.getLexi().lineNum + "\n";
+                            return;
+                        } else {
+                            addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
+
+                            SAR temp = new SAR(new Tuple<String, String, Integer>("T" + (symIdInr - 2), RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType());
+                            SAS.push(temp);
+                            return;
+                        }
+                    }
+                }
+
                 if (!LHS.getType().equals(RHS.getType())) {
                     errorList += "left and right operand types are incompatible. Line: " + opr.getLexi().lineNum + "\n";
                     return;
@@ -1246,6 +1265,16 @@ public class Compiler {
                 return false;
             }
         }
+
+        if (rhs.getLexi().lexi.equals("null")) {
+            if (lhs.getType().equals("int") || lhs.getType().equals("char") || lhs.getType().equals("bool")) {
+                errorList += "cannot set raw types to null. Line:" + lhs.getLexi().lineNum + "\n";
+                return false;
+            } else {
+                return true;
+            }
+        }
+
         return lhs.getType().equals(rhs.getType());
     }
 
@@ -1385,7 +1414,11 @@ public class Compiler {
                 }
                 return false;
             } else if (tempList.get(index + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                scope += "." + tempList.get(2).lexi;
+                if (tempList.get(1).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(tempList.get(1).lexi.toCharArray()[0])) {
+                    scope += "." + tempList.get(1).lexi;
+                } else {
+                    scope += "." + tempList.get(2).lexi;
+                }
                 addToSymbolTable("pvar", new ArrayList<String>(), tempList.get(index).lexi, "private", tempList.get(index + 1).lexi, tempList.get(0).lineNum);
                 paramIdList.add(tempList.get(index).lexi);
                 scope = scope.substring(0, scope.lastIndexOf("."));

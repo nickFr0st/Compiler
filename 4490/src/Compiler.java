@@ -172,8 +172,6 @@ public class Compiler {
                     /**
                      *  check for valid function, object and class declarations
                      **/
-
-
                     if (currentLex.lexi.equals("private") || currentLex.lexi.equals("public")) {
                         if (i != 0) {
                             errorList += "Modifiers must be at the beginning of function declarations. Line: " + currentLex.lineNum + "\n";
@@ -269,7 +267,11 @@ public class Compiler {
                                             addToSymbolTable("Function", new ArrayList<String>(), tempList.get(1).lexi, tempList.get(0).lexi, tempList.get(2).lexi, currentLex.lineNum);
                                             // all good
                                         } else {
-                                            errorList += "Function or object has been incorrectly formatted. Line: " + currentLex.lineNum + "\n";
+                                            if (tempList.get(i + 3).lexi.equals("[")) {
+                                                // arrays are handled below
+                                            } else {
+                                                errorList += "Function or object has been incorrectly formatted. Line: " + currentLex.lineNum + "\n";
+                                            }
                                         }
                                     }
                                 }
@@ -281,6 +283,10 @@ public class Compiler {
                      * validate new operator
                      */
                     if (currentLex.lexi.equals("new")) {
+                        int j = i;
+                        if (tempList.get(0).lexi.equals("private") || tempList.get(0).lexi.equals("public"))
+                            j++;
+
                         if (!isValidObjectTypeExpression(nextLexi)) {
                             if (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(nextLexi.lexi.toCharArray()[0])) {
                                 errorList += "Object must start with a capital letter. Line: " + currentLex.lineNum + "\n";
@@ -289,30 +295,23 @@ public class Compiler {
                             previousLex = currentLex;
                             continue;
                         }
-                        if (!tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                            if (!isValidCalledParameterType(tempList, i + 3)) {
-                                errorList += "Invalid Constructor parameter list. Line: " + currentLex.lineNum + "\n";
-                            }
-                            previousLex = currentLex;
-                            continue;
-                        }
-                        if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
-                            if (tempList.size() < 11) {
-                                errorList += "Invalid array initialization. Line: " + currentLex.lineNum + "\n";
-                                previousLex = currentLex;
-                                continue;
-                            }
-                            if ((tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) && tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name()) && tempList.get(i + 5).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+
+                        // handle arrays
+                        if (tempList.get(j + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+
+                            if ((tempList.get(j + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || tempList.get(j + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) && tempList.get(j + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name()) && tempList.get(j + 5).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                                 // all good
                             } else {
                                 errorList += "Invalid array initialization. Line: " + currentLex.lineNum + "\n";
                                 previousLex = currentLex;
                                 continue;
                             }
-                        } else if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-                            if (!tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                                if (!isValidCalledParameterType(tempList, i + 3)) {
-                                    errorList += "Function '" + tempList.get(i + 1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+
+                            // handle objects
+                        } else if (tempList.get(j + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                            if (!tempList.get(j + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                                if (!isValidCalledParameterType(tempList, j + 3)) {
+                                    errorList += "Function '" + tempList.get(j + 1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
                                     previousLex = currentLex;
                                     continue;
                                 } else {
@@ -616,9 +615,13 @@ public class Compiler {
                         } else if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) && tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                             // all good
                         } else {
-                            errorList += "Syntax error on function call format. Line: " + currentLex.lineNum + "\n";
-                            previousLex = currentLex;
-                            continue;
+                            if (tempList.get(i + 1).lexi.equals("[")) {
+                                // arrays are handled else where
+                            } else {
+                                errorList += "Syntax error on function call format. Line: " + currentLex.lineNum + "\n";
+                                previousLex = currentLex;
+                                continue;
+                            }
                         }
                     } else if (tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
                         // all good
@@ -631,9 +634,13 @@ public class Compiler {
                         if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && (tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name()) && tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()))) {
                             // all good
                         } else {
-                            errorList += "Syntax error on array call format. Line: " + currentLex.lineNum + "\n";
-                            previousLex = currentLex;
-                            continue;
+                            if (tempList.get(i + 1).lexi.equals("[")) {
+                                // arrays are handled else where
+                            } else {
+                                errorList += "Syntax error on function call format. Line: " + currentLex.lineNum + "\n";
+                                previousLex = currentLex;
+                                continue;
+                            }
                         }
                     } else if (tempList.get(i + 1).lexi.equals(".") && (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(i + 2).lexi.toCharArray()[0]))) {
                         if (tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {

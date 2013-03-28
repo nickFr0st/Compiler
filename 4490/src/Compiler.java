@@ -249,6 +249,12 @@ public class Compiler {
                                     } else if (tempList.get(2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) && tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) && tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
                                         addToSymbolTable("Function", new ArrayList<String>(), tempList.get(1).lexi, tempList.get(0).lexi, tempList.get(1).lexi, currentLex.lineNum);
                                         // all good
+                                    } else if (tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+                                        if (!tempList.get(4).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                                            errorList += "invalid array declaration. Line: " + currentLex.lineNum + "\n";
+                                        } else {
+                                            addToSymbolTable("@:", new ArrayList<String>(), tempList.get(1).lexi, tempList.get(0).lexi, tempList.get(2).lexi, currentLex.lineNum);
+                                        }
                                     } else {
                                         if (tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                                             addToSymbolTable("ivar", new ArrayList<String>(), tempList.get(1).lexi, tempList.get(0).lexi, tempList.get(2).lexi, currentLex.lineNum);
@@ -290,9 +296,6 @@ public class Compiler {
                         }
 
                         if (tempList.get(i - 1).lexi.equals("(") || tempList.get(i - 1).lexi.equals(",") || tempList.get(i - 1).lexi.equals("=") || tempList.get(i - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
-                            int j = i;
-                            if (tempList.get(0).lexi.equals("private") || tempList.get(0).lexi.equals("public"))
-                                j++;
 
                             if (!isValidObjectTypeExpression(nextLexi)) {
                                 if (nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(nextLexi.lexi.toCharArray()[0])) {
@@ -304,10 +307,20 @@ public class Compiler {
                             }
 
                             // handle arrays
-                            if (tempList.get(j + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+                            if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
 
-                                if ((tempList.get(j + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || tempList.get(j + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) && tempList.get(j + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name()) && tempList.get(j + 5).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                                    // all good
+                                if (tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
+                                    if (!tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                                        // check for post to pre
+                                    } else {
+
+                                        if (tempList.get(i + 5).type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) && (i + 5) == tempList.size() - 1) {
+                                            i += 4;
+                                            previousLex = currentLex;
+                                            continue;
+                                        }
+                                    }
+
                                 } else {
                                     errorList += "Invalid array initialization. Line: " + currentLex.lineNum + "\n";
                                     previousLex = currentLex;
@@ -315,10 +328,10 @@ public class Compiler {
                                 }
 
                                 // handle objects
-                            } else if (tempList.get(j + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-                                if (!tempList.get(j + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                                    if (!isValidCalledParameterType(tempList, j + 3)) {
-                                        errorList += "Function '" + tempList.get(j + 1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
+                            } else if (tempList.get(i + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+                                if (!tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                                    if (!isValidCalledParameterType(tempList, i + 3)) {
+                                        errorList += "Function '" + tempList.get(i + 1).lexi + "' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
                                         previousLex = currentLex;
                                         continue;
                                     } else {
@@ -590,6 +603,12 @@ public class Compiler {
                                     // all good
                                 } else {
                                     errorList += "Incorrect function definition format. Line: " + currentLex.lineNum + "\n";
+                                }
+                            } else if (tempList.get(2).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+                                if (!tempList.get(3).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                                    errorList += "invalid array declaration. Line: " + currentLex.lineNum + "\n";
+                                } else {
+                                    addToSymbolTable("@:", new ArrayList<String>(), tempList.get(0).lexi, "private", tempList.get(1).lexi, currentLex.lineNum);
                                 }
                             } else {
                                 errorList += "Incorrectly formatted object definition. Line: " + currentLex.lineNum + "\n";

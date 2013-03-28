@@ -778,21 +778,20 @@ public class Compiler {
                 }
 
                 if (item.lexi.equals("while")) {
-                    // todo: need to do stuff with this, as well as if and else    (params will be handled roughly the same as functions)
+                    // todo: need to do stuff with this, as well as if and else also the new operator (params will be handled roughly the same as functions)
+                    // make method like   'isValidArrayIndexingType' to check the different sides of the expression
                 }
 
                 if (isLiteralExpression(tempList.get(i))) {
                     addLiteralExpressionToSAS(scopePassTwo, tempList.get(i), SAS);
                 } else if (isIdentifierExpression(tempList.get(i))) {
-                    // todo: need to validate functions, arrays and objects as well
-                    // functions can not be declared outside of a class
                     SAR sar = new SAR(tempList.get(i), scopePassTwo, "");
                     if (isCalled) {
                         eIndex = i;
                         rExist(sar, SAS, tempList, scopePassTwo);
                         i = eIndex + 1;
 
-                        if (tempList.get(i).lexi.equals(";")) {
+                        if (tempList.get(i).lexi.equals(";") || tempList.get(i).lexi.equals("{")) {
                             cleanupSAS(SAS, OS);
                             i++;
                             continue;
@@ -1011,6 +1010,8 @@ public class Compiler {
                         String value = "t" + symIdInr;
 
                         if (!doParametersExist(SAS, tempList, globalScope, index, ((FunctionData) s.getData()).getParameters(), ((FunctionData) s.getData()).getParameters().size() - 1)) {
+                            errorList += "Invalid parameter. Line: " + tempList.get(index).lineNum + "\n";
+                            eIndex = tempList.size() - 2;
                             return false;
                         }
                         addToSymbolTable("tVar", new ArrayList<String>(), ((FunctionData) s.getData()).getReturnType(), "private", value, sar.getLexi().lineNum);
@@ -1037,6 +1038,7 @@ public class Compiler {
         eIndex = index;
 
         Tuple<String, String, Integer> item = tempList.get(index);
+         // todo: need to validate infix to post-fix
         if (!isLegalValue(item)) {
             errorList += "the function being called has too few parameters. Line: " + item.lineNum + "\n";
 
@@ -1347,6 +1349,40 @@ public class Compiler {
                     if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope)) {
                         if (s.getData() instanceof VaribleData) {
                             sar.setType(((VaribleData) s.getData()).getType());
+
+                            // check for array
+                            if (tempList.get(eIndex + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+                                if (tempList.get(eIndex + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                                    eIndex += 2;
+                                    return true;
+                                }
+
+                                int index = eIndex + 2;
+                                if (!isValidArrayIndexingType(tempList, index, globalScope, SAS)) {
+                                    errorList += "Invalid array operation. Line: " + tempList.get(eIndex).lineNum + "\n";
+                                    return false;
+                                }
+                                eIndex = index;
+
+                                if (tempList.get(eIndex + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                                    return true;
+                                }
+
+                                if (!tempList.get(eIndex + 1).equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
+                                    errorList += "Invalid array operation. Line: " + tempList.get(eIndex).lineNum + "\n";
+                                    return false;
+                                }
+                                index = eIndex + 2;
+
+                                if (!isValidArrayIndexingType(tempList, index, globalScope, SAS)) {
+                                    errorList += "Invalid array operation. Line: " + tempList.get(eIndex).lineNum + "\n";
+                                    return false;
+                                }
+                                eIndex = index;
+                                return true;
+                            }
+
+
                         } else if (s.getData() instanceof FunctionData) {
 
                             if (globalScope.equals("g") && !sar.getLexi().lexi.equals("main")) {
@@ -1354,7 +1390,6 @@ public class Compiler {
                                 return false;
                             }
 
-                            // need to do work here
                             sar.setType(((FunctionData) s.getData()).getReturnType());
                             if (((FunctionData) s.getData()).getParameters().size() == 0) {
                                 if (!tempList.get(eIndex + 1).lexi.equals("(")) {
@@ -1368,8 +1403,12 @@ public class Compiler {
                                 }
                             } else {
                                 int index = eIndex;
-                                if (!doParametersExist(SAS, tempList, globalScope, index + 2, ((FunctionData) s.getData()).getParameters(), ((FunctionData) s.getData()).getParameters().size() - 1)) {
-                                    return false;
+                                if (!tempList.get(tempList.size() - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
+                                    if (!doParametersExist(SAS, tempList, globalScope, index + 2, ((FunctionData) s.getData()).getParameters(), ((FunctionData) s.getData()).getParameters().size() - 1)) {
+                                        errorList += "Invalid parameter list. Line: " + sar.getLexi().lineNum + "\n";
+                                        return false;
+                                    }
+                                    eIndex = index;
                                 }
                             }
                         }
@@ -1380,9 +1419,63 @@ public class Compiler {
                 if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope)) {
                     if (s.getData() instanceof VaribleData) {
                         sar.setType(((VaribleData) s.getData()).getType());
+
+                        // check for array
+                        if (tempList.get(eIndex + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+                            if (tempList.get(eIndex + 2).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                                eIndex += 2;
+                                return true;
+                            }
+
+                            int index = eIndex + 2;
+                            if (!isValidArrayIndexingType(tempList, index, globalScope, SAS)) {
+                                errorList += "Invalid array operation. Line: " + tempList.get(eIndex).lineNum + "\n";
+                                return false;
+                            }
+                            eIndex = index;
+
+                            if (tempList.get(eIndex + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                                return true;
+                            }
+
+                            if (!tempList.get(eIndex + 1).equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
+                                errorList += "Invalid array operation. Line: " + tempList.get(eIndex).lineNum + "\n";
+                                return false;
+                            }
+                            index = eIndex + 2;
+
+                            if (!isValidArrayIndexingType(tempList, index, globalScope, SAS)) {
+                                errorList += "Invalid array operation. Line: " + tempList.get(eIndex).lineNum + "\n";
+                                return false;
+                            }
+                            eIndex = index;
+                            return true;
+                        }
+
+
                     } else if (s.getData() instanceof FunctionData) {
                         // need to do work here
                         sar.setType(((FunctionData) s.getData()).getReturnType());
+                        if (((FunctionData) s.getData()).getParameters().size() == 0) {
+                            if (!tempList.get(eIndex + 1).lexi.equals("(")) {
+                                errorList += "Invalid function call. Line: " + sar.getLexi().lineNum + "\n";
+                                return false;
+                            }
+
+                            if (!tempList.get(eIndex + 2).lexi.equals(")")) {
+                                errorList += "Invalid function call. '" + sar.getLexi().lexi + "' has no parameters. Line: " + sar.getLexi().lineNum + "\n";
+                                return false;
+                            }
+                        } else {
+                            if (!tempList.get(tempList.size() - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
+                                int index = eIndex;
+                                if (!doParametersExist(SAS, tempList, globalScope, index + 2, ((FunctionData) s.getData()).getParameters(), ((FunctionData) s.getData()).getParameters().size() - 1)) {
+                                    errorList += "Invalid parameter list. Line: " + sar.getLexi().lineNum + "\n";
+                                    return false;
+                                }
+                                eIndex = index;
+                            }
+                        }
                     }
                     return true;
                 }
@@ -1395,6 +1488,36 @@ public class Compiler {
             }
         }
         errorList += "'" + sar.getLexi().lexi + "' has not been declared in scope. Line: " + tempList.get(eIndex).lineNum + "\n";
+        return false;
+    }
+
+    private boolean isValidArrayIndexingType(List<Tuple<String, String, Integer>> tempList, int index, String globalScope, Stack<SAR> SAS) {
+        if (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
+            return true;
+        }
+
+        if (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
+            if (Character.isUpperCase(tempList.get(index).lexi.toCharArray()[0])) {
+                errorList += "Can not pass a class name as a variable" + tempList.get(index).lineNum + "\n";
+                return false;
+            }
+
+            SAR sar = new SAR(tempList.get(index), globalScope, "");
+            if (!iExist(sar, SAS, tempList, globalScope)) {
+                errorList += "Invalid array indexing type. Line: " + tempList.get(index) + "\n";
+                return false;
+            }
+
+            if (!sar.getType().equals("int")) {
+                errorList += "Indexing objects must be of type 'int'. Line: " + tempList.get(index) + "\n";
+                return false;
+            }
+
+            index = eIndex;
+            return true;
+        }
+
+        errorList += "Invalid array indexing type. Line: " + tempList.get(index) + "\n";
         return false;
     }
 

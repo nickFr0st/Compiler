@@ -861,6 +861,35 @@ public class Compiler {
                     if (!ClassExist(item, scopePassTwo)) {
                         errorList += "Class does not exist in scope. Line: " + item.lineNum + "\n";
                     }
+                } else if (isStreamOpr(item.lexi)) {
+                    if (item.lexi.equals("cout")) {
+                        if (i + 1 == tempList.size() - 1) {
+                            errorList += "'cout' must have an int or char passed to it via '<<'. Line: " + item.lineNum + "\n";
+                            i++;
+                            continue;
+                        }
+
+                        if (!tempList.get(i + 1).lexi.equals("<<")) {
+                            errorList += "cout must be followed with the extraction operator. Line: " + item.lineNum + "\n";
+                            i++;
+                            continue;
+                        }
+                    }
+
+                    if (item.lexi.equals("cin")) {
+                        if (i + 1 == tempList.size() - 1) {
+                            errorList += "'cin' must have an int or char passed to it via '<<'. Line: " + item.lineNum + "\n";
+                            i++;
+                            continue;
+                        }
+
+                        if (!tempList.get(i + 1).lexi.equals(">>")) {
+                            errorList += "cin must be followed with the insertion operator. Line: " + item.lineNum + "\n";
+                            i++;
+                            continue;
+                        }
+                    }
+
                 } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()))
                     cleanupSAS(SAS, OS);
 
@@ -897,6 +926,8 @@ public class Compiler {
             } else {
                 OS.push(new SAR(item, scopePassTwo, BINARY));
             }
+        } else if (item.lexi.equals("<<") || item.lexi.equals(">>")) {
+            OS.push(new SAR(item, scopePassTwo, URINARY));
         } else {
             OS.push(new SAR(item, scopePassTwo, BINARY));
         }
@@ -1038,7 +1069,7 @@ public class Compiler {
         eIndex = index;
 
         Tuple<String, String, Integer> item = tempList.get(index);
-         // todo: need to validate infix to post-fix
+        // todo: need to validate infix to post-fix
         if (!isLegalValue(item)) {
             errorList += "the function being called has too few parameters. Line: " + item.lineNum + "\n";
 
@@ -1103,7 +1134,24 @@ public class Compiler {
                                 }
 
                                 if (tempList.get(index + 1).lexi.equals(".")) {
-                                    // todo need to check for '.'
+                                    SAS.push(sar);
+                                    eIndex = index + 2;
+                                    if (!rExist(new SAR(tempList.get(index + 2), globalScope, ""), SAS, tempList, globalScope, OS)) {
+                                        errorList += "Fail. Line: " + sar.getLexi().lineNum + "\n";
+                                        return false;
+                                    }
+
+                                    if (!paramList.get(pId).equals(SAS.peek().getType())) {
+                                        errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + item.lineNum + "\n";
+                                        return false;
+                                    }
+                                    index = eIndex;
+                                } else {
+
+                                    if (!paramList.get(pId).equals(sar.getType())) {
+                                        errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + item.lineNum + "\n";
+                                        return false;
+                                    }
                                 }
 
                                 if (!paramList.get(pId).equals(sar.getType())) {
@@ -1145,12 +1193,24 @@ public class Compiler {
                             }
 
                             if (tempList.get(index + 1).lexi.equals(".")) {
-                                // todo need to check for '.'
-                            }
+                                SAS.push(sar);
+                                eIndex = index + 2;
+                                if (!rExist(new SAR(tempList.get(index + 2), globalScope, ""), SAS, tempList, globalScope, OS)) {
+                                    errorList += "Fail. Line: " + sar.getLexi().lineNum + "\n";
+                                    return false;
+                                }
 
-                            if (!paramList.get(pId).equals(sar.getType())) {
-                                errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + item.lineNum + "\n";
-                                return false;
+                                if (!paramList.get(pId).equals(SAS.peek().getType())) {
+                                    errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + item.lineNum + "\n";
+                                    return false;
+                                }
+                                index = eIndex;
+                            } else {
+
+                                if (!paramList.get(pId).equals(sar.getType())) {
+                                    errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + sar.getType() + "'. Line: " + item.lineNum + "\n";
+                                    return false;
+                                }
                             }
 
                         } else if (s.getData() instanceof FunctionData) {
@@ -1214,7 +1274,7 @@ public class Compiler {
             if (isMath) {
                 SAS.push(sar);
                 int errCount = errorList.length();
-                while (OS.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()))  {
+                while (OS.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
                     addTempToSAS(OS.pop(), SAS);
                 }
                 if (errCount != errorList.length()) {
@@ -1235,7 +1295,7 @@ public class Compiler {
             if (isMath) {
                 SAS.push(sar);
                 int errCount = errorList.length();
-                while (OS.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()))  {
+                while (OS.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
                     addTempToSAS(OS.pop(), SAS);
                 }
                 if (errCount != errorList.length()) {
@@ -1252,6 +1312,10 @@ public class Compiler {
         }
 
         return false;
+    }
+
+    private boolean isStreamOpr(String lexi) {
+        return lexi.equals("cout") || lexi.equals("cin");
     }
 
     private boolean isLegalValue(Tuple<String, String, Integer> item) {
@@ -1337,6 +1401,20 @@ public class Compiler {
                 SAR temp = new SAR(new Tuple<String, String, Integer>("T" + (symIdInr - 2), RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType());
                 SAS.push(temp);
             }
+
+        } else if (opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.IO_OPR.name())) {
+            if (SAS.size() < 1) {
+                errorList += "missing an operand. Line: " + opr.getLexi().lineNum + "\n";
+                return;
+            }
+
+            SAR RHS = SAS.pop();
+
+            if (RHS.getType().equals("int") || RHS.getType().equals("char")) {
+                addToSymbolTable("iovar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
+            } else {
+                errorList += "invalid variable type. insertion and extraction operators only deal with int and char. Line: " + opr.getLexi().lineNum + "\n";
+            }
         }
     }
 
@@ -1384,7 +1462,7 @@ public class Compiler {
     }
 
     private boolean isExpressionZ(Tuple<String, String, Integer> lexi) {
-        return (lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()) || lexi.lexi.equals("."));
+        return (lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()) || lexi.lexi.equals(".") || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IO_OPR.name()));
     }
 
     private boolean iExist(SAR sar, Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList, String globalScope, Stack<SAR> OS) {
@@ -1479,13 +1557,12 @@ public class Compiler {
                                 errorList += "Invalid array operation. Line: " + tempList.get(eIndex).lineNum + "\n";
                                 return false;
                             }
-                            eIndex = index;
 
                             if (tempList.get(eIndex + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
                                 return true;
                             }
 
-                            if (!tempList.get(eIndex + 1).equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
+                            if (!tempList.get(eIndex + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
                                 errorList += "Invalid array operation. Line: " + tempList.get(eIndex).lineNum + "\n";
                                 return false;
                             }
@@ -1539,6 +1616,7 @@ public class Compiler {
     }
 
     private boolean isValidArrayIndexingType(List<Tuple<String, String, Integer>> tempList, int index, String globalScope, Stack<SAR> SAS, Stack<SAR> OS) {
+        eIndex = index;
         if (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
             return true;
         }
@@ -1560,7 +1638,6 @@ public class Compiler {
                 return false;
             }
 
-            index = eIndex;
             return true;
         }
 

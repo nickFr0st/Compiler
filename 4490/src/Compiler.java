@@ -1500,7 +1500,7 @@ public class Compiler {
                                     return true;
                                 }
 
-                                if (!tempList.get(eIndex + 1).equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
+                                if (!tempList.get(eIndex + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
                                     errorList += "Invalid array operation. Line: " + tempList.get(eIndex).lineNum + "\n";
                                     return false;
                                 }
@@ -1990,7 +1990,7 @@ public class Compiler {
             return;
         }
 
-        errorList += "Both side of mathematical operation must be either an Identifier or a Number. Line: " + previousLex.lineNum + "\n";
+        errorList += "Both side of mathematical operation must be either an Identifier or a Number. Line: " + currentLex.lineNum + "\n";
     }
 
     private void validateAssignmentOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) throws IllegalArgumentException {

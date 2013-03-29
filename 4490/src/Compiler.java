@@ -144,6 +144,14 @@ public class Compiler {
                         validateReturnStatement(currentLex, nextLexi);
                     }
 
+                    if (currentLex.lexi.equals("true") || currentLex.lexi.equals("false")) {
+                        if (tempList.get(i + 1).lexi.equals("(")) {
+                            errorList += "'true' and 'false' are primitive values and cannot be used as a function. Line: " + currentLex.lineNum + "\n";
+                            previousLex = currentLex;
+                            continue;
+                        }
+                    }
+
                     if (currentLex.lexi.equals("class")) {
                         int errCount = errorList.length();
                         if (!tempList.get(0).lexi.equals("class")) {
@@ -1069,7 +1077,6 @@ public class Compiler {
         eIndex = index;
 
         Tuple<String, String, Integer> item = tempList.get(index);
-        // todo: need to validate infix to post-fix
         if (!isLegalValue(item)) {
             errorList += "the function being called has too few parameters. Line: " + item.lineNum + "\n";
 

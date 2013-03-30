@@ -938,23 +938,63 @@ public class Compiler {
             OS.push(new SAR(item, scopePassTwo, URINARY));
         } else if (item.lexi.equals("=")) {
             if (tempList.get(i + 1).lexi.equals("new")) {
-                SAR sar = new SAR(tempList.get(i + 2), globalScope, "");
-                eIndex = i + 2;
-                int ii = eIndex;
-                if (!iExist(sar, SAS, tempList, globalScope, OS)) {
-                    errorList += "Function '" + sar.getLexi().lexi + "' does not exist. Line: " + item.lineNum + "\n";
-                    return;
-                }
-                if (!SAS.peek().getType().equals(sar.getType())) {
-                    errorList += "Incompatible types, invalid new operation. Line: " + item.lineNum + "\n";
-                    return;
-                }
-                if (ii == eIndex) {
-                    eIndex += 2;
+
+                if (tempList.get(i + 2).lexi.equals("int") || tempList.get(i + 2).lexi.equals("char")) {
+                    if (!tempList.get(i + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+                        errorList += "primitive datatypes cannot be called as a function. Line: " + tempList.get(i).lineNum + "\n";
+                        return;
+                    }
+
+                    if (tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                        errorList += "must specify size when initializing an array. Line: " + tempList.get(i).lineNum + "\n";
+                        return;
+                    }
+
+                    if (!isValidArrayIndexingType(tempList, i + 4, globalScope, SAS, OS)) {
+                        return;
+                    }
+
+                    if (!tempList.get(i + 5).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
+                        if (!tempList.get(i + 5).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                            errorList += "Invalid array declaration. Line: " + tempList.get(i).lineNum + "\n";
+                            return;
+                        }
+                        i += 5;
+                        return;
+                    }
+
+                    if (!isValidArrayIndexingType(tempList, i + 6, globalScope, SAS, OS)) {
+                        return;
+                    }
+
+                    if (!tempList.get(i + 7).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                        errorList += "Invalid array declaration. Line: " + tempList.get(i).lineNum + "\n";
+                        return;
+                    }
+
+                    addLiteralExpressionToSAS(globalScope, tempList.get(i + 2), SAS);
+                    i += 7;
+
                 } else {
-                    eIndex++;
+
+                    SAR sar = new SAR(tempList.get(i + 2), globalScope, "");
+                    eIndex = i + 2;
+                    int ii = eIndex;
+                    if (!iExist(sar, SAS, tempList, globalScope, OS)) {
+                        errorList += "Function '" + sar.getLexi().lexi + "' does not exist. Line: " + item.lineNum + "\n";
+                        return;
+                    }
+                    if (!SAS.peek().getType().equals(sar.getType())) {
+                        errorList += "Incompatible types, invalid new operation. Line: " + item.lineNum + "\n";
+                        return;
+                    }
+                    if (ii == eIndex) {
+                        eIndex += 2;
+                    } else {
+                        eIndex++;
+                    }
+                    SAS.push(sar);
                 }
-                SAS.push(sar);
             }
 
             OS.push(new SAR(item, scopePassTwo, BINARY));
@@ -1652,19 +1692,19 @@ public class Compiler {
 
             SAR sar = new SAR(tempList.get(index), globalScope, "");
             if (!iExist(sar, SAS, tempList, globalScope, OS)) {
-                errorList += "Invalid array indexing type. Line: " + tempList.get(index) + "\n";
+                errorList += "Invalid array indexing type. Line: " + tempList.get(index).lineNum + "\n";
                 return false;
             }
 
             if (!sar.getType().equals("int")) {
-                errorList += "Indexing objects must be of type 'int'. Line: " + tempList.get(index) + "\n";
+                errorList += "Indexing objects must be of type 'int'. Line: " + tempList.get(index).lineNum + "\n";
                 return false;
             }
 
             return true;
         }
 
-        errorList += "Invalid array indexing type. Line: " + tempList.get(index) + "\n";
+        errorList += "Invalid array indexing type. Line: " + tempList.get(index).lineNum + "\n";
         return false;
     }
 

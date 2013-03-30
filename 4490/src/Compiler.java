@@ -160,9 +160,6 @@ public class Compiler {
                         if (!tempList.get(tempList.size() - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
                             errorList += "class declaration line must end with a begin block token ({). Line: " + currentLex.lineNum + "\n";
                         }
-                        if (tempList.size() > 3) {
-                            errorList += "two many arguments in class declaration. Line: " + currentLex.lineNum + "\n";
-                        }
                         if (tempList.size() < 3) {
                             errorList += "Missing arguments in class declaration. Line: " + currentLex.lineNum + "\n";
                         } else if (!tempList.get(i + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
@@ -852,12 +849,14 @@ public class Compiler {
                             OS.pop();
                         }
                     } else if (precedence > lastOprPrecedence) {
-                        pushOS(scopePassTwo, tempList, OS, i, item);
+                        pushOS(scopePassTwo, tempList, OS, i, item, SAS, scopePassTwo);
+                        i = eIndex;
                     } else if (precedence <= lastOprPrecedence) {
                         if (!OS.isEmpty()) {
                             addTempToSAS(OS.pop(), SAS);
                         }
-                        pushOS(scopePassTwo, tempList, OS, i, item);
+                        pushOS(scopePassTwo, tempList, OS, i, item, SAS, scopePassTwo);
+                        i = eIndex;
                     } else {
                         if (item.lexi.equals("(") || item.lexi.equals("[")) {
                             lastOprPrecedence = 0;
@@ -927,7 +926,8 @@ public class Compiler {
         }
     }
 
-    private void pushOS(String scopePassTwo, List<Tuple<String, String, Integer>> tempList, Stack<SAR> OS, int i, Tuple<String, String, Integer> item) {
+    private void pushOS(String scopePassTwo, List<Tuple<String, String, Integer>> tempList, Stack<SAR> OS, int i, Tuple<String, String, Integer> item, Stack<SAR> SAS, String globalScope) {
+        eIndex = i;
         if (item.lexi.equals("-")) {
             if (i == 0 || tempList.get(i - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || tempList.get(i - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || tempList.get(i - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
                 OS.push(new SAR(item, scopePassTwo, URINARY));
@@ -936,6 +936,28 @@ public class Compiler {
             }
         } else if (item.lexi.equals("<<") || item.lexi.equals(">>")) {
             OS.push(new SAR(item, scopePassTwo, URINARY));
+        } else if (item.lexi.equals("=")) {
+            if (tempList.get(i + 1).lexi.equals("new")) {
+                SAR sar = new SAR(tempList.get(i + 2), globalScope, "");
+                eIndex = i + 2;
+                int ii = eIndex;
+                if (!iExist(sar, SAS, tempList, globalScope, OS)) {
+                    errorList += "Function '" + sar.getLexi().lexi + "' does not exist. Line: " + item.lineNum + "\n";
+                    return;
+                }
+                if (!SAS.peek().getType().equals(sar.getType())) {
+                    errorList += "Incompatible types, invalid new operation. Line: " + item.lineNum + "\n";
+                    return;
+                }
+                if (ii == eIndex) {
+                    eIndex += 2;
+                } else {
+                    eIndex++;
+                }
+                SAS.push(sar);
+            }
+
+            OS.push(new SAR(item, scopePassTwo, BINARY));
         } else {
             OS.push(new SAR(item, scopePassTwo, BINARY));
         }
@@ -1131,7 +1153,7 @@ public class Compiler {
                 for (String key : symbolTable.keySet()) {
                     Symbol s = symbolTable.get(key);
                     if (sarScope.equals("g")) {
-                        if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope)) {
+                        if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope) && !(s.getData() instanceof ClassData)) {
                             if (s.getData() instanceof VaribleData) {
                                 sar.setType(((VaribleData) s.getData()).getType());
 
@@ -1190,7 +1212,7 @@ public class Compiler {
                         }
                     }
 
-                    if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope)) {
+                    if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope) && !(s.getData() instanceof ClassData)) {
                         if (s.getData() instanceof VaribleData) {
                             sar.setType(((VaribleData) s.getData()).getType());
 
@@ -1478,7 +1500,7 @@ public class Compiler {
             for (String key : symbolTable.keySet()) {
                 Symbol s = symbolTable.get(key);
                 if (sarScope.equals("g")) {
-                    if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope)) {
+                    if (s.getValue().equals(sar.getLexi().lexi) && !(s.getData() instanceof ClassData)) {
                         if (s.getData() instanceof VaribleData) {
                             sar.setType(((VaribleData) s.getData()).getType());
 
@@ -1489,12 +1511,10 @@ public class Compiler {
                                     return true;
                                 }
 
-                                int index = eIndex + 2;
-                                if (!isValidArrayIndexingType(tempList, index, globalScope, SAS, OS)) {
+                                if (!isValidArrayIndexingType(tempList, eIndex + 2, globalScope, SAS, OS)) {
                                     errorList += "Invalid array operation. Line: " + tempList.get(eIndex).lineNum + "\n";
                                     return false;
                                 }
-                                eIndex = index;
 
                                 if (tempList.get(eIndex + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
                                     return true;
@@ -1504,13 +1524,11 @@ public class Compiler {
                                     errorList += "Invalid array operation. Line: " + tempList.get(eIndex).lineNum + "\n";
                                     return false;
                                 }
-                                index = eIndex + 2;
 
-                                if (!isValidArrayIndexingType(tempList, index, globalScope, SAS, OS)) {
+                                if (!isValidArrayIndexingType(tempList, eIndex + 2, globalScope, SAS, OS)) {
                                     errorList += "Invalid array operation. Line: " + tempList.get(eIndex).lineNum + "\n";
                                     return false;
                                 }
-                                eIndex = index;
                                 return true;
                             }
 
@@ -1534,13 +1552,11 @@ public class Compiler {
                                     return false;
                                 }
                             } else {
-                                int index = eIndex;
                                 if (!tempList.get(tempList.size() - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
-                                    if (!doParametersExist(SAS, tempList, globalScope, index + 2, ((FunctionData) s.getData()).getParameters(), ((FunctionData) s.getData()).getParameters().size() - 1, false, OS)) {
+                                    if (!doParametersExist(SAS, tempList, globalScope, eIndex + 2, ((FunctionData) s.getData()).getParameters(), ((FunctionData) s.getData()).getParameters().size() - 1, false, OS)) {
                                         errorList += "Invalid parameter list. Line: " + sar.getLexi().lineNum + "\n";
                                         return false;
                                     }
-                                    eIndex = index;
                                 }
                             }
                         }
@@ -1548,7 +1564,7 @@ public class Compiler {
                     }
                 }
 
-                if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope)) {
+                if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope) && !(s.getData() instanceof ClassData)) {
                     if (s.getData() instanceof VaribleData) {
                         sar.setType(((VaribleData) s.getData()).getType());
 

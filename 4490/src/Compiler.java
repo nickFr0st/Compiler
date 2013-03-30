@@ -19,8 +19,8 @@ public class Compiler {
     private List<String> paramIdList = new ArrayList<String>();
     private String errorList = "";
     private String scope = "g";
-    private int statementInr = 1;
-    private int symIdInr = 100;
+    private int statementInr = 1000;
+    private int symIdInr = 1000;
     private int eIndex = 0;
 
     public Compiler(LexicalAnalyzer lexicalAnalyzer, LinkedHashMap<String, Symbol> symbolTable) {

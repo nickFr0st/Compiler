@@ -787,6 +787,66 @@ public class Compiler {
                     // make method like   'isValidArrayIndexingType' to check the different sides of the expression
                 }
 
+                if (item.lexi.equals("return")) {
+                    String returnScope = scopePassTwo;
+
+                    String sub = returnScope.substring(returnScope.lastIndexOf("."), returnScope.length());
+                    while (sub.contains("if") || sub.contains("else") || sub.contains("while")) {
+                        returnScope = returnScope.substring(0, returnScope.lastIndexOf(sub));
+                        sub = returnScope.substring(returnScope.lastIndexOf("."), returnScope.length());
+                    }
+
+                    if (!returnScope.contains(".")) {
+                        errorList += "invalid return statement, cannot call return in base scope. Line: " + item.lineNum + "\n";
+                        i++;
+                        continue;
+                    }
+
+                    String returnTypeName = returnScope.substring(returnScope.lastIndexOf(".") + 1, returnScope.length());
+                    String returnTypeScope = returnScope.substring(0, returnScope.lastIndexOf("."));
+                    String returnType = "";
+
+                    // find return type
+                    boolean found = false;
+                    while (!returnTypeScope.isEmpty()) {
+                        for (String key : symbolTable.keySet()) {
+                            Symbol s = symbolTable.get(key);
+                            if (returnTypeScope.equals("g")) {
+                                if (s.getValue().equals(returnTypeName) && !(s.getData() instanceof ClassData)) {
+                                    if (s.getData() instanceof VaribleData) {
+                                        returnType = ((VaribleData) s.getData()).getType();
+                                        found = true;
+                                    } else if (s.getData() instanceof FunctionData) {
+                                        returnType = ((FunctionData) s.getData()).getReturnType();
+                                        found = true;
+                                    }
+                                }
+                            }
+
+                            if (s.getValue().equals(returnTypeName) && s.getScope().equals(returnTypeScope) && !(s.getData() instanceof ClassData)) {
+                                if (s.getData() instanceof VaribleData) {
+                                    returnType = ((VaribleData) s.getData()).getType();
+                                    found = true;
+                                } else if (s.getData() instanceof FunctionData) {
+                                    returnType = ((FunctionData) s.getData()).getReturnType();
+                                    found = true;
+                                }
+                            }
+                            if (found) break;
+                        }
+
+                        if (found) break;
+
+                        if (returnTypeScope.contains(".")) {
+                            returnTypeScope = returnTypeScope.substring(0, returnTypeScope.lastIndexOf("."));
+                        } else {
+                            returnTypeScope = "";
+                        }
+                    }
+                    SAS.push(new SAR(item, scopePassTwo, returnType));
+
+                }
+
                 if (isLiteralExpression(tempList.get(i))) {
                     addLiteralExpressionToSAS(scopePassTwo, tempList.get(i), SAS);
                 } else if (isIdentifierExpression(tempList.get(i))) {
@@ -1005,6 +1065,38 @@ public class Compiler {
 
     private void cleanupSAS(Stack<SAR> SAS, Stack<SAR> OS) {
         while (!OS.isEmpty()) addTempToSAS(OS.pop(), SAS);
+        if (!SAS.isEmpty()) {
+            evaluateReturnStatement(SAS);
+        }
+    }
+
+    private void evaluateReturnStatement(Stack<SAR> sas) {
+        if (sas.size() == 1) {
+            SAR RHS = sas.pop();
+
+            if (RHS.getLexi().lexi.equals("return")) {
+                if (!RHS.getType().equals("void")) {
+                    errorList += "invalid return statement. Line: " + RHS.getLexi().lineNum + "\n";
+                    return;
+                }
+
+                addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
+            }
+            return;
+        }
+
+        if (sas.size() == 2) {
+            SAR RHS = sas.pop();
+            SAR LHS = sas.pop();
+
+            if (LHS.getLexi().lexi.equals("return")) {
+                if (!LHS.getType().equals(RHS.getType())) {
+                    errorList += "invalid return type. Line: " + RHS.getLexi().lineNum + "\n";
+                    return;
+                }
+                addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
+            }
+        }
     }
 
     private void addLiteralExpressionToSAS(String scopePassTwo, Tuple<String, String, Integer> tuple, Stack<SAR> SAS) {

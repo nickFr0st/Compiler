@@ -115,6 +115,7 @@ public class LexicalAnalyzer {
         symbolCheck.add("-");
         symbolCheck.add("/");
         symbolCheck.add("*");
+        symbolCheck.add("%");
 
         // end of line
         symbolCheck.add(";");
@@ -235,7 +236,7 @@ public class LexicalAnalyzer {
                         tokenType = tokenTypesEnum.PUNCTUATION.toString();
                     } else if (token.equals(";")) {
                         tokenType = tokenTypesEnum.EOT.toString();
-                    } else if (token.matches("[\\*\\+-/]")) {
+                    } else if (token.matches("[\\*\\+-/%]")) {
                         tokenType = tokenTypesEnum.MATH_OPR.toString();
                     } else if (token.matches("'" + "[\\w><_,: ]" + "'") || token.matches("'\\" + "\\[\\w]" + "'")) {
                         tokenType = tokenTypesEnum.CHARACTER.toString();

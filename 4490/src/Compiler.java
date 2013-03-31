@@ -12,6 +12,7 @@ import java.util.Stack;
 public class Compiler {
     public static final String BINARY = "binary";
     public static final String URINARY = "urinary";
+
     private LexicalAnalyzer lexicalAnalyzer;
     private List<Tuple<String, String, Integer>> openParens = new ArrayList<Tuple<String, String, Integer>>();
     private List<Tuple<String, String, Integer>> openBlocks = new ArrayList<Tuple<String, String, Integer>>();
@@ -22,6 +23,8 @@ public class Compiler {
     private int statementInr = 1000;
     private int symIdInr = 1000;
     private int eIndex = 0;
+
+    private Stack<ICode> iCodeStack = new Stack<ICode>();
 
     public Compiler(LexicalAnalyzer lexicalAnalyzer, LinkedHashMap<String, Symbol> symbolTable) {
         this.lexicalAnalyzer = lexicalAnalyzer;

@@ -9,12 +9,14 @@ public class ICode {
     private String arg1;
     private String arg2;
     private String result;
+    private String comment;
 
-    public ICode(String operation, String arg1, String arg2, String result) {
+    public ICode(String operation, String arg1, String arg2, String result, String comment) {
         this.operation = operation;
         this.arg1 = arg1;
         this.arg2 = arg2;
         this.result = result;
+        this.comment = comment;
     }
 
     public String getOperation() {
@@ -47,5 +49,13 @@ public class ICode {
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

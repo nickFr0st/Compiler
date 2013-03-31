@@ -2,14 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/ICode.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Compiler.java" afterPath="$PROJECT_DIR$/src/Compiler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ICode.java" afterPath="$PROJECT_DIR$/src/ICode.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449654711" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1364698846381" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1364699463119" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
     <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1364699424976" ignored="false" />
     <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1364679300628" ignored="false" />
@@ -32,7 +31,7 @@
     <file path="$USER_HOME$/Desktop/testp/.idea/workspace.xml" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449686335" ignored="false" />
     <file path="$USER_HOME$/Desktop/testp/.idea/misc.xml" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449481722" ignored="false" />
     <file path="/Operator.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1364342510144" ignored="false" />
-    <file path="/ICode.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1364699320137" ignored="false" />
+    <file path="/ICode.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1364699526382" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,7 +143,7 @@
       <file leaf-file-name="ICode.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ICode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="34" selection-start="458" selection-end="458" vertical-scroll-proportion="0.34434968">
+            <state line="53" column="32" selection-start="1094" selection-end="1094" vertical-scroll-proportion="0.96055436">
               <folding />
             </state>
           </provider>
@@ -238,8 +237,8 @@
         <option value="$PROJECT_DIR$/src/ProgramDriver.java" />
         <option value="$PROJECT_DIR$/src/LexicalAnalyzer.java" />
         <option value="$PROJECT_DIR$/src/Symbol.java" />
-        <option value="$PROJECT_DIR$/src/ICode.java" />
         <option value="$PROJECT_DIR$/src/Compiler.java" />
+        <option value="$PROJECT_DIR$/src/ICode.java" />
       </list>
     </option>
   </component>
@@ -850,7 +849,11 @@
       <created>1364693435099</created>
       <updated>1364693435099</updated>
     </task>
-    <option name="localTasksCounter" value="90" />
+    <task id="LOCAL-00090" summary="create Icode object">
+      <created>1364699466666</created>
+      <updated>1364699466666</updated>
+    </task>
+    <option name="localTasksCounter" value="91" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -885,6 +888,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.49806738" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32800853" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1606847" sideWeight="0.571885" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -897,7 +901,6 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32800853" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -941,7 +944,7 @@
     <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="clean up" />
+    <option name="LAST_COMMIT_MESSAGE" value="create Icode object" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -954,7 +957,6 @@
     <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="added better parameter checking" />
     <MESSAGE value="fixed a bunch of issues" />
     <MESSAGE value="added some syntax fixes" />
     <MESSAGE value="fixed a lexical bug" />
@@ -979,6 +981,7 @@
     <MESSAGE value="return statements are validating" />
     <MESSAGE value="fix" />
     <MESSAGE value="clean up" />
+    <MESSAGE value="create Icode object" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1108,7 +1111,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ICode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="34" selection-start="458" selection-end="458" vertical-scroll-proportion="0.34434968">
+        <state line="53" column="32" selection-start="1094" selection-end="1094" vertical-scroll-proportion="0.96055436">
           <folding />
         </state>
       </provider>

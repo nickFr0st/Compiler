@@ -5,18 +5,28 @@
  * Time: 9:01 PM
  */
 public class ICode {
+    private String label;
     private String operation;
     private String arg1;
     private String arg2;
     private String result;
     private String comment;
 
-    public ICode(String operation, String arg1, String arg2, String result, String comment) {
+    public ICode(String label, String operation, String arg1, String arg2, String result, String comment) {
+        this.label = label;
         this.operation = operation;
         this.arg1 = arg1;
         this.arg2 = arg2;
         this.result = result;
         this.comment = comment;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public String getOperation() {

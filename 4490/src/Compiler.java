@@ -24,7 +24,7 @@ public class Compiler {
     private int symIdInr = 1000;
     private int eIndex = 0;
 
-    private Stack<ICode> iCodeStack = new Stack<ICode>();
+    private List<ICode> iCodeList = new ArrayList<ICode>();
 
     public Compiler(LexicalAnalyzer lexicalAnalyzer, LinkedHashMap<String, Symbol> symbolTable) {
         this.lexicalAnalyzer = lexicalAnalyzer;
@@ -32,6 +32,7 @@ public class Compiler {
     }
 
     public void evaluate() {
+        iCodeList.add(new ICode("", "JMP", "", "", "", "jump to main"));
         Tuple<String, String, Integer> currentLex;
         Tuple<String, String, Integer> previousLex = null;
 
@@ -233,12 +234,14 @@ public class Compiler {
                                                 errorList += "Function 'main' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
                                             }
                                             paramIdList = new ArrayList<String>();
-                                            addToSymbolTable("Function", paramIdList, tempList.get(2).lexi, tempList.get(0).lexi, "main", currentLex.lineNum);
+                                            iCodeList.get(0).setArg1("main" + symIdInr);
+                                            addToSymbolTable("Function", paramIdList, tempList.get(2).lexi, tempList.get(0).lexi, "main" + symIdInr, currentLex.lineNum);
                                             previousLex = currentLex;
                                             continue;
                                         }
                                     }
-                                    addToSymbolTable("Function", new ArrayList<String>(), tempList.get(2).lexi, tempList.get(0).lexi, "main", currentLex.lineNum);
+                                    iCodeList.get(0).setArg1("main" + symIdInr);
+                                    addToSymbolTable("Function", new ArrayList<String>(), tempList.get(2).lexi, tempList.get(0).lexi, "main" + symIdInr, currentLex.lineNum);
                                     previousLex = currentLex;
                                     continue;
                                 }
@@ -551,29 +554,6 @@ public class Compiler {
                         errorList += "Incorrect format, too few arguments. Line: " + currentLex.lineNum + "\n";
                         previousLex = currentLex;
                         continue;
-                    }
-                    if (tempList.get(i + 1).lexi.equals("static") && tempList.get(i + 2).lexi.equals("void")) {
-                        if (tempList.get(i + 3).lexi.equals("main")) {
-                            if (!tempList.get(i + 4).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-                                errorList += "Main function is missing the argument list. Line: " + currentLex.lineNum + "\n";
-                                previousLex = currentLex;
-                                continue;
-                            } else {
-                                if (tempList.get(i + 5).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                                    if (!tempList.get(i + 6).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
-                                        errorList += "Main function declaration must end with an block begin token ({). Line: " + currentLex.lineNum + "\n";
-                                        previousLex = currentLex;
-                                        continue;
-                                    }
-                                } else {
-                                    errorList += "Main function declaration must end with an block begin token ({). Line: " + currentLex.lineNum + "\n";
-                                    previousLex = currentLex;
-                                    continue;
-                                }
-                            }
-                            previousLex = currentLex;
-                            continue;
-                        }
                     }
                     if (tempList.size() < 3) {
                         errorList += "Missing arguments in type declaration. Line: " + currentLex.lineNum + "\n";
@@ -977,6 +957,10 @@ public class Compiler {
                 i++;
             }
 
+        }
+
+        if (iCodeList.get(0).getArg1().isEmpty())  {
+            errorList += "program requires a 'main' function\n";
         }
 
         try {

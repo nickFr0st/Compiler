@@ -134,6 +134,10 @@ public class Compiler {
                         previousLex = currentLex;
                         continue;
                     }
+                } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
+                    addToSymbolTable("Literal", new ArrayList<String>(), "int", "public", "x" + currentLex.lexi, currentLex.lineNum);
+                } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
+                    addToSymbolTable("Literal", new ArrayList<String>(), "char", "public", currentLex.lexi, currentLex.lineNum);
                 }
 
 
@@ -234,14 +238,14 @@ public class Compiler {
                                                 errorList += "Function 'main' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
                                             }
                                             paramIdList = new ArrayList<String>();
-                                            iCodeList.get(0).setArg1("main" + symIdInr);
-                                            addToSymbolTable("Function", paramIdList, tempList.get(2).lexi, tempList.get(0).lexi, "main" + symIdInr, currentLex.lineNum);
+                                            iCodeList.get(0).setArg1("F" + symIdInr);
+                                            addToSymbolTable("Function", paramIdList, tempList.get(2).lexi, tempList.get(0).lexi, "main", currentLex.lineNum);
                                             previousLex = currentLex;
                                             continue;
                                         }
                                     }
-                                    iCodeList.get(0).setArg1("main" + symIdInr);
-                                    addToSymbolTable("Function", new ArrayList<String>(), tempList.get(2).lexi, tempList.get(0).lexi, "main" + symIdInr, currentLex.lineNum);
+                                    iCodeList.get(0).setArg1("F" + symIdInr);
+                                    addToSymbolTable("Function", new ArrayList<String>(), tempList.get(2).lexi, tempList.get(0).lexi, "main", currentLex.lineNum);
                                     previousLex = currentLex;
                                     continue;
                                 }
@@ -826,14 +830,14 @@ public class Compiler {
                             returnTypeScope = "";
                         }
                     }
-                    SAS.push(new SAR(item, scopePassTwo, returnType));
+                    SAS.push(new SAR(item, scopePassTwo, returnType, ""));
 
                 }
 
                 if (isLiteralExpression(tempList.get(i))) {
                     addLiteralExpressionToSAS(scopePassTwo, tempList.get(i), SAS);
                 } else if (isIdentifierExpression(tempList.get(i))) {
-                    SAR sar = new SAR(tempList.get(i), scopePassTwo, "");
+                    SAR sar = new SAR(tempList.get(i), scopePassTwo, "", "");
                     if (isCalled) {
                         eIndex = i;
                         rExist(sar, SAS, tempList, scopePassTwo, OS);
@@ -977,12 +981,12 @@ public class Compiler {
         eIndex = i;
         if (item.lexi.equals("-")) {
             if (i == 0 || tempList.get(i - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || tempList.get(i - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || tempList.get(i - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
-                OS.push(new SAR(item, scopePassTwo, URINARY));
+                OS.push(new SAR(item, scopePassTwo, URINARY, ""));
             } else {
-                OS.push(new SAR(item, scopePassTwo, BINARY));
+                OS.push(new SAR(item, scopePassTwo, BINARY, ""));
             }
         } else if (item.lexi.equals("<<") || item.lexi.equals(">>")) {
-            OS.push(new SAR(item, scopePassTwo, URINARY));
+            OS.push(new SAR(item, scopePassTwo, URINARY, ""));
         } else if (item.lexi.equals("=")) {
             if (tempList.get(i + 1).lexi.equals("new")) {
 
@@ -1024,7 +1028,7 @@ public class Compiler {
 
                 } else {
 
-                    SAR sar = new SAR(tempList.get(i + 2), globalScope, "");
+                    SAR sar = new SAR(tempList.get(i + 2), globalScope, "", "");
                     eIndex = i + 2;
                     int ii = eIndex;
                     if (!iExist(sar, SAS, tempList, globalScope, OS)) {
@@ -1044,9 +1048,9 @@ public class Compiler {
                 }
             }
 
-            OS.push(new SAR(item, scopePassTwo, BINARY));
+            OS.push(new SAR(item, scopePassTwo, BINARY, ""));
         } else {
-            OS.push(new SAR(item, scopePassTwo, BINARY));
+            OS.push(new SAR(item, scopePassTwo, BINARY, ""));
         }
     }
 
@@ -1088,13 +1092,13 @@ public class Compiler {
 
     private void addLiteralExpressionToSAS(String scopePassTwo, Tuple<String, String, Integer> tuple, Stack<SAR> SAS) {
         if (tuple.lexi.equals("true") || tuple.lexi.equals("false")) {
-            SAS.push(new SAR(tuple, scopePassTwo, "bool"));
+            SAS.push(new SAR(tuple, scopePassTwo, "bool", "lvar"));
         } else if (tuple.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
-            SAS.push(new SAR(tuple, scopePassTwo, "int"));
+            SAS.push(new SAR(tuple, scopePassTwo, "int", "lvar"));
         } else if (tuple.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
-            SAS.push(new SAR(tuple, scopePassTwo, "char"));
+            SAS.push(new SAR(tuple, scopePassTwo, "char", "lvar"));
         } else if (tuple.lexi.equals("null")) {
-            SAS.push(new SAR(tuple, scopePassTwo, "null"));
+            SAS.push(new SAR(tuple, scopePassTwo, "null", "lvar"));
         }
     }
 
@@ -1142,17 +1146,18 @@ public class Compiler {
                 if (s.getData() instanceof VaribleData) {
                     if (((VaribleData) s.getData()).getAccessMod().equals("public")) {
                         sar.setType(((VaribleData) s.getData()).getType());
+                        sar.setKey(key);
                         String value = "t" + symIdInr;
                         addToSymbolTable("tVar", new ArrayList<String>(), ((VaribleData) s.getData()).getType(), "private", value, sar.getLexi().lineNum);
 
                         Tuple<String, String, Integer> tempLexi = new Tuple<String, String, Integer>(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);
-                        SAS.push(new SAR(tempLexi, sar.getScope(), sar.getType()));
+                        SAS.push(new SAR(tempLexi, sar.getScope(), sar.getType(), ""));
 
                         if (tempList.get(eIndex + 1).lexi.equals(".")) {
                             eIndex = eIndex + 2;
                             foundScope = foundScope.substring(0, foundScope.lastIndexOf("."));
                             SAS.pop();
-                            return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), ""), SAS, tempList, globalScope, OS);
+                            return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), "", ""), SAS, tempList, globalScope, OS);
                         }
                         return true;
                     } else {
@@ -1167,17 +1172,18 @@ public class Compiler {
 
                     if (((FunctionData) s.getData()).getParameters().size() == 0) {
                         sar.setType(((FunctionData) s.getData()).getReturnType());
+                        sar.setKey(key);
                         String value = "t" + symIdInr;
                         addToSymbolTable("tVar", new ArrayList<String>(), ((FunctionData) s.getData()).getReturnType(), "private", value, sar.getLexi().lineNum);
 
                         Tuple<String, String, Integer> tempLexi = new Tuple<String, String, Integer>(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);
-                        SAS.push(new SAR(tempLexi, sar.getScope(), sar.getType()));
+                        SAS.push(new SAR(tempLexi, sar.getScope(), sar.getType(), ""));
 
                         if (tempList.get(eIndex + 3).lexi.equals(".")) {
                             eIndex = eIndex + 4;
                             foundScope = foundScope.substring(0, foundScope.lastIndexOf("."));
                             SAS.pop();
-                            return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), ""), SAS, tempList, globalScope, OS);
+                            return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), "", ""), SAS, tempList, globalScope, OS);
                         } else {
                             eIndex = eIndex + 2;
                         }
@@ -1186,6 +1192,7 @@ public class Compiler {
 
                     } else {
                         sar.setType(((FunctionData) s.getData()).getReturnType());
+                        sar.setKey(key);
                         int index = eIndex + 2;
                         String value = "t" + symIdInr;
 
@@ -1197,13 +1204,13 @@ public class Compiler {
                         addToSymbolTable("tVar", new ArrayList<String>(), ((FunctionData) s.getData()).getReturnType(), "private", value, sar.getLexi().lineNum);
 
                         Tuple<String, String, Integer> tempLexi = new Tuple<String, String, Integer>(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);
-                        SAS.push(new SAR(tempLexi, sar.getScope(), sar.getType()));
+                        SAS.push(new SAR(tempLexi, sar.getScope(), sar.getType(), ""));
 
                         if (tempList.get(eIndex + 2).lexi.equals(".")) {
                             eIndex += 3;
                             foundScope = foundScope.substring(0, foundScope.lastIndexOf("."));
                             SAS.pop();
-                            return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), ""), SAS, tempList, globalScope, OS);
+                            return evaluateCallies(foundScope + "." + sar.getType(), new SAR(tempList.get(eIndex), sar.getScope(), "", ""), SAS, tempList, globalScope, OS);
                         }
                         return true;
                     }
@@ -1230,7 +1237,7 @@ public class Compiler {
             return false;
         }
 
-        SAR sar = new SAR(item, globalScope, "");
+        SAR sar = new SAR(item, globalScope, "", "");
         if (isLiteralExpression(item)) {
             boolean isGood = true;
             String actualType = "";
@@ -1241,24 +1248,28 @@ public class Compiler {
                     actualType = item.lexi;
                 }
                 sar.setType("bool");
+                sar.setKey("lvar");
             } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
                 if (!paramList.get(pId).equals("int")) {
                     isGood = false;
                     actualType = item.type;
                 }
                 sar.setType("int");
+                sar.setKey("lvar");
             } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
                 if (!paramList.get(pId).equals("char")) {
                     isGood = false;
                     actualType = item.type;
                 }
                 sar.setType("char");
+                sar.setKey("lvar");
             } else if (item.lexi.equals("null")) {
                 if (!paramList.get(pId).equals("null")) {
                     isGood = false;
                     actualType = item.lexi;
                 }
                 sar.setType("null");
+                sar.setKey("lvar");
             }
 
             if (!isGood) {
@@ -1275,6 +1286,7 @@ public class Compiler {
                         if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope) && !(s.getData() instanceof ClassData)) {
                             if (s.getData() instanceof VaribleData) {
                                 sar.setType(((VaribleData) s.getData()).getType());
+                                sar.setKey(key);
 
                                 if (((VaribleData) s.getData()).getAccessMod().equals("private") && !globalScope.equals("g")) {
                                     errorList += "Access Error: " + sar.getLexi().lexi + " is a private variable. Line: " + sar.getLexi().lineNum + "\n";
@@ -1284,7 +1296,7 @@ public class Compiler {
                                 if (tempList.get(index + 1).lexi.equals(".")) {
                                     SAS.push(sar);
                                     eIndex = index + 2;
-                                    if (!rExist(new SAR(tempList.get(index + 2), globalScope, ""), SAS, tempList, globalScope, OS)) {
+                                    if (!rExist(new SAR(tempList.get(index + 2), globalScope, "", ""), SAS, tempList, globalScope, OS)) {
                                         errorList += "Fail. Line: " + sar.getLexi().lineNum + "\n";
                                         return false;
                                     }
@@ -1309,6 +1321,7 @@ public class Compiler {
 
                             } else if (s.getData() instanceof FunctionData) {
                                 sar.setType(((FunctionData) s.getData()).getReturnType());
+                                sar.setKey(key);
 
                                 if (((FunctionData) s.getData()).getAccessMod().equals("private") && !globalScope.equals("g")) {
                                     errorList += "Access Error: " + sar.getLexi().lexi + " is a private function. Line: " + sar.getLexi().lineNum + "\n";
@@ -1334,6 +1347,7 @@ public class Compiler {
                     if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope) && !(s.getData() instanceof ClassData)) {
                         if (s.getData() instanceof VaribleData) {
                             sar.setType(((VaribleData) s.getData()).getType());
+                            sar.setKey(key);
 
                             if (((VaribleData) s.getData()).getAccessMod().equals("private") && !globalScope.contains(sarScope)) {
                                 errorList += "Access Error: " + sar.getLexi().lexi + " is a private variable. Line: " + sar.getLexi().lineNum + "\n";
@@ -1343,7 +1357,7 @@ public class Compiler {
                             if (tempList.get(index + 1).lexi.equals(".")) {
                                 SAS.push(sar);
                                 eIndex = index + 2;
-                                if (!rExist(new SAR(tempList.get(index + 2), globalScope, ""), SAS, tempList, globalScope, OS)) {
+                                if (!rExist(new SAR(tempList.get(index + 2), globalScope, "", ""), SAS, tempList, globalScope, OS)) {
                                     errorList += "Fail. Line: " + sar.getLexi().lineNum + "\n";
                                     return false;
                                 }
@@ -1363,6 +1377,7 @@ public class Compiler {
 
                         } else if (s.getData() instanceof FunctionData) {
                             sar.setType(((FunctionData) s.getData()).getReturnType());
+                            sar.setKey(key);
 
                             if (((FunctionData) s.getData()).getAccessMod().equals("private") && !globalScope.equals(sarScope)) {
                                 errorList += "Access Error: " + sar.getLexi().lexi + " is a private function. Line: " + sar.getLexi().lineNum + "\n";
@@ -1407,10 +1422,10 @@ public class Compiler {
                 errorList += "Mathematical operations require variable to be type int. Line: " + tempList.get(index).lineNum + "\n";
                 return false;
             }
-            OS.push(new SAR(tempList.get(index + 1), globalScope, BINARY));
+            OS.push(new SAR(tempList.get(index + 1), globalScope, BINARY, ""));
             if (tempList.get(index + 2).lexi.equals("-")) {
                 SAS.push(sar);
-                OS.push(new SAR(tempList.get(index + 2), globalScope, URINARY));
+                OS.push(new SAR(tempList.get(index + 2), globalScope, URINARY, ""));
                 return doParametersExist(SAS, tempList, globalScope, index + 3, paramList, pId, true, OS);
             }
             SAS.push(sar);
@@ -1501,6 +1516,7 @@ public class Compiler {
             if (!sarEqualAssignment(RHS, LHS)) {
                 errorList += "left and right operand types are incompatible. Line: " + opr.getLexi().lineNum + "\n";
             }
+            iCodeList.add(new ICode("", "MOV", RHS.getKey(), LHS.getKey(), "", "; " + LHS.getLexi().lexi + " = " + RHS.getLexi().lexi));
 
         } else if (opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
             if (SAS.size() < 2) {
@@ -1514,7 +1530,7 @@ public class Compiler {
                 if (RHS.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || (RHS.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(RHS.getLexi().lexi.toCharArray()[0]) && RHS.getType().equals("int"))) {
                     addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
 
-                    SAR temp = new SAR(new Tuple<String, String, Integer>("T" + (symIdInr - 2), RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType());
+                    SAR temp = new SAR(new Tuple<String, String, Integer>("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "");
                     SAS.push(temp);
                 } else {
                     errorList += "cannot attach a urinary '-' to a non number object";
@@ -1532,7 +1548,7 @@ public class Compiler {
                         } else {
                             addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
 
-                            SAR temp = new SAR(new Tuple<String, String, Integer>("T" + (symIdInr - 2), RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType());
+                            SAR temp = new SAR(new Tuple<String, String, Integer>("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "");
                             SAS.push(temp);
                             return;
                         }
@@ -1546,7 +1562,7 @@ public class Compiler {
 
                 addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
 
-                SAR temp = new SAR(new Tuple<String, String, Integer>("T" + (symIdInr - 2), RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType());
+                SAR temp = new SAR(new Tuple<String, String, Integer>("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "");
                 SAS.push(temp);
             }
 
@@ -1622,6 +1638,7 @@ public class Compiler {
                     if (s.getValue().equals(sar.getLexi().lexi) && !(s.getData() instanceof ClassData)) {
                         if (s.getData() instanceof VaribleData) {
                             sar.setType(((VaribleData) s.getData()).getType());
+                            sar.setKey(key);
 
                             // check for array
                             if (tempList.get(eIndex + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
@@ -1660,6 +1677,7 @@ public class Compiler {
                             }
 
                             sar.setType(((FunctionData) s.getData()).getReturnType());
+                            sar.setKey(key);
                             if (((FunctionData) s.getData()).getParameters().size() == 0) {
                                 if (!tempList.get(eIndex + 1).lexi.equals("(")) {
                                     errorList += "Invalid function call. Line: " + sar.getLexi().lineNum + "\n";
@@ -1686,6 +1704,7 @@ public class Compiler {
                 if (s.getValue().equals(sar.getLexi().lexi) && s.getScope().equals(sarScope) && !(s.getData() instanceof ClassData)) {
                     if (s.getData() instanceof VaribleData) {
                         sar.setType(((VaribleData) s.getData()).getType());
+                        sar.setKey(key);
 
                         // check for array
                         if (tempList.get(eIndex + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
@@ -1722,6 +1741,8 @@ public class Compiler {
                     } else if (s.getData() instanceof FunctionData) {
                         // need to do work here
                         sar.setType(((FunctionData) s.getData()).getReturnType());
+                        sar.setKey(key);
+
                         if (((FunctionData) s.getData()).getParameters().size() == 0) {
                             if (!tempList.get(eIndex + 1).lexi.equals("(")) {
                                 errorList += "Invalid function call. Line: " + sar.getLexi().lineNum + "\n";
@@ -1769,7 +1790,7 @@ public class Compiler {
                 return false;
             }
 
-            SAR sar = new SAR(tempList.get(index), globalScope, "");
+            SAR sar = new SAR(tempList.get(index), globalScope, "", "");
             if (!iExist(sar, SAS, tempList, globalScope, OS)) {
                 errorList += "Invalid array indexing type. Line: " + tempList.get(index).lineNum + "\n";
                 return false;
@@ -2201,6 +2222,12 @@ public class Compiler {
         for (String key : symbolTable.keySet()) {
             Symbol s = symbolTable.get(key);
             if (s.getScope().equals(scope) && s.getValue().equals(value) && s.getKind().equals(type)) {
+                if (value.length() > 1) {
+                    char[] test = value.toCharArray();
+                    if (test[0] == 'x' && Character.isDigit(test[1])) {
+                        return;
+                    }
+                }
                 errorList += "Found duplicate declaration of '" + value + "'. Line: " + lineNum + "\n";
                 return;
             }
@@ -2214,6 +2241,8 @@ public class Compiler {
             scope += "." + value;
         } else if (type.equals("pvar")) {
             symbolTable.put("P" + symIdInr++, new Symbol(scope, "P" + symIdInr, value, type, new VaribleData(returnType, accessMod)));
+        } else if (type.equals("Literal")) {
+            symbolTable.put("L" + (symIdInr++ - 1000), new Symbol(scope, "L" + (symIdInr - 1000), value, type, new VaribleData(returnType, accessMod)));
         } else {
             symbolTable.put("V" + symIdInr++, new Symbol(scope, "V" + symIdInr, value, type, new VaribleData(returnType, accessMod)));
         }

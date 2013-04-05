@@ -8,11 +8,21 @@ public class SAR {
     private Tuple<String, String, Integer> lexi;
     private String scope;
     private String type;
+    private String key;
 
-    public SAR(Tuple<String, String, Integer> lexi, String scope, String type) {
+    public SAR(Tuple<String, String, Integer> lexi, String scope, String type, String key) {
+        this.key = key;
         this.lexi = lexi;
         this.scope = scope;
         this.type = type;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getScope() {

@@ -82,13 +82,14 @@ public class LexicalAnalyzer {
         symbolCheck.add("\'");
 
         // relational operators
-        symbolCheck.add(":=");
         symbolCheck.add("<=");
         symbolCheck.add(">=");
         symbolCheck.add("==");
         symbolCheck.add("<");
         symbolCheck.add(">");
         symbolCheck.add("!=");
+
+        // assignment operator
         symbolCheck.add("=");
 
         // Parentheses

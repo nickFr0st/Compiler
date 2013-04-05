@@ -32,7 +32,7 @@ public class Compiler {
     }
 
     public void evaluate() {
-        iCodeList.add(new ICode("", "JMP", "", "", "", "jump to main"));
+        iCodeList.add(new ICode("", "JMP", "", "", "", "; jump to main"));
         Tuple<String, String, Integer> currentLex;
         Tuple<String, String, Integer> previousLex = null;
 
@@ -135,9 +135,20 @@ public class Compiler {
                         continue;
                     }
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
+                    if (i >= 3) {
+                        if (tempList.get(i -1).lexi.equals("-") && tempList.get(i -2).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
+                            addToSymbolTable("Literal", new ArrayList<String>(), "int", "public", "x-" + currentLex.lexi, currentLex.lineNum);
+                            previousLex = currentLex;
+                            continue;
+                        }
+                    }
                     addToSymbolTable("Literal", new ArrayList<String>(), "int", "public", "x" + currentLex.lexi, currentLex.lineNum);
+                    previousLex = currentLex;
+                    continue;
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
                     addToSymbolTable("Literal", new ArrayList<String>(), "char", "public", currentLex.lexi, currentLex.lineNum);
+                    previousLex = currentLex;
+                    continue;
                 }
 
 
@@ -928,6 +939,7 @@ public class Compiler {
                             i++;
                             continue;
                         }
+                        // todo: handle insertion and extraction
                     }
 
                     if (item.lexi.equals("cin")) {
@@ -1516,7 +1528,11 @@ public class Compiler {
             if (!sarEqualAssignment(RHS, LHS)) {
                 errorList += "left and right operand types are incompatible. Line: " + opr.getLexi().lineNum + "\n";
             }
-            iCodeList.add(new ICode("", "MOV", RHS.getKey(), LHS.getKey(), "", "; " + LHS.getLexi().lexi + " = " + RHS.getLexi().lexi));
+
+            if (RHS.getKey().startsWith("L")) {
+                iCodeList.add(new ICode("", "MOVI", LHS.getKey(), RHS.getKey(), "", "; " + LHS.getLexi().lexi + " = " + RHS.getLexi().lexi));
+            }
+            iCodeList.add(new ICode("", "MOV", LHS.getKey(), RHS.getKey(), "", "; " + LHS.getLexi().lexi + " = " + RHS.getLexi().lexi));
 
         } else if (opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
             if (SAS.size() < 2) {
@@ -1528,14 +1544,14 @@ public class Compiler {
                 SAR RHS = SAS.pop();
 
                 if (RHS.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || (RHS.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(RHS.getLexi().lexi.toCharArray()[0]) && RHS.getType().equals("int"))) {
-                    addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
+                    addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr, RHS.getLexi().lineNum);
 
                     SAR temp = new SAR(new Tuple<String, String, Integer>("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "");
                     SAS.push(temp);
                 } else {
                     errorList += "cannot attach a urinary '-' to a non number object";
                 }
-
+                // todo: need to handle negative numbers
             } else {
                 SAR RHS = SAS.pop();
                 SAR LHS = SAS.pop();
@@ -1546,7 +1562,7 @@ public class Compiler {
                             errorList += "cannot set raw types to null. Line:" + LHS.getLexi().lineNum + "\n";
                             return;
                         } else {
-                            addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
+                            addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr, RHS.getLexi().lineNum);
 
                             SAR temp = new SAR(new Tuple<String, String, Integer>("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "");
                             SAS.push(temp);
@@ -1560,10 +1576,38 @@ public class Compiler {
                     return;
                 }
 
-                addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
 
-                SAR temp = new SAR(new Tuple<String, String, Integer>("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "");
+                SAR temp = new SAR(new Tuple<String, String, Integer>("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "T" + symIdInr);
+                addToSymbolTable("tvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr, RHS.getLexi().lineNum);
                 SAS.push(temp);
+
+                String oprName = opr.getLexi().lexi;
+                if (oprName.equals("+")) {
+                    if (RHS.getKey().startsWith("L") || LHS.getKey().startsWith("L")) {
+                        iCodeList.add(new ICode("", "ADI", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " + " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                    } else {
+                        iCodeList.add(new ICode("", "ADD", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " + " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                    }
+                } else if (oprName.equals("-")) {
+                    iCodeList.add(new ICode("", "SUB", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " - " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                } else if (oprName.equals("*")) {
+                    iCodeList.add(new ICode("", "MUL", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " * " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                } else if (oprName.equals("/")) {
+                    iCodeList.add(new ICode("", "DIV", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " / " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                } else if (oprName.equals("<=")) {
+                    iCodeList.add(new ICode("", "LE", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " <= " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                } else if (oprName.equals(">=")) {
+                    iCodeList.add(new ICode("", "GE", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " >= " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                } else if (oprName.equals("==")) {
+                    iCodeList.add(new ICode("", "EQ", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " == " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                } else if (oprName.equals("<")) {
+                    iCodeList.add(new ICode("", "LT", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " < " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                } else if (oprName.equals(">")) {
+                    iCodeList.add(new ICode("", "GT", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " > " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                } else if (oprName.equals("!=")) {
+                    iCodeList.add(new ICode("", "NE", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " != " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+
+                }
             }
 
         } else if (opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.IO_OPR.name())) {
@@ -1575,7 +1619,7 @@ public class Compiler {
             SAR RHS = SAS.pop();
 
             if (RHS.getType().equals("int") || RHS.getType().equals("char")) {
-                addToSymbolTable("iovar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
+                addToSymbolTable("iovar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr, RHS.getLexi().lineNum);
             } else {
                 errorList += "invalid variable type. insertion and extraction operators only deal with int and char. Line: " + opr.getLexi().lineNum + "\n";
             }
@@ -2243,6 +2287,10 @@ public class Compiler {
             symbolTable.put("P" + symIdInr++, new Symbol(scope, "P" + symIdInr, value, type, new VaribleData(returnType, accessMod)));
         } else if (type.equals("Literal")) {
             symbolTable.put("L" + (symIdInr++ - 1000), new Symbol(scope, "L" + (symIdInr - 1000), value, type, new VaribleData(returnType, accessMod)));
+        } else if (type.equals("tvar")) {
+            symbolTable.put("T" + symIdInr++, new Symbol(scope, "T" + symIdInr, value, type, new VaribleData(returnType, accessMod)));
+        } else if (type.equals("iovar")) {
+            symbolTable.put("IO" + symIdInr++, new Symbol(scope, "IO" + symIdInr, value, type, new VaribleData(returnType, accessMod)));
         } else {
             symbolTable.put("V" + symIdInr++, new Symbol(scope, "V" + symIdInr, value, type, new VaribleData(returnType, accessMod)));
         }

@@ -19,6 +19,8 @@ public class Compiler {
     private String scope = "g";
     private int symIdInr = 1000;
     private int eIndex = 0;
+    private String condLabel = "";
+    private String condTypeScope = "";
 
     private Queue<String> ifList = new ArrayDeque<String>();
 
@@ -727,6 +729,7 @@ public class Compiler {
         lexicalAnalyzer.resetList();
         String scopePassTwo = "g";
 
+
         while (lexicalAnalyzer.hasNext()) {
             // setting up items to be parsed
             Tuple temp;
@@ -764,9 +767,12 @@ public class Compiler {
                             scopePassTwo += "." + tempList.get(1).lexi;
                         }
                     } else if (tempList.get(0).lexi.trim().equals("if") || tempList.get(0).lexi.trim().equals("else") || tempList.get(0).lexi.trim().equals("while")) {
+                        condTypeScope = "." + tempList.get(0).lexi + symIdInr;
                         scopePassTwo += "." + tempList.get(0).lexi + symIdInr++;
                     } else {
-                        if (isValidReturnType(tempList.get(0).lexi, tempList.get(0).type) || tempList.get(0).lexi.equals("class")) {
+                        if (isValidReturnType(tempList.get(0).lexi, tempList.get(0).type) && tempList.get(1).lexi.equals("(")) {
+                            scopePassTwo += "." + tempList.get(0).lexi;
+                        } else if (isValidReturnType(tempList.get(0).lexi, tempList.get(0).type) || tempList.get(0).lexi.equals("class")) {
                             scopePassTwo += "." + tempList.get(1).lexi;
                         }
                     }
@@ -798,16 +804,19 @@ public class Compiler {
                     i = eIndex + 1;
                     continue;
                 } else if (item.lexi.equals("else")) {
+                    Tuple tempItem = new Tuple(ifList.remove(), item.type, item.lineNum);
+                    SAR controlSar = new SAR(tempItem, scopePassTwo, "", "");
                     if (tempList.get(i + 1).lexi.equals("if")) {
                         eIndex = i + 2;
-                        Tuple tempItem = new Tuple(ifList.remove(), item.type, item.lineNum);
-                        SAR controlSar = new SAR(tempItem, scopePassTwo, "", "");
                         if (!iExist(controlSar, SAS, tempList, scopePassTwo, OS)) {
                             errorList += "invalid else statement. Line: " + item.lineNum + "\n";
                         }
                         validateRelationalParametersSemantic(tempList, SAS, OS, scopePassTwo, tempItem, 0, controlSar.getKey());
                         i = eIndex + 1;
+                        continue;
                     }
+
+                    i++;
                     continue;
                 } else if (item.lexi.equals("while")) {
                     eIndex = i + 1;
@@ -891,7 +900,7 @@ public class Compiler {
                         i = eIndex + 1;
 
                         if (tempList.get(i).lexi.equals(";") || tempList.get(i).lexi.equals("{")) {
-                            cleanupSAS(SAS, OS);
+                            cleanupSAS(SAS, OS, scopePassTwo);
                             i++;
                             continue;
                         }
@@ -922,7 +931,7 @@ public class Compiler {
                             if (OS.peek() == null) {
                                 errorList += "Missing opening paren. Line: " + item.lineNum + "\n";
                             }
-                            addTempToSAS(OS.pop(), SAS);
+                            addTempToSAS(OS.pop(), SAS, scopePassTwo);
                         }
                         if (tempList.get(0).lexi.equals("public") || tempList.get(0).lexi.equals("private") || isValidReturnType(tempList.get(0).lexi, tempList.get(0).type) || tempList.get(0).lexi.equals("return")) {
                             scopePassTwo = scopePassTwo.substring(0, scopePassTwo.lastIndexOf("."));
@@ -937,7 +946,7 @@ public class Compiler {
                             if (OS.peek() == null) {
                                 errorList += "Missing opening array. Line: " + item.lineNum + "\n";
                             }
-                            addTempToSAS(OS.pop(), SAS);
+                            addTempToSAS(OS.pop(), SAS, scopePassTwo);
                         }
                         if (!OS.isEmpty()) {
                             OS.pop();
@@ -949,14 +958,14 @@ public class Compiler {
                     } else if (precedence <= lastOprPrecedence) {
                         if (!OS.isEmpty()) {
                             if (!OS.peek().getLexi().lexi.equals("("))
-                                addTempToSAS(OS.pop(), SAS);
+                                addTempToSAS(OS.pop(), SAS, scopePassTwo);
                         }
                         pushOS(scopePassTwo, tempList, OS, i, item, SAS, scopePassTwo);
                         i = eIndex;
                         lastOprPrecedence = precedence;
                     } else {
                         if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                            cleanupSAS(SAS, OS);
+                            cleanupSAS(SAS, OS, scopePassTwo);
                             i++;
                             continue;
                         }
@@ -1001,7 +1010,7 @@ public class Compiler {
                     }
 
                 } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()))
-                    cleanupSAS(SAS, OS);
+                    cleanupSAS(SAS, OS, scopePassTwo);
 
                 // take down scope
                 if (tempList.get(i).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
@@ -1009,6 +1018,14 @@ public class Compiler {
                         errorList += "Invalid closing block on line: " + tempList.get(i).lineNum + "\n";
                     } else {
                         if (!scopePassTwo.equals("g")) {
+
+                            String subScope = scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length());
+                            if ((subScope.startsWith(".if") && Character.isDigit(subScope.toCharArray()[3])) || (subScope.startsWith(".else") && Character.isDigit(subScope.toCharArray()[5])) || (subScope.startsWith(".while") && Character.isDigit(subScope.toCharArray()[6]))) {
+                            } else {
+                                condLabel = "";
+                                condTypeScope = "";
+                            }
+
                             scopePassTwo = scopePassTwo.substring(0, scopePassTwo.lastIndexOf('.'));
                         }
                         openBlocks.remove(openBlocks.size() - 1);
@@ -1092,7 +1109,7 @@ public class Compiler {
                         errorList += "Missing opening paren. Line: " + item.lineNum + "\n";
                         return false;
                     }
-                    addTempToSAS(os.pop(), sas);
+                    addTempToSAS(os.pop(), sas, scopePassTwo);
                 }
 
                 if (!os.isEmpty()) {
@@ -1100,11 +1117,12 @@ public class Compiler {
                 }
                 if (os.isEmpty()) {
                     if (sas.isEmpty()) {
-                        iCodeList.add(new ICode("", "BF", sar.getType(), "SKIP" + type, "", ""));
+                        iCodeList.add(new ICode(condLabel, "BF", sar.getType(), "SKIP" + type, "", ""));
                     } else {
-                        iCodeList.add(new ICode("", "BF", sas.peek().getKey(), "SKIP" + type, "", ""));
+                        iCodeList.add(new ICode(condLabel, "BF", sas.peek().getKey(), "SKIP" + type, "", ""));
                         sas.pop();
                     }
+                    condLabel = "SKIP" + type;
                 }
 
                 if (tempList.get(eIndex + 1).lexi.equals("{")) {
@@ -1120,7 +1138,7 @@ public class Compiler {
             return validateRelationalParametersSemantic(tempList, sas, os, scopePassTwo, tempList.get(eIndex), argCount, type);
         } else if (tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
             while (os.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || os.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
-                addTempToSAS(os.pop(), sas);
+                addTempToSAS(os.pop(), sas, scopePassTwo);
             }
             pushOS(scopePassTwo, tempList, os, eIndex, tempList.get(eIndex), sas, scopePassTwo);
             eIndex++;
@@ -1208,25 +1226,37 @@ public class Compiler {
         }
     }
 
-    private void cleanupSAS(Stack<SAR> SAS, Stack<SAR> OS) {
-        while (!OS.isEmpty()) addTempToSAS(OS.pop(), SAS);
+    private void cleanupSAS(Stack<SAR> SAS, Stack<SAR> OS, String scopePassTwo) {
+        while (!OS.isEmpty()) addTempToSAS(OS.pop(), SAS, scopePassTwo);
         if (!SAS.isEmpty()) {
-            evaluateReturnStatement(SAS);
+            evaluateReturnStatement(SAS, scopePassTwo);
         }
     }
 
-    private void evaluateReturnStatement(Stack<SAR> sas) {
+    private void evaluateReturnStatement(Stack<SAR> sas, String scopePassTwo) {
+        String newLabel = "";
+        if (scopePassTwo.contains(".")) {
+            if (!scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).equals(condTypeScope)) {
+                newLabel = condLabel;
+            }
+        }
+
         if (sas.size() == 1) {
             SAR RHS = sas.pop();
 
             if (RHS.getLexi().lexi.equals("return")) {
                 if (!RHS.getType().equals("void")) {
-                    errorList += "invalid return statement. Line: " + RHS.getLexi().lineNum + "\n";
-                    return;
+                    if (!RHS.getType().equals("main")) {
+                        errorList += "invalid return statement. Line: " + RHS.getLexi().lineNum + "\n";
+                        return;
+                    }
                 }
 
-                iCodeList.add(new ICode("", "RTN", "", "", "", "; return void"));
+                iCodeList.add(new ICode(newLabel, "RTN", "", "", "", "; return void"));
                 addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
+                if (!newLabel.isEmpty()) {
+                    condLabel = "";
+                }
             }
             return;
         }
@@ -1240,8 +1270,11 @@ public class Compiler {
                     errorList += "invalid return type. Line: " + RHS.getLexi().lineNum + "\n";
                     return;
                 }
-                iCodeList.add(new ICode("", "RETURN", RHS.getKey(), "", "", "; return " + RHS.getLexi().lexi));
+                iCodeList.add(new ICode(newLabel, "RETURN", RHS.getKey(), "", "", "; return " + RHS.getLexi().lexi));
                 addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
+                if (!newLabel.isEmpty()) {
+                    condLabel = "";
+                }
             }
         }
     }
@@ -1617,7 +1650,7 @@ public class Compiler {
                 SAS.push(sar);
                 int errCount = errorList.length();
                 while (OS.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
-                    addTempToSAS(OS.pop(), SAS);
+                    addTempToSAS(OS.pop(), SAS, globalScope);
                 }
                 if (errCount != errorList.length()) {
                     return false;
@@ -1638,7 +1671,7 @@ public class Compiler {
                 SAS.push(sar);
                 int errCount = errorList.length();
                 while (OS.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
-                    addTempToSAS(OS.pop(), SAS);
+                    addTempToSAS(OS.pop(), SAS, globalScope);
                 }
                 if (errCount != errorList.length()) {
                     return false;
@@ -1681,7 +1714,14 @@ public class Compiler {
         return false;
     }
 
-    private void addTempToSAS(SAR opr, Stack<SAR> SAS) {
+    private void addTempToSAS(SAR opr, Stack<SAR> SAS, String scopePassTwo) {
+        String newLabel = "";
+        if (scopePassTwo.contains(".")) {
+            if (!scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).equals(condTypeScope) || scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).contains("else")) {
+                newLabel = condLabel;
+            }
+        }
+
         if (opr.getLexi().lexi.equals("=")) {
             if (SAS.size() < 2) {
                 errorList += "missing an operand. Line: " + opr.getLexi().lineNum + "\n";
@@ -1697,9 +1737,10 @@ public class Compiler {
             }
 
             if (RHS.getKey().startsWith("L")) {
-                iCodeList.add(new ICode("", "MOVI", LHS.getKey(), RHS.getKey(), "", "; " + LHS.getLexi().lexi + " = " + RHS.getLexi().lexi));
+                iCodeList.add(new ICode(newLabel, "MOVI", LHS.getKey(), RHS.getKey(), "", "; " + LHS.getLexi().lexi + " = " + RHS.getLexi().lexi));
+            } else {
+                iCodeList.add(new ICode(newLabel, "MOV", LHS.getKey(), RHS.getKey(), "", "; " + LHS.getLexi().lexi + " = " + RHS.getLexi().lexi));
             }
-            iCodeList.add(new ICode("", "MOV", LHS.getKey(), RHS.getKey(), "", "; " + LHS.getLexi().lexi + " = " + RHS.getLexi().lexi));
 
         } else if (opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
             if (SAS.size() < 2) {
@@ -1736,16 +1777,16 @@ public class Compiler {
                 String oprName = opr.getLexi().lexi;
                 if (oprName.equals("+")) {
                     if (RHS.getKey().startsWith("L") || LHS.getKey().startsWith("L")) {
-                        iCodeList.add(new ICode("", "ADI", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " + " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                        iCodeList.add(new ICode(newLabel, "ADI", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " + " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
                     } else {
-                        iCodeList.add(new ICode("", "ADD", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " + " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                        iCodeList.add(new ICode(newLabel, "ADD", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " + " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
                     }
                 } else if (oprName.equals("-")) {
-                    iCodeList.add(new ICode("", "SUB", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " - " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                    iCodeList.add(new ICode(newLabel, "SUB", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " - " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
                 } else if (oprName.equals("*")) {
-                    iCodeList.add(new ICode("", "MUL", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " * " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                    iCodeList.add(new ICode(newLabel, "MUL", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " * " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
                 } else if (oprName.equals("/")) {
-                    iCodeList.add(new ICode("", "DIV", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " / " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                    iCodeList.add(new ICode(newLabel, "DIV", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " / " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
                 }
             }
 
@@ -1761,15 +1802,15 @@ public class Compiler {
                 if (opr.getLexi().lexi.equals("<<")) {
                     if (RHS.getType().equals("int")) {
                         //todo: need to find the items real key value to put in here
-                        iCodeList.add(new ICode("", "WRTI", RHS.getKey(), "", "", "; cout << " + RHS.getLexi().lexi));
+                        iCodeList.add(new ICode(newLabel, "WRTI", RHS.getKey(), "", "", "; cout << " + RHS.getLexi().lexi));
                     } else {
-                        iCodeList.add(new ICode("", "WRTC", RHS.getKey(), "", "", "; cout << " + RHS.getLexi().lexi));
+                        iCodeList.add(new ICode(newLabel, "WRTC", RHS.getKey(), "", "", "; cout << " + RHS.getLexi().lexi));
                     }
                 } else if (opr.getLexi().lexi.equals(">>")) {
                     if (RHS.getType().equals("int")) {
-                        iCodeList.add(new ICode("", "RDI", RHS.getKey(), "", "", "; cin >> " + RHS.getLexi().lexi));
+                        iCodeList.add(new ICode(newLabel, "RDI", RHS.getKey(), "", "", "; cin >> " + RHS.getLexi().lexi));
                     } else {
-                        iCodeList.add(new ICode("", "RDC", RHS.getKey(), "", "", "; cin >> " + RHS.getLexi().lexi));
+                        iCodeList.add(new ICode(newLabel, "RDC", RHS.getKey(), "", "", "; cin >> " + RHS.getLexi().lexi));
                     }
                 }
                 addToSymbolTable("iovar", new ArrayList<String>(), RHS.getType(), "private", "IO" + symIdInr, RHS.getLexi().lineNum);
@@ -1793,9 +1834,9 @@ public class Compiler {
 
             if (RHS.getType().equals("bool") && LHS.getType().equals("bool")) {
                 if (oprName.equals("&&")) {
-                    iCodeList.add(new ICode("", "AND", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " && " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                    iCodeList.add(new ICode(newLabel, "AND", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " && " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
                 } else if (oprName.equals("||")) {
-                    iCodeList.add(new ICode("", "OR", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " || " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                    iCodeList.add(new ICode(newLabel, "OR", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " || " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
                 }
                 return;
             }
@@ -1822,17 +1863,17 @@ public class Compiler {
                     SAS.push(temp);
 
                     if (oprName.equals("<=")) {
-                        iCodeList.add(new ICode("", "LE", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " <= " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                        iCodeList.add(new ICode(newLabel, "LE", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " <= " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
                     } else if (oprName.equals(">=")) {
-                        iCodeList.add(new ICode("", "GE", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " >= " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                        iCodeList.add(new ICode(newLabel, "GE", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " >= " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
                     } else if (oprName.equals("==")) {
-                        iCodeList.add(new ICode("", "EQ", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " == " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                        iCodeList.add(new ICode(newLabel, "EQ", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " == " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
                     } else if (oprName.equals("<")) {
-                        iCodeList.add(new ICode("", "LT", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " < " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                        iCodeList.add(new ICode(newLabel, "LT", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " < " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
                     } else if (oprName.equals(">")) {
-                        iCodeList.add(new ICode("", "GT", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " > " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                        iCodeList.add(new ICode(newLabel, "GT", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " > " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
                     } else if (oprName.equals("!=")) {
-                        iCodeList.add(new ICode("", "NE", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " != " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                        iCodeList.add(new ICode(newLabel, "NE", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " != " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
                     }
                     return;
                 }
@@ -1849,18 +1890,23 @@ public class Compiler {
             SAS.push(temp);
 
             if (oprName.equals("<=")) {
-                iCodeList.add(new ICode("", "LE", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " <= " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                iCodeList.add(new ICode(newLabel, "LE", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " <= " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
             } else if (oprName.equals(">=")) {
-                iCodeList.add(new ICode("", "GE", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " >= " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                iCodeList.add(new ICode(newLabel, "GE", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " >= " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
             } else if (oprName.equals("==")) {
-                iCodeList.add(new ICode("", "EQ", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " == " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                iCodeList.add(new ICode(newLabel, "EQ", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " == " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
             } else if (oprName.equals("<")) {
-                iCodeList.add(new ICode("", "LT", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " < " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                iCodeList.add(new ICode(newLabel, "LT", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " < " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
             } else if (oprName.equals(">")) {
-                iCodeList.add(new ICode("", "GT", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " > " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                iCodeList.add(new ICode(newLabel, "GT", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " > " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
             } else if (oprName.equals("!=")) {
-                iCodeList.add(new ICode("", "NE", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " != " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+                iCodeList.add(new ICode(newLabel, "NE", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " != " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
             }
+
+
+        }
+        if (!newLabel.isEmpty()) {
+            condLabel = "";
         }
     }
 

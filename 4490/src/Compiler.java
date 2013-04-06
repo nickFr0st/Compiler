@@ -825,7 +825,7 @@ public class Compiler {
                     if (!iExist(controlSar, SAS, tempList, scopePassTwo, OS)) {
                         errorList += "invalid while statement. Line: " + item.lineNum + "\n";
                     }
-                    validateRelationalParametersSemantic(tempList, SAS, OS, scopePassTwo, tempItem, 0, controlSar.getKey());
+                    validateRelationalParametersSemanticWhile(tempList, SAS, OS, scopePassTwo, tempItem, 0, controlSar.getKey(), 0);
                     i = eIndex + 1;
                     continue;
                 }
@@ -1143,6 +1143,107 @@ public class Compiler {
             pushOS(scopePassTwo, tempList, os, eIndex, tempList.get(eIndex), sas, scopePassTwo);
             eIndex++;
             return validateRelationalParametersSemantic(tempList, sas, os, scopePassTwo, tempList.get(eIndex), argCount, type);
+        } else {
+            errorList += "Invalid parameter. Line: " + tempList.get(eIndex).lineNum + "\n";
+            return false;
+        }
+    }
+
+    private boolean validateRelationalParametersSemanticWhile(List<Tuple> tempList, Stack<SAR> sas, Stack<SAR> os, String scopePassTwo, Tuple item, int argCount, String type, int passCount) {
+        while (tempList.get(eIndex).lexi.equals("(")) {
+            pushOS(scopePassTwo, tempList, os, eIndex, tempList.get(eIndex), sas, scopePassTwo);
+            eIndex++;
+        }
+
+        // todo: need to add better checking, called variables and such
+        if (!validRelationType(tempList, eIndex)) {
+            errorList += "invalid parameter type. Line: " + tempList.get(eIndex).lineNum + "\n";
+            return false;
+        }
+        int index = eIndex - 1;
+        SAR sar = new SAR(tempList.get(eIndex), scopePassTwo, "", "");
+
+        if (tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()) || tempList.get(eIndex).lexi.equals("true") || tempList.get(eIndex).lexi.equals("false")) {
+            addLiteralExpressionToSAS(scopePassTwo, tempList.get(eIndex), sas);
+            sar = sas.peek();
+        } else if (tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
+            if (!iExist(sar, sas, tempList, scopePassTwo, os)) {
+                return false;
+            }
+            sas.push(sar);
+        }
+        eIndex++;
+
+        argCount++;
+
+        if (argCount == 1 && tempList.get(eIndex).lexi.equals(")") && tempList.get(index).lexi.equals("(")) {
+            if (!sar.getType().equals("bool")) {
+                errorList += "illegal single argument, expected a bool type but was: '" + sar.getType() + "'. Line: " + tempList.get(eIndex).lineNum + "\n";
+                return false;
+            }
+
+        }
+
+        // check if item is an array
+        // todo: check for valid identifiers
+        if (tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+            if (!tempList.get(eIndex + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
+                errorList += "invalid array indexer. Line: " + tempList.get(eIndex).lineNum + "\n";
+                return false;
+            }
+            if (!tempList.get(eIndex + 3).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                errorList += "arrays accessing requires both open and close square brakets. Line: " + tempList.get(eIndex).lineNum + "\n";
+                return false;
+            }
+            eIndex += 3;
+        }
+
+        if (tempList.get(eIndex).lexi.equals(")")) {
+            while (tempList.get(eIndex).lexi.equals(")")) {
+                while (!os.peek().getLexi().lexi.equals("(")) {
+                    if (os.peek() == null) {
+                        errorList += "Missing opening paren. Line: " + item.lineNum + "\n";
+                        return false;
+                    }
+                    if (passCount == 0) {
+                        condLabel = "BEGIN" + type;
+                        addTempToSAS(os.pop(), sas, scopePassTwo);
+                    } else {
+                        addTempToSAS(os.pop(), sas, scopePassTwo);
+                    }
+                }
+
+                if (!os.isEmpty()) {
+                    os.pop();
+                }
+                if (os.isEmpty()) {
+                    if (sas.isEmpty()) {
+                        iCodeList.add(new ICode(condLabel, "BF", sar.getType(), "ENDWHILE" + type, "", ""));
+                    } else {
+                        iCodeList.add(new ICode(condLabel, "BF", sas.peek().getKey(), "ENDWHILE" + type, "", ""));
+                        sas.pop();
+                    }
+                    condLabel = "ENDWHILE" + type;
+                }
+
+                if (tempList.get(eIndex + 1).lexi.equals("{")) {
+                    return true;
+                }
+                eIndex++;
+            }
+        }
+
+        if (tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
+            pushOS(scopePassTwo, tempList, os, eIndex, tempList.get(eIndex), sas, scopePassTwo);
+            eIndex++;
+            return validateRelationalParametersSemanticWhile(tempList, sas, os, scopePassTwo, tempList.get(eIndex), argCount, type, passCount++);
+        } else if (tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
+            while (os.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || os.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
+                addTempToSAS(os.pop(), sas, scopePassTwo);
+            }
+            pushOS(scopePassTwo, tempList, os, eIndex, tempList.get(eIndex), sas, scopePassTwo);
+            eIndex++;
+            return validateRelationalParametersSemanticWhile(tempList, sas, os, scopePassTwo, tempList.get(eIndex), argCount, type, passCount++);
         } else {
             errorList += "Invalid parameter. Line: " + tempList.get(eIndex).lineNum + "\n";
             return false;

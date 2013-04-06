@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,15 +11,16 @@ public class Compiler {
     public static final String URINARY = "urinary";
 
     private LexicalAnalyzer lexicalAnalyzer;
-    private List<Tuple<String, String, Integer>> openParens = new ArrayList<Tuple<String, String, Integer>>();
-    private List<Tuple<String, String, Integer>> openBlocks = new ArrayList<Tuple<String, String, Integer>>();
+    private List<Tuple> openParens = new ArrayList<Tuple>();
+    private List<Tuple> openBlocks = new ArrayList<Tuple>();
     private LinkedHashMap<String, Symbol> symbolTable;
     private List<String> paramIdList = new ArrayList<String>();
     private String errorList = "";
     private String scope = "g";
-    private int statementInr = 1000;
     private int symIdInr = 1000;
     private int eIndex = 0;
+
+    private Queue<String> ifList = new ArrayDeque<String>();
 
     private List<ICode> iCodeList = new ArrayList<ICode>();
 
@@ -33,12 +31,12 @@ public class Compiler {
 
     public void evaluate() {
         iCodeList.add(new ICode("", "JMP", "", "", "", "; jump to main"));
-        Tuple<String, String, Integer> currentLex;
-        Tuple<String, String, Integer> previousLex = null;
+        Tuple currentLex;
+        Tuple previousLex = null;
 
         while (lexicalAnalyzer.hasNext()) {
-            Tuple<String, String, Integer> temp;
-            List<Tuple<String, String, Integer>> tempList = new ArrayList<Tuple<String, String, Integer>>();
+            Tuple temp;
+            List<Tuple> tempList = new ArrayList<Tuple>();
 
             temp = lexicalAnalyzer.getNext();
             while (canAddToList(temp)) {
@@ -66,8 +64,8 @@ public class Compiler {
                     continue;
                 }
 
-                Tuple<String, String, Integer> nextLexi = (i + 1 == tempList.size() ? null : tempList.get(i + 1));
-                Tuple<String, String, Integer> peekPrevious = (i - 2 < 0 ? null : tempList.get(i - 2));
+                Tuple nextLexi = (i + 1 == tempList.size() ? null : tempList.get(i + 1));
+                Tuple peekPrevious = (i - 2 < 0 ? null : tempList.get(i - 2));
 
 
                 // validate expressions
@@ -147,6 +145,10 @@ public class Compiler {
                     continue;
                 } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
                     addToSymbolTable("Literal", new ArrayList<String>(), "char", "public", currentLex.lexi, currentLex.lineNum);
+                    previousLex = currentLex;
+                    continue;
+                } else if (currentLex.lexi.equals("true") || currentLex.lexi.equals("false")) {
+                    addToSymbolTable("Literal", new ArrayList<String>(), "bool", "public", currentLex.lexi, currentLex.lineNum);
                     previousLex = currentLex;
                     continue;
                 }
@@ -451,7 +453,8 @@ public class Compiler {
                             continue;
                         }
 
-                        scope += ".if" + statementInr++;
+                        ifList.add("if" + symIdInr);
+                        addToSymbolTable("Condition", new ArrayList<String>(), "", "private", "if" + symIdInr, currentLex.lineNum);
                         previousLex = currentLex;
                         continue;
                     }
@@ -485,7 +488,9 @@ public class Compiler {
                             previousLex = currentLex;
                             continue;
                         }
-                        scope += ".else" + statementInr++;
+
+                        ifList.add("else" + symIdInr);
+                        addToSymbolTable("Condition", new ArrayList<String>(), "", "private", "else" + symIdInr, currentLex.lineNum);
                         previousLex = currentLex;
                         continue;
                     }
@@ -515,7 +520,8 @@ public class Compiler {
                             continue;
                         }
 
-                        scope += ".while" + statementInr++;
+                        ifList.add("while" + symIdInr);
+                        addToSymbolTable("Condition", new ArrayList<String>(), "", "private", "while" + symIdInr, currentLex.lineNum);
                         previousLex = currentLex;
                         continue;
                     }
@@ -691,7 +697,7 @@ public class Compiler {
         if (openParens.size() > 0) {
             String errorMessage = "Incomplete statements (missing closing parens) on the following lines: ";
 
-            for (Tuple<String, String, Integer> item : openParens) {
+            for (Tuple item : openParens) {
                 errorMessage += item.lineNum + ", ";
             }
             errorList += errorMessage + "\n";
@@ -700,7 +706,7 @@ public class Compiler {
         if (openBlocks.size() > 0) {
             String errorMessage = "Incomplete statements (missing closing blocks) on the following lines: ";
 
-            for (Tuple<String, String, Integer> item : openBlocks) {
+            for (Tuple item : openBlocks) {
                 errorMessage += item.lineNum + ", ";
             }
             errorList += errorMessage + "\n";
@@ -720,12 +726,11 @@ public class Compiler {
          **/
         lexicalAnalyzer.resetList();
         String scopePassTwo = "g";
-        statementInr = 1;
 
         while (lexicalAnalyzer.hasNext()) {
             // setting up items to be parsed
-            Tuple<String, String, Integer> temp;
-            List<Tuple<String, String, Integer>> tempList = new ArrayList<Tuple<String, String, Integer>>();
+            Tuple temp;
+            List<Tuple> tempList = new ArrayList<Tuple>();
 
             Stack<SAR> SAS = new Stack<SAR>();
             Stack<SAR> OS = new Stack<SAR>();
@@ -748,7 +753,7 @@ public class Compiler {
             boolean isCalled = false;
 
             while (i < tempList.size()) {
-                Tuple<String, String, Integer> item = tempList.get(i);
+                Tuple item = tempList.get(i);
                 // setup scope
                 if (tempList.get(i).type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
                     openBlocks.add(tempList.get(i));
@@ -759,7 +764,7 @@ public class Compiler {
                             scopePassTwo += "." + tempList.get(1).lexi;
                         }
                     } else if (tempList.get(0).lexi.trim().equals("if") || tempList.get(0).lexi.trim().equals("else") || tempList.get(0).lexi.trim().equals("while")) {
-                        scopePassTwo += "." + tempList.get(0).lexi + statementInr++;
+                        scopePassTwo += "." + tempList.get(0).lexi + symIdInr++;
                     } else {
                         if (isValidReturnType(tempList.get(0).lexi, tempList.get(0).type) || tempList.get(0).lexi.equals("class")) {
                             scopePassTwo += "." + tempList.get(1).lexi;
@@ -784,20 +789,36 @@ public class Compiler {
                 // todo: need to finish this stuff (get labels and loops setup)
                 if (item.lexi.equals("if")) {
                     eIndex = i + 1;
-                    validateRelationalParametersSemantic(tempList, SAS, OS, scopePassTwo, item, 0);
+                    Tuple tempItem = new Tuple(ifList.remove(), item.type, item.lineNum);
+                    SAR controlSar = new SAR(tempItem, scopePassTwo, "", "");
+                    if (!iExist(controlSar, SAS, tempList, scopePassTwo, OS)) {
+                        errorList += "invalid if statement. Line: " + item.lineNum + "\n";
+                    }
+                    validateRelationalParametersSemantic(tempList, SAS, OS, scopePassTwo, tempItem, 0, controlSar.getKey());
                     i = eIndex + 1;
                     continue;
                 } else if (item.lexi.equals("else")) {
                     if (tempList.get(i + 1).lexi.equals("if")) {
                         eIndex = i + 2;
-                        validateRelationalParametersSemantic(tempList, SAS, OS, scopePassTwo, item, 0);
+                        Tuple tempItem = new Tuple(ifList.remove(), item.type, item.lineNum);
+                        SAR controlSar = new SAR(tempItem, scopePassTwo, "", "");
+                        if (!iExist(controlSar, SAS, tempList, scopePassTwo, OS)) {
+                            errorList += "invalid else statement. Line: " + item.lineNum + "\n";
+                        }
+                        validateRelationalParametersSemantic(tempList, SAS, OS, scopePassTwo, tempItem, 0, controlSar.getKey());
                         i = eIndex + 1;
                     }
                     continue;
                 } else if (item.lexi.equals("while")) {
                     eIndex = i + 1;
-                    validateRelationalParametersSemantic(tempList, SAS, OS, scopePassTwo, item, 0);
+                    Tuple tempItem = new Tuple(ifList.remove(), item.type, item.lineNum);
+                    SAR controlSar = new SAR(tempItem, scopePassTwo, "", "");
+                    if (!iExist(controlSar, SAS, tempList, scopePassTwo, OS)) {
+                        errorList += "invalid while statement. Line: " + item.lineNum + "\n";
+                    }
+                    validateRelationalParametersSemantic(tempList, SAS, OS, scopePassTwo, tempItem, 0, controlSar.getKey());
                     i = eIndex + 1;
+                    continue;
                 }
 
                 if (item.lexi.equals("return")) {
@@ -927,12 +948,19 @@ public class Compiler {
                         lastOprPrecedence = precedence;
                     } else if (precedence <= lastOprPrecedence) {
                         if (!OS.isEmpty()) {
-                            addTempToSAS(OS.pop(), SAS);
+                            if (!OS.peek().getLexi().lexi.equals("("))
+                                addTempToSAS(OS.pop(), SAS);
                         }
                         pushOS(scopePassTwo, tempList, OS, i, item, SAS, scopePassTwo);
                         i = eIndex;
                         lastOprPrecedence = precedence;
                     } else {
+                        if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                            cleanupSAS(SAS, OS);
+                            i++;
+                            continue;
+                        }
+
                         if (item.lexi.equals("(") || item.lexi.equals("[")) {
                             lastOprPrecedence = 0;
                         } else {
@@ -1008,7 +1036,7 @@ public class Compiler {
         }
     }
 
-    private boolean validateRelationalParametersSemantic(List<Tuple<String, String, Integer>> tempList, Stack<SAR> sas, Stack<SAR> os, String scopePassTwo, Tuple<String, String, Integer> item, int argCount) {
+    private boolean validateRelationalParametersSemantic(List<Tuple> tempList, Stack<SAR> sas, Stack<SAR> os, String scopePassTwo, Tuple item, int argCount, String type) {
         while (tempList.get(eIndex).lexi.equals("(")) {
             pushOS(scopePassTwo, tempList, os, eIndex, tempList.get(eIndex), sas, scopePassTwo);
             eIndex++;
@@ -1022,8 +1050,9 @@ public class Compiler {
         int index = eIndex - 1;
         SAR sar = new SAR(tempList.get(eIndex), scopePassTwo, "", "");
 
-        if (tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
+        if (tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()) || tempList.get(eIndex).lexi.equals("true") || tempList.get(eIndex).lexi.equals("false")) {
             addLiteralExpressionToSAS(scopePassTwo, tempList.get(eIndex), sas);
+            sar = sas.peek();
         } else if (tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
             if (!iExist(sar, sas, tempList, scopePassTwo, os)) {
                 return false;
@@ -1070,7 +1099,12 @@ public class Compiler {
                     os.pop();
                 }
                 if (os.isEmpty()) {
-                    sas.pop();
+                    if (sas.isEmpty()) {
+                        iCodeList.add(new ICode("", "BF", sar.getType(), "SKIP" + type, "", ""));
+                    } else {
+                        iCodeList.add(new ICode("", "BF", sas.peek().getKey(), "SKIP" + type, "", ""));
+                        sas.pop();
+                    }
                 }
 
                 if (tempList.get(eIndex + 1).lexi.equals("{")) {
@@ -1083,21 +1117,21 @@ public class Compiler {
         if (tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
             pushOS(scopePassTwo, tempList, os, eIndex, tempList.get(eIndex), sas, scopePassTwo);
             eIndex++;
-            return validateRelationalParametersSemantic(tempList, sas, os, scopePassTwo, tempList.get(eIndex), argCount);
+            return validateRelationalParametersSemantic(tempList, sas, os, scopePassTwo, tempList.get(eIndex), argCount, type);
         } else if (tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
             while (os.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || os.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
                 addTempToSAS(os.pop(), sas);
             }
             pushOS(scopePassTwo, tempList, os, eIndex, tempList.get(eIndex), sas, scopePassTwo);
             eIndex++;
-            return validateRelationalParametersSemantic(tempList, sas, os, scopePassTwo, tempList.get(eIndex), argCount);
+            return validateRelationalParametersSemantic(tempList, sas, os, scopePassTwo, tempList.get(eIndex), argCount, type);
         } else {
             errorList += "Invalid parameter. Line: " + tempList.get(eIndex).lineNum + "\n";
             return false;
         }
     }
 
-    private void pushOS(String scopePassTwo, List<Tuple<String, String, Integer>> tempList, Stack<SAR> OS, int i, Tuple<String, String, Integer> item, Stack<SAR> SAS, String globalScope) {
+    private void pushOS(String scopePassTwo, List<Tuple> tempList, Stack<SAR> OS, int i, Tuple item, Stack<SAR> SAS, String globalScope) {
         eIndex = i;
         if (item.lexi.equals("-")) {
             if (i == 0 || tempList.get(i - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || tempList.get(i - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || tempList.get(i - 1).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
@@ -1212,7 +1246,7 @@ public class Compiler {
         }
     }
 
-    private void addLiteralExpressionToSAS(String scopePassTwo, Tuple<String, String, Integer> tuple, Stack<SAR> SAS) {
+    private void addLiteralExpressionToSAS(String scopePassTwo, Tuple tuple, Stack<SAR> SAS) {
         SAR litSar = new SAR(tuple, scopePassTwo, "", "");
         String searchLit;
 
@@ -1228,6 +1262,7 @@ public class Compiler {
 
             if (s.getValue().equals(searchLit) && s.getKind().equals("Literal")) {
                 litSar.setKey(key);
+                break;
             }
         }
 
@@ -1246,7 +1281,7 @@ public class Compiler {
         }
     }
 
-    private boolean rExist(SAR sar, Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList, String globalScope, Stack<SAR> OS) {
+    private boolean rExist(SAR sar, Stack<SAR> SAS, List<Tuple> tempList, String globalScope, Stack<SAR> OS) {
         SAR caller = SAS.pop();
         boolean found = false;
         String foundScope = "";
@@ -1282,7 +1317,7 @@ public class Compiler {
         return found && evaluateCallies(foundScope, sar, SAS, tempList, globalScope, OS);
     }
 
-    private boolean evaluateCallies(String foundScope, SAR sar, Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList, String globalScope, Stack<SAR> OS) {
+    private boolean evaluateCallies(String foundScope, SAR sar, Stack<SAR> SAS, List<Tuple> tempList, String globalScope, Stack<SAR> OS) {
         for (String key : symbolTable.keySet()) {
             Symbol s = symbolTable.get(key);
 
@@ -1294,7 +1329,7 @@ public class Compiler {
                         String value = "t" + symIdInr;
                         addToSymbolTable("tVar", new ArrayList<String>(), ((VaribleData) s.getData()).getType(), "private", value, sar.getLexi().lineNum);
 
-                        Tuple<String, String, Integer> tempLexi = new Tuple<String, String, Integer>(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);
+                        Tuple tempLexi = new Tuple(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);
                         SAS.push(new SAR(tempLexi, sar.getScope(), sar.getType(), ""));
 
                         if (tempList.get(eIndex + 1).lexi.equals(".")) {
@@ -1320,7 +1355,7 @@ public class Compiler {
                         String value = "t" + symIdInr;
                         addToSymbolTable("tVar", new ArrayList<String>(), ((FunctionData) s.getData()).getReturnType(), "private", value, sar.getLexi().lineNum);
 
-                        Tuple<String, String, Integer> tempLexi = new Tuple<String, String, Integer>(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);
+                        Tuple tempLexi = new Tuple(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);
                         SAS.push(new SAR(tempLexi, sar.getScope(), sar.getType(), ""));
 
                         if (tempList.get(eIndex + 3).lexi.equals(".")) {
@@ -1347,7 +1382,7 @@ public class Compiler {
                         }
                         addToSymbolTable("tVar", new ArrayList<String>(), ((FunctionData) s.getData()).getReturnType(), "private", value, sar.getLexi().lineNum);
 
-                        Tuple<String, String, Integer> tempLexi = new Tuple<String, String, Integer>(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);
+                        Tuple tempLexi = new Tuple(value, LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name(), sar.getLexi().lineNum);
                         SAS.push(new SAR(tempLexi, sar.getScope(), sar.getType(), ""));
 
                         if (tempList.get(eIndex + 2).lexi.equals(".")) {
@@ -1365,10 +1400,10 @@ public class Compiler {
         return false;
     }
 
-    private boolean doParametersExist(Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList, String globalScope, int index, List<String> paramList, int pId, boolean isMath, Stack<SAR> OS) {
+    private boolean doParametersExist(Stack<SAR> SAS, List<Tuple> tempList, String globalScope, int index, List<String> paramList, int pId, boolean isMath, Stack<SAR> OS) {
         eIndex = index;
 
-        Tuple<String, String, Integer> item = tempList.get(index);
+        Tuple item = tempList.get(index);
         if (!isLegalValue(item)) {
             errorList += "the function being called has too few parameters. Line: " + item.lineNum + "\n";
 
@@ -1625,11 +1660,11 @@ public class Compiler {
         return lexi.equals("cout") || lexi.equals("cin");
     }
 
-    private boolean isLegalValue(Tuple<String, String, Integer> item) {
+    private boolean isLegalValue(Tuple item) {
         return ((item.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(item.lexi.toCharArray()[0])) || item.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || item.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()) || item.lexi.equals("true") || item.lexi.equals("false"));
     }
 
-    private boolean ClassExist(Tuple<String, String, Integer> item, String sscope) {
+    private boolean ClassExist(Tuple item, String sscope) {
         for (String key : symbolTable.keySet()) {
             Symbol s = symbolTable.get(key);
             String sarScope = sscope;
@@ -1678,7 +1713,7 @@ public class Compiler {
                 if (RHS.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || (RHS.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(RHS.getLexi().lexi.toCharArray()[0]) && RHS.getType().equals("int"))) {
                     addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr, RHS.getLexi().lineNum);
 
-                    SAR temp = new SAR(new Tuple<String, String, Integer>("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "");
+                    SAR temp = new SAR(new Tuple("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "");
                     SAS.push(temp);
                 } else {
                     errorList += "cannot attach a urinary '-' to a non number object";
@@ -1694,7 +1729,7 @@ public class Compiler {
                 }
 
 
-                SAR temp = new SAR(new Tuple<String, String, Integer>("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "T" + symIdInr);
+                SAR temp = new SAR(new Tuple("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "T" + symIdInr);
                 addToSymbolTable("tvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr, RHS.getLexi().lineNum);
                 SAS.push(temp);
 
@@ -1752,7 +1787,7 @@ public class Compiler {
             SAR LHS = SAS.pop();
             String oprName = opr.getLexi().lexi;
 
-            SAR temp = new SAR(new Tuple<String, String, Integer>("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "T" + symIdInr);
+            SAR temp = new SAR(new Tuple("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "T" + symIdInr);
             addToSymbolTable("tvar", new ArrayList<String>(), "bool", "private", "T" + symIdInr, RHS.getLexi().lineNum);
             SAS.push(temp);
 
@@ -1783,7 +1818,7 @@ public class Compiler {
                 } else {
                     addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr, RHS.getLexi().lineNum);
 
-                    SAR temp = new SAR(new Tuple<String, String, Integer>("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), "bool", "");
+                    SAR temp = new SAR(new Tuple("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), "bool", "");
                     SAS.push(temp);
 
                     if (oprName.equals("<=")) {
@@ -1809,7 +1844,7 @@ public class Compiler {
                 return;
             }
 
-            SAR temp = new SAR(new Tuple<String, String, Integer>("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), "bool", "T" + symIdInr);
+            SAR temp = new SAR(new Tuple("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), "bool", "T" + symIdInr);
             addToSymbolTable("tvar", new ArrayList<String>(), "bool", "private", "T" + symIdInr, RHS.getLexi().lineNum);
             SAS.push(temp);
 
@@ -1872,11 +1907,11 @@ public class Compiler {
         return 0;
     }
 
-    private boolean isExpressionZ(Tuple<String, String, Integer> lexi) {
+    private boolean isExpressionZ(Tuple lexi) {
         return (lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()) || lexi.lexi.equals(".") || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IO_OPR.name()));
     }
 
-    private boolean iExist(SAR sar, Stack<SAR> SAS, List<Tuple<String, String, Integer>> tempList, String globalScope, Stack<SAR> OS) {
+    private boolean iExist(SAR sar, Stack<SAR> SAS, List<Tuple> tempList, String globalScope, Stack<SAR> OS) {
         String sarScope = sar.getScope();
         while (!sarScope.isEmpty()) {
             for (String key : symbolTable.keySet()) {
@@ -2025,7 +2060,7 @@ public class Compiler {
         return false;
     }
 
-    private boolean isValidArrayIndexingType(List<Tuple<String, String, Integer>> tempList, int index, String globalScope, Stack<SAR> SAS, Stack<SAR> OS) {
+    private boolean isValidArrayIndexingType(List<Tuple> tempList, int index, String globalScope, Stack<SAR> SAS, Stack<SAR> OS) {
         eIndex = index;
         if (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
             return true;
@@ -2055,19 +2090,19 @@ public class Compiler {
         return false;
     }
 
-    private boolean isIdentifierExpression(Tuple<String, String, Integer> lexi) {
+    private boolean isIdentifierExpression(Tuple lexi) {
         return (Character.isLowerCase(lexi.lexi.toCharArray()[0]) && lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || lexi.lexi.equals("main"));
     }
 
-    private boolean isLiteralExpression(Tuple<String, String, Integer> lexi) {
+    private boolean isLiteralExpression(Tuple lexi) {
         return (lexi.lexi.equals("true") || lexi.lexi.equals("false") || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()) || lexi.lexi.equals("null"));
     }
 
-    private boolean isLHSofDotValid(List<Tuple<String, String, Integer>> tempList, int index) {
+    private boolean isLHSofDotValid(List<Tuple> tempList, int index) {
         return (tempList.get(index).lexi.equals("this") || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name()));
     }
 
-    private boolean isValidObjectTypeExpression(Tuple<String, String, Integer> lexi) {
+    private boolean isValidObjectTypeExpression(Tuple lexi) {
         return (lexi.lexi.equals("char") || lexi.lexi.equals("int") || lexi.lexi.equals("bool") || (lexi.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(lexi.lexi.toCharArray()[0])));
     }
 
@@ -2075,7 +2110,7 @@ public class Compiler {
         return ((type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(name.toCharArray()[0])) || type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()));
     }
 
-    private void validateComma(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLexi) {
+    private void validateComma(Tuple currentLex, Tuple previousLex, Tuple nextLexi) {
         if (previousLex == null || nextLexi == null || nextLexi.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
             errorList += "There must be a value on both sides of comma. Line: " + currentLex.lineNum + "\n";
             return;
@@ -2099,7 +2134,7 @@ public class Compiler {
         errorList += "There must be a value on both sides of comma. Line: " + currentLex.lineNum + "\n";
     }
 
-    private boolean isValidParameterDeclarationType(List<Tuple<String, String, Integer>> tempList, int index) {
+    private boolean isValidParameterDeclarationType(List<Tuple> tempList, int index) {
         if (tempList.get(index).lexi.equals("bool") || tempList.get(index).lexi.equals("int") || tempList.get(index).lexi.equals("char") || (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(tempList.get(index).lexi.toCharArray()[0]))) {
             if (!tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
                 if (!tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
@@ -2145,7 +2180,7 @@ public class Compiler {
         return false;
     }
 
-    private boolean isValidCalledParameterType(List<Tuple<String, String, Integer>> tempList, int index) {
+    private boolean isValidCalledParameterType(List<Tuple> tempList, int index) {
         if ((tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(index).lexi.toCharArray()[0])) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
             if (tempList.get(index + 1).lexi.equals(".")) {
                 index = index + 2;
@@ -2170,7 +2205,7 @@ public class Compiler {
         return false;
     }
 
-    private boolean isValidRelationParameterType(List<Tuple<String, String, Integer>> tempList, int index) {
+    private boolean isValidRelationParameterType(List<Tuple> tempList, int index) {
         if (!validRelationType(tempList, index)) {
             return false;
         }
@@ -2223,11 +2258,11 @@ public class Compiler {
 
     }
 
-    private boolean validRelationType(List<Tuple<String, String, Integer>> tempList, int index) {
+    private boolean validRelationType(List<Tuple> tempList, int index) {
         return (tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(index).lexi.toCharArray()[0])) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) || tempList.get(index).lexi.equals("true") || tempList.get(index).lexi.equals("false") || tempList.get(index).lexi.equals("null");
     }
 
-    private boolean isValidCalledParameterTypeITOA(List<Tuple<String, String, Integer>> tempList, int index) {
+    private boolean isValidCalledParameterTypeITOA(List<Tuple> tempList, int index) {
         if ((tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(index).lexi.toCharArray()[0])) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
             if (tempList.get(index + 1).lexi.equals(".")) {
                 index = index + 2;
@@ -2254,7 +2289,7 @@ public class Compiler {
         return false;
     }
 
-    private boolean isValidCalledParameterTypeITOALast(List<Tuple<String, String, Integer>> tempList, int index) {
+    private boolean isValidCalledParameterTypeITOALast(List<Tuple> tempList, int index) {
         if ((tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(tempList.get(index).lexi.toCharArray()[0])) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempList.get(index).type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
             if (tempList.get(index + 1).lexi.equals(".")) {
                 index = index + 2;
@@ -2283,7 +2318,7 @@ public class Compiler {
         return (retName.equals("bool") || retName.equals("int") || retName.equals("char") || retName.equals("void") || (retType.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isUpperCase(retName.toCharArray()[0])));
     }
 
-    private void validateIOOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex, Tuple<String, String, Integer> peekPrevious) {
+    private void validateIOOpr(Tuple currentLex, Tuple previousLex, Tuple nextLex, Tuple peekPrevious) {
         if (currentLex.lexi.equals("<<")) {
             if (previousLex == null) {
                 errorList += "Must start an ostream operation with 'cout'. Line: " + currentLex.lineNum + "\n";
@@ -2325,11 +2360,11 @@ public class Compiler {
             }
     }
 
-    private boolean canAddToList(Tuple<String, String, Integer> temp) {
+    private boolean canAddToList(Tuple temp) {
         return !(temp.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || temp.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()) || temp.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name()));
     }
 
-    private void validateBooleanOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) {
+    private void validateBooleanOpr(Tuple currentLex, Tuple previousLex, Tuple nextLex) {
         if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
             errorList += "There must be a valid type on both sides of the boolean operator. Line: " + currentLex.lineNum + "\n";
             return;
@@ -2345,13 +2380,13 @@ public class Compiler {
         errorList += "Right hand side of boolean operator must be either an Identifier, Number, or Character. Line: " + currentLex.lineNum + "\n";
     }
 
-    private void validateReturnStatement(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> nextLex) {
+    private void validateReturnStatement(Tuple currentLex, Tuple nextLex) {
         if (!isReturnValueValid(nextLex)) {
             errorList += "Return statement must either be followed by a value or an end of line token (;). Line: " + currentLex.lineNum + "\n";
         }
     }
 
-    private boolean isReturnValueValid(Tuple<String, String, Integer> nextLex) {
+    private boolean isReturnValueValid(Tuple nextLex) {
         if (nextLex == null)
             return false;
         else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name()) || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()) || nextLex.lexi.equals("true") || nextLex.lexi.equals("false"))
@@ -2359,7 +2394,7 @@ public class Compiler {
         return false;
     }
 
-    private void validateRelationalOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) {
+    private void validateRelationalOpr(Tuple currentLex, Tuple previousLex, Tuple nextLex) {
         if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
             errorList += "There must be a valid type on both sides of the relational operator. Line: " + currentLex.lineNum + "\n";
             return;
@@ -2375,7 +2410,7 @@ public class Compiler {
         errorList += "Right hand side of relational operatior must be either an Identifier, Number, or Character. Line: " + currentLex.lineNum + "\n";
     }
 
-    private void validateMathOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) {
+    private void validateMathOpr(Tuple currentLex, Tuple previousLex, Tuple nextLex) {
         if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
             errorList += "Mathematical operators require a right hand value. Line: " + currentLex.lineNum + "\n";
             return;
@@ -2401,7 +2436,7 @@ public class Compiler {
         errorList += "Both side of mathematical operation must be either an Identifier or a Number. Line: " + currentLex.lineNum + "\n";
     }
 
-    private void validateAssignmentOpr(Tuple<String, String, Integer> currentLex, Tuple<String, String, Integer> previousLex, Tuple<String, String, Integer> nextLex) throws IllegalArgumentException {
+    private void validateAssignmentOpr(Tuple currentLex, Tuple previousLex, Tuple nextLex) throws IllegalArgumentException {
         if (nextLex == null || nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || previousLex == null) {
             errorList += "There must be a valid type on both sides of the assignment operator. Line: " + currentLex.lineNum + "\n";
             return;
@@ -2417,7 +2452,7 @@ public class Compiler {
         errorList += "Right hand side of assignment operation must be either an Identifier, Number, or Character. Line: " + currentLex.lineNum + "\n";
     }
 
-    private boolean isRHSinValidFormatAssignment(Tuple<String, String, Integer> nextLex) {
+    private boolean isRHSinValidFormatAssignment(Tuple nextLex) {
         if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()))
             return true;
         else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()))
@@ -2435,7 +2470,7 @@ public class Compiler {
         return false;
     }
 
-    private boolean isLHSinValidFormatRelationShip(Tuple<String, String, Integer> nextLex) {
+    private boolean isLHSinValidFormatRelationShip(Tuple nextLex) {
         if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()))
             return true;
         else if (nextLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()))
@@ -2450,7 +2485,7 @@ public class Compiler {
         return false;
     }
 
-    private boolean isPreviousLexiValidAssignment(Tuple<String, String, Integer> previousLex) {
+    private boolean isPreviousLexiValidAssignment(Tuple previousLex) {
         if (previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()))
             return true;
         else if (previousLex.type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()))
@@ -2461,7 +2496,7 @@ public class Compiler {
         return false;
     }
 
-    private boolean isLHSinValidFormat(Tuple<String, String, Integer> peekPrevious) {
+    private boolean isLHSinValidFormat(Tuple peekPrevious) {
         return (peekPrevious == null || peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name()) || peekPrevious.type.equals(LexicalAnalyzer.tokenTypesEnum.EOT.name()));
     }
 
@@ -2481,21 +2516,24 @@ public class Compiler {
         }
 
         if (type.equals("Class")) {
-            symbolTable.put("C" + symIdInr++, new Symbol(scope, "C" + symIdInr, value, type, new ClassData()));
+            symbolTable.put("C" + symIdInr, new Symbol(scope, "C" + symIdInr++, value, type, new ClassData()));
             scope += "." + value;
         } else if (type.equals("Function")) {
-            symbolTable.put("F" + symIdInr++, new Symbol(scope, "F" + symIdInr, value, type, new FunctionData(accessMod, params, returnType)));
+            symbolTable.put("F" + symIdInr, new Symbol(scope, "F" + symIdInr++, value, type, new FunctionData(accessMod, params, returnType)));
             scope += "." + value;
         } else if (type.equals("pvar")) {
-            symbolTable.put("P" + symIdInr++, new Symbol(scope, "P" + symIdInr, value, type, new VaribleData(returnType, accessMod)));
+            symbolTable.put("P" + symIdInr, new Symbol(scope, "P" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
         } else if (type.equals("Literal")) {
-            symbolTable.put("L" + (symIdInr++ - 1000), new Symbol(scope, "L" + (symIdInr - 1000), value, type, new VaribleData(returnType, accessMod)));
+            symbolTable.put("L" + (symIdInr - 1000), new Symbol(scope, "L" + (symIdInr++ - 1000), value, type, new VaribleData(returnType, accessMod)));
         } else if (type.equals("tvar")) {
-            symbolTable.put("T" + symIdInr++, new Symbol(scope, "T" + symIdInr, value, type, new VaribleData(returnType, accessMod)));
+            symbolTable.put("T" + symIdInr, new Symbol(scope, "T" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
         } else if (type.equals("iovar")) {
-            symbolTable.put("IO" + symIdInr++, new Symbol(scope, "IO" + symIdInr, value, type, new VaribleData(returnType, accessMod)));
+            symbolTable.put("IO" + symIdInr, new Symbol(scope, "IO" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
+        } else if (type.equals("Condition")) {
+            symbolTable.put("C" + symIdInr, new Symbol(scope, "C" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
+            scope += "." + value;
         } else {
-            symbolTable.put("V" + symIdInr++, new Symbol(scope, "V" + symIdInr, value, type, new VaribleData(returnType, accessMod)));
+            symbolTable.put("V" + symIdInr, new Symbol(scope, "V" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
         }
     }
 }

@@ -13,11 +13,11 @@ public class LexicalAnalyzer {
     private List<String> tokenList;
     private List<String> symbolCheck;
 
-    private List<Tuple<String, String, Integer>> lexicalList;
+    private List<Tuple> lexicalList;
     private int lexPtr;
 
     public LexicalAnalyzer() {
-        lexicalList = new ArrayList<Tuple<String, String, Integer>>();
+        lexicalList = new ArrayList<Tuple>();
         lexPtr = 0;
     }
 
@@ -244,7 +244,7 @@ public class LexicalAnalyzer {
                         tokenType = tokenTypesEnum.IDENTIFIER.toString();
                     }
 
-                    lexicalList.add(new Tuple<String, String, Integer>(token, tokenType, lineCount));
+                    lexicalList.add(new Tuple(token, tokenType, lineCount));
                 }
 
                 lineCount++;
@@ -330,11 +330,11 @@ public class LexicalAnalyzer {
         return lexPtr < lexicalList.size();
     }
 
-    public Tuple<String, String, Integer> getNext() {
+    public Tuple getNext() {
         return lexicalList.get(lexPtr++);
     }
 
-    public Tuple<String, String, Integer> get(int ptr) {
+    public Tuple get(int ptr) {
         try {
             lexicalList.get(ptr);
         } catch (IndexOutOfBoundsException e) {

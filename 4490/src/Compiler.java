@@ -259,7 +259,6 @@ public class Compiler {
                                             continue;
                                         }
                                     }
-                                    iCodeList.get(0).setArg1("F" + symIdInr);
                                     addToSymbolTable("Function", new ArrayList<String>(), tempList.get(2).lexi, tempList.get(0).lexi, "main", currentLex.lineNum);
                                     previousLex = currentLex;
                                     continue;
@@ -815,7 +814,6 @@ public class Compiler {
                         i = eIndex + 1;
                         continue;
                     }
-
                     i++;
                     continue;
                 } else if (item.lexi.equals("while")) {
@@ -916,6 +914,11 @@ public class Compiler {
                     }
                     eIndex = i;
                     if (iExist(sar, SAS, tempList, scopePassTwo, OS)) {
+                        if (sar.getType().equals("main")) {
+                            iCodeList.get(0).setArg1(sar.getKey());
+                            iCodeList.add(new ICode(sar.getKey(), "FRAME", sar.getKey(), "this", "", ""));
+                            iCodeList.add(new ICode("", "CALL", sar.getKey(), "", "", ""));
+                        }
                         SAS.push(sar);
                     } else {
 
@@ -1021,9 +1024,14 @@ public class Compiler {
 
                             String subScope = scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length());
                             if ((subScope.startsWith(".if") && Character.isDigit(subScope.toCharArray()[3])) || (subScope.startsWith(".else") && Character.isDigit(subScope.toCharArray()[5])) || (subScope.startsWith(".while") && Character.isDigit(subScope.toCharArray()[6]))) {
+                                if ((subScope.startsWith(".while") && Character.isDigit(subScope.toCharArray()[6]))) {
+                                    iCodeList.add(new ICode("", "JMP", "BEGIN"+condLabel.substring(condLabel.length()-5, condLabel.length()), "", "", ""));
+                                }
                             } else {
                                 condLabel = "";
                                 condTypeScope = "";
+
+                                iCodeList.add(new ICode("", "RTN", "", "", "", "; always return from a function"));
                             }
 
                             scopePassTwo = scopePassTwo.substring(0, scopePassTwo.lastIndexOf('.'));

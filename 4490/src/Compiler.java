@@ -145,7 +145,7 @@ public class Compiler {
                     addToSymbolTable("Literal", new ArrayList<String>(), "int", "public", "x" + currentLex.lexi, currentLex.lineNum);
                     previousLex = currentLex;
                     continue;
-                } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
+                } else if (currentLex.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
                     addToSymbolTable("Literal", new ArrayList<String>(), "char", "public", currentLex.lexi, currentLex.lineNum);
                     previousLex = currentLex;
                     continue;
@@ -956,7 +956,6 @@ public class Compiler {
                             i++;
                             continue;
                         }
-                        // todo: handle insertion and extraction
                     }
 
                     if (item.lexi.equals("cin")) {
@@ -1057,7 +1056,6 @@ public class Compiler {
             eIndex += 3;
         }
 
-        //todo: handle closing parans
         if (tempList.get(eIndex).lexi.equals(")")) {
             while (tempList.get(eIndex).lexi.equals(")")) {
                 while (!os.peek().getLexi().lexi.equals("(")) {
@@ -1097,14 +1095,6 @@ public class Compiler {
             errorList += "Invalid parameter. Line: " + tempList.get(eIndex).lineNum + "\n";
             return false;
         }
-
-
-//        if (tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name()) || tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
-//            return isValidRelationParameterType(tempList, index + 2);
-//        } else if (tempList.get(index + 1).lexi.equals(",")) {
-//            return isValidRelationParameterType(tempList, index + 2);
-//        } else
-//            return tempList.get(index + 1).type.equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name());
     }
 
     private void pushOS(String scopePassTwo, List<Tuple<String, String, Integer>> tempList, Stack<SAR> OS, int i, Tuple<String, String, Integer> item, Stack<SAR> SAS, String globalScope) {
@@ -1116,7 +1106,6 @@ public class Compiler {
                 OS.push(new SAR(item, scopePassTwo, BINARY, ""));
             }
         } else if (item.lexi.equals("<<") || item.lexi.equals(">>")) {
-            // todo: add to icode and validate type being put through
             OS.push(new SAR(item, scopePassTwo, URINARY, ""));
         } else if (item.lexi.equals("=")) {
             if (tempList.get(i + 1).lexi.equals("new")) {
@@ -1202,6 +1191,7 @@ public class Compiler {
                     return;
                 }
 
+                iCodeList.add(new ICode("", "RTN", "", "", "", "; return void"));
                 addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
             }
             return;
@@ -1216,21 +1206,43 @@ public class Compiler {
                     errorList += "invalid return type. Line: " + RHS.getLexi().lineNum + "\n";
                     return;
                 }
+                iCodeList.add(new ICode("", "RETURN", RHS.getKey(), "", "", "; return " + RHS.getLexi().lexi));
                 addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr++, RHS.getLexi().lineNum);
             }
         }
     }
 
     private void addLiteralExpressionToSAS(String scopePassTwo, Tuple<String, String, Integer> tuple, Stack<SAR> SAS) {
-        // todo: need to do better with literal variables
+        SAR litSar = new SAR(tuple, scopePassTwo, "", "");
+        String searchLit;
+
+        if (tuple.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
+            searchLit = "x" + tuple.lexi;
+        } else {
+            searchLit = tuple.lexi;
+        }
+
+
+        for (String key : symbolTable.keySet()) {
+            Symbol s = symbolTable.get(key);
+
+            if (s.getValue().equals(searchLit) && s.getKind().equals("Literal")) {
+                litSar.setKey(key);
+            }
+        }
+
         if (tuple.lexi.equals("true") || tuple.lexi.equals("false")) {
-            SAS.push(new SAR(tuple, scopePassTwo, "bool", "lvar"));
+            litSar.setType("bool");
+            SAS.push(litSar);
         } else if (tuple.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
-            SAS.push(new SAR(tuple, scopePassTwo, "int", "lvar"));
+            litSar.setType("int");
+            SAS.push(litSar);
         } else if (tuple.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
-            SAS.push(new SAR(tuple, scopePassTwo, "char", "lvar"));
+            litSar.setType("char");
+            SAS.push(litSar);
         } else if (tuple.lexi.equals("null")) {
-            SAS.push(new SAR(tuple, scopePassTwo, "null", "lvar"));
+            litSar.setType("null");
+            SAS.push(litSar);
         }
     }
 
@@ -1711,10 +1723,25 @@ public class Compiler {
             SAR RHS = SAS.pop();
 
             if (RHS.getType().equals("int") || RHS.getType().equals("char")) {
-                addToSymbolTable("iovar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr, RHS.getLexi().lineNum);
+                if (opr.getLexi().lexi.equals("<<")) {
+                    if (RHS.getType().equals("int")) {
+                        //todo: need to find the items real key value to put in here
+                        iCodeList.add(new ICode("", "WRTI", RHS.getKey(), "", "", "; cout << " + RHS.getLexi().lexi));
+                    } else {
+                        iCodeList.add(new ICode("", "WRTC", RHS.getKey(), "", "", "; cout << " + RHS.getLexi().lexi));
+                    }
+                } else if (opr.getLexi().lexi.equals(">>")) {
+                    if (RHS.getType().equals("int")) {
+                        iCodeList.add(new ICode("", "RDI", RHS.getKey(), "", "", "; cin >> " + RHS.getLexi().lexi));
+                    } else {
+                        iCodeList.add(new ICode("", "RDC", RHS.getKey(), "", "", "; cin >> " + RHS.getLexi().lexi));
+                    }
+                }
+                addToSymbolTable("iovar", new ArrayList<String>(), RHS.getType(), "private", "IO" + symIdInr, RHS.getLexi().lineNum);
             } else {
                 errorList += "invalid variable type. insertion and extraction operators only deal with int and char. Line: " + opr.getLexi().lineNum + "\n";
             }
+
         } else if (opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
             if (SAS.size() < 2) {
                 errorList += "missing an operand. Line: " + opr.getLexi().lineNum + "\n";

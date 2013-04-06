@@ -68,4 +68,16 @@ public class ICode {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    @Override
+    public String toString() {
+        return "ICode{" +
+                "label='" + label + '\'' +
+                ", operation='" + operation + '\'' +
+                ", arg1='" + arg1 + '\'' +
+                ", arg2='" + arg2 + '\'' +
+                ", result='" + result + '\'' +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
 }

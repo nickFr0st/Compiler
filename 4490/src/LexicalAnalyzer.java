@@ -334,6 +334,13 @@ public class LexicalAnalyzer {
         return lexicalList.get(lexPtr++);
     }
 
+    public Tuple peekNext() {
+        if (lexPtr >= lexicalList.size() -1) {
+            return null;
+        }
+        return lexicalList.get(lexPtr + 1);
+    }
+
     public Tuple get(int ptr) {
         try {
             lexicalList.get(ptr);

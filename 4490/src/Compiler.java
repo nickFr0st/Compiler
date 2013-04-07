@@ -19,6 +19,9 @@ public class Compiler {
     private String scope = "g";
     private int symIdInr = 1000;
     private int eIndex = 0;
+
+    private Stack<String> ifStack = new Stack<String>();
+
     private String condLabel = "";
     private String condTypeScope = "";
 
@@ -1025,8 +1028,29 @@ public class Compiler {
                             String subScope = scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length());
                             if ((subScope.startsWith(".if") && Character.isDigit(subScope.toCharArray()[3])) || (subScope.startsWith(".else") && Character.isDigit(subScope.toCharArray()[5])) || (subScope.startsWith(".while") && Character.isDigit(subScope.toCharArray()[6]))) {
                                 if ((subScope.startsWith(".while") && Character.isDigit(subScope.toCharArray()[6]))) {
-                                    iCodeList.add(new ICode("", "JMP", "BEGIN"+condLabel.substring(condLabel.length()-5, condLabel.length()), "", "", ""));
+                                    iCodeList.add(new ICode("", "JMP", "BEGIN" + condLabel.substring(condLabel.length() - 5, condLabel.length()), "", "", ""));
                                 }
+
+                                if (subScope.startsWith(".if") && Character.isDigit(subScope.toCharArray()[3])) {
+                                    LexicalAnalyzer tempLex = lexicalAnalyzer;
+                                    Tuple lexC = null;
+                                    if (tempLex.hasNext()) {
+                                        lexC = tempLex.getNext();
+                                    }
+
+                                    if (lexC != null && lexC.lexi.equals("}")) {
+                                        String itemToBeReplaced = ifStack.pop();
+
+                                        if (!ifStack.isEmpty()) {
+                                            for (int u = iCodeList.size() -1; u >= 0; u--) {
+                                                if (iCodeList.get(u).getArg2().equals((itemToBeReplaced))) {
+                                                    iCodeList.get(u).setArg2(ifStack.peek());
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
                             } else {
                                 condLabel = "";
                                 condTypeScope = "";
@@ -1125,12 +1149,13 @@ public class Compiler {
                 }
                 if (os.isEmpty()) {
                     if (sas.isEmpty()) {
-                        iCodeList.add(new ICode(condLabel, "BF", sar.getType(), "SKIP" + type, "", ""));
+                        iCodeList.add(new ICode("", "BF", sar.getType(), "SKIP" + type, "", ""));
                     } else {
-                        iCodeList.add(new ICode(condLabel, "BF", sas.peek().getKey(), "SKIP" + type, "", ""));
+                        iCodeList.add(new ICode("", "BF", sas.peek().getKey(), "SKIP" + type, "", ""));
                         sas.pop();
                     }
                     condLabel = "SKIP" + type;
+                    ifStack.push("SKIP" + type);
                 }
 
                 if (tempList.get(eIndex + 1).lexi.equals("{")) {
@@ -1827,7 +1852,9 @@ public class Compiler {
         String newLabel = "";
         if (scopePassTwo.contains(".")) {
             if (!scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).equals(condTypeScope) || scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).contains("else")) {
-                newLabel = condLabel;
+                if (!ifStack.isEmpty()) {
+                    newLabel = ifStack.pop();
+                }
             }
         }
 

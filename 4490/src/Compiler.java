@@ -21,7 +21,7 @@ public class Compiler {
     private int eIndex = 0;
 
     private Stack<String> ifStack = new Stack<String>();
-    private Stack<String> elseStack = new Stack<String>();
+    private boolean canPop = false;
 
     private String condLabel = "";
     private String condTypeScope = "";
@@ -825,7 +825,9 @@ public class Compiler {
                         errorList += "invalid else statement. Line: " + item.lineNum + "\n";
                     }
 
-                    elseStack.push("SKIP" + controlSar.getKey());
+                    ifStack.push("SKIP" + controlSar.getKey());
+                    canPop = true;
+                    condLabel = "SKIP" + controlSar.getKey();
                     iCodeList.add(new ICode("", "JMP", "SKIP" + controlSar.getKey(), "", "", ""));
                     i++;
                     continue;
@@ -1075,7 +1077,7 @@ public class Compiler {
                                     }
 
                                     if (lexC != null && lexC.lexi.equals("}")) {
-                                        String itemToBeReplaced = elseStack.pop();
+                                        String itemToBeReplaced = ifStack.pop();
 
                                         if (!ifStack.isEmpty()) {
                                             for (int u = iCodeList.size() - 1; u >= 0; u--) {
@@ -1886,10 +1888,24 @@ public class Compiler {
 
     private void addTempToSAS(SAR opr, Stack<SAR> SAS, String scopePassTwo) {
         String newLabel = "";
-        if (scopePassTwo.contains(".")) {
-            boolean containsElse = scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).contains("else");
+        boolean containsElse = scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).contains("else");
+        if (scopePassTwo.contains(".") && !ifStack.isEmpty()) {
             if (!scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).equals(condTypeScope) || containsElse) {
-                if (!ifStack.isEmpty()) {
+                if (containsElse && canPop) {
+
+                    if (ifStack.size() > 1) {
+                        String temp = ifStack.pop();
+                        newLabel = ifStack.pop();
+                        ifStack.push(temp);
+                    } else {
+                        canPop = false;
+                        errorList += "else statements must be paired with if statements. Line: " + opr.getLexi().lineNum + "\n";
+                        return;
+                    }
+                    canPop = false;
+                } else if (containsElse) {
+                    // do nothing
+                } else {
                     newLabel = ifStack.pop();
                 }
             }
@@ -2084,6 +2100,7 @@ public class Compiler {
         }
         if (!newLabel.isEmpty()) {
             condLabel = "";
+            condTypeScope = "";
         }
     }
 

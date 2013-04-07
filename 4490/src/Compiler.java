@@ -1846,7 +1846,11 @@ public class Compiler {
             }
 
             if (RHS.getKey().startsWith("L")) {
-                iCodeList.add(new ICode(newLabel, "MOVI", LHS.getKey(), RHS.getKey(), "", "; " + LHS.getLexi().lexi + " = " + RHS.getLexi().lexi));
+                if (RHS.getType().equals("int")) {
+                    iCodeList.add(new ICode(newLabel, "MOVI", LHS.getKey(), RHS.getKey(), "", "; " + LHS.getLexi().lexi + " = " + RHS.getLexi().lexi));
+                } else if (RHS.getType().equals("char")) {
+                    iCodeList.add(new ICode(newLabel, "MOVC", LHS.getKey(), RHS.getKey(), "", "; " + LHS.getLexi().lexi + " = " + RHS.getLexi().lexi));
+                }
             } else {
                 iCodeList.add(new ICode(newLabel, "MOV", LHS.getKey(), RHS.getKey(), "", "; " + LHS.getLexi().lexi + " = " + RHS.getLexi().lexi));
             }

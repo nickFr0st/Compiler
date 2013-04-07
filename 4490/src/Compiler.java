@@ -21,6 +21,7 @@ public class Compiler {
     private int eIndex = 0;
 
     private Stack<String> ifStack = new Stack<String>();
+    private Stack<String> elseStack = new Stack<String>();
 
     private String condLabel = "";
     private String condTypeScope = "";
@@ -808,6 +809,7 @@ public class Compiler {
                 } else if (item.lexi.equals("else")) {
                     Tuple tempItem = new Tuple(ifList.remove(), item.type, item.lineNum);
                     SAR controlSar = new SAR(tempItem, scopePassTwo, "", "");
+
                     if (tempList.get(i + 1).lexi.equals("if")) {
                         eIndex = i + 2;
                         if (!iExist(controlSar, SAS, tempList, scopePassTwo, OS)) {
@@ -817,6 +819,14 @@ public class Compiler {
                         i = eIndex + 1;
                         continue;
                     }
+
+                    eIndex = i;
+                    if (!iExist(controlSar, SAS, tempList, scopePassTwo, OS)) {
+                        errorList += "invalid else statement. Line: " + item.lineNum + "\n";
+                    }
+
+                    elseStack.push("SKIP" + controlSar.getKey());
+                    iCodeList.add(new ICode("", "JMP", "SKIP" + controlSar.getKey(), "", "", ""));
                     i++;
                     continue;
                 } else if (item.lexi.equals("while")) {
@@ -1032,7 +1042,10 @@ public class Compiler {
                                 }
 
                                 if (subScope.startsWith(".if") && Character.isDigit(subScope.toCharArray()[3])) {
-                                    LexicalAnalyzer tempLex = lexicalAnalyzer;
+                                    LexicalAnalyzer tempLex = new LexicalAnalyzer();
+                                    tempLex.setLexicalList(lexicalAnalyzer.getLexicalList());
+                                    tempLex.setLexPtr(lexicalAnalyzer.getLexPtr());
+
                                     Tuple lexC = null;
                                     if (tempLex.hasNext()) {
                                         lexC = tempLex.getNext();
@@ -1042,9 +1055,32 @@ public class Compiler {
                                         String itemToBeReplaced = ifStack.pop();
 
                                         if (!ifStack.isEmpty()) {
-                                            for (int u = iCodeList.size() -1; u >= 0; u--) {
+                                            for (int u = iCodeList.size() - 1; u >= 0; u--) {
                                                 if (iCodeList.get(u).getArg2().equals((itemToBeReplaced))) {
                                                     iCodeList.get(u).setArg2(ifStack.peek());
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (subScope.startsWith(".else") && Character.isDigit(subScope.toCharArray()[5])) {
+                                    LexicalAnalyzer tempLex = new LexicalAnalyzer();
+                                    tempLex.setLexicalList(lexicalAnalyzer.getLexicalList());
+                                    tempLex.setLexPtr(lexicalAnalyzer.getLexPtr());
+
+                                    Tuple lexC = null;
+                                    if (tempLex.hasNext()) {
+                                        lexC = tempLex.getNext();
+                                    }
+
+                                    if (lexC != null && lexC.lexi.equals("}")) {
+                                        String itemToBeReplaced = elseStack.pop();
+
+                                        if (!ifStack.isEmpty()) {
+                                            for (int u = iCodeList.size() - 1; u >= 0; u--) {
+                                                if (iCodeList.get(u).getArg1().equals((itemToBeReplaced))) {
+                                                    iCodeList.get(u).setArg1(ifStack.peek());
                                                 }
                                             }
                                         }
@@ -1851,7 +1887,8 @@ public class Compiler {
     private void addTempToSAS(SAR opr, Stack<SAR> SAS, String scopePassTwo) {
         String newLabel = "";
         if (scopePassTwo.contains(".")) {
-            if (!scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).equals(condTypeScope) || scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).contains("else")) {
+            boolean containsElse = scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).contains("else");
+            if (!scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).equals(condTypeScope) || containsElse) {
                 if (!ifStack.isEmpty()) {
                     newLabel = ifStack.pop();
                 }

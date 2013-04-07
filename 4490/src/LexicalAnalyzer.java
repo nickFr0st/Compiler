@@ -21,6 +21,22 @@ public class LexicalAnalyzer {
         lexPtr = 0;
     }
 
+    public List<Tuple> getLexicalList() {
+        return lexicalList;
+    }
+
+    public void setLexicalList(List<Tuple> lexicalList) {
+        this.lexicalList = lexicalList;
+    }
+
+    public int getLexPtr() {
+        return lexPtr;
+    }
+
+    public void setLexPtr(int lexPtr) {
+        this.lexPtr = lexPtr;
+    }
+
     public static enum tokenTypesEnum {
         NUMBER,
         CHARACTER,

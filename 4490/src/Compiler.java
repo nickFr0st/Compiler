@@ -770,8 +770,15 @@ public class Compiler {
                             scopePassTwo += "." + tempList.get(1).lexi;
                         }
                     } else if (tempList.get(0).lexi.trim().equals("if") || tempList.get(0).lexi.trim().equals("else") || tempList.get(0).lexi.trim().equals("while")) {
-                        condTypeScope = "." + tempList.get(0).lexi + symIdInr;
-                        scopePassTwo += "." + tempList.get(0).lexi + symIdInr++;
+
+                        if (tempList.get(0).lexi.trim().equals("else") && tempList.get(1).lexi.trim().equals("if")) {
+                            condTypeScope = "." + tempList.get(1).lexi + symIdInr;
+                            scopePassTwo += "." + tempList.get(1).lexi + symIdInr++;
+                        } else {
+                            condTypeScope = "." + tempList.get(0).lexi + symIdInr;
+                            scopePassTwo += "." + tempList.get(0).lexi + symIdInr++;
+                        }
+
                     } else {
                         if (isValidReturnType(tempList.get(0).lexi, tempList.get(0).type) && tempList.get(1).lexi.equals("(")) {
                             scopePassTwo += "." + tempList.get(0).lexi;
@@ -809,12 +816,17 @@ public class Compiler {
                 } else if (item.lexi.equals("else")) {
                     Tuple tempItem = new Tuple(ifList.remove(), item.type, item.lineNum);
                     SAR controlSar = new SAR(tempItem, scopePassTwo, "", "");
+                    canPop = true;
+                    condLabel = "SKIPELSE" + controlSar.getKey();
+                    iCodeList.add(new ICode("", "JMP", "SKIPELSE" + controlSar.getKey(), "", "", ""));
 
                     if (tempList.get(i + 1).lexi.equals("if")) {
                         eIndex = i + 2;
                         if (!iExist(controlSar, SAS, tempList, scopePassTwo, OS)) {
-                            errorList += "invalid else statement. Line: " + item.lineNum + "\n";
+                            errorList += "invalid if statement. Line: " + item.lineNum + "\n";
                         }
+
+                        iCodeList.get(iCodeList.size() -1).setArg1("SKIPIF" + controlSar.getKey());
                         validateRelationalParametersSemantic(tempList, SAS, OS, scopePassTwo, tempItem, 0, controlSar.getKey());
                         i = eIndex + 1;
                         continue;
@@ -825,12 +837,10 @@ public class Compiler {
                         errorList += "invalid else statement. Line: " + item.lineNum + "\n";
                     }
 
-                    ifStack.push("SKIP" + controlSar.getKey());
-                    canPop = true;
-                    condLabel = "SKIP" + controlSar.getKey();
-                    iCodeList.add(new ICode("", "JMP", "SKIP" + controlSar.getKey(), "", "", ""));
+                    ifStack.push("SKIPELSE" + controlSar.getKey());
                     i++;
                     continue;
+
                 } else if (item.lexi.equals("while")) {
                     eIndex = i + 1;
                     Tuple tempItem = new Tuple(ifList.remove(), item.type, item.lineNum);
@@ -838,7 +848,7 @@ public class Compiler {
                     if (!iExist(controlSar, SAS, tempList, scopePassTwo, OS)) {
                         errorList += "invalid while statement. Line: " + item.lineNum + "\n";
                     }
-                    validateRelationalParametersSemanticWhile(tempList, SAS, OS, scopePassTwo, tempItem, 0, controlSar.getKey(), 0);
+                    validateRelationalParametersSemanticWhile(tempList, SAS, OS, scopePassTwo, tempItem, 0, controlSar.getKey(), 0, 0);
                     i = eIndex + 1;
                     continue;
                 }
@@ -1187,13 +1197,13 @@ public class Compiler {
                 }
                 if (os.isEmpty()) {
                     if (sas.isEmpty()) {
-                        iCodeList.add(new ICode("", "BF", sar.getType(), "SKIP" + type, "", ""));
+                        iCodeList.add(new ICode("", "BF", sar.getType(), "SKIPIF" + type, "", ""));
                     } else {
-                        iCodeList.add(new ICode("", "BF", sas.peek().getKey(), "SKIP" + type, "", ""));
+                        iCodeList.add(new ICode("", "BF", sas.peek().getKey(), "SKIPIF" + type, "", ""));
                         sas.pop();
                     }
-                    condLabel = "SKIP" + type;
-                    ifStack.push("SKIP" + type);
+                    condLabel = "SKIPIF" + type;
+                    ifStack.push("SKIPIF" + type);
                 }
 
                 if (tempList.get(eIndex + 1).lexi.equals("{")) {
@@ -1220,7 +1230,7 @@ public class Compiler {
         }
     }
 
-    private boolean validateRelationalParametersSemanticWhile(List<Tuple> tempList, Stack<SAR> sas, Stack<SAR> os, String scopePassTwo, Tuple item, int argCount, String type, int passCount) {
+    private boolean validateRelationalParametersSemanticWhile(List<Tuple> tempList, Stack<SAR> sas, Stack<SAR> os, String scopePassTwo, Tuple item, int argCount, String type, int passCount, int boolOprCount) {
         while (tempList.get(eIndex).lexi.equals("(")) {
             pushOS(scopePassTwo, tempList, os, eIndex, tempList.get(eIndex), sas, scopePassTwo);
             eIndex++;
@@ -1278,10 +1288,8 @@ public class Compiler {
                     }
                     if (passCount == 0) {
                         condLabel = "BEGIN" + type;
-                        addTempToSAS(os.pop(), sas, scopePassTwo);
-                    } else {
-                        addTempToSAS(os.pop(), sas, scopePassTwo);
                     }
+                    addTempToSAS(os.pop(), sas, scopePassTwo);
                 }
 
                 if (!os.isEmpty()) {
@@ -1307,14 +1315,17 @@ public class Compiler {
         if (tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
             pushOS(scopePassTwo, tempList, os, eIndex, tempList.get(eIndex), sas, scopePassTwo);
             eIndex++;
-            return validateRelationalParametersSemanticWhile(tempList, sas, os, scopePassTwo, tempList.get(eIndex), argCount, type, passCount++);
+            return validateRelationalParametersSemanticWhile(tempList, sas, os, scopePassTwo, tempList.get(eIndex), argCount, type, passCount++, boolOprCount);
         } else if (tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
             while (os.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || os.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
+                if (boolOprCount++ == 0) {
+                    condLabel = "BEGIN" + type;
+                }
                 addTempToSAS(os.pop(), sas, scopePassTwo);
             }
             pushOS(scopePassTwo, tempList, os, eIndex, tempList.get(eIndex), sas, scopePassTwo);
             eIndex++;
-            return validateRelationalParametersSemanticWhile(tempList, sas, os, scopePassTwo, tempList.get(eIndex), argCount, type, passCount++);
+            return validateRelationalParametersSemanticWhile(tempList, sas, os, scopePassTwo, tempList.get(eIndex), argCount, type, passCount++, boolOprCount++);
         } else {
             errorList += "Invalid parameter. Line: " + tempList.get(eIndex).lineNum + "\n";
             return false;

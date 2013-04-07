@@ -37,6 +37,7 @@ public class Compiler {
 
     public void evaluate() {
         iCodeList.add(new ICode("", "JMP", "", "", "", "; jump to main"));
+        iCodeList.add(new ICode("", "TRP", "0", "", "", "; program end"));
         Tuple currentLex;
         Tuple previousLex = null;
 
@@ -848,7 +849,24 @@ public class Compiler {
                     if (!iExist(controlSar, SAS, tempList, scopePassTwo, OS)) {
                         errorList += "invalid while statement. Line: " + item.lineNum + "\n";
                     }
+
+
+                    if (!iCodeList.isEmpty()) {
+                        if (iCodeList.get(iCodeList.size()-1).getArg1().contains("BEGINWHILE")) {
+                            String tempArg = iCodeList.get(iCodeList.size()-1).getArg1();
+                            String removeLabel = "ENDWHILE" + tempArg.substring(tempArg.length() -5, tempArg.length());
+
+                            for (ICode cd : iCodeList){
+                                if (cd.getArg2().equals(removeLabel)) {
+                                    cd.setArg2("BEGINWHILE" + controlSar.getKey());
+                                }
+                            }
+                        }
+                    }
+
+                    ifStack.push("BEGINWHILE" + controlSar.getKey());
                     validateRelationalParametersSemanticWhile(tempList, SAS, OS, scopePassTwo, tempItem, 0, controlSar.getKey(), 0, 0);
+                    ifStack.push("ENDWHILE" + controlSar.getKey());
                     i = eIndex + 1;
                     continue;
                 }
@@ -1050,7 +1068,10 @@ public class Compiler {
                             String subScope = scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length());
                             if ((subScope.startsWith(".if") && Character.isDigit(subScope.toCharArray()[3])) || (subScope.startsWith(".else") && Character.isDigit(subScope.toCharArray()[5])) || (subScope.startsWith(".while") && Character.isDigit(subScope.toCharArray()[6]))) {
                                 if ((subScope.startsWith(".while") && Character.isDigit(subScope.toCharArray()[6]))) {
-                                    iCodeList.add(new ICode("", "JMP", "BEGIN" + condLabel.substring(condLabel.length() - 5, condLabel.length()), "", "", ""));
+
+
+                                    iCodeList.add(new ICode("", "JMP", "BEGINWHILE" + condLabel.substring(condLabel.length() - 5, condLabel.length()), "", "", ""));
+
                                 }
 
                                 if (subScope.startsWith(".if") && Character.isDigit(subScope.toCharArray()[3])) {
@@ -1287,7 +1308,7 @@ public class Compiler {
                         return false;
                     }
                     if (passCount == 0) {
-                        condLabel = "BEGIN" + type;
+                        condLabel = "BEGINWHILE" + type;
                     }
                     addTempToSAS(os.pop(), sas, scopePassTwo);
                 }
@@ -1319,7 +1340,7 @@ public class Compiler {
         } else if (tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
             while (os.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || os.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
                 if (boolOprCount++ == 0) {
-                    condLabel = "BEGIN" + type;
+                    condLabel = "BEGINWHILE" + type;
                 }
                 addTempToSAS(os.pop(), sas, scopePassTwo);
             }
@@ -1956,9 +1977,11 @@ public class Compiler {
                 SAR RHS = SAS.pop();
 
                 if (RHS.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || (RHS.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && Character.isLowerCase(RHS.getLexi().lexi.toCharArray()[0]) && RHS.getType().equals("int"))) {
+                    SAR temp = new SAR(new Tuple("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "");
+                    iCodeList.add(new ICode(newLabel, "NEGATE", RHS.getKey(), "", temp.getKey(), "; -" + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+
                     addToSymbolTable("lvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr, RHS.getLexi().lineNum);
 
-                    SAR temp = new SAR(new Tuple("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "");
                     SAS.push(temp);
                 } else {
                     errorList += "cannot attach a urinary '-' to a non number object";

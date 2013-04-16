@@ -2006,8 +2006,8 @@ public class Compiler {
                 }
 
 
-                SAR temp = new SAR(new Tuple("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "T" + symIdInr);
-                addToSymbolTable("tvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr, RHS.getLexi().lineNum);
+                SAR temp = new SAR(new Tuple("T" + (symIdInr - 200), RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "T" + (symIdInr - 200));
+                addToSymbolTable("tvar", new ArrayList<String>(), RHS.getType(), "private", "T" + (symIdInr - 200), RHS.getLexi().lineNum);
                 SAS.push(temp);
 
                 String oprName = opr.getLexi().lexi;
@@ -2809,14 +2809,26 @@ public class Compiler {
         } else if (type.equals("Literal")) {
             symbolTable.put("L" + (symIdInr - 1000), new Symbol(scope, "L" + (symIdInr++ - 1000), value, type, new VaribleData(returnType, accessMod)));
         } else if (type.equals("tvar")) {
-            symbolTable.put("T" + symIdInr, new Symbol(scope, "T" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
+            if (returnType.equals("int")) {
+                iCodeList.add(new ICode("T" + (symIdInr - 200), "CREATE", ".INT", "", "", "; int " + value));
+            } else {
+                iCodeList.add(new ICode("T" + (symIdInr - 200), "CREATE", ".BYT", "", "", "; char " + value));
+            }
+            symbolTable.put("T" + (symIdInr - 200), new Symbol(scope, "T" + (symIdInr++ - 200), value, type, new VaribleData(returnType, accessMod)));
         } else if (type.equals("iovar")) {
             symbolTable.put("IO" + symIdInr, new Symbol(scope, "IO" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
         } else if (type.equals("Condition")) {
             symbolTable.put("C" + symIdInr, new Symbol(scope, "C" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
             scope += "." + value;
         } else {
-            symbolTable.put("V" + symIdInr, new Symbol(scope, "V" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
+            if (returnType.equals("char") || returnType.equals("int")) {
+                if (returnType.equals("int")) {
+                    iCodeList.add(new ICode("V" + (symIdInr - 200), "CREATE", ".INT", "", "", "; int " + value));
+                } else {
+                    iCodeList.add(new ICode("V" + (symIdInr - 200), "CREATE", ".BYT", "", "", "; char " + value));
+                }
+            }
+            symbolTable.put("V" + (symIdInr - 200), new Symbol(scope, "V" + (symIdInr++ - 200), value, type, new VaribleData(returnType, accessMod)));
         }
     }
 }

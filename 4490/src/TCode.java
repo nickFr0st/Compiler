@@ -1,3 +1,5 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,10 +35,12 @@ public class TCode {
         initReg();
     }
 
-    private String getRegister() {
+    private String getRegister(String id) {
         for (String s : reg.keySet()) {
-            if (reg.get(s).equals(""))
+            if (reg.get(s).equals("")) {
+                reg.put(s, id);
                 return s;
+            }
         }
         return null;
     }
@@ -62,9 +66,17 @@ public class TCode {
 
         for (ICode iCode : iCodeList) {
             if (iCode.getOperation().equals("CREATE")) {
-                tCode.add(iCode.getLabel() + " " + iCode.getArg1() + " " + iCode.getComment());
+                if (symbolTable.get(iCode.getLabel()).getData() instanceof VaribleData) {
+                    if (((VaribleData) symbolTable.get(iCode.getLabel()).getData()).getType().equals("int")) {
+                        tCode.add(iCode.getLabel() + " " + iCode.getArg1() + " " + "0" + " " + iCode.getComment());
+                    } else {
+                        tCode.add(iCode.getLabel() + " " + iCode.getArg1() + " " + "\' \'" + " " + iCode.getComment());
+                    }
+                }
             }
         }
+
+        tCode.add("CLR .INT 0");
 
         for (ICode iCode : iCodeList) {
             if (iCode.getOperation().equals("JMP")) {
@@ -77,7 +89,7 @@ public class TCode {
             }
 
             if (iCode.getOperation().equals("MAINST")) {
-                tCode.add(iCode.getLabel() + " " + "MOV" + " " + "R1" + " " + "R1" + " " + "; start of main");
+                tCode.add(iCode.getLabel() + " " + "ADI" + " " + "R0" + " " + "0" + " " + "; start of main");
                 continue;
             }
 
@@ -94,7 +106,8 @@ public class TCode {
             }
 
             if (iCode.getOperation().equals("MOVI")) {
-                String argReg1 = getRegister();
+                String argReg1 = getRegister(iCode.getArg2());
+                tCode.add("LDR " + argReg1 + " CLR");
 
                 String value = symbolTable.get(iCode.getArg2()).getValue();
                 tCode.add("ADI " + argReg1 + " " + value.substring(1, value.length()));
@@ -104,9 +117,26 @@ public class TCode {
                 continue;
             }
 
+            if (iCode.getOperation().equals("MOV")) {
+                String argReg1 = getRegister(iCode.getArg1());
+                tCode.add("LDR " + argReg1 + " CLR");
+                String argReg2 = getRegister(iCode.getArg2());
+                tCode.add("LDR " + argReg2 + " CLR");
+
+                tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+
+                tCode.add("MOV " + argReg1 + " " + argReg2 + " " + iCode.getComment());
+                tCode.add("STR " + argReg1 + " " + iCode.getArg1());
+                freeResource(argReg1);
+                freeResource(argReg2);
+            }
+
             if (iCode.getOperation().equals("ADD")) {
-                String argReg1 = getRegister();
-                String argReg2 = getRegister();
+                String argReg1 = getRegister(iCode.getArg1());
+                tCode.add("LDR " + argReg1 + " CLR");
+                String argReg2 = getRegister(iCode.getArg2());
+                tCode.add("LDR " + argReg2 + " CLR");
 
                 tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
                 tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
@@ -120,7 +150,11 @@ public class TCode {
             }
 
             if (iCode.getOperation().equals("WRTI")) {
-                tCode.add("TRP 1" + iCode.getComment());
+                String argReg1 = getRegister(iCode.getArg1());
+                tCode.add("LDR " + argReg1 + " CLR");
+                tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                tCode.add("TRP 1 " + iCode.getComment());
+                freeResource(argReg1);
                 continue;
             }
         }
@@ -128,5 +162,21 @@ public class TCode {
         for (String j : tCode) {
             System.out.println(j);
         }
+
+        try {
+            FileWriter fWriter = new FileWriter("NNM-program.asm");
+            BufferedWriter writer = new BufferedWriter(fWriter);
+            //WRITES 1 LINE TO FILE AND CHANGES LINE
+            for (String s : tCode) {
+                writer.write(s);
+                writer.newLine();
+            }
+            writer.close();
+        } catch (Exception e) {
+            System.out.println("error creating file");
+        }
+
+        Assembler assembler = new Assembler();
+        assembler.action("NNM-program.asm");
     }
 }

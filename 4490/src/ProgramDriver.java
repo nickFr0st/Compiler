@@ -13,7 +13,5 @@ public class ProgramDriver {
         lexicalAnalyzer.processFile("test2.kxi");
         Compiler syntaxAnalyzer = new Compiler(lexicalAnalyzer, symbolTable);
         syntaxAnalyzer.evaluate();
-
-        System.out.println("Success");
     }
 }

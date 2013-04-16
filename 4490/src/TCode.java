@@ -166,7 +166,7 @@ public class TCode {
         try {
             FileWriter fWriter = new FileWriter("NNM-program.asm");
             BufferedWriter writer = new BufferedWriter(fWriter);
-            //WRITES 1 LINE TO FILE AND CHANGES LINE
+
             for (String s : tCode) {
                 writer.write(s);
                 writer.newLine();

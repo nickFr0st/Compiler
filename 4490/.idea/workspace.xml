@@ -6,19 +6,14 @@
     <bookmark url="file://$PROJECT_DIR$/src/Compiler.java" line="847" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="very basic program">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Assembler.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Instruction.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Memory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/RunnableThread.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ProgramDriver.java" afterPath="$PROJECT_DIR$/src/ProgramDriver.java" />
+    <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/TCode.java" afterPath="$PROJECT_DIR$/src/TCode.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449654711" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366087593843" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366090537972" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
     <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366086446132" ignored="false" />
     <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366089961856" ignored="false" />
@@ -222,7 +217,7 @@
       <file leaf-file-name="TCode.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/TCode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="174" column="141" selection-start="6477" selection-end="6477" vertical-scroll-proportion="0.60399336">
+            <state line="168" column="12" selection-start="6247" selection-end="6247" vertical-scroll-proportion="0.6888519">
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#327#343#0" expanded="true" />
@@ -317,8 +312,8 @@
         <option value="$PROJECT_DIR$/src/RunnableThread.java" />
         <option value="$PROJECT_DIR$/src/Memory.java" />
         <option value="$PROJECT_DIR$/src/Instruction.java" />
-        <option value="$PROJECT_DIR$/src/TCode.java" />
         <option value="$PROJECT_DIR$/src/ProgramDriver.java" />
+        <option value="$PROJECT_DIR$/src/TCode.java" />
       </list>
     </option>
   </component>
@@ -1005,7 +1000,11 @@
       <created>1366087515631</created>
       <updated>1366087515632</updated>
     </task>
-    <option name="localTasksCounter" value="109" />
+    <task id="LOCAL-00109" summary="added the assembler">
+      <created>1366090541510</created>
+      <updated>1366090541510</updated>
+    </task>
+    <option name="localTasksCounter" value="110" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1096,7 +1095,7 @@
     <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="very basic program" />
+    <option name="LAST_COMMIT_MESSAGE" value="added the assembler" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -1109,7 +1108,6 @@
     <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="more changes" />
     <MESSAGE value="more new validation" />
     <MESSAGE value="fixed new for arrays" />
     <MESSAGE value="return statements are validating" />
@@ -1134,6 +1132,7 @@
     <MESSAGE value="added while statement stuff" />
     <MESSAGE value="the beginings of TCode" />
     <MESSAGE value="very basic program" />
+    <MESSAGE value="added the assembler" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1266,7 +1265,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/TCode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="174" column="141" selection-start="6477" selection-end="6477" vertical-scroll-proportion="0.60399336">
+        <state line="168" column="12" selection-start="6247" selection-end="6247" vertical-scroll-proportion="0.6888519">
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#327#343#0" expanded="true" />

@@ -20,6 +20,8 @@ public class Compiler {
     private int symIdInr = 1000;
     private int eIndex = 0;
 
+    private List<String> tCode = new ArrayList<String>();
+
     private Stack<String> ifStack = new Stack<String>();
     private boolean canPop = false;
 
@@ -818,14 +820,15 @@ public class Compiler {
                     Tuple tempItem = new Tuple(ifList.remove(), item.type, item.lineNum);
                     SAR controlSar = new SAR(tempItem, scopePassTwo, "", "");
                     canPop = true;
+                    if (!iExist(controlSar, SAS, tempList, scopePassTwo, OS)) {
+                        errorList += "invalid if statement. Line: " + item.lineNum + "\n";
+                    }
+
                     condLabel = "SKIPELSE" + controlSar.getKey();
                     iCodeList.add(new ICode("", "JMP", "SKIPELSE" + controlSar.getKey(), "", "", ""));
 
                     if (tempList.get(i + 1).lexi.equals("if")) {
                         eIndex = i + 2;
-                        if (!iExist(controlSar, SAS, tempList, scopePassTwo, OS)) {
-                            errorList += "invalid if statement. Line: " + item.lineNum + "\n";
-                        }
 
                         iCodeList.get(iCodeList.size() -1).setArg1("SKIPIF" + controlSar.getKey());
                         validateRelationalParametersSemantic(tempList, SAS, OS, scopePassTwo, tempItem, 0, controlSar.getKey());
@@ -834,9 +837,6 @@ public class Compiler {
                     }
 
                     eIndex = i;
-                    if (!iExist(controlSar, SAS, tempList, scopePassTwo, OS)) {
-                        errorList += "invalid else statement. Line: " + item.lineNum + "\n";
-                    }
 
                     ifStack.push("SKIPELSE" + controlSar.getKey());
                     i++;
@@ -866,7 +866,7 @@ public class Compiler {
 
                     ifStack.push("BEGINWHILE" + controlSar.getKey());
                     validateRelationalParametersSemanticWhile(tempList, SAS, OS, scopePassTwo, tempItem, 0, controlSar.getKey(), 0, 0);
-                    ifStack.push("ENDWHILE" + controlSar.getKey());
+                    //ifStack.push("ENDWHILE" + controlSar.getKey());
                     i = eIndex + 1;
                     continue;
                 }
@@ -959,8 +959,7 @@ public class Compiler {
                     if (iExist(sar, SAS, tempList, scopePassTwo, OS)) {
                         if (sar.getType().equals("main")) {
                             iCodeList.get(0).setArg1(sar.getKey());
-                            iCodeList.add(new ICode(sar.getKey(), "FRAME", sar.getKey(), "this", "", ""));
-                            iCodeList.add(new ICode("", "CALL", sar.getKey(), "", "", ""));
+                            iCodeList.add(new ICode(sar.getKey(), "MAINST", sar.getKey(), "this", "", ""));
                         }
                         SAS.push(sar);
                     } else {
@@ -1069,8 +1068,11 @@ public class Compiler {
                             if ((subScope.startsWith(".if") && Character.isDigit(subScope.toCharArray()[3])) || (subScope.startsWith(".else") && Character.isDigit(subScope.toCharArray()[5])) || (subScope.startsWith(".while") && Character.isDigit(subScope.toCharArray()[6]))) {
                                 if ((subScope.startsWith(".while") && Character.isDigit(subScope.toCharArray()[6]))) {
 
-
-                                    iCodeList.add(new ICode("", "JMP", "BEGINWHILE" + condLabel.substring(condLabel.length() - 5, condLabel.length()), "", "", ""));
+                                    if (!ifStack.isEmpty() || ifStack.size() > 1) {
+                                        String tempItem = ifStack.pop();
+                                        iCodeList.add(new ICode("", "JMP", ifStack.pop(), "", "", ""));
+                                        ifStack.push(tempItem);
+                                    }
 
                                 }
 
@@ -1152,6 +1154,9 @@ public class Compiler {
             System.out.print(e.getMessage());
             System.exit(0);
         }
+
+        TCode targetCode = new TCode(symbolTable, iCodeList);
+        targetCode.buildCode();
     }
 
     private boolean validateRelationalParametersSemantic(List<Tuple> tempList, Stack<SAR> sas, Stack<SAR> os, String scopePassTwo, Tuple item, int argCount, String type) {
@@ -1309,6 +1314,7 @@ public class Compiler {
                     }
                     if (passCount == 0) {
                         condLabel = "BEGINWHILE" + type;
+                        ifStack.push(condLabel);
                     }
                     addTempToSAS(os.pop(), sas, scopePassTwo);
                 }
@@ -1324,6 +1330,7 @@ public class Compiler {
                         sas.pop();
                     }
                     condLabel = "ENDWHILE" + type;
+                    ifStack.push(condLabel);
                 }
 
                 if (tempList.get(eIndex + 1).lexi.equals("{")) {
@@ -1929,6 +1936,8 @@ public class Compiler {
                         String temp = ifStack.pop();
                         newLabel = ifStack.pop();
                         ifStack.push(temp);
+                    } else if (ifStack.size() == 1) {
+                        ifStack.push(ifStack.pop());
                     } else {
                         canPop = false;
                         errorList += "else statements must be paired with if statements. Line: " + opr.getLexi().lineNum + "\n";

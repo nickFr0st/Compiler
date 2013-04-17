@@ -17,7 +17,7 @@ public class Compiler {
     private List<String> paramIdList = new ArrayList<String>();
     private String errorList = "";
     private String scope = "g";
-    private int symIdInr = 1000;
+    private int symIdInr = 100;
     private int eIndex = 0;
 
     private List<String> tCode = new ArrayList<String>();
@@ -260,7 +260,7 @@ public class Compiler {
                                                 errorList += "Function 'main' contains an invalid argument list. Line: " + currentLex.lineNum + "\n";
                                             }
                                             paramIdList = new ArrayList<String>();
-                                            iCodeList.get(0).setArg1("F" + symIdInr);
+                                            iCodeList.get(0).setArg1("F_MAIN" + symIdInr);
                                             addToSymbolTable("Function", paramIdList, tempList.get(2).lexi, tempList.get(0).lexi, "main", currentLex.lineNum);
                                             previousLex = currentLex;
                                             continue;
@@ -1671,28 +1671,28 @@ public class Compiler {
                     actualType = item.lexi;
                 }
                 sar.setType("bool");
-                sar.setKey("lvar");
+                sar.setKey("L"+symIdInr);
             } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
                 if (!paramList.get(pId).equals("int")) {
                     isGood = false;
                     actualType = item.type;
                 }
                 sar.setType("int");
-                sar.setKey("lvar");
+                sar.setKey("L"+symIdInr);
             } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
                 if (!paramList.get(pId).equals("char")) {
                     isGood = false;
                     actualType = item.type;
                 }
                 sar.setType("char");
-                sar.setKey("lvar");
+                sar.setKey("L"+symIdInr);
             } else if (item.lexi.equals("null")) {
                 if (!paramList.get(pId).equals("null")) {
                     isGood = false;
                     actualType = item.lexi;
                 }
                 sar.setType("null");
-                sar.setKey("lvar");
+                sar.setKey("L"+symIdInr);
             }
 
             if (!isGood) {
@@ -2006,8 +2006,8 @@ public class Compiler {
                 }
 
 
-                SAR temp = new SAR(new Tuple("T" + (symIdInr - 200), RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "T" + (symIdInr - 200));
-                addToSymbolTable("tvar", new ArrayList<String>(), RHS.getType(), "private", "T" + (symIdInr - 200), RHS.getLexi().lineNum);
+                SAR temp = new SAR(new Tuple("T" + symIdInr, RHS.getLexi().type, RHS.getLexi().lineNum), RHS.getScope(), RHS.getType(), "T" + symIdInr);
+                addToSymbolTable("tvar", new ArrayList<String>(), RHS.getType(), "private", "T" + symIdInr, RHS.getLexi().lineNum);
                 SAS.push(temp);
 
                 String oprName = opr.getLexi().lexi;
@@ -2802,19 +2802,23 @@ public class Compiler {
             symbolTable.put("C" + symIdInr, new Symbol(scope, "C" + symIdInr++, value, type, new ClassData()));
             scope += "." + value;
         } else if (type.equals("Function")) {
-            symbolTable.put("F" + symIdInr, new Symbol(scope, "F" + symIdInr++, value, type, new FunctionData(accessMod, params, returnType)));
+            if (value.equals("main")) {
+                symbolTable.put("F_MAIN" + symIdInr, new Symbol(scope, "F" + symIdInr++, value, type, new FunctionData(accessMod, params, returnType)));
+            } else {
+                symbolTable.put("F" + symIdInr, new Symbol(scope, "F" + symIdInr++, value, type, new FunctionData(accessMod, params, returnType)));
+            }
             scope += "." + value;
         } else if (type.equals("pvar")) {
             symbolTable.put("P" + symIdInr, new Symbol(scope, "P" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
         } else if (type.equals("Literal")) {
-            symbolTable.put("L" + (symIdInr - 1000), new Symbol(scope, "L" + (symIdInr++ - 1000), value, type, new VaribleData(returnType, accessMod)));
+            symbolTable.put("L" + symIdInr, new Symbol(scope, "L" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
         } else if (type.equals("tvar")) {
             if (returnType.equals("int")) {
-                iCodeList.add(new ICode("T" + (symIdInr - 200), "CREATE", ".INT", "", "", "; int " + value));
+                iCodeList.add(new ICode("T" + symIdInr, "CREATE", ".INT", "", "", "; int " + value));
             } else {
-                iCodeList.add(new ICode("T" + (symIdInr - 200), "CREATE", ".BYT", "", "", "; char " + value));
+                iCodeList.add(new ICode("T" + symIdInr, "CREATE", ".BYT", "", "", "; char " + value));
             }
-            symbolTable.put("T" + (symIdInr - 200), new Symbol(scope, "T" + (symIdInr++ - 200), value, type, new VaribleData(returnType, accessMod)));
+            symbolTable.put("T" + symIdInr, new Symbol(scope, "T" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
         } else if (type.equals("iovar")) {
             symbolTable.put("IO" + symIdInr, new Symbol(scope, "IO" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
         } else if (type.equals("Condition")) {
@@ -2823,12 +2827,12 @@ public class Compiler {
         } else {
             if (returnType.equals("char") || returnType.equals("int")) {
                 if (returnType.equals("int")) {
-                    iCodeList.add(new ICode("V" + (symIdInr - 200), "CREATE", ".INT", "", "", "; int " + value));
+                    iCodeList.add(new ICode("V" + symIdInr, "CREATE", ".INT", "", "", "; int " + value));
                 } else {
-                    iCodeList.add(new ICode("V" + (symIdInr - 200), "CREATE", ".BYT", "", "", "; char " + value));
+                    iCodeList.add(new ICode("V" + symIdInr, "CREATE", ".BYT", "", "", "; char " + value));
                 }
             }
-            symbolTable.put("V" + (symIdInr - 200), new Symbol(scope, "V" + (symIdInr++ - 200), value, type, new VaribleData(returnType, accessMod)));
+            symbolTable.put("V" + symIdInr, new Symbol(scope, "V" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
         }
     }
 }

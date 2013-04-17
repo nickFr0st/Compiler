@@ -56,9 +56,12 @@ public class TCode {
             if (s.getSymId().startsWith("L") && Character.isDigit(s.getSymId().toCharArray()[1])) {
                 if (s.getData() instanceof VaribleData) {
                     if (((VaribleData) s.getData()).getType().equals("int")) {
-                        tCode.add(s.getSymId() + " " + s.getValue().substring(1, s.getValue().length()));
+                        tCode.add(s.getSymId() + " .INT " + s.getValue().substring(1, s.getValue().length()));
                     } else {
-                        tCode.add(s.getSymId() + " " + s.getValue());
+                        if (s.getValue().equals("\'\\n\'"))
+                            tCode.add(s.getSymId() + " .BYT " + "\'13\'");
+                        else
+                            tCode.add(s.getSymId() + " .BYT " + s.getValue());
                     }
                 }
             }
@@ -132,6 +135,23 @@ public class TCode {
                 freeResource(argReg2);
             }
 
+            if (iCode.getOperation().equals("ADI")) {
+                String argReg1 = getRegister(iCode.getArg1());
+                tCode.add("LDR " + argReg1 + " CLR");
+                String argReg2 = getRegister(iCode.getArg2());
+                tCode.add("LDR " + argReg2 + " CLR");
+
+                tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+
+                tCode.add("ADD " + argReg1 + " " + argReg2);
+                tCode.add("STR " + argReg1 + " " + iCode.getResult() + " " + iCode.getComment());
+
+                freeResource(argReg1);
+                freeResource(argReg2);
+                continue;
+            }
+
             if (iCode.getOperation().equals("ADD")) {
                 String argReg1 = getRegister(iCode.getArg1());
                 tCode.add("LDR " + argReg1 + " CLR");
@@ -149,11 +169,72 @@ public class TCode {
                 continue;
             }
 
+            if (iCode.getOperation().equals("SUB")) {
+                String argReg1 = getRegister(iCode.getArg1());
+                tCode.add("LDR " + argReg1 + " CLR");
+                String argReg2 = getRegister(iCode.getArg2());
+                tCode.add("LDR " + argReg2 + " CLR");
+
+                tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+
+                tCode.add("SUB " + argReg1 + " " + argReg2);
+                tCode.add("STR " + argReg1 + " " + iCode.getResult() + " " + iCode.getComment());
+
+                freeResource(argReg1);
+                freeResource(argReg2);
+                continue;
+            }
+
+            if (iCode.getOperation().equals("DIV")) {
+                String argReg1 = getRegister(iCode.getArg1());
+                tCode.add("LDR " + argReg1 + " CLR");
+                String argReg2 = getRegister(iCode.getArg2());
+                tCode.add("LDR " + argReg2 + " CLR");
+
+                tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+
+                tCode.add("DIV " + argReg1 + " " + argReg2);
+                tCode.add("STR " + argReg1 + " " + iCode.getResult() + " " + iCode.getComment());
+
+                freeResource(argReg1);
+                freeResource(argReg2);
+                continue;
+            }
+
+            if (iCode.getOperation().equals("MUL")) {
+                String argReg1 = getRegister(iCode.getArg1());
+                tCode.add("LDR " + argReg1 + " CLR");
+                String argReg2 = getRegister(iCode.getArg2());
+                tCode.add("LDR " + argReg2 + " CLR");
+
+                tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+
+                tCode.add("SUB " + argReg1 + " " + argReg2);
+                tCode.add("STR " + argReg1 + " " + iCode.getResult() + " " + iCode.getComment());
+
+                freeResource(argReg1);
+                freeResource(argReg2);
+                continue;
+            }
+
             if (iCode.getOperation().equals("WRTI")) {
                 String argReg1 = getRegister(iCode.getArg1());
                 tCode.add("LDR " + argReg1 + " CLR");
                 tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
                 tCode.add("TRP 1 " + iCode.getComment());
+                freeResource(argReg1);
+                continue;
+            }
+
+            if (iCode.getOperation().equals("WRTC")) {
+                String argReg1 = getRegister(iCode.getArg1());
+                tCode.add("LDR " + argReg1 + " CLR");
+                tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+
+                tCode.add("TRP 3 " + iCode.getComment());
                 freeResource(argReg1);
                 continue;
             }
@@ -178,5 +259,9 @@ public class TCode {
 
         Assembler assembler = new Assembler();
         assembler.action("NNM-program.asm");
+    }
+
+    private boolean isLiteral(String arg2) {
+        return arg2.startsWith("L");
     }
 }

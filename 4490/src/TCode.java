@@ -73,8 +73,10 @@ public class TCode {
                     if (((VaribleData) symbolTable.get(iCode.getLabel()).getData()).getType().equals("int")) {
                         tCode.add(iCode.getLabel() + " " + iCode.getArg1() + " " + "0" + " " + iCode.getComment());
                     } else {
-                        tCode.add(iCode.getLabel() + " " + iCode.getArg1() + " " + "\' \'" + " " + iCode.getComment());
+                        tCode.add(iCode.getLabel() + " " + iCode.getArg1() + " " + "\'0\'" + " " + iCode.getComment());
                     }
+                } else if (symbolTable.get(iCode.getLabel()).getData() instanceof FunctionData) {
+                    tCode.add(iCode.getLabel() + " " + iCode.getArg1() + " " + "\'0\'" + iCode.getComment());
                 }
             }
         }

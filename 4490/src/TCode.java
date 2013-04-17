@@ -240,6 +240,26 @@ public class TCode {
                 freeResource(argReg1);
                 continue;
             }
+
+            if (iCode.getOperation().equals("RDI")) {
+                tCode.add("TRP 2");
+                String argReg1 = getRegister(iCode.getArg1());
+
+                tCode.add("LDR " + argReg1 + " INII");
+                tCode.add("STR " + argReg1 + " " + iCode.getArg1());
+                freeResource(argReg1);
+                continue;
+            }
+
+            if (iCode.getOperation().equals("RDC")) {
+                tCode.add("TRP 4");
+                String argReg1 = getRegister(iCode.getArg1());
+
+                tCode.add("LDR " + argReg1 + " INPT");
+                tCode.add("STR " + argReg1 + " " + iCode.getArg1());
+                freeResource(argReg1);
+                continue;
+            }
         }
 
         for (String j : tCode) {

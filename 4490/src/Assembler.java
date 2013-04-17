@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 /**
@@ -102,6 +103,8 @@ public class Assembler {
             String lastDirectiveLoaded = null;
 
             // pass one; build symbol table
+            symbolTable.put("INII", INT);
+            mem.add(new Memory("INII", "0"));
             symbolTable.put("INPT", INT);
             symbolTable.put("INCT", INT);
             mem.add(new Memory("INPT", ""));
@@ -524,6 +527,25 @@ public class Assembler {
                     if (instructionList.get(i).getOpd1().equals("3")) {
                         System.out.print(lastRegUsedChar);
                         break;
+                    }
+                    if (instructionList.get(i).getOpd1().equals("2")) {
+                        Integer number = 0;
+                        try {
+                            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+                            String input = bufferedReader.readLine();
+                            number = Integer.parseInt(input);
+                        } catch (NumberFormatException ex) {
+                            System.out.println("Not a number !");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        for (Memory m : mem) {
+                            if (m.getLabel().equals("INII")) {
+                                m.setData(number.toString());
+                                break;
+                            }
+                        }
                     }
                     if (instructionList.get(i).getOpd1().equals("4")) {
                         if (mem.get(0).getData().equals("") || mem.get(0).getData().equals("\r\n")) {

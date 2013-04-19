@@ -1127,11 +1127,21 @@ public class Compiler {
                                     if (lexC != null && lexC.lexi.equals("}")) {
                                         if (ifStack.size() > 1) {
                                             String itemToBeReplaced = ifStack.pop();
+                                            String replacer;
+
+                                            if (ifStack.peek().startsWith("ENDWHILE")) {
+                                                String end = ifStack.pop();
+                                                replacer = ifStack.peek();
+                                                ifStack.push(end);
+                                            } else {
+                                                replacer = ifStack.peek();
+                                            }
+
 
                                             if (!ifStack.isEmpty()) {
                                                 for (int u = iCodeList.size() - 1; u >= 0; u--) {
                                                     if (iCodeList.get(u).getArg2().equals((itemToBeReplaced))) {
-                                                        iCodeList.get(u).setArg2(ifStack.peek());
+                                                        iCodeList.get(u).setArg2(replacer);
                                                     }
                                                 }
                                             }
@@ -1154,11 +1164,20 @@ public class Compiler {
                                     if (lexC != null && lexC.lexi.equals("}")) {
                                         if (ifStack.size() > 1) {
                                             String itemToBeReplaced = ifStack.pop();
+                                            String replacer;
+
+                                            if (ifStack.peek().startsWith("ENDWHILE")) {
+                                                String end = ifStack.pop();
+                                                replacer = ifStack.peek();
+                                                ifStack.push(end);
+                                            } else {
+                                                replacer = ifStack.peek();
+                                            }
 
                                             if (!ifStack.isEmpty()) {
                                                 for (int u = iCodeList.size() - 1; u >= 0; u--) {
                                                     if (iCodeList.get(u).getArg1().equals((itemToBeReplaced))) {
-                                                        iCodeList.get(u).setArg1(ifStack.peek());
+                                                        iCodeList.get(u).setArg1(replacer);
                                                     }
                                                 }
                                             }
@@ -2869,6 +2888,9 @@ public class Compiler {
                 if (value.length() > 1) {
                     char[] test = value.toCharArray();
                     if (test[0] == 'x' && Character.isDigit(test[1])) {
+                        return;
+                    }
+                    if (test[0] == '\'' && test[1] == '\\' && value.length() == 4) {
                         return;
                     }
                 }

@@ -484,39 +484,67 @@ public class TCode {
             }
 
             if (iCode.getOperation().equals("AND")) {
+                String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
                 String argReg3 = getRegister(iCode.getResult());
 
                 if (useCondLabel) {
-                    tCode.set(tCode.size() - 1, "L" + condIncr++ + " LDR " + argReg3 + " " + iCode.getArg1());
+                    tCode.set(tCode.size() - 1, "L" + condIncr++ + " LDR " + argReg1 + " " + iCode.getArg1());
                     useCondLabel = false;
                 } else {
-                    tCode.add("LDR " + argReg3 + " " + iCode.getArg1());
+                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
                 }
-                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
-                tCode.add("AND " + argReg3 + " " + argReg2);
-                tCode.add("STR " + argReg3 + " " + iCode.getResult());
 
+                String L3 = "L" + condIncr++;
+                String L4 = "L" + condIncr;
+
+                tCode.add("CMP " + argReg1 + " R1 ; Check " + iCode.getArg1() +" for True");
+                tCode.add("BNZ  " + argReg1 + " " + L3 + " ; if FALSE GOTO " + L3);
+                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+                tCode.add("CMP " + argReg2 + " R1 ; Check " + iCode.getArg2() +" for True");
+                tCode.add("BNZ  " + argReg2 + " " + L3 + " ; if FALSE GOTO " + L3);
+                tCode.add("STR R1 " + iCode.getResult());
+                tCode.add("JMP " + L4);
+                tCode.add(L3 + " STR R0 " + iCode.getResult());
+
+                freeResource(argReg1);
                 freeResource(argReg2);
                 freeResource(argReg3);
+
+                useCondLabel = true;
+                tCode.add(L4);
             }
 
-            if (iCode.getOperation().equals("AND")) {
+            if (iCode.getOperation().equals("OR")) {
+                String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
                 String argReg3 = getRegister(iCode.getResult());
 
                 if (useCondLabel) {
-                    tCode.set(tCode.size() - 1, "L" + condIncr++ + " LDR " + argReg3 + " " + iCode.getArg1());
+                    tCode.set(tCode.size() - 1, "L" + condIncr++ + " LDR " + argReg1 + " " + iCode.getArg1());
                     useCondLabel = false;
                 } else {
-                    tCode.add("LDR " + argReg3 + " " + iCode.getArg1());
+                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
                 }
-                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
-                tCode.add("OR " + argReg3 + " " + argReg2);
-                tCode.add("STR " + argReg3 + " " + iCode.getResult());
 
+                String L3 = "L" + condIncr++;
+                String L4 = "L" + condIncr;
+
+                tCode.add("CMP " + argReg1 + " R1 ; Check " + iCode.getArg1() +" for True");
+                tCode.add("BRZ  " + argReg1 + " " + L3 + " ; if TRUE GOTO " + L3);
+                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+                tCode.add("CMP " + argReg2 + " R1 ; Check " + iCode.getArg2() +" for True");
+                tCode.add("BRZ  " + argReg2 + " " + L3 + " ; if TRUE GOTO " + L3);
+                tCode.add("STR R0 " + iCode.getResult());
+                tCode.add("JMP " + L4);
+                tCode.add(L3 + " STR R1 " + iCode.getResult());
+
+                freeResource(argReg1);
                 freeResource(argReg2);
                 freeResource(argReg3);
+
+                useCondLabel = true;
+                tCode.add(L4);
             }
 
             if (iCode.getOperation().equals("BF")) {

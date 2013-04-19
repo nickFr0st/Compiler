@@ -71,7 +71,7 @@ public class TCode {
         }
 
         for (ICode iCode : iCodeList) {
-            if (iCode.getOperation().equals("CREATE")) {
+            if (iCode.getOperation().equals("CREATE") && !iCode.getLabel().startsWith("L")) {
                 if (symbolTable.get(iCode.getLabel()).getData() instanceof VaribleData) {
                     if (((VaribleData) symbolTable.get(iCode.getLabel()).getData()).getType().equals("int")) {
                         tCode.add(iCode.getLabel() + " " + iCode.getArg1() + " " + "0" + " " + iCode.getComment());

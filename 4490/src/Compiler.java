@@ -19,6 +19,7 @@ public class Compiler {
     private String scope = "g";
     private int symIdInr = 100;
     private int eIndex = 0;
+    private boolean useConditionInReturn = false;
 
     private List<String> tCode = new ArrayList<String>();
 
@@ -830,7 +831,7 @@ public class Compiler {
                     if (tempList.get(i + 1).lexi.equals("if")) {
                         eIndex = i + 2;
 
-                        iCodeList.get(iCodeList.size() -1).setArg1("SKIPIF" + controlSar.getKey());
+                        iCodeList.get(iCodeList.size() - 1).setArg1("SKIPIF" + controlSar.getKey());
                         validateRelationalParametersSemantic(tempList, SAS, OS, scopePassTwo, tempItem, 0, controlSar.getKey());
                         i = eIndex + 1;
                         continue;
@@ -852,11 +853,11 @@ public class Compiler {
 
 
                     if (!iCodeList.isEmpty()) {
-                        if (iCodeList.get(iCodeList.size()-1).getArg1().contains("BEGINWHILE")) {
-                            String tempArg = iCodeList.get(iCodeList.size()-1).getArg1();
-                            String removeLabel = "ENDWHILE" + tempArg.substring(tempArg.length() -5, tempArg.length());
+                        if (iCodeList.get(iCodeList.size() - 1).getArg1().contains("BEGINWHILE")) {
+                            String tempArg = iCodeList.get(iCodeList.size() - 1).getArg1();
+                            String removeLabel = "ENDWHILE" + tempArg.substring(tempArg.length() - 5, tempArg.length());
 
-                            for (ICode cd : iCodeList){
+                            for (ICode cd : iCodeList) {
                                 if (cd.getArg2().equals(removeLabel)) {
                                     cd.setArg2("BEGINWHILE" + controlSar.getKey());
                                 }
@@ -1087,14 +1088,18 @@ public class Compiler {
                                     }
 
                                     if (lexC != null && lexC.lexi.equals("}")) {
-                                        String itemToBeReplaced = ifStack.pop();
+                                        if (ifStack.size() > 1) {
+                                            String itemToBeReplaced = ifStack.pop();
 
-                                        if (!ifStack.isEmpty()) {
-                                            for (int u = iCodeList.size() - 1; u >= 0; u--) {
-                                                if (iCodeList.get(u).getArg2().equals((itemToBeReplaced))) {
-                                                    iCodeList.get(u).setArg2(ifStack.peek());
+                                            if (!ifStack.isEmpty()) {
+                                                for (int u = iCodeList.size() - 1; u >= 0; u--) {
+                                                    if (iCodeList.get(u).getArg2().equals((itemToBeReplaced))) {
+                                                        iCodeList.get(u).setArg2(ifStack.peek());
+                                                    }
                                                 }
                                             }
+                                        } else {
+                                            useConditionInReturn = true;
                                         }
                                     }
                                 }
@@ -1110,14 +1115,18 @@ public class Compiler {
                                     }
 
                                     if (lexC != null && lexC.lexi.equals("}")) {
-                                        String itemToBeReplaced = ifStack.pop();
+                                        if (ifStack.size() > 1) {
+                                            String itemToBeReplaced = ifStack.pop();
 
-                                        if (!ifStack.isEmpty()) {
-                                            for (int u = iCodeList.size() - 1; u >= 0; u--) {
-                                                if (iCodeList.get(u).getArg1().equals((itemToBeReplaced))) {
-                                                    iCodeList.get(u).setArg1(ifStack.peek());
+                                            if (!ifStack.isEmpty()) {
+                                                for (int u = iCodeList.size() - 1; u >= 0; u--) {
+                                                    if (iCodeList.get(u).getArg1().equals((itemToBeReplaced))) {
+                                                        iCodeList.get(u).setArg1(ifStack.peek());
+                                                    }
                                                 }
                                             }
+                                        } else {
+                                            useConditionInReturn = true;
                                         }
                                     }
                                 }
@@ -1125,6 +1134,16 @@ public class Compiler {
                             } else {
                                 condLabel = "";
                                 condTypeScope = "";
+
+                                if (useConditionInReturn) {
+                                    String itemToBeReplaced = ifStack.pop();
+                                    for (int u = iCodeList.size() - 1; u >= 0; u--) {
+                                        if (iCodeList.get(u).getArg2().equals((itemToBeReplaced))) {
+                                            iCodeList.get(u).setArg2("RTN");
+                                        }
+                                    }
+                                    useConditionInReturn = false;
+                                }
 
                                 iCodeList.add(new ICode("", "RTN", "", "", "", "; always return from a function"));
                             }
@@ -1671,34 +1690,53 @@ public class Compiler {
                     actualType = item.lexi;
                 }
                 sar.setType("bool");
-                sar.setKey("L"+symIdInr);
+                sar.setKey("L" + symIdInr);
             } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
                 if (!paramList.get(pId).equals("int")) {
                     isGood = false;
                     actualType = item.type;
                 }
                 sar.setType("int");
-                sar.setKey("L"+symIdInr);
+                sar.setKey("L" + symIdInr);
             } else if (item.type.equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
                 if (!paramList.get(pId).equals("char")) {
                     isGood = false;
                     actualType = item.type;
                 }
                 sar.setType("char");
-                sar.setKey("L"+symIdInr);
+                sar.setKey("L" + symIdInr);
             } else if (item.lexi.equals("null")) {
                 if (!paramList.get(pId).equals("null")) {
                     isGood = false;
                     actualType = item.lexi;
                 }
                 sar.setType("null");
-                sar.setKey("L"+symIdInr);
+                sar.setKey("L" + symIdInr);
             }
 
             if (!isGood) {
                 errorList += "incompatible parameter type. expected '" + paramList.get(pId) + "' but was '" + actualType + "'. Line: " + item.lineNum + "\n";
                 return false;
             }
+
+            if (sar.getType().equals("int")) {
+                boolean done = false;
+                if (index >= 3) {
+                    if (tempList.get(index - 1).lexi.equals("-") && tempList.get(index - 2).type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
+                        addToSymbolTable("Literal", new ArrayList<String>(), "int", "public", "x-" + item, item.lineNum);
+                        done = true;
+                    }
+                }
+                if (!done) {
+                    addToSymbolTable("Literal", new ArrayList<String>(), "int", "public", "x" + item.lexi, item.lineNum);
+
+                }
+            } else if (sar.getType().equals("char") || sar.getType().equals("null")) {
+                addToSymbolTable("Literal", new ArrayList<String>(), "char", "public", item.lexi, item.lineNum);
+            } else if (sar.getType().equals("bool")) {
+                addToSymbolTable("Literal", new ArrayList<String>(), "int", "public", item.lexi, item.lineNum);
+            }
+
         } else if (isIdentifierExpression(item)) {
             String sarScope = globalScope;
             boolean found = false;
@@ -2817,6 +2855,11 @@ public class Compiler {
             }
             symbolTable.put("P" + symIdInr, new Symbol(scope, "P" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
         } else if (type.equals("Literal")) {
+            if (returnType.equals("int")) {
+                iCodeList.add(new ICode("L" + symIdInr, "CREATE", ".INT", "", "", "; int " + value));
+            } else {
+                iCodeList.add(new ICode("L" + symIdInr, "CREATE", ".BYT", "", "", "; char " + value));
+            }
             symbolTable.put("L" + symIdInr, new Symbol(scope, "L" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
         } else if (type.equals("tvar")) {
             if (returnType.equals("int")) {

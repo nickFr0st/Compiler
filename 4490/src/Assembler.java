@@ -45,6 +45,7 @@ public class Assembler {
     private final int RUN = 38;
     private final int END = 39;
     private final int BLK = 40;
+    private final int BGT = 41;
 
     private void initalizeRegReglist() {
         nameRegRegList.add("ADD");
@@ -92,6 +93,7 @@ public class Assembler {
         preLoadedOpcodes.add("RUN");
         preLoadedOpcodes.add("END");
         preLoadedOpcodes.add("BLK");
+        preLoadedOpcodes.add("BGT");
     }
 
     public void action(String file) {
@@ -663,6 +665,18 @@ public class Assembler {
                     }
 
                     break;
+                case BGT:
+                    newValue = 0;
+                    if (Integer.parseInt(reg.get(instructionList.get(i).getOpd1())) > newValue) {
+                        for (Instruction bnxTest : instructionList) {
+                            if (bnxTest.getLabel() != null && bnxTest.getLabel().equals(instructionList.get(i).getOpd2())) {
+                                i = instructionList.indexOf(bnxTest) - 1;
+                                break;
+                            }
+                        }
+                    }
+
+                    break;
                 case BRZ:
                     newValue = 0;
                     if (reg.get(instructionList.get(i).getOpd1()).equals(newValue.toString())) {
@@ -975,7 +989,7 @@ public class Assembler {
     }
 
     private boolean checkForRegMemLabels(HashMap<String, Integer> symbolTable, String[] lineInfo, int counter, List<Instruction> instructions) {
-        if (lineInfo[0].equals("LDR") || lineInfo[0].equals("LDA") || lineInfo[0].equals("BNZ") || lineInfo[0].equals("STR") || lineInfo[0].equals("BLT") || lineInfo[0].equals("BRZ")) {
+        if (lineInfo[0].equals("LDR") || lineInfo[0].equals("LDA") || lineInfo[0].equals("BNZ") || lineInfo[0].equals("STR") || lineInfo[0].equals("BLT") || lineInfo[0].equals("BRZ") || lineInfo[0].equals("BGT")) {
 
             if (!lineInfo[1].matches("^R(\\d|10)$")) {
                 System.out.println("Line " + counter + ": operand 1 must be a valid register");
@@ -1004,6 +1018,13 @@ public class Assembler {
                 }
 
                 instructions.add(new Instruction(BLT, lineInfo[1].substring(1, lineInfo[1].length()), lineInfo[2]));
+            }  else if (lineInfo[0].equals("BGT")) {
+                if (lineInfo[2].length() <= 4) {
+                    System.out.println("Label at line: " + counter + " must be associated with an instruction not a directive.");
+                    return true;
+                }
+
+                instructions.add(new Instruction(BGT, lineInfo[1].substring(1, lineInfo[1].length()), lineInfo[2]));
             } else if (lineInfo[0].equals("BRZ")) {
                 if (lineInfo[2].length() <= 4) {
                     System.out.println("Label at line: " + counter + " must be associated with an instruction not a directive.");
@@ -1015,7 +1036,7 @@ public class Assembler {
                 instructions.add(new Instruction(STR, lineInfo[1].substring(1, lineInfo[1].length()), lineInfo[2]));
             }
 
-        } else if (lineInfo[1].equals("LDR") || lineInfo[1].equals("LDA") || lineInfo[1].equals("BNZ") || lineInfo[1].equals("STR") || lineInfo[1].equals("BLT") || lineInfo[1].equals("BRZ")) {
+        } else if (lineInfo[1].equals("LDR") || lineInfo[1].equals("LDA") || lineInfo[1].equals("BNZ") || lineInfo[1].equals("STR") || lineInfo[1].equals("BLT") || lineInfo[1].equals("BRZ") || lineInfo[1].equals("BGT")) {
 
             if (!lineInfo[2].matches("^R(\\d|10)$")) {
                 System.out.println("Line " + counter + ": operand 1 must be a valid register");
@@ -1044,6 +1065,13 @@ public class Assembler {
                 }
 
                 instructions.add(new Instruction(BLT, lineInfo[2].substring(1, lineInfo[2].length()), lineInfo[3], lineInfo[0].trim()));
+            } else if (lineInfo[1].equals("BGT")) {
+                if (lineInfo[3].length() <= 4) {
+                    System.out.println("Label at line: " + counter + " must be associated with an instruction not a directive.");
+                    return true;
+                }
+
+                instructions.add(new Instruction(BGT, lineInfo[2].substring(1, lineInfo[2].length()), lineInfo[3], lineInfo[0].trim()));
             } else if (lineInfo[1].equals("BRZ")) {
                 if (lineInfo[3].length() <= 4) {
                     System.out.println("Label at line: " + counter + " must be associated with an instruction not a directive.");

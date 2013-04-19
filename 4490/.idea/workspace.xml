@@ -7,15 +7,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Assembler.java" afterPath="$PROJECT_DIR$/src/Assembler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Compiler.java" afterPath="$PROJECT_DIR$/src/Compiler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/TCode.java" afterPath="$PROJECT_DIR$/src/TCode.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449654711" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366162567497" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366168024802" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
-    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366162192300" ignored="false" />
-    <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366162300130" ignored="false" />
+    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366343032289" ignored="false" />
+    <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366167786852" ignored="false" />
     <file path="/LexicalAnalizer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358821966318" ignored="false" />
     <file path="/Tuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1365271663627" ignored="false" />
     <file path="/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1365294742234" ignored="false" />
@@ -36,7 +39,8 @@
     <file path="$USER_HOME$/Desktop/testp/.idea/misc.xml" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449481722" ignored="false" />
     <file path="/Operator.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1364342510144" ignored="false" />
     <file path="/ICode.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1365126454642" ignored="false" />
-    <file path="/TCode.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366162465275" ignored="false" />
+    <file path="/TCode.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366347456791" ignored="false" />
+    <file path="/Assembler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366345666166" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +90,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/Assembler.java" line="218" class="Assembler" package="">
+      <breakpoint url="file://$PROJECT_DIR$/src/Compiler.java" line="854" class="Compiler" package="">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -100,49 +104,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/TCode.java" line="236" class="TCode" package="">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/Compiler.java" line="1955" class="Compiler" package="">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/TCode.java" line="69" class="TCode" package="">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/Compiler.java" line="2807" class="Compiler" package="">
+      <breakpoint url="file://$PROJECT_DIR$/src/Assembler.java" line="536" class="Assembler" package="">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -203,18 +165,9 @@
       <file leaf-file-name="Compiler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Compiler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="2810" column="0" selection-start="156332" selection-end="156332" vertical-scroll-proportion="-14.24">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TCode.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/TCode.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="71" column="108" selection-start="2349" selection-end="2349" vertical-scroll-proportion="0.5091514">
+            <state line="2101" column="62" selection-start="117234" selection-end="117238" vertical-scroll-proportion="-7.48">
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#48192#48199#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -223,9 +176,21 @@
       <file leaf-file-name="Assembler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Assembler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="218" column="45" selection-start="8328" selection-end="8346" vertical-scroll-proportion="0.0">
+            <state line="1041" column="65" selection-start="51183" selection-end="51186" vertical-scroll-proportion="-527.96">
               <folding>
-                <element signature="e#8254#8267#0" expanded="true" />
+                <element signature="e#8445#8458#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TCode.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/TCode.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="533" column="78" selection-start="22922" selection-end="22922" vertical-scroll-proportion="0.5108153">
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#530#546#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -259,13 +224,13 @@
         <option value="$PROJECT_DIR$/src/Tuple.java" />
         <option value="$PROJECT_DIR$/src/SAR.java" />
         <option value="$PROJECT_DIR$/src/LexicalAnalyzer.java" />
-        <option value="$PROJECT_DIR$/src/Assembler.java" />
         <option value="$PROJECT_DIR$/src/RunnableThread.java" />
         <option value="$PROJECT_DIR$/src/Memory.java" />
         <option value="$PROJECT_DIR$/src/Instruction.java" />
         <option value="$PROJECT_DIR$/src/ProgramDriver.java" />
         <option value="$PROJECT_DIR$/src/Symbol.java" />
         <option value="$PROJECT_DIR$/src/Compiler.java" />
+        <option value="$PROJECT_DIR$/src/Assembler.java" />
         <option value="$PROJECT_DIR$/src/TCode.java" />
       </list>
     </option>
@@ -969,7 +934,15 @@
       <created>1366162569841</created>
       <updated>1366162569841</updated>
     </task>
-    <option name="localTasksCounter" value="113" />
+    <task id="LOCAL-00113" summary="fixed more bugs">
+      <created>1366162576123</created>
+      <updated>1366162576123</updated>
+    </task>
+    <task id="LOCAL-00114" summary="fixed concole input">
+      <created>1366168027155</created>
+      <updated>1366168027155</updated>
+    </task>
+    <option name="localTasksCounter" value="115" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1060,7 +1033,7 @@
     <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed more bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed concole input" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -1073,7 +1046,6 @@
     <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="return statements are validating" />
     <MESSAGE value="fix" />
     <MESSAGE value="create Icode object" />
     <MESSAGE value="update" />
@@ -1098,6 +1070,7 @@
     <MESSAGE value="clean up" />
     <MESSAGE value="more Logic" />
     <MESSAGE value="fixed more bugs" />
+    <MESSAGE value="fixed concole input" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1161,13 +1134,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/SAR.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="0" selection-start="662" selection-end="662" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Memory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="31" column="0" selection-start="542" selection-end="542" vertical-scroll-proportion="0.0">
@@ -1210,27 +1176,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/SAR.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="0" selection-start="420" selection-end="420" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Assembler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="218" column="45" selection-start="8328" selection-end="8346" vertical-scroll-proportion="0.0">
+        <state line="1041" column="65" selection-start="51183" selection-end="51186" vertical-scroll-proportion="-527.96">
           <folding>
-            <element signature="e#8254#8267#0" expanded="true" />
+            <element signature="e#8445#8458#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Compiler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2810" column="0" selection-start="156332" selection-end="156332" vertical-scroll-proportion="-14.24">
-          <folding />
+        <state line="2101" column="62" selection-start="117234" selection-end="117238" vertical-scroll-proportion="-7.48">
+          <folding>
+            <element signature="e#48192#48199#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/TCode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="108" selection-start="2349" selection-end="2349" vertical-scroll-proportion="0.5091514">
+        <state line="533" column="78" selection-start="22922" selection-end="22922" vertical-scroll-proportion="0.5108153">
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#530#546#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -2810,6 +2810,11 @@ public class Compiler {
             }
             scope += "." + value;
         } else if (type.equals("pvar")) {
+            if (returnType.equals("int")) {
+                iCodeList.add(new ICode("P" + symIdInr, "CREATE", ".INT", "", "", "; int " + value));
+            } else {
+                iCodeList.add(new ICode("P" + symIdInr, "CREATE", ".BYT", "", "", "; char " + value));
+            }
             symbolTable.put("P" + symIdInr, new Symbol(scope, "P" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
         } else if (type.equals("Literal")) {
             symbolTable.put("L" + symIdInr, new Symbol(scope, "L" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));

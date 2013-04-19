@@ -1081,9 +1081,35 @@ public class Compiler {
                                 if ((subScope.startsWith(".while") && Character.isDigit(subScope.toCharArray()[6]))) {
 
                                     if (!ifStack.isEmpty() || ifStack.size() > 1) {
+
                                         String tempItem = ifStack.pop();
                                         iCodeList.add(new ICode("", "JMP", ifStack.pop(), "", "", ""));
                                         ifStack.push(tempItem);
+
+                                        LexicalAnalyzer tempLex = new LexicalAnalyzer();
+                                        tempLex.setLexicalList(lexicalAnalyzer.getLexicalList());
+                                        tempLex.setLexPtr(lexicalAnalyzer.getLexPtr());
+
+                                        Tuple lexC = null;
+                                        if (tempLex.hasNext()) {
+                                            lexC = tempLex.getNext();
+                                        }
+
+                                        if (lexC != null && lexC.lexi.equals("}")) {
+                                            if (ifStack.size() > 1) {
+                                                String itemToBeReplaced = ifStack.pop();
+
+                                                if (!ifStack.isEmpty()) {
+                                                    for (int u = iCodeList.size() - 1; u >= 0; u--) {
+                                                        if (iCodeList.get(u).getArg2().equals((itemToBeReplaced))) {
+                                                            iCodeList.get(u).setArg2(ifStack.peek());
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                useConditionInReturn = true;
+                                            }
+                                        }
                                     }
 
                                 }

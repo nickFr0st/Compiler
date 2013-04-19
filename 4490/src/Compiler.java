@@ -1139,7 +1139,7 @@ public class Compiler {
                                     String itemToBeReplaced = ifStack.pop();
                                     for (int u = iCodeList.size() - 1; u >= 0; u--) {
                                         if (iCodeList.get(u).getArg2().equals((itemToBeReplaced))) {
-                                            iCodeList.get(u).setArg2("RTN");
+                                            iCodeList.get(u).setArg2("FINISH");
                                         }
                                     }
                                     useConditionInReturn = false;

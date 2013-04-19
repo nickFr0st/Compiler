@@ -315,7 +315,7 @@ public class TCode {
                 tCode.add("MOV " + argReg3 + " " + argReg1);
                 tCode.add("CMP " + argReg3 + " " + argReg2);
                 tCode.add("BRZ " + argReg3 + " " + L3 + " ; " + iCode.getResult() + " == " + iCode.getArg2() + " GOTO " + L3);
-                tCode.add("MOV " + argReg3 + " R0 ; Set FALSE");
+                tCode.add("STR R0 " + iCode.getResult() + " ; Set FALSE");
                 tCode.add("JMP " + L4);
                 tCode.add(L3 + " STR R1 " + iCode.getResult() + " ; Set TRUE");
 
@@ -345,7 +345,7 @@ public class TCode {
                 tCode.add("MOV " + argReg3 + " " + argReg1);
                 tCode.add("CMP " + argReg3 + " " + argReg2);
                 tCode.add("BLT " + argReg3 + " " + L3 + " ; " + iCode.getResult() + " < " + iCode.getArg2() + " GOTO " + L3);
-                tCode.add("MOV " + argReg3 + " R0 ; Set FALSE");
+                tCode.add("STR R0 " + iCode.getResult() + " ; Set FALSE");
                 tCode.add("JMP " + L4);
                 tCode.add(L3 + " STR R1 " + iCode.getResult() + " ; Set TRUE");
 
@@ -375,7 +375,7 @@ public class TCode {
                 tCode.add("MOV " + argReg3 + " " + argReg1);
                 tCode.add("CMP " + argReg3 + " " + argReg2);
                 tCode.add("BGT " + argReg3 + " " + L3 + " ; " + iCode.getResult() + " > " + iCode.getArg2() + " GOTO " + L3);
-                tCode.add("MOV " + argReg3 + " R0 ; Set FALSE");
+                tCode.add("STR R0 " + iCode.getResult() + " ; Set FALSE");
                 tCode.add("JMP " + L4);
                 tCode.add(L3 + " STR R1 " + iCode.getResult() + " ; Set TRUE");
 
@@ -405,7 +405,7 @@ public class TCode {
                 tCode.add("MOV " + argReg3 + " " + argReg1);
                 tCode.add("CMP " + argReg3 + " " + argReg2);
                 tCode.add("BNZ " + argReg3 + " " + L3 + " ; " + iCode.getResult() + " != " + iCode.getArg2() + " GOTO " + L3);
-                tCode.add("MOV " + argReg3 + " R0 ; Set FALSE");
+                tCode.add("STR R0 " + iCode.getResult() + " ; Set FALSE");
                 tCode.add("JMP " + L4);
                 tCode.add(L3 + " STR R1 " + iCode.getResult() + " ; Set TRUE");
 
@@ -438,7 +438,7 @@ public class TCode {
                 tCode.add("MOV " + argReg3 + " " + argReg1 + " ; Test " + iCode.getArg1() + " == " + iCode.getArg2());
                 tCode.add("CMP " + argReg3 + " " + argReg2);
                 tCode.add("BRZ " + argReg3 + " " + L3 + " ; " + iCode.getResult() + " == " + iCode.getArg2() + " GOTO " + L3);
-                tCode.add("MOV " + argReg3 + " R0 ; Set FALSE");
+                tCode.add("STR R0 " + iCode.getResult() + " ; Set FALSE");
                 tCode.add("JMP " + L4);
                 tCode.add(L3 + " STR R1 " + iCode.getResult() + " ; Set TRUE");
 
@@ -471,7 +471,7 @@ public class TCode {
                 tCode.add("MOV " + argReg3 + " " + argReg1 + " ; Test " + iCode.getArg1() + " == " + iCode.getArg2());
                 tCode.add("CMP " + argReg3 + " " + argReg2);
                 tCode.add("BRZ " + argReg3 + " " + L3 + " ; " + iCode.getResult() + " == " + iCode.getArg2() + " GOTO " + L3);
-                tCode.add("MOV " + argReg3 + " R0 ; Set FALSE");
+                tCode.add("STR R0 " + iCode.getResult() + " ; Set FALSE");
                 tCode.add("JMP " + L4);
                 tCode.add(L3 + " STR R1 " + iCode.getResult() + " ; Set TRUE");
 

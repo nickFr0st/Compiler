@@ -1080,7 +1080,7 @@ public class Assembler {
 
                 instructions.add(new Instruction(BRZ, lineInfo[2].substring(1, lineInfo[2].length()), lineInfo[3], lineInfo[0].trim()));
             } else if (lineInfo[1].equals("STR")) {
-                instructions.add(new Instruction(STR, lineInfo[2].substring(1, lineInfo[2].length()), lineInfo[3]));
+                instructions.add(new Instruction(STR, lineInfo[2].substring(1, lineInfo[2].length()), lineInfo[3], lineInfo[0].trim()));
             }
         }
         return false;

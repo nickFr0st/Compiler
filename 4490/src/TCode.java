@@ -239,7 +239,7 @@ public class TCode {
                 }
                 tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
 
-                tCode.add("SUB " + argReg1 + " " + argReg2);
+                tCode.add("MUL " + argReg1 + " " + argReg2);
                 tCode.add("STR " + argReg1 + " " + iCode.getResult() + " " + iCode.getComment());
 
                 freeResource(argReg1);

@@ -20,8 +20,10 @@ public class Compiler {
     private int symIdInr = 100;
     private int eIndex = 0;
     private boolean useConditionInReturn = false;
+    private boolean useConditionInReturnWhile = false;
 
     private Stack<String> ifStack = new Stack<String>();
+    private Stack<String> whileStack = new Stack<String>();
     private boolean canPop = false;
 
     private String condLabel = "";
@@ -809,6 +811,7 @@ public class Compiler {
                     i = eIndex + 1;
                     continue;
                 } else if (item.lexi.equals("else")) {
+                    eIndex = i + 1;
                     Tuple tempItem = new Tuple(ifList.remove(), item.type, item.lineNum);
                     SAR controlSar = new SAR(tempItem, scopePassTwo, "", "");
                     canPop = true;
@@ -872,7 +875,7 @@ public class Compiler {
                         }
                     }
 
-                    ifStack.push("BEGINWHILE" + controlSar.getKey());
+                    whileStack.push("BEGINWHILE" + controlSar.getKey());
                     validateRelationalParametersSemanticWhile(tempList, SAS, OS, scopePassTwo, tempItem, 0, controlSar.getKey(), 0, 0);
                     i = eIndex + 1;
                     continue;
@@ -983,7 +986,7 @@ public class Compiler {
                             if (OS.peek() == null) {
                                 errorList += "Missing opening paren. Line: " + item.lineNum + "\n";
                             }
-                            addTempToSAS(OS.pop(), SAS, scopePassTwo);
+                            addTempToSAS(OS.pop(), SAS, scopePassTwo, false);
                         }
                         if (tempList.get(0).lexi.equals("public") || tempList.get(0).lexi.equals("private") || isValidReturnType(tempList.get(0).lexi, tempList.get(0).type) || tempList.get(0).lexi.equals("return")) {
                             scopePassTwo = scopePassTwo.substring(0, scopePassTwo.lastIndexOf("."));
@@ -998,7 +1001,7 @@ public class Compiler {
                             if (OS.peek() == null) {
                                 errorList += "Missing opening array. Line: " + item.lineNum + "\n";
                             }
-                            addTempToSAS(OS.pop(), SAS, scopePassTwo);
+                            addTempToSAS(OS.pop(), SAS, scopePassTwo, false);
                         }
                         if (!OS.isEmpty()) {
                             OS.pop();
@@ -1009,8 +1012,9 @@ public class Compiler {
                         lastOprPrecedence = precedence;
                     } else if (precedence <= lastOprPrecedence) {
                         if (!OS.isEmpty()) {
-                            if (!OS.peek().getLexi().lexi.equals("("))
-                                addTempToSAS(OS.pop(), SAS, scopePassTwo);
+                            if (!OS.peek().getLexi().lexi.equals("(")) {
+                                addTempToSAS(OS.pop(), SAS, scopePassTwo, false);
+                            }
                         }
                         pushOS(scopePassTwo, tempList, OS, i, item, SAS, scopePassTwo);
                         i = eIndex;
@@ -1075,11 +1079,11 @@ public class Compiler {
                             if ((subScope.startsWith(".if") && Character.isDigit(subScope.toCharArray()[3])) || (subScope.startsWith(".else") && Character.isDigit(subScope.toCharArray()[5])) || (subScope.startsWith(".while") && Character.isDigit(subScope.toCharArray()[6]))) {
                                 if ((subScope.startsWith(".while") && Character.isDigit(subScope.toCharArray()[6]))) {
 
-                                    if (ifStack.size() > 1) {
+                                    if (whileStack.size() > 1) {
 
-                                        String tempItem = ifStack.pop();
-                                        iCodeList.add(new ICode("", "JMP", ifStack.pop(), "", "", ""));
-                                        ifStack.push(tempItem);
+                                        String tempItem = whileStack.pop();
+                                        iCodeList.add(new ICode("", "JMP", whileStack.pop(), "", "", ""));
+                                        whileStack.push(tempItem);
 
                                         LexicalAnalyzer tempLex = new LexicalAnalyzer();
                                         tempLex.setLexicalList(lexicalAnalyzer.getLexicalList());
@@ -1091,21 +1095,26 @@ public class Compiler {
                                         }
 
                                         if (lexC != null && lexC.lexi.equals("}")) {
-                                            if (ifStack.size() > 1) {
-                                                String itemToBeReplaced = ifStack.pop();
+                                            if (whileStack.size() > 1) {
+                                                String itemToBeReplaced = whileStack.pop();
 
-                                                if (!ifStack.isEmpty()) {
+                                                if (!whileStack.isEmpty()) {
+
+                                                    String tempHolder = whileStack.pop();
+                                                    String replace = whileStack.peek();
+                                                    whileStack.push(tempHolder);
+
                                                     for (int u = iCodeList.size() - 1; u >= 0; u--) {
                                                         if (iCodeList.get(u).getArg2().equals((itemToBeReplaced))) {
-                                                            iCodeList.get(u).setArg2(ifStack.peek());
+                                                            iCodeList.get(u).setArg2(replace);
                                                         }
                                                     }
                                                 }
                                             } else {
-                                                useConditionInReturn = true;
+                                                useConditionInReturnWhile = true;
                                             }
                                         }
-                                    } else if (ifStack.size() == 1) {
+                                    } else if (whileStack.size() == 1) {
                                         LexicalAnalyzer tempLex = new LexicalAnalyzer();
                                         tempLex.setLexicalList(lexicalAnalyzer.getLexicalList());
                                         tempLex.setLexPtr(lexicalAnalyzer.getLexPtr());
@@ -1116,18 +1125,18 @@ public class Compiler {
                                         }
 
                                         if (lexC != null && lexC.lexi.equals("}")) {
-                                            if (ifStack.size() > 1) {
-                                                String itemToBeReplaced = ifStack.pop();
+                                            if (whileStack.size() > 1) {
+                                                String itemToBeReplaced = whileStack.pop();
 
-                                                if (!ifStack.isEmpty()) {
+                                                if (!whileStack.isEmpty()) {
                                                     for (int u = iCodeList.size() - 1; u >= 0; u--) {
                                                         if (iCodeList.get(u).getArg2().equals((itemToBeReplaced))) {
-                                                            iCodeList.get(u).setArg2(ifStack.peek());
+                                                            iCodeList.get(u).setArg2(whileStack.peek());
                                                         }
                                                     }
                                                 }
                                             } else {
-                                                useConditionInReturn = true;
+                                                useConditionInReturnWhile = true;
                                             }
                                         }
                                     }
@@ -1225,6 +1234,20 @@ public class Compiler {
                                     useConditionInReturn = false;
                                 }
 
+                                if (useConditionInReturnWhile) {
+                                    String itemToBeReplaced = whileStack.pop();
+                                    for (int u = iCodeList.size() - 1; u >= 0; u--) {
+                                        if (iCodeList.get(u).getArg2().equals((itemToBeReplaced))) {
+                                            iCodeList.get(u).setArg2("FINISH");
+                                        }
+                                        if (iCodeList.get(u).getArg1().equals((itemToBeReplaced))) {
+                                            iCodeList.get(u).setArg1("FINISH");
+                                        }
+                                    }
+
+                                    useConditionInReturnWhile = false;
+                                }
+
                                 iCodeList.add(new ICode("", "RTN", "", "", "", "; always return from a function"));
                             }
 
@@ -1314,7 +1337,7 @@ public class Compiler {
                         errorList += "Missing opening paren. Line: " + item.lineNum + "\n";
                         return false;
                     }
-                    addTempToSAS(os.pop(), sas, scopePassTwo);
+                    addTempToSAS(os.pop(), sas, scopePassTwo, false);
                 }
 
                 if (!os.isEmpty()) {
@@ -1344,7 +1367,7 @@ public class Compiler {
             return validateRelationalParametersSemantic(tempList, sas, os, scopePassTwo, tempList.get(eIndex), argCount, type, condType);
         } else if (tempList.get(eIndex).type.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
             while (os.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name()) || os.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.RELATIONAL_OPR.name())) {
-                addTempToSAS(os.pop(), sas, scopePassTwo);
+                addTempToSAS(os.pop(), sas, scopePassTwo, false);
             }
             pushOS(scopePassTwo, tempList, os, eIndex, tempList.get(eIndex), sas, scopePassTwo);
             eIndex++;
@@ -1413,9 +1436,9 @@ public class Compiler {
                     }
                     if (passCount == 0) {
                         condLabel = "BEGINWHILE" + type;
-                        ifStack.push(condLabel);
+                        whileStack.push(condLabel);
                     }
-                    addTempToSAS(os.pop(), sas, scopePassTwo);
+                    addTempToSAS(os.pop(), sas, scopePassTwo, true);
                 }
 
                 if (!os.isEmpty()) {
@@ -1429,7 +1452,7 @@ public class Compiler {
                         sas.pop();
                     }
                     condLabel = "ENDWHILE" + type;
-                    ifStack.push(condLabel);
+                    whileStack.push(condLabel);
                 }
 
                 if (tempList.get(eIndex + 1).lexi.equals("{")) {
@@ -1448,7 +1471,7 @@ public class Compiler {
                 if (boolOprCount++ == 0) {
                     condLabel = "BEGINWHILE" + type;
                 }
-                addTempToSAS(os.pop(), sas, scopePassTwo);
+                addTempToSAS(os.pop(), sas, scopePassTwo, false);
             }
             pushOS(scopePassTwo, tempList, os, eIndex, tempList.get(eIndex), sas, scopePassTwo);
             eIndex++;
@@ -1531,7 +1554,7 @@ public class Compiler {
     }
 
     private void cleanupSAS(Stack<SAR> SAS, Stack<SAR> OS, String scopePassTwo) {
-        while (!OS.isEmpty()) addTempToSAS(OS.pop(), SAS, scopePassTwo);
+        while (!OS.isEmpty()) addTempToSAS(OS.pop(), SAS, scopePassTwo, false);
         if (!SAS.isEmpty()) {
             evaluateReturnStatement(SAS, scopePassTwo);
         }
@@ -1973,7 +1996,7 @@ public class Compiler {
                 SAS.push(sar);
                 int errCount = errorList.length();
                 while (OS.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
-                    addTempToSAS(OS.pop(), SAS, globalScope);
+                    addTempToSAS(OS.pop(), SAS, globalScope, false);
                 }
                 if (errCount != errorList.length()) {
                     return false;
@@ -1994,7 +2017,7 @@ public class Compiler {
                 SAS.push(sar);
                 int errCount = errorList.length();
                 while (OS.peek().getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
-                    addTempToSAS(OS.pop(), SAS, globalScope);
+                    addTempToSAS(OS.pop(), SAS, globalScope, false);
                 }
                 if (errCount != errorList.length()) {
                     return false;
@@ -2037,13 +2060,12 @@ public class Compiler {
         return false;
     }
 
-    private void addTempToSAS(SAR opr, Stack<SAR> SAS, String scopePassTwo) {
+    private void addTempToSAS(SAR opr, Stack<SAR> SAS, String scopePassTwo, boolean isParamter) {
         String newLabel = "";
         boolean containsElse = scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).contains("else");
-        if (scopePassTwo.contains(".") && !ifStack.isEmpty()) {
-            if (!scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).equals(condTypeScope) || containsElse) {
-                if (containsElse && canPop) {
-
+        if (scopePassTwo.contains(".") && (!ifStack.isEmpty() || !whileStack.isEmpty())) {
+            if (!scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).equals(condTypeScope) || containsElse || isParamter) {
+                if (containsElse && canPop && !ifStack.isEmpty()) {
                     if (ifStack.size() > 1) {
                         String temp = ifStack.pop();
                         newLabel = ifStack.pop();
@@ -2058,6 +2080,9 @@ public class Compiler {
                     canPop = false;
                 } else if (containsElse) {
                     // do nothing
+                } else if (isParamter) {
+                    if (!whileStack.isEmpty())
+                        newLabel = whileStack.pop();
                 } else {
                     newLabel = ifStack.pop();
                 }

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/Compiler.java" line="1161" mnemonic="3" />
-    <bookmark url="file://$PROJECT_DIR$/src/Compiler.java" line="847" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/src/Compiler.java" line="1559" mnemonic="3" />
+    <bookmark url="file://$PROJECT_DIR$/src/Compiler.java" line="851" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/TCode.java" afterPath="$PROJECT_DIR$/src/TCode.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Compiler.java" afterPath="$PROJECT_DIR$/src/Compiler.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449654711" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366477186096" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366490787188" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
-    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366477005568" ignored="false" />
-    <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366475653254" ignored="false" />
+    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366496384252" ignored="false" />
+    <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366496233752" ignored="false" />
     <file path="/LexicalAnalizer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358821966318" ignored="false" />
     <file path="/Tuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1365271663627" ignored="false" />
     <file path="/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366474268946" ignored="false" />
@@ -30,7 +30,7 @@
     <file path="/FunctionData.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363483514783" ignored="false" />
     <file path="/ClassData.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1360449524258" ignored="false" />
     <file path="/SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1365128685625" ignored="false" />
-    <file path="/a.dummy" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366469874781" ignored="false" />
+    <file path="/a.dummy" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366485022099" ignored="false" />
     <file path="$USER_HOME$/Desktop/testp/src/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449678062" ignored="false" />
     <file path="$USER_HOME$/Desktop/testp/.idea/workspace.xml" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449686335" ignored="false" />
     <file path="$USER_HOME$/Desktop/testp/.idea/misc.xml" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449481722" ignored="false" />
@@ -59,7 +59,7 @@
   <component name="DebuggerManager">
     <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/TCode.java" line="249" class="TCode" package="">
+      <breakpoint url="file://$PROJECT_DIR$/src/TCode.java" line="56" class="TCode" package="">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -72,6 +72,34 @@
         <option name="INSTANCE_FILTERS_ENABLED" value="false" />
         <option name="CONDITION" value="&#13;&#13;JAVA" />
         <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/Compiler.java" line="1081" class="Compiler" package="">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/Compiler.java" line="1556" class="Compiler" package="">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </line_breakpoints>
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
@@ -117,20 +145,30 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Compiler.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Compiler.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Compiler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="2123" column="131" selection-start="118346" selection-end="118346" vertical-scroll-proportion="0.0">
+            <state line="1558" column="96" selection-start="90363" selection-end="90363" vertical-scroll-proportion="0.3837037">
               <folding>
                 <element signature="e#335#342#0" expanded="true" />
                 <element signature="e#396#403#0" expanded="true" />
                 <element signature="e#514#522#0" expanded="true" />
-                <element signature="e#749#757#0" expanded="true" />
-                <element signature="e#922#930#0" expanded="true" />
-                <element signature="e#984#991#0" expanded="true" />
-                <element signature="e#1545#1552#0" expanded="true" />
-                <element signature="e#47715#47722#0" expanded="true" />
+                <element signature="e#804#812#0" expanded="true" />
+                <element signature="e#864#872#0" expanded="true" />
+                <element signature="e#1037#1045#0" expanded="true" />
+                <element signature="e#1099#1106#0" expanded="true" />
+                <element signature="e#1660#1667#0" expanded="true" />
+                <element signature="e#47830#47837#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SAR.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/SAR.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="20" column="0" selection-start="420" selection-end="420" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -164,10 +202,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TCode.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="TCode.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/TCode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="266" column="36" selection-start="10703" selection-end="10703" vertical-scroll-proportion="0.6540698">
+            <state line="56" column="0" selection-start="1500" selection-end="1500" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#530#546#0" expanded="true" />
@@ -210,8 +248,8 @@
         <option value="$PROJECT_DIR$/src/Symbol.java" />
         <option value="$PROJECT_DIR$/src/Assembler.java" />
         <option value="$PROJECT_DIR$/src/LexicalAnalyzer.java" />
-        <option value="$PROJECT_DIR$/src/Compiler.java" />
         <option value="$PROJECT_DIR$/src/TCode.java" />
+        <option value="$PROJECT_DIR$/src/Compiler.java" />
       </list>
     </option>
   </component>
@@ -974,7 +1012,11 @@
       <created>1366477188251</created>
       <updated>1366477188251</updated>
     </task>
-    <option name="localTasksCounter" value="128" />
+    <task id="LOCAL-00128" summary="added mod operator">
+      <created>1366477912028</created>
+      <updated>1366477912028</updated>
+    </task>
+    <option name="localTasksCounter" value="129" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1065,7 +1107,7 @@
     <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="starting setup on mod operator" />
+    <option name="LAST_COMMIT_MESSAGE" value="added mod operator" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -1078,7 +1120,6 @@
     <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="if now work great" />
     <MESSAGE value="further else coding" />
     <MESSAGE value="else now works" />
     <MESSAGE value="else if now works" />
@@ -1103,6 +1144,7 @@
     <MESSAGE value="simplified negative numbers" />
     <MESSAGE value="fixed negative number bug" />
     <MESSAGE value="starting setup on mod operator" />
+    <MESSAGE value="added mod operator" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1187,13 +1229,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/SAR.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="0" selection-start="420" selection-end="420" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/ProgramDriver.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="14" column="0" selection-start="478" selection-end="478" vertical-scroll-proportion="0.0">
@@ -1224,28 +1259,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Compiler.java">
+    <entry file="file://$PROJECT_DIR$/src/SAR.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2123" column="131" selection-start="118346" selection-end="118346" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#335#342#0" expanded="true" />
-            <element signature="e#396#403#0" expanded="true" />
-            <element signature="e#514#522#0" expanded="true" />
-            <element signature="e#749#757#0" expanded="true" />
-            <element signature="e#922#930#0" expanded="true" />
-            <element signature="e#984#991#0" expanded="true" />
-            <element signature="e#1545#1552#0" expanded="true" />
-            <element signature="e#47715#47722#0" expanded="true" />
-          </folding>
+        <state line="20" column="0" selection-start="420" selection-end="420" vertical-scroll-proportion="0.0">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/TCode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="266" column="36" selection-start="10703" selection-end="10703" vertical-scroll-proportion="0.6540698">
+        <state line="56" column="0" selection-start="1500" selection-end="1500" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#530#546#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Compiler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1558" column="96" selection-start="90363" selection-end="90363" vertical-scroll-proportion="0.3837037">
+          <folding>
+            <element signature="e#335#342#0" expanded="true" />
+            <element signature="e#396#403#0" expanded="true" />
+            <element signature="e#514#522#0" expanded="true" />
+            <element signature="e#804#812#0" expanded="true" />
+            <element signature="e#864#872#0" expanded="true" />
+            <element signature="e#1037#1045#0" expanded="true" />
+            <element signature="e#1099#1106#0" expanded="true" />
+            <element signature="e#1660#1667#0" expanded="true" />
+            <element signature="e#47830#47837#0" expanded="true" />
           </folding>
         </state>
       </provider>

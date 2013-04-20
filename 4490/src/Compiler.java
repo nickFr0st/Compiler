@@ -871,7 +871,7 @@ public class Compiler {
                                     cd.setArg1("BEGINWHILE" + controlSar.getKey());
                                 }
                             }
-                            ifStack.pop();
+                            whileStack.pop();
                         }
                     }
 
@@ -2063,6 +2063,8 @@ public class Compiler {
     private void addTempToSAS(SAR opr, Stack<SAR> SAS, String scopePassTwo, boolean isParamter) {
         String newLabel = "";
         boolean containsElse = scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).contains("else");
+        boolean containsWhile = scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).contains("while");
+        String whileKind = scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length());
         if (scopePassTwo.contains(".") && (!ifStack.isEmpty() || !whileStack.isEmpty())) {
             if (!scopePassTwo.substring(scopePassTwo.lastIndexOf("."), scopePassTwo.length()).equals(condTypeScope) || containsElse || isParamter) {
                 if (containsElse && canPop && !ifStack.isEmpty()) {
@@ -2080,11 +2082,12 @@ public class Compiler {
                     canPop = false;
                 } else if (containsElse) {
                     // do nothing
-                } else if (isParamter) {
+                } else if (isParamter || (!containsWhile && condTypeScope.contains("while")) || (containsWhile && condTypeScope.contains("while") && (!whileKind.equals(condTypeScope)))) {
                     if (!whileStack.isEmpty())
                         newLabel = whileStack.pop();
                 } else {
-                    newLabel = ifStack.pop();
+                    if (!ifStack.isEmpty())
+                        newLabel = ifStack.pop();
                 }
             }
         }

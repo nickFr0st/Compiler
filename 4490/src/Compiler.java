@@ -2884,7 +2884,7 @@ public class Compiler {
     private void addToSymbolTable(String type, List<String> params, String returnType, String accessMod, String value, int lineNum) {
         for (String key : symbolTable.keySet()) {
             Symbol s = symbolTable.get(key);
-            if (s.getScope().equals(scope) && s.getValue().equals(value) && s.getKind().equals(type)) {
+            if (s.getScope().equals(scope) && s.getValue().equals(value) && s.getKind().equals(type) && !type.equals("Literal")) {
                 if (value.length() > 1) {
                     char[] test = value.toCharArray();
                     if (test[0] == 'x' && Character.isDigit(test[1])) {
@@ -2902,6 +2902,7 @@ public class Compiler {
         if (type.equals("Class")) {
             symbolTable.put("C" + symIdInr, new Symbol(scope, "C" + symIdInr++, value, type, new ClassData()));
             scope += "." + value;
+
         } else if (type.equals("Function")) {
             if (value.equals("main")) {
                 symbolTable.put("F_MAIN" + symIdInr, new Symbol(scope, "F" + symIdInr++, value, type, new FunctionData(accessMod, params, returnType)));
@@ -2910,6 +2911,7 @@ public class Compiler {
                 symbolTable.put("F" + symIdInr, new Symbol(scope, "F" + symIdInr++, value, type, new FunctionData(accessMod, params, returnType)));
             }
             scope += "." + value;
+
         } else if (type.equals("pvar")) {
             if (returnType.equals("int")) {
                 iCodeList.add(new ICode("P" + symIdInr, "CREATE", ".INT", "", "", "; int " + value));
@@ -2917,6 +2919,7 @@ public class Compiler {
                 iCodeList.add(new ICode("P" + symIdInr, "CREATE", ".BYT", "", "", "; char " + value));
             }
             symbolTable.put("P" + symIdInr, new Symbol(scope, "P" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
+
         } else if (type.equals("Literal")) {
             if (returnType.equals("int")) {
                 iCodeList.add(new ICode("L" + symIdInr, "CREATE", ".INT", "", "", "; int " + value));
@@ -2924,6 +2927,7 @@ public class Compiler {
                 iCodeList.add(new ICode("L" + symIdInr, "CREATE", ".BYT", "", "", "; char " + value));
             }
             symbolTable.put("L" + symIdInr, new Symbol(scope, "L" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
+
         } else if (type.equals("tvar")) {
             if (returnType.equals("int")) {
                 iCodeList.add(new ICode("T" + symIdInr, "CREATE", ".INT", "", "", "; int " + value));
@@ -2931,11 +2935,14 @@ public class Compiler {
                 iCodeList.add(new ICode("T" + symIdInr, "CREATE", ".BYT", "", "", "; char " + value));
             }
             symbolTable.put("T" + symIdInr, new Symbol(scope, "T" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
+
         } else if (type.equals("iovar")) {
             symbolTable.put("IO" + symIdInr, new Symbol(scope, "IO" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
+
         } else if (type.equals("Condition")) {
             symbolTable.put("C" + symIdInr, new Symbol(scope, "C" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
             scope += "." + value;
+
         } else {
             if (returnType.equals("int")) {
                 iCodeList.add(new ICode("V" + symIdInr, "CREATE", ".INT", "", "", "; int " + value));

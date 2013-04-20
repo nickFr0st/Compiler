@@ -2120,6 +2120,8 @@ public class Compiler {
                 iCodeList.add(new ICode(newLabel, "MUL", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " * " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
             } else if (oprName.equals("/")) {
                 iCodeList.add(new ICode(newLabel, "DIV", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " / " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
+            } else if (oprName.equals("%")) {
+                iCodeList.add(new ICode(newLabel, "MOD", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " % " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi ));
             }
 
         } else if (opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.IO_OPR.name())) {

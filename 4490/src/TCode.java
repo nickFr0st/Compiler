@@ -247,6 +247,25 @@ public class TCode {
                 continue;
             }
 
+            if (iCode.getOperation().equals("MOD")) {
+                String argReg1 = getRegister(iCode.getArg1());
+                String argReg2 = getRegister(iCode.getArg2());
+
+                if (iCode.getLabel().equals("")) {
+                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                } else {
+                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
+                }
+                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+
+
+
+
+                freeResource(argReg1);
+                freeResource(argReg2);
+                continue;
+            }
+
             if (iCode.getOperation().equals("WRTI")) {
                 String argReg1 = getRegister(iCode.getArg1());
                 if (iCode.getLabel().equals("")) {

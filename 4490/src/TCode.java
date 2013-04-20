@@ -53,6 +53,9 @@ public class TCode {
     }
 
     public void buildCode() {
+
+        tCode.add("CLR .INT 0");
+
         for (String key : symbolTable.keySet()) {
             Symbol s = symbolTable.get(key);
 
@@ -84,7 +87,7 @@ public class TCode {
             }
         }
 
-        tCode.add("CLR .INT 0");
+        tCode.add("");
         tCode.add("LDR R0 CLR");
         tCode.add("LDR R1 CLR");
         tCode.add("ADI R1 1");
@@ -273,7 +276,7 @@ public class TCode {
                 if (iCode.getLabel().equals("")) {
                     tCode.add("TRP 2");
                 } else {
-                    tCode.add(iCode.getLabel() + "TRP 2");
+                    tCode.add(iCode.getLabel() + " TRP 2");
                 }
                 String argReg1 = getRegister(iCode.getArg1());
 

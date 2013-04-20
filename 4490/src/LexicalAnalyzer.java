@@ -194,25 +194,34 @@ public class LexicalAnalyzer {
                     }
                 }
 
-                for (String item : tokenizer) {
-                    if (tokenizer.length < 1 && item.trim().isEmpty()) {
+                for (int i = 0; i < tokenizer.length; i++) { //String item : tokenizer) {
+                    if (tokenizer.length < 1 && tokenizer[1].trim().isEmpty()) {
                         lineCount++;
                         continue;
                     }
 
                     int originalListSize = tokenList.size();
                     for (String s : symbolCheck) {
-                        while (item.contains(s) && item.length() > 0) {
+                        while (tokenizer[i].contains(s) && tokenizer[i].length() > 0) {
                             if (s.equals("'")) {
-                                s = checkForChars(item, s);
+                                s = checkForChars(tokenizer[i], s);
                             }
 
-                            item = breakDownToken(item, s);
+                            if (s.equals("-") && tokenizer[i].startsWith("-") && tokenizer[i].length() > 1) {
+                                String breaker = tokenizer[i];
+                                if (tokenizer[i].endsWith(";")) {
+                                    breaker = breaker.substring(0, breaker.length() -1);
+                                }
+                                tokenizer[i] = breakDownToken(tokenizer[i], breaker);
+                                continue;
+                            }
+
+                            tokenizer[i] = breakDownToken(tokenizer[i], s);
                         }
                     }
 
                     if (originalListSize == tokenList.size()) {
-                        tokenList.add(item);
+                        tokenList.add(tokenizer[i]);
                     }
                 }
 

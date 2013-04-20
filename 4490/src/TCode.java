@@ -250,6 +250,7 @@ public class TCode {
             if (iCode.getOperation().equals("MOD")) {
                 String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
+                String argReg3 = getRegister(iCode.getResult());
 
                 if (iCode.getLabel().equals("")) {
                     tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
@@ -257,12 +258,16 @@ public class TCode {
                     tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
                 }
                 tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+                tCode.add("LDR " + argReg3 + " " + iCode.getArg1());
 
-
-
+                tCode.add("DIV " + argReg3 + " " + argReg2);
+                tCode.add("MUL " + argReg3 + " " + argReg2);
+                tCode.add("SUB " + argReg1 + " " + argReg3);
+                tCode.add("STR " + argReg1 + " " + iCode.getResult() + " " + iCode.getComment());
 
                 freeResource(argReg1);
                 freeResource(argReg2);
+                freeResource(argReg3);
                 continue;
             }
 

@@ -858,6 +858,7 @@ public class Compiler {
                     eIndex = i + 1;
                     Tuple tempItem = new Tuple(ifList.remove(), item.type, item.lineNum);
                     SAR controlSar = new SAR(tempItem, scopePassTwo, "", "");
+
                     if (!iExist(controlSar, SAS, tempList, scopePassTwo, OS)) {
                         errorList += "invalid while statement. Line: " + item.lineNum + "\n";
                     }
@@ -866,19 +867,22 @@ public class Compiler {
                     if (!iCodeList.isEmpty()) {
                         if (iCodeList.get(iCodeList.size() - 1).getArg1().contains("BEGINWHILE")) {
                             String tempArg = iCodeList.get(iCodeList.size() - 1).getArg1();
-                            String removeLabel = "ENDWHILE" + tempArg.substring(tempArg.length() - 5, tempArg.length());
+                            String removeLabel = "ENDWHILE" + tempArg.substring(tempArg.length() - 4, tempArg.length());
 
                             for (ICode cd : iCodeList) {
                                 if (cd.getArg2().equals(removeLabel)) {
                                     cd.setArg2("BEGINWHILE" + controlSar.getKey());
                                 }
+                                if (cd.getArg1().equals(removeLabel)) {
+                                    cd.setArg1("BEGINWHILE" + controlSar.getKey());
+                                }
                             }
+                            ifStack.pop();
                         }
                     }
 
                     ifStack.push("BEGINWHILE" + controlSar.getKey());
                     validateRelationalParametersSemanticWhile(tempList, SAS, OS, scopePassTwo, tempItem, 0, controlSar.getKey(), 0, 0);
-                    //ifStack.push("ENDWHILE" + controlSar.getKey());
                     i = eIndex + 1;
                     continue;
                 }
@@ -1080,12 +1084,37 @@ public class Compiler {
                             if ((subScope.startsWith(".if") && Character.isDigit(subScope.toCharArray()[3])) || (subScope.startsWith(".else") && Character.isDigit(subScope.toCharArray()[5])) || (subScope.startsWith(".while") && Character.isDigit(subScope.toCharArray()[6]))) {
                                 if ((subScope.startsWith(".while") && Character.isDigit(subScope.toCharArray()[6]))) {
 
-                                    if (!ifStack.isEmpty() || ifStack.size() > 1) {
+                                    if (ifStack.size() > 1) {
 
                                         String tempItem = ifStack.pop();
                                         iCodeList.add(new ICode("", "JMP", ifStack.pop(), "", "", ""));
                                         ifStack.push(tempItem);
 
+                                        LexicalAnalyzer tempLex = new LexicalAnalyzer();
+                                        tempLex.setLexicalList(lexicalAnalyzer.getLexicalList());
+                                        tempLex.setLexPtr(lexicalAnalyzer.getLexPtr());
+
+                                        Tuple lexC = null;
+                                        if (tempLex.hasNext()) {
+                                            lexC = tempLex.getNext();
+                                        }
+
+                                        if (lexC != null && lexC.lexi.equals("}")) {
+                                            if (ifStack.size() > 1) {
+                                                String itemToBeReplaced = ifStack.pop();
+
+                                                if (!ifStack.isEmpty()) {
+                                                    for (int u = iCodeList.size() - 1; u >= 0; u--) {
+                                                        if (iCodeList.get(u).getArg2().equals((itemToBeReplaced))) {
+                                                            iCodeList.get(u).setArg2(ifStack.peek());
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                useConditionInReturn = true;
+                                            }
+                                        }
+                                    } else if (ifStack.size() == 1) {
                                         LexicalAnalyzer tempLex = new LexicalAnalyzer();
                                         tempLex.setLexicalList(lexicalAnalyzer.getLexicalList());
                                         tempLex.setLexPtr(lexicalAnalyzer.getLexPtr());

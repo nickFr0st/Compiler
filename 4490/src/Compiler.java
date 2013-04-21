@@ -799,7 +799,6 @@ public class Compiler {
                     continue;
                 }
 
-                // todo: need to finish this stuff (get labels and loops setup)
                 if (item.lexi.equals("if")) {
                     eIndex = i + 1;
                     Tuple tempItem = new Tuple(ifList.remove(), item.type, item.lineNum);
@@ -811,13 +810,13 @@ public class Compiler {
                     i = eIndex + 1;
                     continue;
                 } else if (item.lexi.equals("else")) {
-                    eIndex = i + 1;
                     Tuple tempItem = new Tuple(ifList.remove(), item.type, item.lineNum);
                     SAR controlSar = new SAR(tempItem, scopePassTwo, "", "");
                     canPop = true;
                     if (!iExist(controlSar, SAS, tempList, scopePassTwo, OS)) {
                         errorList += "invalid if statement. Line: " + item.lineNum + "\n";
                     }
+                    eIndex = i + 1;
 
                     condLabel = "SKIPELSE" + controlSar.getKey();
                     iCodeList.add(new ICode("", "JMP", "SKIPELSE" + controlSar.getKey(), "", "", ""));
@@ -1154,7 +1153,36 @@ public class Compiler {
                                     }
 
                                     if (lexC != null && lexC.lexi.equals("}")) {
-                                        if (ifStack.size() > 1) {
+                                        String inScope = scopePassTwo.substring(0, scopePassTwo.lastIndexOf("."));
+                                        boolean whileInScope = inScope.substring(inScope.lastIndexOf("."), inScope.length()).contains("while");
+
+
+                                        if (whileInScope) {
+                                            if (whileStack.size() > 1) {
+                                                String itemToBeReplaced = ifStack.pop();
+                                                String replacer;
+
+                                                if (whileStack.peek().startsWith("ENDWHILE")) {
+                                                    String end = whileStack.pop();
+                                                    replacer = whileStack.peek();
+                                                    whileStack.push(end);
+                                                } else {
+                                                    replacer = whileStack.peek();
+                                                }
+
+
+                                                if (!whileStack.isEmpty()) {
+                                                    for (int u = iCodeList.size() - 1; u >= 0; u--) {
+                                                        if (iCodeList.get(u).getArg2().equals((itemToBeReplaced))) {
+                                                            iCodeList.get(u).setArg2(replacer);
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                useConditionInReturnWhile = true;
+                                            }
+
+                                        } else if (ifStack.size() > 1) {
                                             String itemToBeReplaced = ifStack.pop();
                                             String replacer;
 
@@ -1165,7 +1193,6 @@ public class Compiler {
                                             } else {
                                                 replacer = ifStack.peek();
                                             }
-
 
                                             if (!ifStack.isEmpty()) {
                                                 for (int u = iCodeList.size() - 1; u >= 0; u--) {

@@ -328,14 +328,20 @@ public class TCode {
                 String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
                 String argReg3 = getRegister(iCode.getResult());
-                String L3 = "L" + condIncr++;
-                String L4 = "L" + condIncr;
 
                 if (iCode.getLabel().equals("")) {
-                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                    if (useCondLabel) {
+                        tCode.set(tCode.size() - 1, "L" + condIncr++ + " LDR " + argReg1 + " " + iCode.getArg1());
+                    } else {
+                        tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                    }
                 } else {
                     tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
                 }
+
+                String L3 = "L" + condIncr++;
+                String L4 = "L" + condIncr;
+
                 tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
                 tCode.add("LDR " + argReg3 + " " + iCode.getResult());
 
@@ -352,23 +358,29 @@ public class TCode {
 
                 useCondLabel = true;
                 tCode.add(L4);
+                continue;
             }
 
             if (iCode.getOperation().equals("LT")) {
                 String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
                 String argReg3 = getRegister(iCode.getResult());
-                String L3 = "L" + condIncr++;
-                String L4 = "L" + condIncr;
 
                 if (iCode.getLabel().equals("")) {
-                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                    if (useCondLabel) {
+                        tCode.set(tCode.size() - 1, "L" + condIncr++ + " LDR " + argReg1 + " " + iCode.getArg1());
+                    } else {
+                        tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                    }
                 } else {
                     tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
                 }
+
+                String L3 = "L" + condIncr++;
+                String L4 = "L" + condIncr;
+
                 tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
                 tCode.add("LDR " + argReg3 + " " + iCode.getResult());
-
                 tCode.add("MOV " + argReg3 + " " + argReg1);
                 tCode.add("CMP " + argReg3 + " " + argReg2);
                 tCode.add("BLT " + argReg3 + " " + L3 + " ; " + iCode.getResult() + " < " + iCode.getArg2() + " GOTO " + L3);
@@ -382,20 +394,28 @@ public class TCode {
 
                 useCondLabel = true;
                 tCode.add(L4);
+                continue;
             }
 
             if (iCode.getOperation().equals("GT")) {
                 String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
                 String argReg3 = getRegister(iCode.getResult());
-                String L3 = "L" + condIncr++;
-                String L4 = "L" + condIncr;
+
 
                 if (iCode.getLabel().equals("")) {
-                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                    if (useCondLabel) {
+                        tCode.set(tCode.size() - 1, "L" + condIncr++ + " LDR " + argReg1 + " " + iCode.getArg1());
+                    } else {
+                        tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                    }
                 } else {
                     tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
                 }
+
+                String L3 = "L" + condIncr++;
+                String L4 = "L" + condIncr;
+
                 tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
                 tCode.add("LDR " + argReg3 + " " + iCode.getResult());
 
@@ -412,20 +432,27 @@ public class TCode {
 
                 useCondLabel = true;
                 tCode.add(L4);
+                continue;
             }
 
             if (iCode.getOperation().equals("NE")) {
                 String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
                 String argReg3 = getRegister(iCode.getResult());
-                String L3 = "L" + condIncr++;
-                String L4 = "L" + condIncr;
 
                 if (iCode.getLabel().equals("")) {
-                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                    if (useCondLabel) {
+                        tCode.set(tCode.size() - 1, "L" + condIncr++ + " LDR " + argReg1 + " " + iCode.getArg1());
+                    } else {
+                        tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                    }
                 } else {
                     tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
                 }
+
+                String L3 = "L" + condIncr++;
+                String L4 = "L" + condIncr;
+
                 tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
                 tCode.add("LDR " + argReg3 + " " + iCode.getResult());
 
@@ -442,20 +469,27 @@ public class TCode {
 
                 useCondLabel = true;
                 tCode.add(L4);
+                continue;
             }
 
             if (iCode.getOperation().equals("LE")) {
                 String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
                 String argReg3 = getRegister(iCode.getResult());
-                String L3 = "L" + condIncr++;
-                String L4 = "L" + condIncr;
 
                 if (iCode.getLabel().equals("")) {
-                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                    if (useCondLabel) {
+                        tCode.set(tCode.size() - 1, "L" + condIncr++ + " LDR " + argReg1 + " " + iCode.getArg1());
+                    } else {
+                        tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                    }
                 } else {
                     tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
                 }
+
+                String L3 = "L" + condIncr++;
+                String L4 = "L" + condIncr;
+
                 tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
                 tCode.add("LDR " + argReg3 + " " + iCode.getResult());
 
@@ -475,20 +509,27 @@ public class TCode {
 
                 useCondLabel = true;
                 tCode.add(L4);
+                continue;
             }
 
             if (iCode.getOperation().equals("GE")) {
                 String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
                 String argReg3 = getRegister(iCode.getResult());
-                String L3 = "L" + condIncr++;
-                String L4 = "L" + condIncr;
 
                 if (iCode.getLabel().equals("")) {
-                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                    if (useCondLabel) {
+                        tCode.set(tCode.size() - 1, "L" + condIncr++ + " LDR " + argReg1 + " " + iCode.getArg1());
+                    } else {
+                        tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                    }
                 } else {
                     tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
                 }
+
+                String L3 = "L" + condIncr++;
+                String L4 = "L" + condIncr;
+
                 tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
                 tCode.add("LDR " + argReg3 + " " + iCode.getResult());
 
@@ -508,6 +549,7 @@ public class TCode {
 
                 useCondLabel = true;
                 tCode.add(L4);
+                continue;
             }
 
             if (iCode.getOperation().equals("AND")) {
@@ -540,6 +582,7 @@ public class TCode {
 
                 useCondLabel = true;
                 tCode.add(L4);
+                continue;
             }
 
             if (iCode.getOperation().equals("OR")) {
@@ -572,6 +615,7 @@ public class TCode {
 
                 useCondLabel = true;
                 tCode.add(L4);
+                continue;
             }
 
             if (iCode.getOperation().equals("BF")) {
@@ -584,6 +628,7 @@ public class TCode {
                 }
                 tCode.add("BRZ " + argReg1 + " " + iCode.getArg2() + " " + iCode.getComment());
                 freeResource(argReg1);
+                continue;
             }
 
             if (iCode.getOperation().equals("BT")) {

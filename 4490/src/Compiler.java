@@ -2133,15 +2133,7 @@ public class Compiler {
                 errorList += "left and right operand types are incompatible. Line: " + opr.getLexi().lineNum + "\n";
             }
 
-            if (RHS.getKey().startsWith("L")) {
-                if (RHS.getType().equals("int")) {
-                    iCodeList.add(new ICode(newLabel, "MOVI", LHS.getKey(), RHS.getKey(), "", "; " + LHS.getLexi().lexi + " = " + RHS.getLexi().lexi));
-                } else if (RHS.getType().equals("char")) {
-                    iCodeList.add(new ICode(newLabel, "MOVC", LHS.getKey(), RHS.getKey(), "", "; " + LHS.getLexi().lexi + " = " + RHS.getLexi().lexi));
-                }
-            } else {
-                iCodeList.add(new ICode(newLabel, "MOV", LHS.getKey(), RHS.getKey(), "", "; " + LHS.getLexi().lexi + " = " + RHS.getLexi().lexi));
-            }
+            iCodeList.add(new ICode(newLabel, "MOV", LHS.getKey(), RHS.getKey(), "", "; " + LHS.getLexi().lexi + " = " + RHS.getLexi().lexi));
 
         } else if (opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
             if (SAS.size() < 2) {

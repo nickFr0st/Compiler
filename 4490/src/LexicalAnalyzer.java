@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by IntelliJ IDEA.
@@ -263,7 +264,7 @@ public class LexicalAnalyzer {
                         tokenType = tokenTypesEnum.EOT.toString();
                     } else if (token.matches("[\\*\\+-/%]")) {
                         tokenType = tokenTypesEnum.MATH_OPR.toString();
-                    } else if (token.matches("'" + "[\\w><_,: ]" + "'") || token.matches("'\\" + "\\[\\w]" + "'")) {
+                    } else if (token.matches("'" + "\\p{Print}" + "'") || token.matches("'\\" + "\\[n|s]" + "'")) {
                         tokenType = tokenTypesEnum.CHARACTER.toString();
                     } else if (token.matches("^[a-zA-Z]+[a-zA-Z0-9_]*$") && token.length() < 80) {
                         tokenType = tokenTypesEnum.IDENTIFIER.toString();
@@ -287,11 +288,11 @@ public class LexicalAnalyzer {
 
         if (index < size - 3) {
             if (item.charAt(index + 2) == '\'') {
-                if (item.substring(index + 1, index + 2).matches("[\\w><_,: ]")) {
+                if (Pattern.matches("\\p{Print}", item.substring(index + 1, index + 2))) {
                     breakDownItem = item.substring(index, index + 3);
                 }
             } else if (item.charAt(index + 1) == '\\' && item.charAt(index + 3) == '\'') {
-                if (item.substring(index + 2, index + 3).matches("[\\w><_,: ]")) {
+                if (item.substring(index + 2, index + 3).matches("[n|s]")) {
                     breakDownItem = item.substring(index, index + 4);
                 }
             }
@@ -300,7 +301,7 @@ public class LexicalAnalyzer {
 
         if (index < size - 2) {
             if (item.charAt(index + 2) == '\'') {
-                if (item.substring(index + 1, index + 2).matches("[\\w><_,: ]")) {  // || item.substring(index + 1, index + 2).matches("[>]")
+                if (item.substring(index + 1, index + 2).matches("\\p{Print}]")) {
                     breakDownItem = item.substring(index, index + 3);
                 }
             }

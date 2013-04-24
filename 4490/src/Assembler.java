@@ -600,7 +600,13 @@ public class Assembler {
                     }
                     break;
                 case CMP:
-                    newValue = reg.get(instructionList.get(i).getOpd1()).compareTo(reg.get(instructionList.get(i).getOpd2()));
+
+                    if (reg.get(instructionList.get(i).getOpd1()).matches("^(-|\\+)?[0-9]+$") && reg.get(instructionList.get(i).getOpd2()).matches("^(-|\\+)?[0-9]+$")) {
+                        newValue = new Integer(reg.get(instructionList.get(i).getOpd1())).compareTo(new Integer(reg.get(instructionList.get(i).getOpd2())));
+                    } else {
+                        newValue = reg.get(instructionList.get(i).getOpd1()).compareTo(reg.get(instructionList.get(i).getOpd2()));
+                    }
+
                     reg.put(instructionList.get(i).getOpd1(), newValue.toString());
                     break;
                 case JMP:

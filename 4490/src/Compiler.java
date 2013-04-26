@@ -28,6 +28,7 @@ public class Compiler {
 
     private String condLabel = "";
     private String condTypeScope = "";
+    private int condIncr = 0;
 
     private Queue<String> ifList = new ArrayDeque<String>();
 
@@ -455,8 +456,8 @@ public class Compiler {
                             continue;
                         }
 
-                        ifList.add("if" + symIdInr);
-                        addToSymbolTable("Condition", new ArrayList<String>(), "", "private", "if" + symIdInr, currentLex.lineNum);
+                        ifList.add("if" + condIncr);
+                        addToSymbolTable("Condition", new ArrayList<String>(), "", "private", "if" + condIncr, currentLex.lineNum);
                         previousLex = currentLex;
                         continue;
                     }
@@ -491,8 +492,8 @@ public class Compiler {
                             continue;
                         }
 
-                        ifList.add("else" + symIdInr);
-                        addToSymbolTable("Condition", new ArrayList<String>(), "", "private", "else" + symIdInr, currentLex.lineNum);
+                        ifList.add("else" + condIncr);
+                        addToSymbolTable("Condition", new ArrayList<String>(), "", "private", "else" + condIncr, currentLex.lineNum);
                         previousLex = currentLex;
                         continue;
                     }
@@ -522,8 +523,8 @@ public class Compiler {
                             continue;
                         }
 
-                        ifList.add("while" + symIdInr);
-                        addToSymbolTable("Condition", new ArrayList<String>(), "", "private", "while" + symIdInr, currentLex.lineNum);
+                        ifList.add("while" + condIncr);
+                        addToSymbolTable("Condition", new ArrayList<String>(), "", "private", "while" + condIncr, currentLex.lineNum);
                         previousLex = currentLex;
                         continue;
                     }
@@ -729,6 +730,8 @@ public class Compiler {
         lexicalAnalyzer.resetList();
         String scopePassTwo = "g";
 
+        condIncr = 0;
+
 
         while (lexicalAnalyzer.hasNext()) {
             // setting up items to be parsed
@@ -769,11 +772,11 @@ public class Compiler {
                     } else if (tempList.get(0).lexi.trim().equals("if") || tempList.get(0).lexi.trim().equals("else") || tempList.get(0).lexi.trim().equals("while")) {
 
                         if (tempList.get(0).lexi.trim().equals("else") && tempList.get(1).lexi.trim().equals("if")) {
-                            condTypeScope = "." + tempList.get(1).lexi + symIdInr;
-                            scopePassTwo += "." + tempList.get(1).lexi + symIdInr++;
+                            condTypeScope = "." + tempList.get(1).lexi + condIncr;
+                            scopePassTwo += "." + tempList.get(1).lexi + condIncr++;
                         } else {
-                            condTypeScope = "." + tempList.get(0).lexi + symIdInr;
-                            scopePassTwo += "." + tempList.get(0).lexi + symIdInr++;
+                            condTypeScope = "." + tempList.get(0).lexi + condIncr;
+                            scopePassTwo += "." + tempList.get(0).lexi + condIncr++;
                         }
 
                     } else {
@@ -2113,7 +2116,7 @@ public class Compiler {
                     if (!whileStack.isEmpty())
                         newLabel = whileStack.pop();
                 } else {
-                    if (!ifStack.isEmpty())
+                    if (!ifStack.isEmpty() && !ContainedInIfStack(scopePassTwo))
                         newLabel = ifStack.pop();
                 }
             }
@@ -2168,7 +2171,7 @@ public class Compiler {
             } else if (oprName.equals("/")) {
                 iCodeList.add(new ICode(newLabel, "DIV", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " / " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
             } else if (oprName.equals("%")) {
-                iCodeList.add(new ICode(newLabel, "MOD", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " % " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi ));
+                iCodeList.add(new ICode(newLabel, "MOD", LHS.getKey(), RHS.getKey(), temp.getKey(), "; " + LHS.getLexi().lexi + " % " + RHS.getLexi().lexi + " -> " + temp.getLexi().lexi));
             }
 
         } else if (opr.getLexi().type.equals(LexicalAnalyzer.tokenTypesEnum.IO_OPR.name())) {
@@ -2290,6 +2293,15 @@ public class Compiler {
             condLabel = "";
             condTypeScope = "";
         }
+    }
+
+    private boolean ContainedInIfStack(String scopePassTwo) {
+        String valueNum = ifStack.peek().substring(ifStack.peek().indexOf("C") + 1, ifStack.peek().length());
+        if (ifStack.peek().contains("ELSE"))
+            valueNum = "else" + valueNum;
+        else if (ifStack.peek().contains("IF"))
+            valueNum = "if" + valueNum;
+        return scopePassTwo.contains(valueNum);
     }
 
     private boolean sarEqualAssignment(SAR rhs, SAR lhs) {
@@ -2987,7 +2999,7 @@ public class Compiler {
             symbolTable.put("IO" + symIdInr, new Symbol(scope, "IO" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
 
         } else if (type.equals("Condition")) {
-            symbolTable.put("C" + symIdInr, new Symbol(scope, "C" + symIdInr++, value, type, new VaribleData(returnType, accessMod)));
+            symbolTable.put("C" + condIncr, new Symbol(scope, "C" + condIncr++, value, type, new VaribleData(returnType, accessMod)));
             scope += "." + value;
 
         } else {

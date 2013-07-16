@@ -60,7 +60,11 @@ public class LexicalAnalyzer {
         IO_OPR
     }
 
-    protected void setKeyWords() {
+    public List<String> getKeyWords() {
+        return keyWords;
+    }
+
+    public void setKeyWords() {
         keyWords = new ArrayList<String>();
         keyWords.add("atoi");
         keyWords.add("bool");
@@ -87,7 +91,7 @@ public class LexicalAnalyzer {
         keyWords.add("while");
     }
 
-    protected void setSymbolCheck() {
+    public void setSymbolCheck() {
         symbolCheck = new ArrayList<String>();
         // boolean operators
         symbolCheck.add("&&");
@@ -137,6 +141,10 @@ public class LexicalAnalyzer {
 
         // end of line
         symbolCheck.add(";");
+    }
+
+    public List<String> getSymbolCheck() {
+        return symbolCheck;
     }
 
     public void processFile(String fileName) {

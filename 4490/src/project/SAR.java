@@ -1,3 +1,5 @@
+package project;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Nathanael

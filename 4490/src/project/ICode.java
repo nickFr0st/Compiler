@@ -1,3 +1,5 @@
+package project;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Nathanael
@@ -71,7 +73,7 @@ public class ICode {
 
     @Override
     public String toString() {
-        return "ICode{" +
+        return "project.ICode{" +
                 "label='" + label + '\'' +
                 ", operation='" + operation + '\'' +
                 ", arg1='" + arg1 + '\'' +

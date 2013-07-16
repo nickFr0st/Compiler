@@ -1,5 +1,8 @@
+package project.tests;
+
 import org.junit.Before;
 import org.junit.Test;
+import project.Tuple;
 
 import static org.junit.Assert.assertEquals;
 
@@ -11,11 +14,11 @@ import static org.junit.Assert.assertEquals;
  */
 
 public class TupleTest {
-    Tuple tuple;
+    private Tuple tuple;
 
     @Before
     public void setUp() throws Exception {
-        tuple = new Tuple();
+        tuple = new Tuple("l", "t", 1);
     }
 
     @Test

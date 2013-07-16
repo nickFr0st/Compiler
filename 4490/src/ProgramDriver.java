@@ -11,7 +11,9 @@ public class ProgramDriver {
         LinkedHashMap<String, Symbol> symbolTable = new LinkedHashMap<String, Symbol>();
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
         lexicalAnalyzer.processFile("test2.kxi");
-        Compiler syntaxAnalyzer = new Compiler(lexicalAnalyzer, symbolTable);
-        syntaxAnalyzer.evaluate();
+        Compiler compiler = new Compiler(lexicalAnalyzer);
+//        Compiler syntaxAnalyzer = new Compiler(lexicalAnalyzer, symbolTable);
+//        syntaxAnalyzer.evaluate();
+        compiler.evaluate();
     }
 }

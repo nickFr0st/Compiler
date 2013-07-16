@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Created by IntelliJ IDEA.
- * User: nmalloch
- * Date: 1/8/13
- * Time: 12:05 PM
+ * Created with IntelliJ IDEA.
+ * User: Nathanael
+ * Date: 4/27/13
+ * Time: 7:55 AM
  */
 public class LexicalAnalyzer {
     private List<String> keyWords;
@@ -43,10 +43,9 @@ public class LexicalAnalyzer {
         CHARACTER,
         IDENTIFIER,
         PUNCTUATION,
-        KEYWORD,
         MATH_OPR,
-        RELATIONAL_OPR,
         BOOLEAN_OPR,
+        LOGICAL_OPR,
         ASSIGNMENT_OPR,
         ARRAY_BEGIN,
         ARRAY_END,
@@ -169,9 +168,9 @@ public class LexicalAnalyzer {
 
                 tokenList = new ArrayList<String>();
                 // break up string by spaces
-                for (int i = 0; i < line.length(); i++){
+                for (int i = 0; i < line.length(); i++) {
                     if (i > 0 && i < line.length()) {
-                        if (line.toCharArray()[i] == ' ' && line.toCharArray()[i -1] == '\'' && line.toCharArray()[i +1] == '\'') {
+                        if (line.toCharArray()[i] == ' ' && line.toCharArray()[i - 1] == '\'' && line.toCharArray()[i + 1] == '\'') {
                             StringBuilder sb = new StringBuilder(line);
                             sb.setCharAt(i, 'ƒ');
                             line = sb.toString();
@@ -183,9 +182,9 @@ public class LexicalAnalyzer {
 
                 for (int j = 0; j < tokenizer.length; j++) {
                     if (tokenizer[j].contains("ƒ")) {
-                        for (int i = 0; i < tokenizer[j].length(); i++){
+                        for (int i = 0; i < tokenizer[j].length(); i++) {
                             if (i > 0 && i < tokenizer[j].length()) {
-                                if (tokenizer[j].toCharArray()[i] == 'ƒ' && tokenizer[j].toCharArray()[i -1] == '\'' && tokenizer[j].toCharArray()[i +1] == '\'') {
+                                if (tokenizer[j].toCharArray()[i] == 'ƒ' && tokenizer[j].toCharArray()[i - 1] == '\'' && tokenizer[j].toCharArray()[i + 1] == '\'') {
                                     StringBuilder sb = new StringBuilder(tokenizer[j]);
                                     sb.setCharAt(i, ' ');
                                     tokenizer[j] = sb.toString();
@@ -211,7 +210,16 @@ public class LexicalAnalyzer {
                             if (s.equals("-") && tokenizer[i].startsWith("-") && tokenizer[i].length() > 1) {
                                 String breaker = tokenizer[i];
                                 if (tokenizer[i].endsWith(";")) {
-                                    breaker = breaker.substring(0, breaker.length() -1);
+                                    breaker = breaker.substring(0, breaker.length() - 1);
+                                }
+                                tokenizer[i] = breakDownToken(tokenizer[i], breaker);
+                                continue;
+                            }
+
+                            if (s.equals("+") && tokenizer[i].startsWith("+") && tokenizer[i].length() > 1 && tokenizer[i].substring(1, tokenizer[i].length()).matches("^[0-9]+?")) {
+                                String breaker = tokenizer[i];
+                                if (tokenizer[i].endsWith(";")) {
+                                    breaker = breaker.substring(0, breaker.length() - 1);
                                 }
                                 tokenizer[i] = breakDownToken(tokenizer[i], breaker);
                                 continue;
@@ -235,15 +243,20 @@ public class LexicalAnalyzer {
                     String tokenType = tokenTypesEnum.UNKNOWN.toString();
 
                     if (keyWords.contains(token.trim())) {
-                        tokenType = tokenTypesEnum.KEYWORD.toString();
+                        String temp = token.trim();
+                        if (temp.equals(ModifierTypeConst.PRIVATE.getKey()) || temp.equals(ModifierTypeConst.PUBLIC.getKey())) {
+                            tokenType = "modifier";
+                        } else {
+                            tokenType = temp;
+                        }
                     } else if (token.matches("^[-|\\+]?[0-9]+$")) {
                         tokenType = tokenTypesEnum.NUMBER.toString();
                     } else if (token.equals("&&") || token.equals("||")) {
-                        tokenType = tokenTypesEnum.BOOLEAN_OPR.toString();
+                        tokenType = tokenTypesEnum.LOGICAL_OPR.toString();
                     } else if (token.equals(">>") || token.equals("<<")) {
                         tokenType = tokenTypesEnum.IO_OPR.toString();
                     } else if (token.equals(":=") || token.equals("<=") || token.equals(">=") || token.equals("==") || token.equals("<") || token.equals(">") || token.equals("!=")) {
-                        tokenType = tokenTypesEnum.RELATIONAL_OPR.toString();
+                        tokenType = tokenTypesEnum.BOOLEAN_OPR.toString();
                     } else if (token.equals("=")) {
                         tokenType = tokenTypesEnum.ASSIGNMENT_OPR.toString();
                     } else if (token.equals("(")) {
@@ -267,7 +280,11 @@ public class LexicalAnalyzer {
                     } else if (token.matches("'" + "\\p{Print}" + "'") || token.matches("'\\" + "\\[n|s]" + "'")) {
                         tokenType = tokenTypesEnum.CHARACTER.toString();
                     } else if (token.matches("^[a-zA-Z]+[a-zA-Z0-9_]*$") && token.length() < 80) {
-                        tokenType = tokenTypesEnum.IDENTIFIER.toString();
+                        if (Character.isUpperCase(token.toCharArray()[0])) {
+                            tokenType = KeyConst.CLASS_NAME.getKey();
+                        } else {
+                            tokenType = tokenTypesEnum.IDENTIFIER.toString();
+                        }
                     }
 
                     lexicalList.add(new Tuple(token, tokenType, lineCount));
@@ -332,7 +349,11 @@ public class LexicalAnalyzer {
                     tokenList.add(temp);
                 }
             }
-            tokenList.add(breakDownItem);
+            if (breakDownItem.startsWith("+") && breakDownItem.substring(1, breakDownItem.length()).matches("^[0-9]+?")) {
+                tokenList.add(breakDownItem.substring(1, breakDownItem.length()));
+            } else {
+                tokenList.add(breakDownItem);
+            }
 
             size = tokenList.size();
             item = item.trim().substring(item.indexOf(breakDownItem) + breakLength, item.length());
@@ -356,24 +377,31 @@ public class LexicalAnalyzer {
         return lexPtr < lexicalList.size();
     }
 
-    public Tuple getNext() {
-        return lexicalList.get(lexPtr++);
-    }
-
-    public Tuple peekNext() {
-        if (lexPtr >= lexicalList.size() -1) {
-            return null;
-        }
-        return lexicalList.get(lexPtr + 1);
-    }
-
-    public Tuple get(int ptr) {
+    public Tuple getToken() {
         try {
-            lexicalList.get(ptr);
-        } catch (IndexOutOfBoundsException e) {
-            return null;
+            return lexicalList.get(lexPtr);
+        } catch (Exception e) {
+            return new NullTuple();
         }
-        return lexicalList.get(ptr);
+    }
+
+    public Tuple peek() {
+        try {
+            return lexicalList.get(lexPtr + 1);
+        } catch (Exception e) {
+            return new NullTuple();
+        }
+    }
+
+    public Tuple previousToken() {
+        if (lexPtr == 0) {
+            return new NullTuple();
+        }
+        return lexicalList.get(lexPtr - 1);
+    }
+
+    public void nextToken() {
+        lexPtr++;
     }
 
     public void resetList() {

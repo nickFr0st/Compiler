@@ -9,6 +9,12 @@ public class Tuple {
     public String type;
     public int lineNum;
 
+    /**
+     * used for nullTuple
+     */
+    public Tuple() {
+    }
+
     public Tuple(String lexi, String type, int lineNum) {
         this.lexi = lexi;
         this.type = type;

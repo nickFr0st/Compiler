@@ -5,9 +5,9 @@
  * Time: 7:15 PM
  */
 public class Tuple {
-    public String lexi;
-    public String type;
-    public int lineNum;
+    private String lexi;
+    private String type;
+    private int lineNum;
 
     /**
      * used for nullTuple
@@ -21,4 +21,27 @@ public class Tuple {
         this.lineNum = lineNum;
     }
 
+    public String getLexi() {
+        return lexi;
+    }
+
+    public void setLexi(String lexi) {
+        this.lexi = lexi;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public int getLineNum() {
+        return lineNum;
+    }
+
+    public void setLineNum(int lineNum) {
+        this.lineNum = lineNum;
+    }
 }

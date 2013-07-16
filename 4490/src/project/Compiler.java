@@ -440,6 +440,6 @@ public class Compiler {
     }
 
     private boolean type(String itemType) {
-        return (itemType.equals(KeyConst.INT) || itemType.equals(KeyConst.CHAR) || itemType.equals(KeyConst.BOOL) || itemType.equals(KeyConst.VOID) || itemType.equals(KeyConst.CLASS_NAME.getKey()));
+        return (itemType.equals(KeyConst.INT.getKey()) || itemType.equals(KeyConst.CHAR.getKey()) || itemType.equals(KeyConst.BOOL.getKey()) || itemType.equals(KeyConst.VOID.getKey()) || itemType.equals(KeyConst.CLASS_NAME.getKey()));
     }
 }

@@ -460,4 +460,16 @@ public class Compiler {
     private boolean type(String itemType) {
         return (itemType.equals(KeyConst.INT.getKey()) || itemType.equals(KeyConst.CHAR.getKey()) || itemType.equals(KeyConst.BOOL.getKey()) || itemType.equals(KeyConst.VOID.getKey()) || itemType.equals(KeyConst.CLASS_NAME.getKey()));
     }
+
+    private boolean isLogicalConnectiveExpression(String itemType) {
+        return itemType.equals(LexicalAnalyzer.tokenTypesEnum.LOGICAL_OPR.name());
+    }
+
+    private boolean isBooleanExpression(String itemType) {
+        return itemType.equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name());
+    }
+
+    private boolean isMathematicalExpression(String itemType) {
+        return itemType.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name());
+    }
 }

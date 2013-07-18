@@ -202,7 +202,7 @@ public class Compiler {
         return expression() || lexicalAnalyzer.getToken().getType().equals(KeyConst.THIS.getKey());
     }
 
-    private boolean expressionz() {
+    public boolean expressionz() {
         Tuple token = lexicalAnalyzer.getToken();
         if (token.getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || token.getType().equals(LexicalAnalyzer.tokenTypesEnum.LOGICAL_OPR.name()) || token.getType().equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || token.getType().equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
 
@@ -228,7 +228,7 @@ public class Compiler {
         return false;
     }
 
-    private boolean expression() {
+    public boolean expression() {
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
 
             // check format: "(" expression ")" [expressionz]

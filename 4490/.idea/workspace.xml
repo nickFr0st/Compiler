@@ -2,17 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/KeyConst.java" afterPath="$PROJECT_DIR$/src/project/KeyConst.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/ModifierTypeConst.java" afterPath="$PROJECT_DIR$/src/project/ModifierTypeConst.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/project/CompilerTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Compiler.java" afterPath="$PROJECT_DIR$/src/project/Compiler.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1373949090855" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374106404384" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374107983349" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
-    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1373959970525" ignored="false" />
-    <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374034789745" ignored="false" />
+    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374108118739" ignored="false" />
+    <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374107983349" ignored="false" />
     <file path="/LexicalAnalizer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358821966318" ignored="false" />
     <file path="/Tuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1373949924903" ignored="false" />
     <file path="/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1373959198594" ignored="false" />
@@ -65,6 +65,7 @@
     <file path="$USER_HOME$/Desktop/Compiler/TheCompiler/src/test/java/com/compiler/TupleTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374030181988" ignored="false" />
     <file path="$USER_HOME$/Desktop/Compiler/TheCompiler/src/test/java/com/compiler/NullTupleTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374030527153" ignored="false" />
     <file path="$USER_HOME$/Desktop/Compiler/TheCompiler/src/test/java/com/compiler/LexicalAnalyzerTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374030585568" ignored="false" />
+    <file path="/CompilerTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374107957949" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,9 +122,44 @@
         <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
     </breakpoint_any>
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/CompilerTest.java" line="27" class="project.CompilerTest" package="project">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_rules />
     <ui_properties />
+  </component>
+  <component name="DockManager">
+    <window id="3">
+      <content type="file-editors">
+        <state>
+          <leaf>
+            <file leaf-file-name="Compiler.java" pinned="false" current="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state line="230" column="0" selection-start="9695" selection-end="9695" vertical-scroll-proportion="0.6637838">
+                    <folding />
+                  </state>
+                </provider>
+              </entry>
+            </file>
+          </leaf>
+        </state>
+      </content>
+    </window>
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
@@ -131,19 +167,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Compiler.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
+      <file leaf-file-name="CompilerTest.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/project/CompilerTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="215" column="49" selection-start="9222" selection-end="9222" vertical-scroll-proportion="0.0">
+            <state line="10" column="73" selection-start="165" selection-end="165" vertical-scroll-proportion="0.18123667">
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#675#682#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MemoryTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/tests/MemoryTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="13" selection-start="248" selection-end="248" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ModifierTypeConst.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ModifierTypeConst.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/ModifierTypeConst.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="150" selection-start="214" selection-end="214" vertical-scroll-proportion="0.23560767">
+            <state line="13" column="150" selection-start="214" selection-end="214" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -170,7 +218,16 @@
       <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="293" column="40" selection-start="10693" selection-end="10693" vertical-scroll-proportion="0.0">
+            <state line="286" column="54" selection-start="10137" selection-end="10140" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LexicalAnalyzerTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/tests/LexicalAnalyzerTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="114" column="5" selection-start="5123" selection-end="5123" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -196,7 +253,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/Tuple.java" />
         <option value="$PROJECT_DIR$/src/Compiler.java" />
         <option value="$PROJECT_DIR$/src/TupleTest.java" />
         <option value="$PROJECT_DIR$/src/NullTuple.java" />
@@ -208,10 +264,11 @@
         <option value="$PROJECT_DIR$/src/project/tests/TupleTest.java" />
         <option value="$PROJECT_DIR$/src/project/LexicalAnalyzerTest.java" />
         <option value="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" />
-        <option value="$PROJECT_DIR$/src/project/Compiler.java" />
         <option value="$PROJECT_DIR$/src/project/tests/LexicalAnalyzerTest.java" />
         <option value="$PROJECT_DIR$/src/project/KeyConst.java" />
         <option value="$PROJECT_DIR$/src/project/ModifierTypeConst.java" />
+        <option value="$PROJECT_DIR$/src/project/Compiler.java" />
+        <option value="$PROJECT_DIR$/src/project/CompilerTest.java" />
       </list>
     </option>
   </component>
@@ -388,15 +445,15 @@
     <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
     <key name="CreateTestDialog.RecentsKey">
       <recent name="project" />
       <recent name="" />
     </key>
-    <key name="CreateTestDialog.Recents.Supers">
-      <recent name="" />
-    </key>
   </component>
-  <component name="RunManager" selected="JUnit.TupleTest">
+  <component name="RunManager" selected="JUnit.CompilerTest">
     <configuration default="false" name="ProgramDriver" type="Application" factoryName="Application" temporary="true">
       <extension name="coverage" enabled="false" merge="false" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="project.ProgramDriver" />
@@ -546,11 +603,41 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <list size="4">
+    <configuration default="false" name="CompilerTest" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" runner="idea" />
+      <module name="Complier" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="project" />
+      <option name="MAIN_CLASS_NAME" value="project.CompilerTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <list size="5">
       <item index="0" class="java.lang.String" itemvalue="JUnit.TupleTest" />
       <item index="1" class="java.lang.String" itemvalue="JUnit.MemoryTest" />
       <item index="2" class="java.lang.String" itemvalue="Application.ProgramDriver" />
       <item index="3" class="java.lang.String" itemvalue="JUnit.LexicalAnalyzerTest" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.CompilerTest" />
     </list>
     <recent_temporary>
       <list size="2">
@@ -1167,7 +1254,11 @@
       <created>1373960028547</created>
       <updated>1373960028547</updated>
     </task>
-    <option name="localTasksCounter" value="145" />
+    <task id="LOCAL-00145" summary="clean up">
+      <created>1374107162719</created>
+      <updated>1374107162719</updated>
+    </task>
+    <option name="localTasksCounter" value="146" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1202,6 +1293,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.49806738" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32616082" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1606847" sideWeight="0.571885" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1214,7 +1306,6 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32800853" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32616082" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1326,62 +1417,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/project/tests/NullTupleTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="12" selection-start="301" selection-end="301" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/tests/MemoryTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="0" selection-start="49" selection-end="71" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/ProgramDriver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="0" selection-start="160" selection-end="666" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/IData.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="17" selection-start="126" selection-end="126" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/tests/TupleTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="13" selection-start="311" selection-end="311" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/tests/LexicalAnalyzerTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="114" column="5" selection-start="5123" selection-end="5123" vertical-scroll-proportion="0.8550107">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="293" column="40" selection-start="10693" selection-end="10693" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/KeyConst.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="20" selection-start="687" selection-end="687" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Memory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="16" column="6" selection-start="292" selection-end="292" vertical-scroll-proportion="0.0">
@@ -1424,17 +1459,76 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
+    <entry file="file://$PROJECT_DIR$/src/project/ModifierTypeConst.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="215" column="49" selection-start="9222" selection-end="9222" vertical-scroll-proportion="0.0">
+        <state line="13" column="150" selection-start="214" selection-end="214" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/ModifierTypeConst.java">
+    <entry file="file://$PROJECT_DIR$/src/project/KeyConst.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="150" selection-start="214" selection-end="214" vertical-scroll-proportion="0.23560767">
+        <state line="39" column="20" selection-start="687" selection-end="687" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="286" column="54" selection-start="10137" selection-end="10140" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/junit-4.10.jar!/org/junit/internal/runners/model/ReflectiveCallable.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="40" selection-start="388" selection-end="388" vertical-scroll-proportion="-6.8">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/tests/MemoryTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="13" selection-start="248" selection-end="248" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/tests/LexicalAnalyzerTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="114" column="5" selection-start="5123" selection-end="5123" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="230" column="0" selection-start="9695" selection-end="9695" vertical-scroll-proportion="0.6637838">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/tests/TupleTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="13" selection-start="311" selection-end="311" vertical-scroll-proportion="0.271855">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/ProgramDriver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="49" selection-start="437" selection-end="437" vertical-scroll-proportion="0.25373134">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/CompilerTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="73" selection-start="165" selection-end="165" vertical-scroll-proportion="0.18123667">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#675#682#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

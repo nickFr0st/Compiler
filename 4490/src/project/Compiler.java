@@ -19,7 +19,7 @@ public class Compiler {
 
     private static final String MISSING_CLOSING_PARENTHESIS = "Missing closing parenthesis.";
     private static final String MISSING_OPENING_PARENTHESIS = "Missing opening parenthesis.";
-    private static final String LINE = " Line ";
+    private static final String LINE = " Line: ";
 
     private static final String OPERATION = " operation.";
     private static final String ARGUMENT_LIST = " argument_list.";

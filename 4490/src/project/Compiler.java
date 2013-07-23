@@ -356,8 +356,16 @@ public class Compiler {
 
             //check format: "(" [ argument_list ] ")"
             lexicalAnalyzer.nextToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !argument_list()) {
-                errorList +=  INVALID_ARGUMENT_LIST + " in function." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+                errorList += INVALID_FUNCTION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+            }
+
+            if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                return true;
+            }
+
+            if (!argument_list()) {
+                errorList += INVALID_ARGUMENT_LIST + " in function." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 

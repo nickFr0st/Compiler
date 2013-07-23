@@ -50,7 +50,6 @@ public class Compiler {
     }
 
     private boolean new_declaration() {
-        // todo: I believe there is an issue with the logic of the new operation... will need to clear it with professor
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
 
             // check format: "(" [argument_list] ")"
@@ -70,7 +69,6 @@ public class Compiler {
                 return false;
             }
 
-            lexicalAnalyzer.nextToken();
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 errorList += ILLEGAL_NEW_DECLARATION + OPERATION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
@@ -82,6 +80,7 @@ public class Compiler {
             }
             return true;
         }
+
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
 
             // check format: "[" expression "]"
@@ -96,7 +95,6 @@ public class Compiler {
                 return false;
             }
 
-            lexicalAnalyzer.nextToken();
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 errorList += ILLEGAL_NEW_DECLARATION + OPERATION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
@@ -338,6 +336,7 @@ public class Compiler {
         }
 
         while (lexicalAnalyzer.getToken().getLexi().equals(",")) {
+            lexicalAnalyzer.nextToken();
             if (!expression()) {
                 errorList += INVALID_ARGUMENT_LIST + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
@@ -357,28 +356,12 @@ public class Compiler {
 
             //check format: "(" [ argument_list ] ")"
             lexicalAnalyzer.nextToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += INVALID_FUNCTION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-                lexicalAnalyzer.nextToken();
-                return true;
-            }
-
-            if (!argument_list()) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !argument_list()) {
                 errorList +=  INVALID_ARGUMENT_LIST + " in function." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += INVALID_FUNCTION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 errorList += INVALID_FUNCTION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
@@ -390,23 +373,12 @@ public class Compiler {
 
             //check format: "[" expression "]"
             lexicalAnalyzer.nextToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += "array element missing expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (!expression()) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
                 errorList += "invalid array expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
-            lexicalAnalyzer.nextToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += MISSING_ARRAY_CLOSE + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
                 errorList += MISSING_ARRAY_CLOSE + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }

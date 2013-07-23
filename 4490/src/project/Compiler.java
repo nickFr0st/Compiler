@@ -382,6 +382,8 @@ public class Compiler {
                 errorList += MISSING_ARRAY_CLOSE + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
+
+            lexicalAnalyzer.nextToken();
             return true;
         }
         return false;
@@ -407,23 +409,17 @@ public class Compiler {
 
         String errCheck = errorList;
 
-        if (fn_arr_member()) {
-            return true;
-        }
-
+        fn_arr_member();
         if (!errCheck.equals(errorList)) {
             return false;
         }
 
-        if (member_refz()) {
+        if (lexicalAnalyzer.getToken() instanceof NullTuple) {
             return true;
         }
 
-        if (!errCheck.equals(errorList)) {
-            return false;
-        }
-
-        return true;
+        member_refz();
+        return errCheck.equals(errorList);
     }
 
     private boolean type(String itemType) {

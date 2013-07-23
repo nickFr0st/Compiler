@@ -196,22 +196,12 @@ public class Compiler {
 
             // check format: "(" expression ")" [expressionz]
             lexicalAnalyzer.nextToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += ILLEGAL_EXPRESSION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (!expression()) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
                 errorList += ILLEGAL_EXPRESSION + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += ILLEGAL_EXPRESSION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 errorList += ILLEGAL_EXPRESSION + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
@@ -221,8 +211,10 @@ public class Compiler {
                 return true;
             }
 
+            String errCheck = errorList;
             expressionz();
-            return true;
+
+            return errCheck.equals(errorList);
 
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.TRUE.getKey()) || lexicalAnalyzer.getToken().getType().equals(KeyConst.FALSE.getKey()) || lexicalAnalyzer.getToken().getType().equals(KeyConst.NULL.getKey()) || lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
 
@@ -232,8 +224,10 @@ public class Compiler {
                 return true;
             }
 
+            String errCheck = errorList;
             expressionz();
-            return true;
+
+            return errCheck.equals(errorList);
 
         } else if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
 
@@ -244,31 +238,27 @@ public class Compiler {
             }
             String errCheck = errorList;
 
-            if (fn_arr_member()) {
-                return true;
-            }
-
+            fn_arr_member();
             if (!errCheck.equals(errorList)) {
                 return false;
             }
 
-            if (member_refz()) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 return true;
             }
 
+            member_refz();
             if (!errCheck.equals(errorList)) {
                 return false;
             }
 
-            if (expressionz()) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 return true;
             }
 
-            if (!errCheck.equals(errorList)) {
-                return false;
-            }
+            expressionz();
 
-            return true;
+            return errCheck.equals(errorList);
         }
         return false;
     }

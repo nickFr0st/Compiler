@@ -15,6 +15,7 @@ public class Compiler {
 
     private static final String INVALID_ARGUMENT_LIST = "Invalid argument list.";
     private static final String INVALID_FUNCTION = "Invalid function.";
+    private static final String INVALID_TYPE = "Invalid type.";
     private static final String MISSING_ARRAY_CLOSE = "Array element missing array close.";
 
     private static final String MISSING_CLOSING_PARENTHESIS = "Missing closing parenthesis.";
@@ -49,6 +50,7 @@ public class Compiler {
     }
 
     private boolean new_declaration() {
+        // todo: I believe there is an issue with the logic of the new operation... will need to clear it with professor
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
 
             // check format: "(" [argument_list] ")"
@@ -121,7 +123,7 @@ public class Compiler {
             }
 
             if (!type(lexicalAnalyzer.getToken().getType())) {
-                errorList += ILLEGAL_NEW_OPERATION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                errorList += ILLEGAL_NEW_OPERATION  + " " + INVALID_TYPE + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
@@ -160,18 +162,17 @@ public class Compiler {
             }
 
             if (!expression()) {
-                errorList += ILLEGAL_ATOI_OPERATION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                errorList += ILLEGAL_ATOI_OPERATION + " Invalid Expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
-            lexicalAnalyzer.nextToken();
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 errorList += ILLEGAL_ATOI_OPERATION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
             if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                errorList += ILLEGAL_ATOI_OPERATION + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                errorList += ILLEGAL_ATOI_OPERATION + " atoi can only contain one parameter. " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
@@ -188,7 +189,7 @@ public class Compiler {
             }
 
             if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-                errorList += ILLEGAL_ITOA_OPERATION + MISSING_OPENING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                errorList += ILLEGAL_ITOA_OPERATION + " " + MISSING_OPENING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
@@ -199,18 +200,17 @@ public class Compiler {
             }
 
             if (!expression()) {
-                errorList += ILLEGAL_ITOA_OPERATION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                errorList += ILLEGAL_ITOA_OPERATION + " Invalid Expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
-            lexicalAnalyzer.nextToken();
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 errorList += ILLEGAL_ITOA_OPERATION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
             if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                errorList += ILLEGAL_ITOA_OPERATION + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                errorList += ILLEGAL_ITOA_OPERATION + " itoa can only contain one parameter. "  + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
@@ -222,7 +222,7 @@ public class Compiler {
 
     public boolean expressionz() {
         Tuple token = lexicalAnalyzer.getToken();
-        if (token.getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || token.getType().equals(LexicalAnalyzer.tokenTypesEnum.LOGICAL_OPR.name()) || token.getType().equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name()) || token.getType().equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
+        if (token.getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || isLogicalConnectiveExpression(token.getType()) || isBooleanExpression(token.getType()) || isMathematicalExpression(token.getType())) {
 
             lexicalAnalyzer.nextToken();
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
@@ -231,10 +231,7 @@ public class Compiler {
             }
 
             if (token.getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
-                if (!assignment_expression()) {
-                    errorList += "illegal assignment operation." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                    return false;
-                }
+                return assignment_expression();
             } else {
                 if (!expression()) {
                     errorList += "illegal operation." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";

@@ -186,12 +186,8 @@ public class Compiler {
             if (token.getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
                 return assignment_expression();
             } else {
-                if (!expression()) {
-                    errorList += "illegal operation." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                    return false;
-                }
+                return expression();
             }
-            return true;
         }
         return false;
     }

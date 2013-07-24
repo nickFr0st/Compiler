@@ -135,6 +135,10 @@ public class Compiler {
                 return false;
             }
 
+            //todo: need to check for increased size of error message for all expression checks
+            // todo: if size increases that means token has moved if not token has not
+
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 errorList += ILLEGAL_ATOI_OPERATION + " atoi can only contain one parameter. " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
@@ -375,9 +379,15 @@ public class Compiler {
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
 
             // check format: "(" {statement} ")"
+            String errorCheck = errorList;
+
             lexicalAnalyzer.nextToken();
             while (statement()) {
                 lexicalAnalyzer.nextToken();
+            }
+
+            if (!errorCheck.equals(errorList)) {
+                return false;
             }
 
             if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {

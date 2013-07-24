@@ -130,7 +130,6 @@ public class LexicalAnalyzer {
         symbolCheck.add("\"");
         symbolCheck.add(",");
         symbolCheck.add(".");
-        symbolCheck.add(":");
 
         // math operators
         symbolCheck.add("+");
@@ -204,7 +203,7 @@ public class LexicalAnalyzer {
                     }
                 }
 
-                for (int i = 0; i < tokenizer.length; i++) { //String item : tokenizer) {
+                for (int i = 0; i < tokenizer.length; i++) {
                     if (tokenizer.length < 1 && tokenizer[1].trim().isEmpty()) {
                         lineCount++;
                         continue;
@@ -265,7 +264,7 @@ public class LexicalAnalyzer {
                         tokenType = tokenTypesEnum.LOGICAL_OPR.toString();
                     } else if (token.equals(">>") || token.equals("<<")) {
                         tokenType = tokenTypesEnum.IO_OPR.toString();
-                    } else if (token.equals(":=") || token.equals("<=") || token.equals(">=") || token.equals("==") || token.equals("<") || token.equals(">") || token.equals("!=")) {
+                    } else if (token.equals("<=") || token.equals(">=") || token.equals("==") || token.equals("<") || token.equals(">") || token.equals("!=")) {
                         tokenType = tokenTypesEnum.BOOLEAN_OPR.toString();
                     } else if (token.equals("=")) {
                         tokenType = tokenTypesEnum.ASSIGNMENT_OPR.toString();
@@ -281,7 +280,7 @@ public class LexicalAnalyzer {
                         tokenType = tokenTypesEnum.ARRAY_BEGIN.toString();
                     } else if (token.equals("]")) {
                         tokenType = tokenTypesEnum.ARRAY_END.toString();
-                    } else if (token.matches("[,.:]")) {
+                    } else if (token.matches("[,.]")) {
                         tokenType = tokenTypesEnum.PUNCTUATION.toString();
                     } else if (token.equals(";")) {
                         tokenType = tokenTypesEnum.EOT.toString();

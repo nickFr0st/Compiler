@@ -2,13 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
-      <change type="MOVED" beforePath="C:\Users\nmalloch\Documents\GitHub\Compiler\4490\src\project\CompilerTest.java" afterPath="$PROJECT_DIR$/src/project/tests/CompilerTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1373949090855" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374615568566" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374642639554" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
     <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374553761941" ignored="false" />
     <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374616256770" ignored="false" />
@@ -27,43 +26,43 @@
     <file path="/ClassData.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1360449524258" ignored="false" />
     <file path="/SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1365128685625" ignored="false" />
     <file path="/a.dummy" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366950140080" ignored="false" />
-    <file path="$USER_HOME$/Desktop/testp/src/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449678062" ignored="false" />
-    <file path="$USER_HOME$/Desktop/testp/.idea/workspace.xml" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449686335" ignored="false" />
-    <file path="$USER_HOME$/Desktop/testp/.idea/misc.xml" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449481722" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../testp/src/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449678062" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../testp/.idea/workspace.xml" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449686335" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../testp/.idea/misc.xml" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449481722" ignored="false" />
     <file path="/Operator.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1364342510144" ignored="false" />
     <file path="/ICode.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1365126454642" ignored="false" />
     <file path="/TCode.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366514197066" ignored="false" />
     <file path="/Assembler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366842314290" ignored="false" />
-    <file path="$USER_HOME$/Desktop/compiler_v2/src/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367074256181" ignored="false" />
-    <file path="$USER_HOME$/Desktop/compiler_v2/src/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367079767238" ignored="false" />
-    <file path="$USER_HOME$/Desktop/compiler_v2/src/KeyConst.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367071829643" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../compiler_v2/src/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367074256181" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../compiler_v2/src/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367079767238" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../compiler_v2/src/KeyConst.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367071829643" ignored="false" />
     <file path="/KeyConst.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367071805715" ignored="false" />
-    <file path="$USER_HOME$/Desktop/compiler_v2/src/ModifierType.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367071941658" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../compiler_v2/src/ModifierType.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367071941658" ignored="false" />
     <file path="/ModifierType.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367072309503" ignored="false" />
-    <file path="$USER_HOME$/Desktop/compiler_v2/src/ModifierTypeConst.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367072309503" ignored="false" />
-    <file path="$USER_HOME$/Desktop/compiler_v2/src/Symantics.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367074231504" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../compiler_v2/src/ModifierTypeConst.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367072309503" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../compiler_v2/src/Symantics.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367074231504" ignored="false" />
     <file path="/Symantics.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367074528841" ignored="false" />
-    <file path="$USER_HOME$/Desktop/compiler_v2/src/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367079283423" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../compiler_v2/src/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367079283423" ignored="false" />
     <file path="/NullTuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1373950839441" ignored="false" />
     <file path="/TupleTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374030143062" ignored="false" />
     <file path="/NullTupleTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1373951591593" ignored="false" />
     <file path="/MemoryTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1373951544682" ignored="false" />
     <file path="/LexicalAnalyzerTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374106849278" ignored="false" />
-    <file path="$USER_HOME$/Desktop/Compiler/pom.xml" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029118920" ignored="false" />
-    <file path="$USER_HOME$/Desktop/Compiler/apache-maven-3.1.0/conf/settings.xml" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029118920" ignored="false" />
-    <file path="$USER_HOME$/Desktop/Compiler/src/main/java/com/compiler/App.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029202927" ignored="false" />
-    <file path="$USER_HOME$/Desktop/Compiler/TheCompiler/src/main/java/com/compiler/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029992721" ignored="false" />
-    <file path="$USER_HOME$/Desktop/Compiler/TheCompiler/src/main/java/com/compiler/Symbol.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029997241" ignored="false" />
-    <file path="$USER_HOME$/Desktop/Compiler/TheCompiler/src/main/java/com/compiler/IData.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029958881" ignored="false" />
-    <file path="$USER_HOME$/Desktop/Compiler/TheCompiler/src/main/java/com/compiler/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029978375" ignored="false" />
-    <file path="$USER_HOME$/Desktop/Compiler/TheCompiler/src/main/java/com/compiler/Tuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374030001793" ignored="false" />
-    <file path="$USER_HOME$/Desktop/Compiler/TheCompiler/src/main/java/com/compiler/NullTuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029986889" ignored="false" />
-    <file path="$USER_HOME$/Desktop/Compiler/TheCompiler/src/main/java/com/compiler/ModifierTypeConst.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029982786" ignored="false" />
-    <file path="$USER_HOME$/Desktop/Compiler/TheCompiler/src/main/java/com/compiler/KeyConst.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029967594" ignored="false" />
-    <file path="$USER_HOME$/Desktop/Compiler/TheCompiler/src/main/java/com/compiler/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029947357" ignored="false" />
-    <file path="$USER_HOME$/Desktop/Compiler/TheCompiler/src/test/java/com/compiler/TupleTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374030181988" ignored="false" />
-    <file path="$USER_HOME$/Desktop/Compiler/TheCompiler/src/test/java/com/compiler/NullTupleTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374030527153" ignored="false" />
-    <file path="$USER_HOME$/Desktop/Compiler/TheCompiler/src/test/java/com/compiler/LexicalAnalyzerTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374030585568" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../Compiler/pom.xml" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029118920" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../Compiler/apache-maven-3.1.0/conf/settings.xml" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029118920" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../Compiler/src/main/java/com/compiler/App.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029202927" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../Compiler/TheCompiler/src/main/java/com/compiler/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029992721" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../Compiler/TheCompiler/src/main/java/com/compiler/Symbol.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029997241" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../Compiler/TheCompiler/src/main/java/com/compiler/IData.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029958881" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../Compiler/TheCompiler/src/main/java/com/compiler/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029978375" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../Compiler/TheCompiler/src/main/java/com/compiler/Tuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374030001793" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../Compiler/TheCompiler/src/main/java/com/compiler/NullTuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029986889" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../Compiler/TheCompiler/src/main/java/com/compiler/ModifierTypeConst.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029982786" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../Compiler/TheCompiler/src/main/java/com/compiler/KeyConst.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029967594" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../Compiler/TheCompiler/src/main/java/com/compiler/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374029947357" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../Compiler/TheCompiler/src/test/java/com/compiler/TupleTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374030181988" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../Compiler/TheCompiler/src/test/java/com/compiler/NullTupleTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374030527153" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../Compiler/TheCompiler/src/test/java/com/compiler/LexicalAnalyzerTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374030585568" ignored="false" />
     <file path="/CompilerTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374616544242" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -89,23 +88,6 @@
   </component>
   <component name="DebuggerManager">
     <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/project/tests/CompilerTest.java" line="89" class="project.tests.CompilerTest" package="project.tests">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-    </line_breakpoints>
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -142,6 +124,23 @@
         <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
     </breakpoint_any>
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/tests/CompilerTest.java" line="89" class="project.tests.CompilerTest" package="project.tests">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -190,7 +189,7 @@
       <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="391" column="0" selection-start="14211" selection-end="14211" vertical-scroll-proportion="0.0">
+            <state line="390" column="0" selection-start="14129" selection-end="14129" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -205,19 +204,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Compiler.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Compiler.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="235" column="24" selection-start="10800" selection-end="10800" vertical-scroll-proportion="0.0">
+            <state line="231" column="24" selection-start="10754" selection-end="10754" vertical-scroll-proportion="-2.8162162">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CompilerTest.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="CompilerTest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/tests/CompilerTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="43" column="41" selection-start="1066" selection-end="1066" vertical-scroll-proportion="0.024355302">
+            <state line="73" column="98" selection-start="2008" selection-end="2008" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="e#729#736#0" expanded="true" />
                 <element signature="e#1287#1294#0" expanded="true" />
@@ -269,10 +268,10 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="54" />
+    <option name="x" value="55" />
     <option name="y" value="-8" />
-    <option name="width" value="1634" />
-    <option name="height" value="1066" />
+    <option name="width" value="1873" />
+    <option name="height" value="1096" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -339,6 +338,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -414,7 +414,6 @@
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -426,19 +425,19 @@
     <property name="recentsLimit" value="5" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="options.lastSelected" value="reference.settings.project.maven.importing" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/Compiler/TheCompiler" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.includeInheritedMembers" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
-    <property name="MemberChooser.showClasses" value="true" />
     <property name="FullScreen" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="dynamic.classpath" value="false" />
     <property name="options.searchVisible" value="true" />
+    <property name="dynamic.classpath" value="false" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.Recents.Supers">
@@ -448,6 +447,119 @@
       <recent name="project" />
       <recent name="" />
     </key>
+  </component>
+  <component name="RestoreUpdateTree">
+    <UpdateInfo date="Moments ago" ActionInfo="_Update">
+      <UpdatedFiles>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Updated from server" />
+          <option name="myStatusName" value="Changed on server" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="CHANGED_ON_SERVER" />
+          <FILE-GROUP>
+            <option name="myUpdateName" value="Updated" />
+            <option name="myStatusName" value="Changed" />
+            <option name="mySupportsDeletion" value="false" />
+            <option name="myCanBeAbsent" value="false" />
+            <option name="myId" value="UPDATED" />
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/src/project/Compiler.java</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/src/project/LexicalAnalyzer.java</PATH>
+          </FILE-GROUP>
+          <FILE-GROUP>
+            <option name="myUpdateName" value="Created" />
+            <option name="myStatusName" value="Created" />
+            <option name="mySupportsDeletion" value="false" />
+            <option name="myCanBeAbsent" value="false" />
+            <option name="myId" value="CREATED" />
+          </FILE-GROUP>
+          <FILE-GROUP>
+            <option name="myUpdateName" value="Deleted" />
+            <option name="myStatusName" value="Deleted" />
+            <option name="mySupportsDeletion" value="false" />
+            <option name="myCanBeAbsent" value="true" />
+            <option name="myId" value="REMOVED_FROM_REPOSITORY" />
+          </FILE-GROUP>
+          <FILE-GROUP>
+            <option name="myUpdateName" value="Restored" />
+            <option name="myStatusName" value="Will be restored" />
+            <option name="mySupportsDeletion" value="false" />
+            <option name="myCanBeAbsent" value="false" />
+            <option name="myId" value="RESTORED" />
+          </FILE-GROUP>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Modified" />
+          <option name="myStatusName" value="Modified" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MODIFIED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Skipped" />
+          <option name="myStatusName" value="Skipped" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="SKIPPED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Merged with conflicts" />
+          <option name="myStatusName" value="Will be merged with conflicts" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MERGED_WITH_CONFLICTS" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Merged with tree conflicts" />
+          <option name="myStatusName" value="Merged with tree conflicts" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Merged with property conflicts" />
+          <option name="myStatusName" value="Will be merged with property conflicts" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Merged" />
+          <option name="myStatusName" value="Will be merged" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MERGED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Not in repository" />
+          <option name="myStatusName" value="Not in repository" />
+          <option name="mySupportsDeletion" value="true" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="UNKNOWN" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Locally added" />
+          <option name="myStatusName" value="Locally added" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="LOCALLY_ADDED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Locally removed" />
+          <option name="myStatusName" value="Locally removed" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="LOCALLY_REMOVED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Switched" />
+          <option name="myStatusName" value="Switched" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="SWITCHED" />
+        </FILE-GROUP>
+      </UpdatedFiles>
+    </UpdateInfo>
   </component>
   <component name="RunManager" selected="JUnit.CompilerTest">
     <configuration default="false" name="ProgramDriver" type="Application" factoryName="Application" temporary="true">
@@ -1314,34 +1426,34 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="54" y="-8" width="1634" height="1066" extended-state="6" />
+    <frame x="55" y="-8" width="1873" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32837406" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32800853" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2585837" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.49806738" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32616082" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951653" sideWeight="0.75" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1596692" sideWeight="0.75" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39977914" sideWeight="0.600639" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19160685" sideWeight="0.6709265" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.49806738" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951653" sideWeight="0.75" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19211195" sideWeight="0.75" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.49806738" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32800853" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32616082" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -1518,7 +1630,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="391" column="0" selection-start="14211" selection-end="14211" vertical-scroll-proportion="0.0">
+        <state line="390" column="0" selection-start="14129" selection-end="14129" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1532,27 +1644,25 @@
     </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/lib/junit-4.10.jar!/org/junit/runners/model/FrameworkMethod.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="235" column="24" selection-start="10800" selection-end="10800" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/tests/CompilerTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="41" selection-start="1066" selection-end="1066" vertical-scroll-proportion="0.024355302">
+        <state line="73" column="98" selection-start="2008" selection-end="2008" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#729#736#0" expanded="true" />
             <element signature="e#1287#1294#0" expanded="true" />
             <element signature="e#1751#1758#0" expanded="true" />
             <element signature="e#2232#2239#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="231" column="24" selection-start="10754" selection-end="10754" vertical-scroll-proportion="-2.8162162">
+          <folding />
         </state>
       </provider>
     </entry>

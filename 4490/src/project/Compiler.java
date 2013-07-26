@@ -398,7 +398,7 @@ public class Compiler {
             lexicalAnalyzer.nextToken();
             return true;
 
-        } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.IF.name())) {
+        } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.IF.getKey())) {
 
             // check format: "if" "(" expression ")" statement [ "else" statement ]
             lexicalAnalyzer.nextToken();
@@ -423,7 +423,7 @@ public class Compiler {
                 return false;
             }
 
-            if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.ELSE.name())) {
+            if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.ELSE.getKey())) {
 
                 lexicalAnalyzer.nextToken();
                 if (lexicalAnalyzer.getToken() instanceof NullTuple || !statement()) {
@@ -435,7 +435,7 @@ public class Compiler {
             lexicalAnalyzer.nextToken();
             return true;
 
-        } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.WHILE.name())) {
+        } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.WHILE.getKey())) {
 
             // check format: "while" "(" expression ")" statement
             lexicalAnalyzer.nextToken();
@@ -463,7 +463,7 @@ public class Compiler {
             lexicalAnalyzer.nextToken();
             return true;
 
-        } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.RETURN.name())) {
+        } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.RETURN.getKey())) {
 
             // check format: "return" [ expression ] ";"
             lexicalAnalyzer.nextToken();
@@ -489,7 +489,7 @@ public class Compiler {
             lexicalAnalyzer.nextToken();
             return true;
 
-        } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.COUT.name())) {
+        } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.COUT.getKey())) {
 
             // check format: "cout" "<<" expression ";"
             lexicalAnalyzer.nextToken();
@@ -512,7 +512,7 @@ public class Compiler {
             lexicalAnalyzer.nextToken();
             return true;
 
-        } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.CIN.name())) {
+        } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.CIN.getKey())) {
 
             // check format: "cin" ">>" expression ";"
             lexicalAnalyzer.nextToken();

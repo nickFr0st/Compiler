@@ -36,18 +36,10 @@ public class Compiler {
 
     public void evaluate() {
         // pass one
-        while (lexicalAnalyzer.hasNext()) {
-
-            if (expression()) {
-                if (lexicalAnalyzer.getToken() instanceof NullTuple)
-                    break;
-
-                continue;
-            }
-            lexicalAnalyzer.nextToken();
+        if (!compiliation_unit()) {
+            System.out.print(errorList);
+            System.exit(0);
         }
-
-        System.out.print(errorList);
     }
 
     private boolean new_declaration() {
@@ -741,6 +733,34 @@ public class Compiler {
         }
 
         return method_body();
+    }
+
+    public boolean field_declaration() {
+        if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+            // check format: "(" [parameter_list] ")" method_body
+        } else {
+            // check format: ["[" "]"] ["=" assignment_expression ]
+        }
+        return false;
+    }
+
+    public boolean class_member_declaration() {
+        if (lexicalAnalyzer.getToken().getType().equals(KeyConst.MODIFIER.getKey())) {
+            // check format: modifier type identifier field_declaration
+        } else {
+            // check format: constructor_declaration
+        }
+        return false;
+    }
+
+    public boolean class_declaration() {
+        // check format: "class" class_name "{" {class_member_declaration} "}"
+        return false;
+    }
+
+    public boolean compiliation_unit() {
+        // check format: {class_declaration} "void" "main" "(" ")" method_body
+        return false;
     }
 
     private boolean type(String itemType) {

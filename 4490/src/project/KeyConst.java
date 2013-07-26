@@ -30,7 +30,8 @@ public enum KeyConst {
     TRUE("true"),
     VOID("void"),
     WHILE("while"),
-    CLASS_NAME("class_name");
+    CLASS_NAME("class_name"),
+    MODIFIER("modifier");
 
     private String key;
 

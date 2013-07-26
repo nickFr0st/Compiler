@@ -56,7 +56,7 @@ public class Compiler {
             // check format: "(" [argument_list] ")"
             lexicalAnalyzer.nextToken();
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += ILLEGAL_NEW_DECLARATION + OPERATION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                errorList += ILLEGAL_NEW_DECLARATION + OPERATION + " " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
@@ -65,9 +65,13 @@ public class Compiler {
                 return true;
             }
 
+            String errorCheck = errorList;
+
             if (!argument_list()) {
-                errorList += ILLEGAL_NEW_DECLARATION + ARGUMENT_LIST + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
-                return false;
+                if (!errorCheck.equals(errorList)) {
+                    errorList += ILLEGAL_NEW_DECLARATION + ARGUMENT_LIST + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                    return false;
+                }
             }
 
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
@@ -107,7 +111,7 @@ public class Compiler {
             // check format: "new" type new_declaration
             lexicalAnalyzer.nextToken();
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !type(lexicalAnalyzer.getToken().getType())) {
-                errorList += ILLEGAL_NEW_OPERATION  + " " + INVALID_TYPE + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                errorList += ILLEGAL_NEW_OPERATION + " " + INVALID_TYPE + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
@@ -118,9 +122,7 @@ public class Compiler {
             }
 
             return true;
-        }
-
-        if (lexicalAnalyzer.getToken().getType().equals(KeyConst.ATOI.getKey())) {
+        } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.ATOI.getKey())) {
 
             // check format: "atoi" "(" expression ")"
             lexicalAnalyzer.nextToken();
@@ -135,19 +137,13 @@ public class Compiler {
                 return false;
             }
 
-            //todo: need to check for increased size of error message for all expression checks
-            // todo: if size increases that means token has moved if not token has not
-
-
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 errorList += ILLEGAL_ATOI_OPERATION + " atoi can only contain one parameter. " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
             return true;
-        }
-
-        if (lexicalAnalyzer.getToken().getType().equals(KeyConst.ITOA.getKey())) {
+        } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.ITOA.getKey())) {
 
             // check format: "itoa" "(" expression ")"
             lexicalAnalyzer.nextToken();
@@ -163,14 +159,21 @@ public class Compiler {
             }
 
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                errorList += ILLEGAL_ITOA_OPERATION + " itoa can only contain one parameter. "  + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                errorList += ILLEGAL_ITOA_OPERATION + " itoa can only contain one parameter. " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
             return true;
+        } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.THIS.getKey())) {
+            lexicalAnalyzer.nextToken();
+            return true;
+        } else {
+            if (!expression()) {
+                errorList += "Invalid assignment expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                return false;
+            }
+            return true;
         }
-
-        return expression() || lexicalAnalyzer.getToken().getType().equals(KeyConst.THIS.getKey());
     }
 
     public boolean expressionz() {
@@ -184,10 +187,18 @@ public class Compiler {
             }
 
             if (token.getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
-                return assignment_expression();
+                if (!assignment_expression()) {
+                    errorList += "Invalid assignment expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                    return false;
+                }
             } else {
-                return expression();
+                if (!expression()) {
+                    errorList += "Invalid expressionz expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                    return false;
+                }
             }
+
+            return true;
         }
         return false;
     }
@@ -272,19 +283,11 @@ public class Compiler {
             return false;
         }
 
-        if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-            return true;
-        }
-
-        while (lexicalAnalyzer.getToken().getLexi().equals(",")) {
+        while (!(lexicalAnalyzer.getToken() instanceof NullTuple) && lexicalAnalyzer.getToken().getLexi().equals(",")) {
             lexicalAnalyzer.nextToken();
             if (!expression()) {
                 errorList += INVALID_ARGUMENT_LIST + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                break;
             }
         }
         return true;
@@ -298,7 +301,8 @@ public class Compiler {
             //check format: "(" [ argument_list ] ")"
             lexicalAnalyzer.nextToken();
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += INVALID_FUNCTION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                errorList += INVALID_FUNCTION + " " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                return false;
             }
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
@@ -323,7 +327,7 @@ public class Compiler {
             //check format: "[" expression "]"
             lexicalAnalyzer.nextToken();
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
-                errorList += "invalid array expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                errorList += "Invalid array expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
@@ -347,7 +351,7 @@ public class Compiler {
 
         lexicalAnalyzer.nextToken();
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
-            errorList += "invalid member ref." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+            errorList += "Invalid member ref." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
             return false;
         }
 
@@ -386,10 +390,12 @@ public class Compiler {
                 return false;
             }
 
-            if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 errorList += INVALID_STATEMENT + " " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
+
+            lexicalAnalyzer.nextToken();
             return true;
 
         } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.IF.name())) {
@@ -412,7 +418,7 @@ public class Compiler {
                 return false;
             }
 
-            if (!statement())  {
+            if (!statement()) {
                 errorList += INVALID_STATEMENT + " 'if' statement." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
@@ -426,6 +432,7 @@ public class Compiler {
                 }
             }
 
+            lexicalAnalyzer.nextToken();
             return true;
 
         } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.WHILE.name())) {
@@ -448,20 +455,28 @@ public class Compiler {
                 return false;
             }
 
-            if (!statement())  {
+            if (!statement()) {
                 errorList += INVALID_STATEMENT + " 'while' statement." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
+            lexicalAnalyzer.nextToken();
             return true;
 
         } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.RETURN.name())) {
 
             // check format: "return" [ expression ] ";"
-            String checkError = errorList;
-            expression();
+            lexicalAnalyzer.nextToken();
+            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+                errorList += INVALID_STATEMENT + " 'return' statement must end with a ';'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
 
-            if (!checkError.equals(errorList)) {
+            if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                return true;
+            }
+
+            if (!expression()) {
                 errorList += "Invalid 'return' statement expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
@@ -471,6 +486,7 @@ public class Compiler {
                 return false;
             }
 
+            lexicalAnalyzer.nextToken();
             return true;
 
         } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.COUT.name())) {
@@ -493,6 +509,7 @@ public class Compiler {
                 return false;
             }
 
+            lexicalAnalyzer.nextToken();
             return true;
 
         } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.CIN.name())) {
@@ -515,30 +532,23 @@ public class Compiler {
                 return false;
             }
 
+            lexicalAnalyzer.nextToken();
             return true;
 
         } else {
 
             // check format: expression ";"
-            String errorCheck = errorList;
-            boolean wasSuccessful = expression();
-
-            if (!errorCheck.equals(errorList)) {
+            if (!expression()) {
                 errorList += "Invalid statement expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
-            if (wasSuccessful) {
-                if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                    errorList += INVALID_STATEMENT + " 'expression' statement must end with a ';'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                    return false;
-                }
-
-                return true;
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                errorList += INVALID_STATEMENT + " 'expression' statement must end with a ';'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
             }
+            return true;
         }
-
-        return false;
     }
 
     private boolean type(String itemType) {

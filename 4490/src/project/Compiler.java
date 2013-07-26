@@ -598,59 +598,110 @@ public class Compiler {
 
     public boolean variable_declaration() {
         // check format: type identifier ["[" "]"] ["=" assignment_expression ] ";"
+        if (!type(lexicalAnalyzer.getToken().getType())) {
 
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !type(lexicalAnalyzer.getToken().getType())) {
-            errorList += "Variable declarations must start with a valid type." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return false;
-        }
-
-        lexicalAnalyzer.nextToken();
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
-            errorList += "Variable declarations require a valid identifier." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return false;
-        }
-
-        lexicalAnalyzer.nextToken();
-        if(lexicalAnalyzer.getToken() instanceof NullTuple) {
-            errorList += "Invalid variable declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return false;
-        }
-
-        if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
-
-            lexicalAnalyzer.getToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
-                errorList += "Invalid parameter declaration. Missing closing array bracket." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !type(lexicalAnalyzer.getToken().getType())) {
+                errorList += "Variable declarations must start with a valid type." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
-            if(lexicalAnalyzer.getToken() instanceof NullTuple) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
+                errorList += "Variable declarations require a valid identifier." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            lexicalAnalyzer.nextToken();
+            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 errorList += "Invalid variable declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
-        }
 
-        if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+            if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
 
-            lexicalAnalyzer.nextToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !assignment_expression()) {
-                errorList += "Invalid variable declaration. Invalid assignment expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";;
-                return false;
+                lexicalAnalyzer.getToken();
+                if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                    errorList += "Invalid parameter declaration. Missing closing array bracket." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                    return false;
+                }
+
+                lexicalAnalyzer.nextToken();
+                if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+                    errorList += "Invalid variable declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                    return false;
+                }
             }
 
-            lexicalAnalyzer.nextToken();
-            if(lexicalAnalyzer.getToken() instanceof NullTuple) {
+            if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+
+                lexicalAnalyzer.nextToken();
+                if (lexicalAnalyzer.getToken() instanceof NullTuple || !assignment_expression()) {
+                    errorList += "Invalid variable declaration. Invalid assignment expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                    return false;
+                }
+
+                lexicalAnalyzer.nextToken();
+                if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+                    errorList += "Invalid variable declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                    return false;
+                }
+            }
+
+            if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                 errorList += "Invalid variable declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
-        }
 
-        if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+            lexicalAnalyzer.nextToken();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean method_body() {
+        // check format: "{" {variable_declaration} {statement} "}"
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
+            errorList += "Method body must begin with an open block '{'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
 
         lexicalAnalyzer.nextToken();
+        if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+            errorList += "Method body must end with a closing block '}'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        String errorCheck = errorList;
+
+        while (variable_declaration()) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+                errorList += "Method body must end with a closing block '}'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+        }
+
+        if (!errorCheck.equals(errorList)) {
+            errorList += "Invalid variable_declaration in method body." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        while (statement()) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+                errorList += "Method body must end with a closing block '}'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+        }
+
+        if (!errorCheck.equals(errorList)) {
+            errorList += "Invalid statement in method body." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
+            errorList += "Method body must end with a closing block '}'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
         return true;
     }
 

@@ -551,6 +551,109 @@ public class Compiler {
         }
     }
 
+    public boolean parameter() {
+        // check format: type identifier ["[" "]"]
+
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !type(lexicalAnalyzer.getToken().getType())) {
+            errorList += "Parameter declarations must start with a valid type." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        lexicalAnalyzer.nextToken();
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
+            errorList += "Parameter declarations require a valid identifier." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        lexicalAnalyzer.nextToken();
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+            return true;
+        }
+
+        lexicalAnalyzer.getToken();
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+            errorList += "Invalid parameter declaration. Missing closing array bracket." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean parameter_list() {
+        // check format: parameter { "," parameter}
+        if (!parameter()) {
+            errorList += "Invalid parameter_list" + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+            return false;
+        }
+
+        while (!(lexicalAnalyzer.getToken() instanceof NullTuple) && lexicalAnalyzer.getToken().getLexi().equals(",")) {
+            lexicalAnalyzer.nextToken();
+            if (!parameter()) {
+                errorList += "Invalid parameter_list" + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean variable_declaration() {
+        // check format: type identifier ["[" "]"] ["=" assignment_expression ] ";"
+
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !type(lexicalAnalyzer.getToken().getType())) {
+            errorList += "Variable declarations must start with a valid type." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        lexicalAnalyzer.nextToken();
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
+            errorList += "Variable declarations require a valid identifier." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        lexicalAnalyzer.nextToken();
+        if(lexicalAnalyzer.getToken() instanceof NullTuple) {
+            errorList += "Invalid variable declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+
+            lexicalAnalyzer.getToken();
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                errorList += "Invalid parameter declaration. Missing closing array bracket." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            lexicalAnalyzer.nextToken();
+            if(lexicalAnalyzer.getToken() instanceof NullTuple) {
+                errorList += "Invalid variable declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+        }
+
+        if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+
+            lexicalAnalyzer.nextToken();
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !assignment_expression()) {
+                errorList += "Invalid variable declaration. Invalid assignment expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";;
+                return false;
+            }
+
+            lexicalAnalyzer.nextToken();
+            if(lexicalAnalyzer.getToken() instanceof NullTuple) {
+                errorList += "Invalid variable declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+        }
+
+        if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+            return false;
+        }
+
+        lexicalAnalyzer.nextToken();
+        return true;
+    }
+
     private boolean type(String itemType) {
         return (itemType.equals(KeyConst.INT.getKey()) || itemType.equals(KeyConst.CHAR.getKey()) || itemType.equals(KeyConst.BOOL.getKey()) || itemType.equals(KeyConst.VOID.getKey()) || itemType.equals(KeyConst.CLASS_NAME.getKey()));
     }

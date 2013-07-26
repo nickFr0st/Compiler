@@ -8,9 +8,9 @@
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1373949090855" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374798878731" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374802313295" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
-    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374802186170" ignored="false" />
+    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374804555824" ignored="false" />
     <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374616256770" ignored="false" />
     <file path="/LexicalAnalizer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358821966318" ignored="false" />
     <file path="/Tuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1373949924903" ignored="false" />
@@ -164,7 +164,7 @@
       <file leaf-file-name="Compiler.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="41" column="139" selection-start="1742" selection-end="1742" vertical-scroll-proportion="0.41823444">
+            <state line="652" column="45" selection-start="29618" selection-end="29618" vertical-scroll-proportion="0.65557164">
               <folding />
             </state>
           </provider>
@@ -1225,7 +1225,11 @@
       <created>1374697226193</created>
       <updated>1374697226193</updated>
     </task>
-    <option name="localTasksCounter" value="156" />
+    <task id="LOCAL-00156" summary="fixed some bugs">
+      <created>1374802315693</created>
+      <updated>1374802315693</updated>
+    </task>
+    <option name="localTasksCounter" value="157" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1322,7 +1326,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="a little clean up" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed some bugs" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -1342,7 +1346,6 @@
     <MESSAGE value="the nested while is kind of working" />
     <MESSAGE value="whiles work with whiles" />
     <MESSAGE value="more loop stuff" />
-    <MESSAGE value="fixed some bugs" />
     <MESSAGE value="fixed compare function" />
     <MESSAGE value="fixed lexial char bug" />
     <MESSAGE value="fixed char print bug" />
@@ -1361,6 +1364,7 @@
     <MESSAGE value="clean up member_refz()" />
     <MESSAGE value="logic fix" />
     <MESSAGE value="a little clean up" />
+    <MESSAGE value="fixed some bugs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1483,7 +1487,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="139" selection-start="1742" selection-end="1742" vertical-scroll-proportion="0.41823444">
+        <state line="652" column="45" selection-start="29618" selection-end="29618" vertical-scroll-proportion="0.65557164">
           <folding />
         </state>
       </provider>

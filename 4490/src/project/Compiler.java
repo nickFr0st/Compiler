@@ -705,6 +705,44 @@ public class Compiler {
         return true;
     }
 
+    public boolean constructor_declaration() {
+        // check format: class_name "(" [parameter_list] ")" method_body
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(KeyConst.CLASS_NAME.getKey())) {
+            errorList += "Invalid class name in constructor declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        String className = lexicalAnalyzer.getToken().getLexi();
+
+        lexicalAnalyzer.nextToken();
+        if(lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+            errorList += MISSING_OPENING_PARENTHESIS +" for constructor declaration. 'class " + className + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        lexicalAnalyzer.nextToken();
+        if(lexicalAnalyzer.getToken() instanceof NullTuple) {
+            errorList += MISSING_CLOSING_PARENTHESIS +" for constructor declaration. 'class " + className + "'\n";
+            return false;
+        }
+
+        if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+            return true;
+        }
+
+        if(!parameter_list()) {
+            errorList += "Invalid parameter list for constructor declaration. 'class " + className + "'"  + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        if(lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+            errorList += MISSING_CLOSING_PARENTHESIS +" for constructor declaration. 'class " + className + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        return method_body();
+    }
+
     private boolean type(String itemType) {
         return (itemType.equals(KeyConst.INT.getKey()) || itemType.equals(KeyConst.CHAR.getKey()) || itemType.equals(KeyConst.BOOL.getKey()) || itemType.equals(KeyConst.VOID.getKey()) || itemType.equals(KeyConst.CLASS_NAME.getKey()));
     }

@@ -845,12 +845,91 @@ public class Compiler {
 
     public boolean class_declaration() {
         // check format: "class" class_name "{" {class_member_declaration} "}"
-        return false;
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(KeyConst.CLASS.getKey()))  {
+            errorList += "Invalid class declaration. Missing 'class' tag." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        lexicalAnalyzer.nextToken();
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(KeyConst.CLASS_NAME.getKey()))  {
+            errorList += "Invalid class declaration. Missing a valid class name." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        lexicalAnalyzer.nextToken();
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
+            errorList += "Invalid class declaration. Missing opening block." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        lexicalAnalyzer.nextToken();
+        while (class_member_declaration()) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+                errorList += "Method body must end with a closing block '}'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+        }
+
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
+            errorList += "Invalid class declaration. Missing closing block." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        lexicalAnalyzer.nextToken();
+        return true;
     }
 
     public boolean compiliation_unit() {
         // check format: {class_declaration} "void" "main" "(" ")" method_body
-        return false;
+        if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+            errorList += "Invalid compilation unit. Missing 'main' method.\n";
+            return false;
+        }
+
+        if (!lexicalAnalyzer.getToken().getLexi().equals(KeyConst.VOID.getKey())) {
+            if (!class_declaration()) {
+                errorList += "Invalid compilation unit. Invalid class declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+                errorList += "Invalid compilation unit. Missing 'main' method.\n";
+                return false;
+            }
+
+            while(lexicalAnalyzer.getToken().getLexi().equals(KeyConst.CLASS.getKey())) {
+                if (!class_declaration()) {
+                    errorList += "Invalid compilation unit. Invalid class declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                    return false;
+                }
+            }
+
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getLexi().equals(KeyConst.VOID.getKey())) {
+                errorList += "Invalid compilation unit. Missing 'main' method.\n";
+                return false;
+            }
+        }
+
+        lexicalAnalyzer.nextToken();
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getLexi().equals(KeyConst.MAIN.getKey())) {
+            errorList += "Invalid compilation unit. Invalid name for method 'main'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        lexicalAnalyzer.nextToken();
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+            errorList += "Invalid compilation unit. Invalid 'main' method. " + MISSING_OPENING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        lexicalAnalyzer.nextToken();
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+            errorList += "Invalid compilation unit. Invalid 'main' method. " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        lexicalAnalyzer.nextToken();
+        return method_body();
     }
 
     private boolean type(String itemType) {

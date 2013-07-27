@@ -113,6 +113,7 @@ public class Compiler {
                 return false;
             }
 
+            lexicalAnalyzer.nextToken();
             return true;
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.ATOI.getKey())) {
 
@@ -134,6 +135,7 @@ public class Compiler {
                 return false;
             }
 
+            lexicalAnalyzer.nextToken();
             return true;
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.ITOA.getKey())) {
 
@@ -155,6 +157,7 @@ public class Compiler {
                 return false;
             }
 
+            lexicalAnalyzer.nextToken();
             return true;
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.THIS.getKey())) {
             lexicalAnalyzer.nextToken();
@@ -632,7 +635,6 @@ public class Compiler {
                     return false;
                 }
 
-                lexicalAnalyzer.nextToken();
                 if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                     errorList += "Invalid variable declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                     return false;
@@ -738,10 +740,70 @@ public class Compiler {
     public boolean field_declaration() {
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
             // check format: "(" [parameter_list] ")" method_body
+
+            lexicalAnalyzer.nextToken();
+            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+                errorList += "Invalid field declaration. NullTuple exception. " + MISSING_CLOSING_PARENTHESIS + "\n";
+                return false;
+            }
+
+            if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                lexicalAnalyzer.nextToken();
+                return true;
+            }
+
+            if (!parameter_list()) {
+                errorList += "Invalid parameter list in field declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                errorList += "Invalid field declaration." + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            lexicalAnalyzer.nextToken();
+            return method_body();
+
         } else {
-            // check format: ["[" "]"] ["=" assignment_expression ]
+            // check format: ["[" "]"] ["=" assignment_expression ] ";"
+            if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+
+                lexicalAnalyzer.getToken();
+                if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
+                    errorList += "Invalid field declaration. Missing closing array bracket." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                    return false;
+                }
+
+                lexicalAnalyzer.nextToken();
+                if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+                    errorList += "Invalid field declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                    return false;
+                }
+            }
+
+            if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+
+                lexicalAnalyzer.nextToken();
+                if (lexicalAnalyzer.getToken() instanceof NullTuple || !assignment_expression()) {
+                    errorList += "Invalid field declaration. Invalid assignment expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                    return false;
+                }
+
+                if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+                    errorList += "Invalid field declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                    return false;
+                }
+            }
+
+            if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                errorList += "Invalid field declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            lexicalAnalyzer.nextToken();
+            return true;
         }
-        return false;
     }
 
     public boolean class_member_declaration() {

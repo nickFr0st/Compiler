@@ -696,6 +696,7 @@ public class Compiler {
             return false;
         }
 
+        lexicalAnalyzer.getToken();
         return true;
     }
 
@@ -709,14 +710,14 @@ public class Compiler {
         String className = lexicalAnalyzer.getToken().getLexi();
 
         lexicalAnalyzer.nextToken();
-        if(lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-            errorList += MISSING_OPENING_PARENTHESIS +" for constructor declaration. 'class " + className + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+            errorList += MISSING_OPENING_PARENTHESIS + " for constructor declaration. 'class " + className + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
 
         lexicalAnalyzer.nextToken();
-        if(lexicalAnalyzer.getToken() instanceof NullTuple) {
-            errorList += MISSING_CLOSING_PARENTHESIS +" for constructor declaration. 'class " + className + "'\n";
+        if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+            errorList += MISSING_CLOSING_PARENTHESIS + " for constructor declaration. 'class " + className + "'\n";
             return false;
         }
 
@@ -724,16 +725,17 @@ public class Compiler {
             return true;
         }
 
-        if(!parameter_list()) {
-            errorList += "Invalid parameter list for constructor declaration. 'class " + className + "'"  + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+        if (!parameter_list()) {
+            errorList += "Invalid parameter list for constructor declaration. 'class " + className + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
 
-        if(lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-            errorList += MISSING_CLOSING_PARENTHESIS +" for constructor declaration. 'class " + className + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+            errorList += MISSING_CLOSING_PARENTHESIS + " for constructor declaration. 'class " + className + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
 
+        lexicalAnalyzer.nextToken();
         return method_body();
     }
 
@@ -809,10 +811,36 @@ public class Compiler {
     public boolean class_member_declaration() {
         if (lexicalAnalyzer.getToken().getType().equals(KeyConst.MODIFIER.getKey())) {
             // check format: modifier type identifier field_declaration
+
+            lexicalAnalyzer.nextToken();
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !type(lexicalAnalyzer.getToken().getType())) {
+                errorList += "Invalid class member declaration. Missing a valid type." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            lexicalAnalyzer.nextToken();
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
+                errorList += "Invalid class member declaration. Missing a valid identifier." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            lexicalAnalyzer.nextToken();
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !field_declaration()) {
+                errorList += "Invalid class member declaration. Invalid field declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            return true;
+
         } else {
             // check format: constructor_declaration
+            if (!constructor_declaration()) {
+                errorList += "Invalid class member declaration. Invalid constructor declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            return true;
         }
-        return false;
     }
 
     public boolean class_declaration() {

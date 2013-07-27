@@ -39,6 +39,8 @@ public class Compiler {
         if (!compiliation_unit()) {
             System.out.print(errorList);
             System.exit(0);
+        } else {
+            System.out.print("Success!");
         }
     }
 
@@ -70,6 +72,8 @@ public class Compiler {
                 errorList += ILLEGAL_NEW_DECLARATION + OPERATION + " " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
+
+            lexicalAnalyzer.nextToken();
             return true;
         }
 
@@ -91,6 +95,8 @@ public class Compiler {
                 errorList += ILLEGAL_NEW_DECLARATION + OPERATION + ", " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
+
+            lexicalAnalyzer.nextToken();
             return true;
         }
 
@@ -113,7 +119,6 @@ public class Compiler {
                 return false;
             }
 
-            lexicalAnalyzer.nextToken();
             return true;
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.ATOI.getKey())) {
 
@@ -534,7 +539,6 @@ public class Compiler {
 
             // check format: expression ";"
             if (!expression()) {
-                errorList += "Invalid statement expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
@@ -593,7 +597,7 @@ public class Compiler {
 
     public boolean variable_declaration() {
         // check format: type identifier ["[" "]"] ["=" assignment_expression ] ";"
-        if (!type(lexicalAnalyzer.getToken().getType())) {
+        if (type(lexicalAnalyzer.getToken().getType())) {
 
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !type(lexicalAnalyzer.getToken().getType())) {
                 errorList += "Variable declarations must start with a valid type." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
@@ -696,7 +700,7 @@ public class Compiler {
             return false;
         }
 
-        lexicalAnalyzer.getToken();
+        lexicalAnalyzer.nextToken();
         return true;
     }
 
@@ -832,7 +836,7 @@ public class Compiler {
 
             return true;
 
-        } else {
+        } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.CLASS_NAME.getKey())) {
             // check format: constructor_declaration
             if (!constructor_declaration()) {
                 errorList += "Invalid class member declaration. Invalid constructor declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
@@ -841,17 +845,19 @@ public class Compiler {
 
             return true;
         }
+
+        return false;
     }
 
     public boolean class_declaration() {
         // check format: "class" class_name "{" {class_member_declaration} "}"
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(KeyConst.CLASS.getKey()))  {
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(KeyConst.CLASS.getKey())) {
             errorList += "Invalid class declaration. Missing 'class' tag." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
 
         lexicalAnalyzer.nextToken();
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(KeyConst.CLASS_NAME.getKey()))  {
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(KeyConst.CLASS_NAME.getKey())) {
             errorList += "Invalid class declaration. Missing a valid class name." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
@@ -897,7 +903,7 @@ public class Compiler {
                 return false;
             }
 
-            while(lexicalAnalyzer.getToken().getLexi().equals(KeyConst.CLASS.getKey())) {
+            while (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.CLASS.getKey())) {
                 if (!class_declaration()) {
                     errorList += "Invalid compilation unit. Invalid class declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                     return false;

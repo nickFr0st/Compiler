@@ -45,12 +45,20 @@ public class Compiler {
     }
 
     private boolean new_declaration() {
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
 
             // check format: "(" [argument_list] ")"
             lexicalAnalyzer.nextToken();
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 errorList += ILLEGAL_NEW_DECLARATION + OPERATION + " " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
@@ -68,6 +76,10 @@ public class Compiler {
                 }
             }
 
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 errorList += ILLEGAL_NEW_DECLARATION + OPERATION + " " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
@@ -81,6 +93,10 @@ public class Compiler {
 
             // check format: "[" expression "]"
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 errorList += ILLEGAL_NEW_DECLARATION + OPERATION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
@@ -88,6 +104,10 @@ public class Compiler {
 
             if (!expression()) {
                 errorList += ILLEGAL_NEW_DECLARATION + EXPRESSION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
@@ -104,16 +124,28 @@ public class Compiler {
     }
 
     private boolean assignment_expression() {
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken().getType().equals(KeyConst.NEW.getKey())) {
 
             // check format: "new" type new_declaration
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !type(lexicalAnalyzer.getToken().getType())) {
                 errorList += ILLEGAL_NEW_OPERATION + " " + INVALID_TYPE + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !new_declaration()) {
                 errorList += ILLEGAL_NEW_OPERATION + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
@@ -124,14 +156,26 @@ public class Compiler {
 
             // check format: "atoi" "(" expression ")"
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
                 errorList += ILLEGAL_ATOI_OPERATION + MISSING_OPENING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
                 errorList += ILLEGAL_ATOI_OPERATION + " Invalid Expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
@@ -146,14 +190,26 @@ public class Compiler {
 
             // check format: "itoa" "(" expression ")"
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
                 errorList += ILLEGAL_ITOA_OPERATION + " " + MISSING_OPENING_PARENTHESIS + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
                 errorList += ILLEGAL_ITOA_OPERATION + " Invalid Expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
@@ -177,39 +233,60 @@ public class Compiler {
     }
 
     public boolean expressionz() {
-        Tuple token = lexicalAnalyzer.getToken();
-        if (token.getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || isLogicalConnectiveExpression(token.getType()) || isBooleanExpression(token.getType()) || isMathematicalExpression(token.getType())) {
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
 
-            lexicalAnalyzer.nextToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += "expressionz missing right hand expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+        Tuple token = lexicalAnalyzer.getToken();
+        if (!(token.getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || isLogicalConnectiveExpression(token.getType()) || isBooleanExpression(token.getType()) || isMathematicalExpression(token.getType()))) {
+            errorList += "Invalid expressionz." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+            return false;
+        }
+
+        lexicalAnalyzer.nextToken();
+        if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+            errorList += "expressionz missing right hand expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+            return false;
+        }
+
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
+        if (token.getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+            if (!assignment_expression()) {
+                errorList += "Invalid assignment expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
             }
-
-            if (token.getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
-                if (!assignment_expression()) {
-                    errorList += "Invalid assignment expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
-                    return false;
-                }
-            } else {
-                if (!expression()) {
-                    errorList += "Invalid expressionz expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
-                    return false;
-                }
+        } else {
+            if (!expression()) {
+                errorList += "Invalid expressionz expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                return false;
             }
-
-            return true;
         }
-        return false;
+
+        return true;
     }
 
     public boolean expression() {
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
 
             // check format: "(" expression ")" [expressionz]
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
                 errorList += ILLEGAL_EXPRESSION + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
@@ -223,10 +300,15 @@ public class Compiler {
                 return true;
             }
 
-            String errCheck = errorList;
-            expressionz();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
 
-            return errCheck.equals(errorList);
+            if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || isLogicalConnectiveExpression(lexicalAnalyzer.getToken().getType()) || isBooleanExpression(lexicalAnalyzer.getToken().getType()) || isMathematicalExpression(lexicalAnalyzer.getToken().getType())) {
+                return expressionz();
+            }
+
+            return true;
 
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.TRUE.getKey()) || lexicalAnalyzer.getToken().getType().equals(KeyConst.FALSE.getKey()) || lexicalAnalyzer.getToken().getType().equals(KeyConst.NULL.getKey()) || lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
 
@@ -236,10 +318,15 @@ public class Compiler {
                 return true;
             }
 
-            String errCheck = errorList;
-            expressionz();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
 
-            return errCheck.equals(errorList);
+            if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || isLogicalConnectiveExpression(lexicalAnalyzer.getToken().getType()) || isBooleanExpression(lexicalAnalyzer.getToken().getType()) || isMathematicalExpression(lexicalAnalyzer.getToken().getType())) {
+                return expressionz();
+            }
+
+            return true;
 
         } else if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
 
@@ -248,6 +335,11 @@ public class Compiler {
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 return true;
             }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             String errCheck = errorList;
 
             fn_arr_member();
@@ -259,6 +351,10 @@ public class Compiler {
                 return true;
             }
 
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             member_refz();
             if (!errCheck.equals(errorList)) {
                 return false;
@@ -268,17 +364,25 @@ public class Compiler {
                 return true;
             }
 
-            expressionz();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
 
-            return errCheck.equals(errorList);
+            if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || isLogicalConnectiveExpression(lexicalAnalyzer.getToken().getType()) || isBooleanExpression(lexicalAnalyzer.getToken().getType()) || isMathematicalExpression(lexicalAnalyzer.getToken().getType())) {
+                return expressionz();
+            }
+
+            return true;
         } else if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.UNKNOWN.name())) {
-            errorList += "Unknown symbol." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return false;
+            return !isUnknownSymbol(lexicalAnalyzer.getToken().getType());
         }
         return false;
     }
 
     private boolean argument_list() {
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
 
         // check format: expression { "," expression}
         if (!expression()) {
@@ -288,6 +392,10 @@ public class Compiler {
 
         while (!(lexicalAnalyzer.getToken() instanceof NullTuple) && lexicalAnalyzer.getToken().getLexi().equals(",")) {
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (!expression()) {
                 errorList += INVALID_ARGUMENT_LIST + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
@@ -297,6 +405,9 @@ public class Compiler {
     }
 
     private boolean fn_arr_member() {
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
 
         // check format: "(" [ argument_list ] ")" | "[" expression "]"
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
@@ -308,12 +419,20 @@ public class Compiler {
                 return false;
             }
 
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 return true;
             }
 
             if (!argument_list()) {
                 errorList += INVALID_ARGUMENT_LIST + " in function parameter." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
@@ -329,8 +448,16 @@ public class Compiler {
 
             //check format: "[" expression "]"
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
                 errorList += "Invalid array expression." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
@@ -346,6 +473,9 @@ public class Compiler {
     }
 
     private boolean member_refz() {
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
 
         // check format: "." identifier [ fn_arr_member ] [ member_refz ]
         if (!lexicalAnalyzer.getToken().getLexi().equals(".")) {
@@ -353,6 +483,10 @@ public class Compiler {
         }
 
         lexicalAnalyzer.nextToken();
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
             errorList += "Invalid member ref." + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
             return false;
@@ -361,6 +495,10 @@ public class Compiler {
         lexicalAnalyzer.nextToken();
         if (lexicalAnalyzer.getToken() instanceof NullTuple) {
             return true;
+        }
+
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
         }
 
         String errCheck = errorList;
@@ -374,27 +512,46 @@ public class Compiler {
             return true;
         }
 
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         member_refz();
         return errCheck.equals(errorList);
     }
 
     public boolean statement() {
-        if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
 
-            // check format: "(" {statement} ")"
+        if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
+
+            // check format: "{" {statement} "}"
             String errorCheck = errorList;
 
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             while (statement()) {
-                lexicalAnalyzer.nextToken();
+                lexicalAnalyzer.nextToken();    //todo: <- this could be a problem
+                if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                    return false;
+                }
             }
 
             if (!errorCheck.equals(errorList)) {
                 return false;
             }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                errorList += INVALID_STATEMENT + " " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
+                errorList += INVALID_STATEMENT + " Missing a closing block." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
@@ -405,14 +562,26 @@ public class Compiler {
 
             // check format: "if" "(" expression ")" statement [ "else" statement ]
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
                 errorList += INVALID_STATEMENT + " " + MISSING_OPENING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
                 errorList += "'if' statement requires a valid expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
@@ -422,6 +591,10 @@ public class Compiler {
             }
 
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (!statement()) {
                 errorList += INVALID_STATEMENT + " 'if' statement." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
@@ -430,6 +603,10 @@ public class Compiler {
             if (!(lexicalAnalyzer.getToken() instanceof NullTuple) && lexicalAnalyzer.getToken().getLexi().equals(KeyConst.ELSE.getKey())) {
 
                 lexicalAnalyzer.nextToken();
+                if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                    return false;
+                }
+
                 if (lexicalAnalyzer.getToken() instanceof NullTuple || !statement()) {
                     errorList += INVALID_STATEMENT + " a valid statement is required after an else statement." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                     return false;
@@ -442,19 +619,36 @@ public class Compiler {
 
             // check format: "while" "(" expression ")" statement
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
                 errorList += INVALID_STATEMENT + " " + MISSING_OPENING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
                 errorList += "'while' statement requires a valid expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 errorList += INVALID_STATEMENT + " " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
@@ -474,12 +668,20 @@ public class Compiler {
                 return false;
             }
 
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                 return true;
             }
 
             if (!expression()) {
                 errorList += "Invalid 'return' statement expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
@@ -495,14 +697,26 @@ public class Compiler {
 
             // check format: "cout" "<<" expression ";"
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getLexi().equals("<<")) {
                 errorList += INVALID_STATEMENT + "'cout' statement missing extraction operator." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
                 errorList += "'cout' statement requires a valid expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
@@ -518,14 +732,26 @@ public class Compiler {
 
             // check format: "cin" ">>" expression ";"
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getLexi().equals(">>")) {
                 errorList += INVALID_STATEMENT + "'cin' statement missing extraction operator." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
                 errorList += "'cin' statement requires a valid expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
@@ -544,6 +770,10 @@ public class Compiler {
                 return false;
             }
 
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                 errorList += INVALID_STATEMENT + " 'expression' statement must end with a ';'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
@@ -553,6 +783,10 @@ public class Compiler {
     }
 
     public boolean parameter() {
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         // check format: type identifier ["[" "]"]
 
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !type(lexicalAnalyzer.getToken().getType())) {
@@ -561,17 +795,29 @@ public class Compiler {
         }
 
         lexicalAnalyzer.nextToken();
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
             errorList += "Parameter declarations require a valid identifier." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
 
         lexicalAnalyzer.nextToken();
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
             return true;
         }
 
         lexicalAnalyzer.getToken();
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
             errorList += "Invalid parameter declaration. Missing closing array bracket." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
@@ -581,14 +827,27 @@ public class Compiler {
     }
 
     public boolean parameter_list() {
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         // check format: parameter { "," parameter}
         if (!parameter()) {
             errorList += "Invalid parameter_list" + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
             return false;
         }
 
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         while (!(lexicalAnalyzer.getToken() instanceof NullTuple) && lexicalAnalyzer.getToken().getLexi().equals(",")) {
             lexicalAnalyzer.nextToken();
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (!parameter()) {
                 errorList += "Invalid parameter_list" + LINE + lexicalAnalyzer.previousToken().getLineNum() + "\n";
                 return false;
@@ -598,6 +857,10 @@ public class Compiler {
     }
 
     public boolean variable_declaration() {
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         // check format: type identifier ["[" "]"] ["=" assignment_expression ] ";"
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !type(lexicalAnalyzer.getToken().getType())) {
             errorList += "Variable declarations must start with a valid type." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
@@ -605,6 +868,10 @@ public class Compiler {
         }
 
         lexicalAnalyzer.nextToken();
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
             errorList += "Variable declarations require a valid identifier." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
@@ -616,9 +883,17 @@ public class Compiler {
             return false;
         }
 
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
 
             lexicalAnalyzer.getToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
                 errorList += "Invalid parameter declaration. Missing closing array bracket." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
@@ -629,11 +904,19 @@ public class Compiler {
                 errorList += "Invalid variable declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
         }
 
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
 
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !assignment_expression()) {
                 errorList += "Invalid variable declaration. Invalid assignment expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
@@ -641,6 +924,10 @@ public class Compiler {
 
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 errorList += "Invalid variable declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
         }
@@ -655,6 +942,10 @@ public class Compiler {
     }
 
     public boolean method_body() {
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         // check format: "{" {variable_declaration} {statement} "}"
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
             errorList += "Method body must begin with an open block '{'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
@@ -667,12 +958,20 @@ public class Compiler {
             return false;
         }
 
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         String errorCheck = errorList;
 
         if (type(lexicalAnalyzer.getToken().getType())) {
             while (variable_declaration()) {
                 if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                     errorList += "Method body must end with a closing block '}'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                    return false;
+                }
+
+                if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                     return false;
                 }
 
@@ -685,15 +984,27 @@ public class Compiler {
             }
         }
 
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         while (statement()) {
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 errorList += "Method body must end with a closing block '}'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
         }
 
         if (!errorCheck.equals(errorList)) {
             errorList += "Invalid statement in method body." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
         }
 
@@ -707,6 +1018,10 @@ public class Compiler {
     }
 
     public boolean constructor_declaration() {
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         // check format: class_name "(" [parameter_list] ")" method_body
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(KeyConst.CLASS_NAME.getKey())) {
             errorList += "Invalid class name in constructor declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
@@ -716,6 +1031,10 @@ public class Compiler {
         String className = lexicalAnalyzer.getToken().getLexi();
 
         lexicalAnalyzer.nextToken();
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
             errorList += MISSING_OPENING_PARENTHESIS + " for constructor declaration. 'class " + className + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
@@ -727,11 +1046,19 @@ public class Compiler {
             return false;
         }
 
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
             if (!parameter_list()) {
                 errorList += "Invalid parameter list for constructor declaration. 'class " + className + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
+        }
+
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
         }
 
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
@@ -740,16 +1067,28 @@ public class Compiler {
         }
 
         lexicalAnalyzer.nextToken();
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         return method_body();
     }
 
     public boolean field_declaration() {
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
             // check format: "(" [parameter_list] ")" method_body
 
             lexicalAnalyzer.nextToken();
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 errorList += "Invalid field declaration. NullTuple exception. " + MISSING_CLOSING_PARENTHESIS + "\n";
+                return false;
+            }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
@@ -763,19 +1102,36 @@ public class Compiler {
                 return false;
             }
 
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 errorList += "Invalid field declaration." + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             return method_body();
 
         } else {
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             // check format: ["[" "]"] ["=" assignment_expression ] ";"
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
 
                 lexicalAnalyzer.getToken();
+                if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                    return false;
+                }
+
                 if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
                     errorList += "Invalid field declaration. Missing closing array bracket." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                     return false;
@@ -786,11 +1142,19 @@ public class Compiler {
                     errorList += "Invalid field declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                     return false;
                 }
+
+                if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                    return false;
+                }
             }
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
 
                 lexicalAnalyzer.nextToken();
+                if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                    return false;
+                }
+
                 if (lexicalAnalyzer.getToken() instanceof NullTuple || !assignment_expression()) {
                     errorList += "Invalid field declaration. Invalid assignment expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                     return false;
@@ -798,6 +1162,10 @@ public class Compiler {
 
                 if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                     errorList += "Invalid field declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                    return false;
+                }
+
+                if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                     return false;
                 }
             }
@@ -813,22 +1181,38 @@ public class Compiler {
     }
 
     public boolean class_member_declaration() {
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken().getType().equals(KeyConst.MODIFIER.getKey())) {
             // check format: modifier type identifier field_declaration
 
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !type(lexicalAnalyzer.getToken().getType())) {
                 errorList += "Invalid class member declaration. Missing a valid type." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
                 errorList += "Invalid class member declaration. Missing a valid identifier." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             if (lexicalAnalyzer.getToken() instanceof NullTuple || !field_declaration()) {
                 errorList += "Invalid class member declaration. Invalid field declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
@@ -850,6 +1234,10 @@ public class Compiler {
     }
 
     public boolean class_declaration() {
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         // check format: "class" class_name "{" {class_member_declaration} "}"
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(KeyConst.CLASS.getKey())) {
             errorList += "Invalid class declaration. Missing 'class' tag." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
@@ -857,27 +1245,47 @@ public class Compiler {
         }
 
         lexicalAnalyzer.nextToken();
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(KeyConst.CLASS_NAME.getKey())) {
             errorList += "Invalid class declaration. Missing a valid class name." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
 
         lexicalAnalyzer.nextToken();
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
             errorList += "Invalid class declaration. Missing opening block." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
 
         lexicalAnalyzer.nextToken();
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         while (class_member_declaration()) {
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 errorList += "Method body must end with a closing block '}'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
         }
 
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
             errorList += "Invalid class declaration. Missing closing block." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
         }
 
@@ -892,6 +1300,10 @@ public class Compiler {
             return false;
         }
 
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (!lexicalAnalyzer.getToken().getLexi().equals(KeyConst.VOID.getKey())) {
             if (!class_declaration()) {
                 errorList += "Invalid compilation unit. Invalid class declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
@@ -903,9 +1315,17 @@ public class Compiler {
                 return false;
             }
 
+            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                return false;
+            }
+
             while (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.CLASS.getKey())) {
                 if (!class_declaration()) {
                     errorList += "Invalid compilation unit. Invalid class declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                    return false;
+                }
+
+                if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                     return false;
                 }
             }
@@ -917,24 +1337,40 @@ public class Compiler {
         }
 
         lexicalAnalyzer.nextToken();
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getLexi().equals(KeyConst.MAIN.getKey())) {
             errorList += "Invalid compilation unit. Invalid name for method 'main'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
 
         lexicalAnalyzer.nextToken();
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
             errorList += "Invalid compilation unit. Invalid 'main' method. " + MISSING_OPENING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
 
         lexicalAnalyzer.nextToken();
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
             errorList += "Invalid compilation unit. Invalid 'main' method. " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
 
         lexicalAnalyzer.nextToken();
+        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            return false;
+        }
+
         return method_body();
     }
 
@@ -952,5 +1388,14 @@ public class Compiler {
 
     private boolean isMathematicalExpression(String itemType) {
         return itemType.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name());
+    }
+
+    private boolean isUnknownSymbol(String type) {
+        if (type.equals(LexicalAnalyzer.tokenTypesEnum.UNKNOWN.name())) {
+            errorList += "Unknown Symbol on" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return true;
+        }
+
+        return false;
     }
 }

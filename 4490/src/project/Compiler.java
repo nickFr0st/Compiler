@@ -962,6 +962,11 @@ public class Compiler {
             return false;
         }
 
+        if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
+            lexicalAnalyzer.nextToken();
+            return true;
+        }
+
         String errorCheck = errorList;
 
         if (type(lexicalAnalyzer.getToken().getType())) {
@@ -986,6 +991,11 @@ public class Compiler {
 
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
+        }
+
+        if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
+            lexicalAnalyzer.nextToken();
+            return true;
         }
 
         while (statement()) {

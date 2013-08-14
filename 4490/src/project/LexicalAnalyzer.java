@@ -402,11 +402,18 @@ public class LexicalAnalyzer {
         }
     }
 
-    public Tuple previousToken() {
+    public Tuple peekPreviousToken() {
         if (lexPtr == 0) {
             return new NullTuple();
         }
         return lexicalList.get(lexPtr - 1);
+    }
+
+    public Tuple previousToken() {
+        if (lexPtr == 0) {
+            return new NullTuple();
+        }
+        return lexicalList.get(--lexPtr);
     }
 
     public void nextToken() {

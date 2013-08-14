@@ -3,18 +3,20 @@
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Compiler.java" afterPath="$PROJECT_DIR$/src/project/Compiler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/tests/CompilerTest.java" afterPath="$PROJECT_DIR$/src/project/tests/CompilerTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" afterPath="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1373949090855" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1375233276083" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1376511765747" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
-    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1375235508757" ignored="false" />
+    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1376513350075" ignored="false" />
     <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1375234857088" ignored="false" />
     <file path="/LexicalAnalizer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358821966318" ignored="false" />
     <file path="/Tuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1373949924903" ignored="false" />
-    <file path="/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374808228540" ignored="false" />
+    <file path="/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1376513330205" ignored="false" />
     <file path="/SyntacsAnalyer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358913752123" ignored="false" />
     <file path="/SyntaxAnalyer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1359012344904" ignored="false" />
     <file path="/SyntaxAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1360450240999" ignored="false" />
@@ -64,7 +66,9 @@
     <file path="$PROJECT_DIR$/../../../Compiler/TheCompiler/src/test/java/com/compiler/TupleTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374030181988" ignored="false" />
     <file path="$PROJECT_DIR$/../../../Compiler/TheCompiler/src/test/java/com/compiler/NullTupleTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374030527153" ignored="false" />
     <file path="$PROJECT_DIR$/../../../Compiler/TheCompiler/src/test/java/com/compiler/LexicalAnalyzerTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374030585568" ignored="false" />
-    <file path="/CompilerTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1374616544242" ignored="false" />
+    <file path="/CompilerTest.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1376514710596" ignored="false" />
+    <file path="C:/dev/trunk2/fb/swing/src/java/com/evnt/common/swing/swingutil/parampanels/PPStringProductNum.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1376512370424" ignored="false" />
+    <file path="C:/dev/trunk2/fb/core/src/java/com/evnt/eve/modules/AccountingModule.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1376512370424" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,9 +82,9 @@
     <splitter proportion="0.5" />
   </component>
   <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/Complier$ProgramDriver.coverage" NAME="ProgramDriver Coverage Results" MODIFIED="1376514531623" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/Complier$CompilerTest.coverage" NAME="CompilerTest Coverage Results" MODIFIED="1376514752628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/Complier$LexicalAnalyzerTest.coverage" NAME="LexicalAnalyzerTest Coverage Results" MODIFIED="1374615622931" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/Complier$ProgramDriver.coverage" NAME="ProgramDriver Coverage Results" MODIFIED="1375234180874" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/Complier$CompilerTest.coverage" NAME="CompilerTest Coverage Results" MODIFIED="1374802277667" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/Complier$TupleTest.coverage" NAME="TupleTest Coverage Results" MODIFIED="1374695649648" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
   </component>
   <component name="CreatePatchCommitExecutor">
@@ -127,7 +131,22 @@
       </breakpoint>
     </breakpoint_any>
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/project/Compiler.java" line="650" class="project.Compiler" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/tests/CompilerTest.java" line="58" class="project.tests.CompilerTest" package="project.tests">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/project/tests/CompilerTest.java" line="75" class="project.tests.CompilerTest" package="project.tests">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -143,9 +162,34 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </line_breakpoints>
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
+  </component>
+  <component name="DockManager">
+    <window id="1">
+      <content type="file-editors">
+        <state>
+          <leaf>
+            <file leaf-file-name="CompilerTest.java" pinned="false" current="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/src/project/tests/CompilerTest.java">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state line="131" column="49" selection-start="4434" selection-end="4434" vertical-scroll-proportion="0.032223415">
+                    <folding>
+                      <element signature="e#636#643#0" expanded="true" />
+                      <element signature="e#1297#1304#0" expanded="true" />
+                      <element signature="e#1955#1962#0" expanded="true" />
+                      <element signature="e#2689#2696#0" expanded="true" />
+                      <element signature="e#3982#3989#0" expanded="true" />
+                      <element signature="e#4586#4593#0" expanded="true" />
+                    </folding>
+                  </state>
+                </provider>
+              </entry>
+            </file>
+          </leaf>
+        </state>
+      </content>
+    </window>
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
@@ -156,7 +200,7 @@
       <file leaf-file-name="Compiler.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="964" column="0" selection-start="39944" selection-end="39944" vertical-scroll-proportion="0.63103956">
+            <state line="138" column="81" selection-start="5402" selection-end="5402" vertical-scroll-proportion="0.4580265">
               <folding />
             </state>
           </provider>
@@ -165,7 +209,7 @@
       <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="390" column="0" selection-start="14145" selection-end="14145" vertical-scroll-proportion="0.0">
+            <state line="415" column="41" selection-start="14759" selection-end="14759" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -174,7 +218,7 @@
       <file leaf-file-name="ProgramDriver.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/ProgramDriver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="49" selection-start="437" selection-end="437" vertical-scroll-proportion="0.0">
+            <state line="17" column="67" selection-start="571" selection-end="571" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -211,11 +255,11 @@
         <option value="$PROJECT_DIR$/src/project/tests/LexicalAnalyzerTest.java" />
         <option value="$PROJECT_DIR$/src/project/ModifierTypeConst.java" />
         <option value="$PROJECT_DIR$/src/project/CompilerTest.java" />
-        <option value="$PROJECT_DIR$/src/project/tests/CompilerTest.java" />
         <option value="$PROJECT_DIR$/src/project/KeyConst.java" />
-        <option value="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" />
         <option value="$PROJECT_DIR$/src/project/ProgramDriver.java" />
+        <option value="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" />
         <option value="$PROJECT_DIR$/src/project/Compiler.java" />
+        <option value="$PROJECT_DIR$/src/project/tests/CompilerTest.java" />
       </list>
     </option>
   </component>
@@ -224,10 +268,10 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="55" />
+    <option name="x" value="54" />
     <option name="y" value="-8" />
-    <option name="width" value="1873" />
-    <option name="height" value="1096" />
+    <option name="width" value="1634" />
+    <option name="height" value="1066" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -262,7 +306,7 @@
     <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator proportions="" version="1" splitterProportion="0.5">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -273,7 +317,88 @@
       <autoscrollFromSource />
       <sortByType />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Complier" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Complier" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="4490" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Complier" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="4490" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="project" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Complier" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="4490" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="project" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tests" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Complier" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="4490" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="project.structure.last.edited" value="Project" />
@@ -291,12 +416,12 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.includeInheritedMembers" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
-    <property name="FullScreen" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
+    <property name="FullScreen" value="false" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.searchVisible" value="true" />
-    <property name="dynamic.classpath" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="dynamic.classpath" value="false" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.Recents.Supers">
@@ -307,7 +432,7 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ProgramDriver">
+  <component name="RunManager" selected="JUnit.CompilerTest">
     <configuration default="false" name="ProgramDriver" type="Application" factoryName="Application" temporary="true">
       <extension name="coverage" enabled="false" merge="false" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="project.ProgramDriver" />
@@ -1232,15 +1357,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="55" y="-8" width="1873" height="1096" extended-state="6" />
+    <frame x="54" y="-8" width="1634" height="1066" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32800853" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25772098" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25751072" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.49806738" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -1248,18 +1373,18 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32909995" sideWeight="0.742279" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3288804" sideWeight="0.7435622" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15958034" sideWeight="0.742279" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15903307" sideWeight="0.742279" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32965213" sideWeight="0.7507987" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39977914" sideWeight="0.600639" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19160685" sideWeight="0.742279" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25772098" sideWeight="0.49806738" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19147582" sideWeight="0.7435622" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25643778" sideWeight="0.49806738" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32800853" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -1369,6 +1494,13 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/project/ProgramDriver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="49" selection-start="437" selection-end="437" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/lib/junit-4.10.jar!/org/junit/internal/runners/model/ReflectiveCallable.class">
       <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="40" selection-start="388" selection-end="388" vertical-scroll-proportion="-6.8" />
@@ -1396,13 +1528,6 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/tests/CompilerTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="81" column="61" selection-start="2241" selection-end="2241" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Tuple.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="30" column="23" selection-start="546" selection-end="546" vertical-scroll-proportion="0.7244318">
@@ -1413,11 +1538,6 @@
     <entry file="file://$PROJECT_DIR$/src/project/Memory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="16" column="0" selection-start="292" selection-end="292" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.7.0_10/src.zip!/java/lang/Enum.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="129" column="18" selection-start="3994" selection-end="3994" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/NullTuple.java">
@@ -1450,21 +1570,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/ProgramDriver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="49" selection-start="437" selection-end="437" vertical-scroll-proportion="0.0">
+        <state line="17" column="67" selection-start="571" selection-end="571" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="390" column="0" selection-start="14145" selection-end="14145" vertical-scroll-proportion="0.0">
+        <state line="415" column="41" selection-start="14759" selection-end="14759" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/tests/CompilerTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="131" column="49" selection-start="4434" selection-end="4434" vertical-scroll-proportion="0.032223415">
+          <folding>
+            <element signature="e#636#643#0" expanded="true" />
+            <element signature="e#1297#1304#0" expanded="true" />
+            <element signature="e#1955#1962#0" expanded="true" />
+            <element signature="e#2689#2696#0" expanded="true" />
+            <element signature="e#3982#3989#0" expanded="true" />
+            <element signature="e#4586#4593#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="964" column="0" selection-start="39944" selection-end="39944" vertical-scroll-proportion="0.63103956">
+        <state line="138" column="81" selection-start="5402" selection-end="5402" vertical-scroll-proportion="0.4580265">
           <folding />
         </state>
       </provider>

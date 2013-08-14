@@ -26,22 +26,106 @@ public class CompilerTest {
     }
 
     @Test
-    public void testExpressionz() {
-        assertTrue(compiler.expression());
-    }
-
-    @Test
-    public void testExpressionzNull() {
+    public void testExpressionzUnknown() {
         ArrayList<Tuple> lexicalList = new ArrayList<Tuple>();
-        Tuple t1 = new Tuple("h", "IDENTIFIER", 0);
-        Tuple t2 = new Tuple("=", "ASSIGNMENT_OPR", 0);
+        Tuple t1 = new Tuple(":[", "UNKNOWN", 1);
+        Tuple t2 = new Tuple("=", "ASSIGNMENT_OPR", 1);
 
         LexicalAnalyzer lexicalAnalyzer1 = new LexicalAnalyzer();
         lexicalList.add(t1);
         lexicalList.add(t2);
+        lexicalAnalyzer1.setLexicalList(lexicalList);
 
         compiler = new Compiler(lexicalAnalyzer1);
-        assertFalse(compiler.expression());
+        assertFalse(compiler.expressionz());
+        assertEquals(t1, compiler.getLexicalAnalyzer().getToken());
+        assertEquals("Unknown Symbol on Line: 1\n", compiler.getErrorList());
+    }
+
+    @Test
+    public void testExpressionzInvalidExpression() {
+        ArrayList<Tuple> lexicalList = new ArrayList<Tuple>();
+        Tuple t1 = new Tuple("a", "CHARACTER", 1);
+        Tuple t2 = new Tuple("=", "ASSIGNMENT_OPR", 1);
+
+        LexicalAnalyzer lexicalAnalyzer1 = new LexicalAnalyzer();
+        lexicalList.add(t1);
+        lexicalList.add(t2);
+        lexicalAnalyzer1.setLexicalList(lexicalList);
+
+        compiler = new Compiler(lexicalAnalyzer1);
+        assertFalse(compiler.expressionz());
+        assertEquals(t1, compiler.getLexicalAnalyzer().getToken());
+        assertEquals("Invalid expressionz. Line: 1\n", compiler.getErrorList());
+    }
+
+    @Test
+    public void testExpressionzUnknownTwo() {
+        ArrayList<Tuple> lexicalList = new ArrayList<Tuple>();
+        Tuple t1 = new Tuple("+", "MATH_OPR", 0);
+        Tuple t2 = new Tuple("[Y", "UNKNOWN", 1);
+
+        LexicalAnalyzer lexicalAnalyzer1 = new LexicalAnalyzer();
+        lexicalList.add(t1);
+        lexicalList.add(t2);
+        lexicalAnalyzer1.setLexicalList(lexicalList);
+
+        compiler = new Compiler(lexicalAnalyzer1);
+        assertFalse(compiler.expressionz());
+        assertEquals(t1, compiler.getLexicalAnalyzer().getToken());
+        assertEquals("Unknown Symbol on Line: 1\n", compiler.getErrorList());
+    }
+
+    @Test
+    public void testExpressionzNullTuple() {
+        Tuple t1 = new Tuple("+", "MATH_OPR", 1);
+        Tuple t2 = new NullTuple();
+
+        ArrayList<Tuple> lexicalList = new ArrayList<Tuple>();
+        lexicalList.add(t1);
+        lexicalList.add(t2);
+
+        LexicalAnalyzer lexicalAnalyzer1 = new LexicalAnalyzer();
+        lexicalAnalyzer1.setLexicalList(lexicalList);
+
+        compiler = new Compiler(lexicalAnalyzer1);
+        assertFalse(compiler.expressionz());
+        assertEquals(t1, compiler.getLexicalAnalyzer().getToken());
+        assertEquals("expressionz missing right hand expression. Line: 1\n", compiler.getErrorList());
+    }
+
+    @Test
+    public void testExpressionzBadAssignment() {
+        Tuple t1 = new Tuple("=", "ASSIGNMENT_OPR", 1);
+        Tuple t2 = new Tuple("+", "MATH_OPR", 1);
+
+        ArrayList<Tuple> lexicalList = new ArrayList<Tuple>();
+        lexicalList.add(t1);
+        lexicalList.add(t2);
+
+        LexicalAnalyzer lexicalAnalyzer1 = new LexicalAnalyzer();
+        lexicalAnalyzer1.setLexicalList(lexicalList);
+
+        compiler = new Compiler(lexicalAnalyzer1);
+        assertFalse(compiler.expressionz());
+        assertTrue(compiler.getErrorList().contains("Invalid assignment expression. Line: 1\n"));
+    }
+
+    @Test
+    public void testExpressionzBadExpression() {
+        Tuple t1 = new Tuple("+", "MATH_OPR", 1);
+        Tuple t2 = new Tuple("=", "ASSIGNMENT_OPR", 1);
+
+        ArrayList<Tuple> lexicalList = new ArrayList<Tuple>();
+        lexicalList.add(t1);
+        lexicalList.add(t2);
+
+        LexicalAnalyzer lexicalAnalyzer1 = new LexicalAnalyzer();
+        lexicalAnalyzer1.setLexicalList(lexicalList);
+
+        compiler = new Compiler(lexicalAnalyzer1);
+        assertFalse(compiler.expressionz());
+        assertTrue(compiler.getErrorList().contains("Invalid expressionz expression. Line: 1\n"));
     }
 
     @Test
@@ -61,33 +145,14 @@ public class CompilerTest {
     }
 
     @Test
-    public void testExpressionzNoneAssignmentFail() {
-        Tuple t2 = new Tuple("!=", "LOGICAL_OPR", 0);
-
-        ArrayList<Tuple> lexicalList = new ArrayList<Tuple>();
-        lexicalList.add(t2);
-
-        LexicalAnalyzer lexicalAnalyzer1 = new LexicalAnalyzer();
-        lexicalAnalyzer1.setLexicalList(lexicalList);
-
-        compiler = new Compiler(lexicalAnalyzer1);
-        assertFalse(compiler.expressionz());
+    public void testExpression() {
+        assertTrue(compiler.expression());
     }
 
     @Test
-    public void testExpressionzBadExpression() {
-        Tuple t2 = new Tuple("&&", "BOOLEAN_OPR", 0);
-        Tuple t3 = new Tuple("{0", "UNKNOWN", 0);
-
-        ArrayList<Tuple> lexicalList = new ArrayList<Tuple>();
-        lexicalList.add(t2);
-        lexicalList.add(t3);
-
-        LexicalAnalyzer lexicalAnalyzer1 = new LexicalAnalyzer();
-        lexicalAnalyzer1.setLexicalList(lexicalList);
-
-        compiler = new Compiler(lexicalAnalyzer1);
-        assertFalse(compiler.expressionz());
+    public void testExpressionNull() {
+        compiler = new Compiler(new LexicalAnalyzer());
+        assertFalse(compiler.expression());
     }
 
     private LexicalAnalyzer setupLexicalAnalyzer() {

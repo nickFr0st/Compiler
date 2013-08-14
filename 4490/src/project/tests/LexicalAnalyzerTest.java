@@ -105,7 +105,6 @@ public class LexicalAnalyzerTest {
         assertTrue(lexicalAnalyzer.getSymbolCheck().contains("\""));
         assertTrue(lexicalAnalyzer.getSymbolCheck().contains(","));
         assertTrue(lexicalAnalyzer.getSymbolCheck().contains("."));
-        assertTrue(lexicalAnalyzer.getSymbolCheck().contains(":"));
         assertTrue(lexicalAnalyzer.getSymbolCheck().contains("+"));
         assertTrue(lexicalAnalyzer.getSymbolCheck().contains("-"));
         assertTrue(lexicalAnalyzer.getSymbolCheck().contains("/"));

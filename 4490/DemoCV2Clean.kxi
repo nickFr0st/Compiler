@@ -1,0 +1,19 @@
+class H {
+	private Q q;
+	
+	public bool isTue(int i, char c) {
+		if (c == 'a') return true;
+		else if (c == 'b') return false;
+		else return i == 1;
+	}
+}
+
+void main() {
+	H h = new H();
+	
+	while(i != 0) {
+		if (j == 3) return 0;
+		i = 3;
+	}
+
+}

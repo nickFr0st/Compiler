@@ -1,7 +1,7 @@
 class H {
 	private Q q;
 	
-	public bool isTue(int i, char c) {
+	public bool isTrue(int i, char c) {
 		if (c == 'a') return true;
 		else if (c == 'b') return false;
 		else return i == 1;

@@ -403,10 +403,11 @@ public class LexicalAnalyzer {
     }
 
     public Tuple peekPreviousToken() {
-        if (lexPtr == 0) {
+        try {
+            return lexicalList.get(lexPtr - 1);
+        } catch (Exception e) {
             return new NullTuple();
         }
-        return lexicalList.get(lexPtr - 1);
     }
 
     public Tuple previousToken() {

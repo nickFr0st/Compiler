@@ -47,9 +47,11 @@ public class Compiler {
         if (!compiliation_unit()) {
             System.out.print(errorList);
             System.exit(0);
-        } else {
-            System.out.print("Success!");
         }
+
+        lexicalAnalyzer.resetList();
+
+        System.out.print("Success!");
     }
 
     private boolean new_declaration() {

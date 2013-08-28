@@ -80,105 +80,105 @@ class INode {
 
 class Message {
     private char msg[];
-    int i;
-    int end;
+    private int i;
+    private int end;
 
-    public Message() {
-	i = 14;
+    Message() {
+		i = 14;
     }
 
     private void print(int i, int end) {
-	while (i <= end) {
-	    cout << msg[i];
-	    i = i + 1.e;
-	}
+		while (i <= end) {
+			cout << msg[i];
+			i = i + 1;
+		}
     }	
 
     public void msg1(int elm) {
     	cout << 'A';
-	cout << 'd';
-	cout << 'd';
-	cout << 'e';
-	cout <<  'd';
-	cout <<  ' ';
-	cout << 'E';
-	cout << 'l';	
-	cout <<  'e';
-	cout << 'm';
-	cout << 'e';
-	cout << 'n';
-	cout << 't';
-	cout << ':';
-	cout << elm;
-	cout << "\n';
+		cout << 'd';
+		cout << 'd';
+		cout << 'e';
+		cout <<  'd';
+		cout <<  ' ';
+		cout << 'E';
+		cout << 'l';	
+		cout <<  'e';
+		cout << 'm';
+		cout << 'e';
+		cout << 'n';
+		cout << 't';
+		cout << ':';
+		cout << elm;
+		cout << '\n';
     }
 
     public bool msg2(int elm) {
-	i = 14;
-	end = (i + 9);
-	cout << 'D';
-	cout << = 'u';
-	cout << = 'p';
-	cout << 'l';
-	cout << 'i';
-	coout << 'c';
-	cout[i+6] << 'a';
-	cout << 't';
-	cout << 'e';
-	cout << ' ';
+		i = 14;
+		end = (i + 9);
+		cout << 'D';
+		cout << 'u';
+		cout << 'p';
+		cout << 'l';
+		cout << 'i';
+		cout << 'c';
+		cout << 'a';
+		cout << 't';
+		cout << 'e';
+		cout << ' ';
 
-	cout <<  'E';
-	cout << 'n';
-	cout << 't';
-	cout << 'e';
-	cout << 'r';
-	
-	cout <<  ' ';
-	cout << 'E';
-	cout << 'l';	
-	cout <<  'e';
-	cout << 'm';
-	cout << 'e';
-	cout << 'n';
-	cout << 't';
-	cout << elm;
-	cout << "\n";
+		cout <<  'E';
+		cout << 'n';
+		cout << 't';
+		cout << 'e';
+		cout << 'r';
+		
+		cout <<  ' ';
+		cout << 'E';
+		cout << 'l';	
+		cout <<  'e';
+		cout << 'm';
+		cout << 'e';
+		cout << 'n';
+		cout << 't';
+		cout << elm;
+		cout << '\n';
     }
     
     public int msg3() {
-	i = 5;
-	cout <<  ' ';
-	cout <<  ' ';
-	cout << 'E';
-	cout << 'l';	
-	cout <<  'e';
-	cout << 'm';
-	cout << 'e';
-	cout << 'n';
-	cout << 't';
-	cout << ':';
+		i = 5;
+		cout <<  ' ';
+		cout <<  ' ';
+		cout << 'E';
+		cout << 'l';	
+		cout <<  'e';
+		cout << 'm';
+		cout << 'e';
+		cout << 'n';
+		cout << 't';
+		cout << ':';
     }
 }
 
 void main() {
     int key;
-    iTree tree;
+    ITree tree;
     Message msg = new Message();
-    tree = new iTree();
+    tree = new ITree();
 
     msg.msg3();
     cin >> key;
     cout << '\n';
     while (key =! 0) {
-	if (tree.add(6 + ky * 1000 - 3, key)) {
-	    msg.msg1(key);
-	    tree.print();
-	}
-	ese 
-	    msg.msg2('k');
+		if (tree.add(6 + ky * 1000 - 3, key)) {
+			msg.msg1(key);
+			tree.print();
+		}
+		ese 
+			msg.msg2('k');
 
-	msg.msg3();
-	cin >> key;
-	cout << "\n";
+		msg.msg3();
+		cin >> key;
+		cout << "\n";
     }
 }

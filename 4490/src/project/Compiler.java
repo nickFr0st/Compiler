@@ -1162,7 +1162,7 @@ public class Compiler {
             // check format: ["[" "]"] ["=" assignment_expression ] ";"
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
 
-                lexicalAnalyzer.getToken();
+                lexicalAnalyzer.nextToken();
                 if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                     return false;
                 }

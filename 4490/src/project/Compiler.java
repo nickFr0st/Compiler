@@ -276,13 +276,8 @@ public class Compiler {
         }
 
         lexicalAnalyzer.nextToken();
-        if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             errorList += "expressionz missing right hand expression." + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
-            lexicalAnalyzer.previousToken();
-            return false;
-        }
-
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             lexicalAnalyzer.previousToken();
             return false;
         }
@@ -570,7 +565,7 @@ public class Compiler {
             }
 
             while (statement()) {
-                lexicalAnalyzer.nextToken();    //todo: <- this could be a problem
+                lexicalAnalyzer.nextToken();
                 if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                     return false;
                 }
@@ -589,7 +584,6 @@ public class Compiler {
                 return false;
             }
 
-            lexicalAnalyzer.nextToken();
             return true;
 
         } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.IF.getKey())) {
@@ -634,9 +628,11 @@ public class Compiler {
                 return false;
             }
 
-            if (!(lexicalAnalyzer.getToken() instanceof NullTuple) && lexicalAnalyzer.getToken().getLexi().equals(KeyConst.ELSE.getKey())) {
+            if (!(lexicalAnalyzer.peek() instanceof NullTuple) && lexicalAnalyzer.peek().getLexi().equals(KeyConst.ELSE.getKey())) {
 
                 lexicalAnalyzer.nextToken();
+                lexicalAnalyzer.nextToken();
+
                 if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                     return false;
                 }
@@ -724,7 +720,6 @@ public class Compiler {
                 return false;
             }
 
-            lexicalAnalyzer.nextToken();
             return true;
 
         } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.COUT.getKey())) {
@@ -759,7 +754,6 @@ public class Compiler {
                 return false;
             }
 
-            lexicalAnalyzer.nextToken();
             return true;
 
         } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.CIN.getKey())) {
@@ -794,7 +788,6 @@ public class Compiler {
                 return false;
             }
 
-            lexicalAnalyzer.nextToken();
             return true;
 
         } else {
@@ -812,6 +805,7 @@ public class Compiler {
                 errorList += INVALID_STATEMENT + " 'expression' statement must end with a ';'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
+
             return true;
         }
     }
@@ -956,12 +950,8 @@ public class Compiler {
                 return false;
             }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 errorList += "Invalid variable declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
         }
@@ -1033,6 +1023,7 @@ public class Compiler {
         }
 
         while (statement()) {
+            lexicalAnalyzer.nextToken();
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 errorList += "Method body must end with a closing block '}'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
@@ -1138,7 +1129,7 @@ public class Compiler {
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 lexicalAnalyzer.nextToken();
-                return true;
+                return method_body();
             }
 
             if (!parameter_list()) {
@@ -1415,6 +1406,7 @@ public class Compiler {
             return false;
         }
 
+        // at this point we have declared classes and "void main()"
         return method_body();
     }
 

@@ -11,12 +11,9 @@ import java.util.LinkedHashMap;
  */
 public class ProgramDriver {
     public static void main(String[] args) {
-        LinkedHashMap<String, Symbol> symbolTable = new LinkedHashMap<String, Symbol>();
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
         lexicalAnalyzer.processFile("DemoCV2Clean.kxi");
         Compiler compiler = new Compiler(lexicalAnalyzer);
-//        project.Compiler syntaxAnalyzer = new project.Compiler(lexicalAnalyzer, symbolTable);
-//        syntaxAnalyzer.evaluate();
         compiler.evaluate();
     }
 }

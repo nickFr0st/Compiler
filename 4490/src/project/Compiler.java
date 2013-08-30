@@ -1,7 +1,6 @@
 package project;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 /**
@@ -1298,7 +1297,7 @@ public class Compiler {
             return false;
         }
 
-        symbolTable.put("C" + variableId, new Symbol(scope, "C" + variableId, lexicalAnalyzer.getToken().getLexi(), "Class", null));
+        symbolTable.put("C" + variableId, new Symbol(scope, "C" + variableId, lexicalAnalyzer.getToken().getLexi(), "Class", null, 0));
         variableId++;
         scope += lexicalAnalyzer.getToken().getLexi();
 

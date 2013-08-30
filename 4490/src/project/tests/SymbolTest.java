@@ -14,15 +14,16 @@ import static junit.framework.Assert.assertNull;
  * Time: 11:31 PM
  */
 public class SymbolTest {
-    Symbol symbol;
-    String scope = "g.Cat.run";
-    String symId = "L106";
-    String value = "speed";
-    String kind = "lvar";
+    private Symbol symbol;
+    private String scope = "g.Cat.run";
+    private String symId = "L106";
+    private String value = "speed";
+    private String kind = "lvar";
+    private int size = 6;
 
     @Before
     public void setUp() throws Exception {
-        symbol = new Symbol(scope, symId, value, kind, null);
+        symbol = new Symbol(scope, symId, value, kind, null, size);
     }
 
     @Test
@@ -51,5 +52,10 @@ public class SymbolTest {
     @Test
     public void testGetData() throws Exception {
         assertNull(symbol.getData());
+    }
+
+    @Test
+    public void testGetSize() throws Exception {
+        assertEquals(size, symbol.getSize());
     }
 }

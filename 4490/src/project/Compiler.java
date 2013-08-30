@@ -55,10 +55,12 @@ public class Compiler {
             System.out.print(errorList);
             System.exit(0);
         }
-
+        System.out.print("Syntax Analysis Successful!");
         lexicalAnalyzer.resetList();
 
-        System.out.print("Success!");
+        // pass two
+        // do semantic analysis
+
     }
 
     private boolean new_declaration() {
@@ -1303,8 +1305,7 @@ public class Compiler {
             return false;
         }
 
-        symbolTable.put("C" + variableId, new Symbol(scope, "C" + variableId, lexicalAnalyzer.getToken().getLexi(), "Class", null, 0));
-        variableId++;
+        symbolTable.put("C" + variableId, new Symbol(scope, "C" + variableId++, lexicalAnalyzer.getToken().getLexi(), "Class", null, 0));
         incrementScope(lexicalAnalyzer.getToken().getLexi(), true);
 
         lexicalAnalyzer.nextToken();

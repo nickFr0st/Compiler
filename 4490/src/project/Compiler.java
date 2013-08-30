@@ -453,6 +453,7 @@ public class Compiler {
             }
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                lexicalAnalyzer.nextToken();
                 return true;
             }
 

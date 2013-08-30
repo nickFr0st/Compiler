@@ -7,5 +7,6 @@ package project;
  * Time: 3:25 PM
  */
 public interface IData {
-
+    public String getType();
+    public String getAccessMod();
 }

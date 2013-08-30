@@ -1,5 +1,7 @@
 package project;
 
+import java.util.Hashtable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Nathanael
@@ -26,6 +28,10 @@ public class Compiler {
     private static final String OPERATION = " operation.";
     private static final String ARGUMENT_LIST = " argument_list.";
     private static final String EXPRESSION = " expression.";
+
+    private String scope = "g.";
+    private Hashtable<String, Symbol> symbolTable = new Hashtable<String, Symbol>();
+    private int variableId = 100;
 
     private LexicalAnalyzer lexicalAnalyzer;
     private String errorList = "";
@@ -1290,6 +1296,10 @@ public class Compiler {
             return false;
         }
 
+        symbolTable.put("C" + variableId, new Symbol(scope, "C" + variableId, lexicalAnalyzer.getToken().getLexi(), "Class", null));
+        variableId++;
+        scope += lexicalAnalyzer.getToken().getLexi();
+
         lexicalAnalyzer.nextToken();
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
@@ -1320,6 +1330,8 @@ public class Compiler {
             errorList += "Invalid class declaration. Missing closing block." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
+
+        scope = scope.substring(0, scope.lastIndexOf(".") + 1);
 
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;

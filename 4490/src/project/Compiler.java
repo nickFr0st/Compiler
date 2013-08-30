@@ -1071,7 +1071,8 @@ public class Compiler {
             return false;
         }
 
-        String className = lexicalAnalyzer.getToken().getLexi();
+        String constructorName = lexicalAnalyzer.getToken().getLexi();
+//        incrementScope(constructorName, false);
 
         lexicalAnalyzer.nextToken();
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -1079,13 +1080,13 @@ public class Compiler {
         }
 
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-            errorList += MISSING_OPENING_PARENTHESIS + " for constructor declaration. 'class " + className + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            errorList += MISSING_OPENING_PARENTHESIS + " for constructor declaration. 'class " + constructorName + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
 
         lexicalAnalyzer.nextToken();
         if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-            errorList += MISSING_CLOSING_PARENTHESIS + " for constructor declaration. 'class " + className + "'\n";
+            errorList += MISSING_CLOSING_PARENTHESIS + " for constructor declaration. 'class " + constructorName + "'\n";
             return false;
         }
 
@@ -1095,7 +1096,7 @@ public class Compiler {
 
         if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
             if (!parameter_list()) {
-                errorList += "Invalid parameter list for constructor declaration. 'class " + className + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                errorList += "Invalid parameter list for constructor declaration. 'class " + constructorName + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
         }
@@ -1105,7 +1106,7 @@ public class Compiler {
         }
 
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-            errorList += MISSING_CLOSING_PARENTHESIS + " for constructor declaration. 'class " + className + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            errorList += MISSING_CLOSING_PARENTHESIS + " for constructor declaration. 'class " + constructorName + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
 
@@ -1114,7 +1115,12 @@ public class Compiler {
             return false;
         }
 
-        return method_body();
+        if (!method_body()) {
+            return false;
+        }
+
+//        decrementScope();
+        return true;
     }
 
     public boolean field_declaration() {
@@ -1299,7 +1305,7 @@ public class Compiler {
 
         symbolTable.put("C" + variableId, new Symbol(scope, "C" + variableId, lexicalAnalyzer.getToken().getLexi(), "Class", null, 0));
         variableId++;
-        scope += lexicalAnalyzer.getToken().getLexi();
+        incrementScope(lexicalAnalyzer.getToken().getLexi(), true);
 
         lexicalAnalyzer.nextToken();
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -1332,7 +1338,7 @@ public class Compiler {
             return false;
         }
 
-        scope = scope.substring(0, scope.lastIndexOf(".") + 1);
+        decrementScope();
 
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
@@ -1447,5 +1453,17 @@ public class Compiler {
         }
 
         return false;
+    }
+
+    private void decrementScope() {
+        scope = scope.substring(0, scope.lastIndexOf(".") + 1);
+    }
+
+    private void incrementScope(String name, boolean isClass) {
+        if (isClass) {
+            scope += name;
+        } else {
+            scope += "." + name;
+        }
     }
 }

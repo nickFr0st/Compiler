@@ -27,11 +27,11 @@ public class MethodData implements IData {
         return returnType;
     }
 
-    public List<String> getParameters() {
-        return parameters;
-    }
-
     public String getAccessMod() {
         return accessMod;
+    }
+
+    public List<String> getParameters() {
+        return parameters;
     }
 }

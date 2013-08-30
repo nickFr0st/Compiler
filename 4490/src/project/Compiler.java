@@ -1,6 +1,8 @@
 package project;
 
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,7 +32,7 @@ public class Compiler {
     private static final String EXPRESSION = " expression.";
 
     private String scope = "g.";
-    private Hashtable<String, Symbol> symbolTable = new Hashtable<String, Symbol>();
+    private Map<String, Symbol> symbolTable = new HashMap<String, Symbol>();
     private int variableId = 100;
 
     private LexicalAnalyzer lexicalAnalyzer;

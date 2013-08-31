@@ -9,22 +9,23 @@ package project;
 public class SAR {
     private Tuple lexi;
     private String scope;
-    private String type;
-    private String key;
+    private String sarId;
 
-    public SAR(Tuple lexi, String scope, String type, String key) {
-        this.key = key;
+    public SAR() {
+    }
+
+    public SAR(Tuple lexi, String scope, String sarId) {
+        this.sarId = sarId;
         this.lexi = lexi;
         this.scope = scope;
-        this.type = type;
     }
 
-    public String getKey() {
-        return key;
+    public String getSarId() {
+        return sarId;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setSarId(String key) {
+        this.sarId = key;
     }
 
     public String getScope() {
@@ -33,13 +34,5 @@ public class SAR {
 
     public Tuple getLexi() {
         return lexi;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 }

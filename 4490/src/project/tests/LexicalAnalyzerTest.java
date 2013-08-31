@@ -28,7 +28,7 @@ public class LexicalAnalyzerTest {
         ArrayList<Tuple> lexicalList = new ArrayList<Tuple>();
         lexicalList.add(new Tuple("lexi", "type", 12));
         lexicalAnalyzer.setLexicalList(lexicalList);
-        assertEquals("lexi", lexicalAnalyzer.getLexicalList().get(0).getLexi());
+        assertEquals("lexi", lexicalAnalyzer.getLexicalList().get(0).getName());
     }
 
     @Test

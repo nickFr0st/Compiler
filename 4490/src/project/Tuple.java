@@ -7,7 +7,7 @@ package project;
  * Time: 7:15 PM
  */
 public class Tuple {
-    private String lexi;
+    private String name;
     private String type;
     private int lineNum;
 
@@ -17,18 +17,18 @@ public class Tuple {
     public Tuple() {
     }
 
-    public Tuple(String lexi, String type, int lineNum) {
-        this.lexi = lexi;
+    public Tuple(String name, String type, int lineNum) {
+        this.name = name;
         this.type = type;
         this.lineNum = lineNum;
     }
 
-    public String getLexi() {
-        return lexi;
+    public String getName() {
+        return name;
     }
 
-    public void setLexi(String lexi) {
-        this.lexi = lexi;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getType() {

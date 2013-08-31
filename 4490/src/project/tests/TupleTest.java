@@ -24,8 +24,8 @@ public class TupleTest {
     @Test
     public void testGetLexi() throws Exception {
         String lexi = "lexi";
-        tuple.setLexi(lexi);
-        assertEquals(lexi, tuple.getLexi());
+        tuple.setName(lexi);
+        assertEquals(lexi, tuple.getName());
     }
 
     @Test

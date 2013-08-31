@@ -432,7 +432,7 @@ public class Compiler {
             return false;
         }
 
-        while (!(lexicalAnalyzer.getToken() instanceof NullTuple) && lexicalAnalyzer.getToken().getLexi().equals(",")) {
+        while (!(lexicalAnalyzer.getToken() instanceof NullTuple) && lexicalAnalyzer.getToken().getName().equals(",")) {
             lexicalAnalyzer.nextToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
@@ -521,7 +521,7 @@ public class Compiler {
         }
 
         // check format: "." identifier [ fn_arr_member ] [ member_refz ]
-        if (!lexicalAnalyzer.getToken().getLexi().equals(".")) {
+        if (!lexicalAnalyzer.getToken().getName().equals(".")) {
             return false;
         }
 
@@ -600,7 +600,7 @@ public class Compiler {
 
             return true;
 
-        } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.IF.getKey())) {
+        } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.IF.getKey())) {
 
             // check format: "if" "(" expression ")" statement [ "else" statement ]
             lexicalAnalyzer.nextToken();
@@ -642,7 +642,7 @@ public class Compiler {
                 return false;
             }
 
-            if (!(lexicalAnalyzer.peek() instanceof NullTuple) && lexicalAnalyzer.peek().getLexi().equals(KeyConst.ELSE.getKey())) {
+            if (!(lexicalAnalyzer.peek() instanceof NullTuple) && lexicalAnalyzer.peek().getName().equals(KeyConst.ELSE.getKey())) {
 
                 lexicalAnalyzer.nextToken();
                 lexicalAnalyzer.nextToken();
@@ -659,7 +659,7 @@ public class Compiler {
 
             return true;
 
-        } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.WHILE.getKey())) {
+        } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.WHILE.getKey())) {
 
             // check format: "while" "(" expression ")" statement
             lexicalAnalyzer.nextToken();
@@ -703,7 +703,7 @@ public class Compiler {
 
             return true;
 
-        } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.RETURN.getKey())) {
+        } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.RETURN.getKey())) {
 
             // check format: "return" [ expression ] ";"
             lexicalAnalyzer.nextToken();
@@ -736,7 +736,7 @@ public class Compiler {
 
             return true;
 
-        } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.COUT.getKey())) {
+        } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.COUT.getKey())) {
 
             // check format: "cout" "<<" expression ";"
             lexicalAnalyzer.nextToken();
@@ -744,7 +744,7 @@ public class Compiler {
                 return false;
             }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getLexi().equals("<<")) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getName().equals("<<")) {
                 errorList += INVALID_STATEMENT + "'cout' statement missing extraction operator." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
@@ -770,7 +770,7 @@ public class Compiler {
 
             return true;
 
-        } else if (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.CIN.getKey())) {
+        } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.CIN.getKey())) {
 
             // check format: "cin" ">>" expression ";"
             lexicalAnalyzer.nextToken();
@@ -778,7 +778,7 @@ public class Compiler {
                 return false;
             }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getLexi().equals(">>")) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getName().equals(">>")) {
                 errorList += INVALID_STATEMENT + "'cin' statement missing extraction operator." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
@@ -836,7 +836,7 @@ public class Compiler {
             return false;
         }
 
-        String type = lexicalAnalyzer.getToken().getLexi();
+        String type = lexicalAnalyzer.getToken().getName();
 
         lexicalAnalyzer.nextToken();
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -848,7 +848,7 @@ public class Compiler {
             return false;
         }
 
-        String name = lexicalAnalyzer.getToken().getLexi();
+        String name = lexicalAnalyzer.getToken().getName();
 
         lexicalAnalyzer.nextToken();
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -891,7 +891,7 @@ public class Compiler {
             return false;
         }
 
-        while (!(lexicalAnalyzer.getToken() instanceof NullTuple) && lexicalAnalyzer.getToken().getLexi().equals(",")) {
+        while (!(lexicalAnalyzer.getToken() instanceof NullTuple) && lexicalAnalyzer.getToken().getName().equals(",")) {
             lexicalAnalyzer.nextToken();
 
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -919,7 +919,7 @@ public class Compiler {
             return false;
         }
 
-        String type = lexicalAnalyzer.getToken().getLexi();
+        String type = lexicalAnalyzer.getToken().getName();
 
         lexicalAnalyzer.nextToken();
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -931,7 +931,7 @@ public class Compiler {
             return false;
         }
 
-        String name = lexicalAnalyzer.getToken().getLexi();
+        String name = lexicalAnalyzer.getToken().getName();
 
         lexicalAnalyzer.nextToken();
         if (lexicalAnalyzer.getToken() instanceof NullTuple) {
@@ -1100,7 +1100,7 @@ public class Compiler {
             return false;
         }
 
-        String constructorName = lexicalAnalyzer.getToken().getLexi();
+        String constructorName = lexicalAnalyzer.getToken().getName();
 
         lexicalAnalyzer.nextToken();
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -1321,7 +1321,7 @@ public class Compiler {
         if (lexicalAnalyzer.getToken().getType().equals(KeyConst.MODIFIER.getKey())) {
             // check format: modifier type identifier field_declaration
 
-            String modifier = lexicalAnalyzer.getToken().getLexi();
+            String modifier = lexicalAnalyzer.getToken().getName();
 
             lexicalAnalyzer.nextToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -1332,7 +1332,7 @@ public class Compiler {
                 errorList += "Invalid class member declaration. Missing a valid type." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
-            String type = lexicalAnalyzer.getToken().getLexi();
+            String type = lexicalAnalyzer.getToken().getName();
 
             lexicalAnalyzer.nextToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -1343,7 +1343,7 @@ public class Compiler {
                 errorList += "Invalid class member declaration. Missing a valid identifier." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
-            String name = lexicalAnalyzer.getToken().getLexi();
+            String name = lexicalAnalyzer.getToken().getName();
 
             lexicalAnalyzer.nextToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -1391,8 +1391,8 @@ public class Compiler {
             return false;
         }
 
-        symbolTable.put("C" + variableId, new Symbol(scope, "C" + variableId++, lexicalAnalyzer.getToken().getLexi(), "Class", null, 0));
-        incrementScope(lexicalAnalyzer.getToken().getLexi(), true);
+        symbolTable.put("C" + variableId, new Symbol(scope, "C" + variableId++, lexicalAnalyzer.getToken().getName(), "Class", null, 0));
+        incrementScope(lexicalAnalyzer.getToken().getName(), true);
 
         lexicalAnalyzer.nextToken();
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -1446,7 +1446,7 @@ public class Compiler {
             return false;
         }
 
-        if (!lexicalAnalyzer.getToken().getLexi().equals(KeyConst.VOID.getKey())) {
+        if (!lexicalAnalyzer.getToken().getName().equals(KeyConst.VOID.getKey())) {
             if (!class_declaration()) {
                 errorList += "Invalid compilation unit. Invalid class declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
@@ -1461,7 +1461,7 @@ public class Compiler {
                 return false;
             }
 
-            while (lexicalAnalyzer.getToken().getLexi().equals(KeyConst.CLASS.getKey())) {
+            while (lexicalAnalyzer.getToken().getName().equals(KeyConst.CLASS.getKey())) {
                 if (!class_declaration()) {
                     errorList += "Invalid compilation unit. Invalid class declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                     return false;
@@ -1472,7 +1472,7 @@ public class Compiler {
                 }
             }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getLexi().equals(KeyConst.VOID.getKey())) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getName().equals(KeyConst.VOID.getKey())) {
                 errorList += "Invalid compilation unit. Missing 'main' method.\n";
                 return false;
             }
@@ -1483,7 +1483,7 @@ public class Compiler {
             return false;
         }
 
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getLexi().equals(KeyConst.MAIN.getKey())) {
+        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getName().equals(KeyConst.MAIN.getKey())) {
             errorList += "Invalid compilation unit. Invalid name for method 'main'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }

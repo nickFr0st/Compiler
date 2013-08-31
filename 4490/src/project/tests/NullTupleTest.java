@@ -23,7 +23,7 @@ public class NullTupleTest {
 
     @Test
     public void testNullTuple() throws Exception {
-        assertEquals("", tuple.getLexi());
+        assertEquals("", tuple.getName());
         assertEquals("", tuple.getType());
         assertEquals(0, tuple.getLineNum());
     }

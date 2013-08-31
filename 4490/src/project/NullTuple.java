@@ -17,7 +17,7 @@ public class NullTuple extends Tuple {
         lineNum = 0;
     }
 
-    public String getLexi() {
+    public String getName() {
         return lexi;
     }
 

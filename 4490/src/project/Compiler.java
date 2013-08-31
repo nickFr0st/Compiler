@@ -1,10 +1,7 @@
 package project;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,7 +32,7 @@ public class Compiler {
     private static final int ELEM_SIZE = 1;
 
     private String scope = "g.";
-    private Map<String, Symbol> symbolTable = new HashMap<String, Symbol>();
+    private LinkedHashMap<String, Symbol> symbolTable = new LinkedHashMap<String, Symbol>();
     private int variableId = 100;
 
     private LexicalAnalyzer lexicalAnalyzer;
@@ -63,7 +60,7 @@ public class Compiler {
         lexicalAnalyzer.resetList();
 
         // pass two
-        PassTwo passTwo = new PassTwo(new StackHandler(symbolTable), symbolTable, lexicalAnalyzer);
+        PassTwo passTwo = new PassTwo(new StackHandler(symbolTable, errorList, variableId), symbolTable, lexicalAnalyzer);
         passTwo.evaluate();
     }
 

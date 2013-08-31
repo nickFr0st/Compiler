@@ -1,5 +1,6 @@
 package project;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -12,11 +13,11 @@ public class PassTwo {
     private static final String LINE = " Line: ";
 
     private StackHandler stackHandler;
-    private Map<String, Symbol> symbolTable;
+    private LinkedHashMap<String, Symbol> symbolTable;
     private LexicalAnalyzer lexicalAnalyzer;
     private String errorList;
 
-    public PassTwo(StackHandler stackHandler, Map<String, Symbol> symbolTable, LexicalAnalyzer lexicalAnalyzer) {
+    public PassTwo(StackHandler stackHandler, LinkedHashMap<String, Symbol> symbolTable, LexicalAnalyzer lexicalAnalyzer) {
         this.stackHandler = stackHandler;
         this.symbolTable = symbolTable;
         this.lexicalAnalyzer = lexicalAnalyzer;

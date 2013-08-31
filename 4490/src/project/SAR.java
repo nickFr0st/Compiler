@@ -10,6 +10,7 @@ public class SAR {
     private Tuple lexi;
     private String scope;
     private String sarId;
+    private String type;
 
     public SAR() {
     }
@@ -22,10 +23,11 @@ public class SAR {
         this.lexi = lexi;
     }
 
-    public SAR(Tuple lexi, String scope, String sarId) {
+    public SAR(Tuple lexi, String scope, String sarId, String type) {
         this.sarId = sarId;
         this.lexi = lexi;
         this.scope = scope;
+        this.type = type;
     }
 
     public String getSarId() {
@@ -42,5 +44,9 @@ public class SAR {
 
     public Tuple getLexi() {
         return lexi;
+    }
+
+    public String getType() {
+        return type;
     }
 }

@@ -71,7 +71,9 @@ public class Symbol {
     }
 
     /**
-     * returns the size of the symbol
+     * returns the number of memory blocks used by the symbol element
+     * (may not be used)
+     *
      * @return size
      */
     public int getSize() {

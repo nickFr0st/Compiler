@@ -59,12 +59,12 @@ public class Compiler {
             System.out.print(errorList);
             System.exit(0);
         }
-        System.out.print("Syntax Analysis Successful!");
+        System.out.println("Syntax Analysis Successful!");
         lexicalAnalyzer.resetList();
 
         // pass two
-        // do semantic analysis
-
+        PassTwo passTwo = new PassTwo(new StackHandler(symbolTable), symbolTable, lexicalAnalyzer);
+        passTwo.evaluate();
     }
 
     private boolean new_declaration() {

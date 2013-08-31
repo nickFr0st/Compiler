@@ -2,28 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/project/BAL_SAR.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/project/Identifier_SAR.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/project/Literal_SAR.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/project/StackHandler.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/project/Type_SAR.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/project/Variable_SAR.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/project/Opr_SAR.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/project/PassTwo.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Compiler.java" afterPath="$PROJECT_DIR$/src/project/Compiler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DemoCV2Clean.kxi" afterPath="$PROJECT_DIR$/DemoCV2Clean.kxi" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/tests/LexicalAnalyzerTest.java" afterPath="$PROJECT_DIR$/src/project/tests/LexicalAnalyzerTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/NullTuple.java" afterPath="$PROJECT_DIR$/src/project/NullTuple.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/tests/NullTupleTest.java" afterPath="$PROJECT_DIR$/src/project/tests/NullTupleTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/SAR.java" afterPath="$PROJECT_DIR$/src/project/SAR.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Tuple.java" afterPath="$PROJECT_DIR$/src/project/Tuple.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/tests/TupleTest.java" afterPath="$PROJECT_DIR$/src/project/tests/TupleTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/StackHandler.java" afterPath="$PROJECT_DIR$/src/project/StackHandler.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1373949090855" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377960626978" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377966095295" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
-    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377924242494" ignored="false" />
+    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377968861005" ignored="false" />
     <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377923606476" ignored="false" />
     <file path="/LexicalAnalizer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358821966318" ignored="false" />
     <file path="/Tuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377964110153" ignored="false" />
@@ -38,7 +29,7 @@
     <file path="/VaribleData.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377841760805" ignored="false" />
     <file path="/FunctionData.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377841725258" ignored="false" />
     <file path="/ClassData.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1360449524258" ignored="false" />
-    <file path="/SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377964012762" ignored="false" />
+    <file path="/SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377968026078" ignored="false" />
     <file path="/a.dummy" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366950140080" ignored="false" />
     <file path="$PROJECT_DIR$/../../../testp/src/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449678062" ignored="false" />
     <file path="$PROJECT_DIR$/../../../testp/.idea/workspace.xml" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449686335" ignored="false" />
@@ -98,12 +89,14 @@
     <file path="/POModuleClient.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377891726721" ignored="false" />
     <file path="C:/dev/trunk2/fb/swing/src/java/com/evnt/client/modules/so/SOModuleClient.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377902431234" ignored="false" />
     <file path="C:/dev/trunk2/fb/swing/src/java/com/evnt/client/modules/so/wizards/quickship/WizQuickShip.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377902431234" ignored="false" />
-    <file path="/StackHandler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965846811" ignored="false" />
+    <file path="/StackHandler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377967553093" ignored="false" />
     <file path="/Identifier_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965315762" ignored="false" />
     <file path="/Literal_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965495543" ignored="false" />
     <file path="/Type_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965523497" ignored="false" />
     <file path="/Variable_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965726936" ignored="false" />
     <file path="/BAL_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965864014" ignored="false" />
+    <file path="/PassTwo.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377968867932" ignored="false" />
+    <file path="/Opr_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377967422222" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -170,23 +163,7 @@
         <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
     </breakpoint_any>
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/project/Compiler.java" line="1519" class="project.Compiler" package="project">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="&#13;&#13;JAVA" />
-        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
-      </breakpoint>
-    </line_breakpoints>
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -196,16 +173,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Compiler.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Compiler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="425" column="92" selection-start="18014" selection-end="18014" vertical-scroll-proportion="0.22054054">
+            <state line="61" column="26" selection-start="2186" selection-end="2186" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1593#1609#0" expanded="true" />
-                <element signature="e#47416#47424#0" expanded="true" />
-                <element signature="e#50085#50093#0" expanded="true" />
+                <element signature="e#47513#47521#0" expanded="true" />
+                <element signature="e#50182#50190#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PassTwo.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="29" column="36" selection-start="807" selection-end="807" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -213,34 +199,7 @@
       <file leaf-file-name="SAR.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/SAR.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="5" selection-start="626" selection-end="626" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Identifier_SAR.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/Identifier_SAR.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="39" selection-start="150" selection-end="150" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Literal_SAR.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/Literal_SAR.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="36" selection-start="147" selection-end="147" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Type_SAR.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/Type_SAR.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="33" selection-start="144" selection-end="144" vertical-scroll-proportion="0.0">
+            <state line="16" column="17" selection-start="240" selection-end="240" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -255,31 +214,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="StackHandler.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="StackHandler.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/StackHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="49" selection-start="885" selection-end="885" vertical-scroll-proportion="0.0">
+            <state line="49" column="89" selection-start="1208" selection-end="1208" vertical-scroll-proportion="0.47761193">
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#250#266#0" expanded="true" />
+                <element signature="e#268#284#0" expanded="true" />
+                <element signature="e#376#385#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BAL_SAR.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/BAL_SAR.java">
+      <file leaf-file-name="Opr_SAR.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/Opr_SAR.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="32" selection-start="143" selection-end="143" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Variable_SAR.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/Variable_SAR.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="37" selection-start="148" selection-end="148" vertical-scroll-proportion="0.0">
+            <state line="8" column="34" selection-start="145" selection-end="145" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -305,22 +256,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/project/VaraibleData.java" />
-        <option value="$PROJECT_DIR$/src/project/IData.java" />
         <option value="$PROJECT_DIR$/src/project/VariableData.java" />
         <option value="$PROJECT_DIR$/src/project/tests/SymbolTest.java" />
         <option value="$PROJECT_DIR$/src/project/Symbol.java" />
         <option value="$PROJECT_DIR$/src/project/MethodData.java" />
-        <option value="$PROJECT_DIR$/src/project/Compiler.java" />
         <option value="$PROJECT_DIR$/src/project/Tuple.java" />
         <option value="$PROJECT_DIR$/src/project/SAR112.java" />
         <option value="$PROJECT_DIR$/src/project/Identifier_SAR.java" />
-        <option value="$PROJECT_DIR$/src/project/SAR.java" />
         <option value="$PROJECT_DIR$/src/project/Literal_SAR.java" />
         <option value="$PROJECT_DIR$/src/project/Type_SAR.java" />
         <option value="$PROJECT_DIR$/src/project/Variable_SAR.java" />
-        <option value="$PROJECT_DIR$/src/project/StackHandler.java" />
         <option value="$PROJECT_DIR$/src/project/BAL_SAR.java" />
+        <option value="$PROJECT_DIR$/src/project/StackHandler.java" />
+        <option value="$PROJECT_DIR$/src/project/SAR.java" />
+        <option value="$PROJECT_DIR$/src/project/Opr_SAR.java" />
+        <option value="$PROJECT_DIR$/src/project/Compiler.java" />
+        <option value="$PROJECT_DIR$/src/project/PassTwo.java" />
       </list>
     </option>
   </component>
@@ -1449,7 +1400,11 @@
       <created>1377924479645</created>
       <updated>1377924479645</updated>
     </task>
-    <option name="localTasksCounter" value="178" />
+    <task id="LOCAL-00178" summary="revamping the SAR object and setting up SAS and OS">
+      <created>1377966101875</created>
+      <updated>1377966101875</updated>
+    </task>
+    <option name="localTasksCounter" value="179" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1491,11 +1446,11 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15847598" sideWeight="0.6709265" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15847598" sideWeight="0.71565497" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32965213" sideWeight="0.7507987" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39977914" sideWeight="0.600639" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17338488" sideWeight="0.71565497" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17338488" sideWeight="0.71565497" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28434506" sideWeight="0.49806738" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32854778" sideWeight="0.71565497" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
@@ -1546,7 +1501,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="populated the symbol table" />
+    <option name="LAST_COMMIT_MESSAGE" value="revamping the SAR object and setting up SAS and OS" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -1560,7 +1515,6 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="fixed some logic" />
     <MESSAGE value="clean up fn_arr_member()" />
     <MESSAGE value="clean up member_refz()" />
     <MESSAGE value="logic fix" />
@@ -1585,6 +1539,7 @@
     <MESSAGE value="scope is now easier to maniplate" />
     <MESSAGE value="clearified some javaDocs" />
     <MESSAGE value="populated the symbol table" />
+    <MESSAGE value="revamping the SAR object and setting up SAS and OS" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1610,20 +1565,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="13" selection-start="264" selection-end="264" vertical-scroll-proportion="0.018123668">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/IData.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="0" selection-start="199" selection-end="199" vertical-scroll-proportion="0.21748401">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Assembler.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="87" column="31" selection-start="2677" selection-end="2677" vertical-scroll-proportion="0.018378379">
@@ -1666,16 +1607,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/SAR.java">
+    <entry file="file://$PROJECT_DIR$/src/project/Type_SAR.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="5" selection-start="626" selection-end="626" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Identifier_SAR.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="39" selection-start="150" selection-end="150" vertical-scroll-proportion="0.0">
+        <state line="8" column="33" selection-start="144" selection-end="144" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1687,9 +1621,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Type_SAR.java">
+    <entry file="file://$PROJECT_DIR$/src/project/Identifier_SAR.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="33" selection-start="144" selection-end="144" vertical-scroll-proportion="0.0">
+        <state line="8" column="39" selection-start="150" selection-end="150" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1708,24 +1642,46 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/StackHandler.java">
+    <entry file="file://$PROJECT_DIR$/src/project/Opr_SAR.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="49" selection-start="885" selection-end="885" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#250#266#0" expanded="true" />
-          </folding>
+        <state line="8" column="34" selection-start="145" selection-end="145" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/SAR.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="17" selection-start="240" selection-end="240" vertical-scroll-proportion="0.0">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="425" column="92" selection-start="18014" selection-end="18014" vertical-scroll-proportion="0.22054054">
+        <state line="61" column="26" selection-start="2186" selection-end="2186" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1593#1609#0" expanded="true" />
-            <element signature="e#47416#47424#0" expanded="true" />
-            <element signature="e#50085#50093#0" expanded="true" />
+            <element signature="e#47513#47521#0" expanded="true" />
+            <element signature="e#50182#50190#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="36" selection-start="807" selection-end="807" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/StackHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="89" selection-start="1208" selection-end="1208" vertical-scroll-proportion="0.47761193">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#268#284#0" expanded="true" />
+            <element signature="e#376#385#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -14,6 +14,14 @@ public class SAR {
     public SAR() {
     }
 
+    /**
+     * this is used for the Opr_SAR
+     * @param lexi
+     */
+    public SAR(Tuple lexi) {
+        this.lexi = lexi;
+    }
+
     public SAR(Tuple lexi, String scope, String sarId) {
         this.sarId = sarId;
         this.lexi = lexi;

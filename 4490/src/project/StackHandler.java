@@ -1,6 +1,7 @@
 package project;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -10,11 +11,11 @@ import java.util.Stack;
  * Time: 9:21 AM
  */
 public class StackHandler {
-    private HashMap<String, Symbol> symbolTable = new HashMap<String, Symbol>();
+    private Map<String, Symbol> symbolTable = new HashMap<String, Symbol>();
     private Stack<SAR> SAS = new Stack<SAR>();
-    private Stack<SAR> OS = new Stack<SAR>();
+    private Stack<Opr_SAR> OS = new Stack<Opr_SAR>();
 
-    public StackHandler(HashMap<String, Symbol> symbolTable) {
+    public StackHandler(Map<String, Symbol> symbolTable) {
         this.symbolTable = symbolTable;
     }
 
@@ -38,17 +39,17 @@ public class StackHandler {
         SAS.push(identifier);
     }
 
-    public void operatorPush(SAR opr) {
-        int precedence = getOperatorPrecedence(opr.getLexi().getName());
+    public void operatorPush(Opr_SAR opr) {
+        opr.setPrecedence(getOperatorPrecedence(opr.getLexi().getName()));
 
         if (OS.isEmpty()) {
             OS.push(opr);
             return;
         }
 
-        int lastOprPrecedence = getOperatorPrecedence(OS.peek().getLexi().getName());
+        int lastOprPrecedence = OS.peek().getPrecedence();
 
-        if (lastOprPrecedence <= precedence) {
+        if (lastOprPrecedence <= opr.getPrecedence()) {
             OS.push(opr);
         } else {
 

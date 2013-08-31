@@ -1,6 +1,9 @@
 package project;
 
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,6 +32,7 @@ public class Compiler {
     private static final String OPERATION = " operation.";
     private static final String ARGUMENT_LIST = " argument_list.";
     private static final String EXPRESSION = " expression.";
+    private static final int ELEM_SIZE = 1;
 
     private String scope = "g.";
     private Map<String, Symbol> symbolTable = new HashMap<String, Symbol>();
@@ -820,7 +824,7 @@ public class Compiler {
         }
     }
 
-    public boolean parameter() {
+    public boolean parameter(List<String> parameterNames) {
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
         }
@@ -832,6 +836,8 @@ public class Compiler {
             return false;
         }
 
+        String type = lexicalAnalyzer.getToken().getLexi();
+
         lexicalAnalyzer.nextToken();
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
@@ -842,12 +848,16 @@ public class Compiler {
             return false;
         }
 
+        String name = lexicalAnalyzer.getToken().getLexi();
+
         lexicalAnalyzer.nextToken();
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
         }
 
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+            parameterNames.add("P" + variableId);
+            symbolTable.put("P" + variableId, new Symbol(scope, "P" + variableId++, name, "param", new VariableData(type, "private"), ELEM_SIZE));
             return true;
         }
 
@@ -861,16 +871,18 @@ public class Compiler {
             return false;
         }
 
+        parameterNames.add("P" + variableId);
+        symbolTable.put("P" + variableId, new Symbol(scope, "P" + variableId++, name, "param", new VariableData(type, "private"), ELEM_SIZE));
         return true;
     }
 
-    public boolean parameter_list() {
+    public boolean parameter_list(List<String> parameters) {
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
         }
 
         // check format: parameter { "," parameter}
-        if (!parameter()) {
+        if (!parameter(parameters)) {
             errorList += "Invalid parameter_list" + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
             return false;
         }
@@ -886,7 +898,7 @@ public class Compiler {
                 return false;
             }
 
-            if (!parameter()) {
+            if (!parameter(parameters)) {
                 errorList += "Invalid parameter_list" + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
                 return false;
             }
@@ -895,6 +907,8 @@ public class Compiler {
     }
 
     public boolean variable_declaration() {
+        boolean symbolAdded = false;
+
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
         }
@@ -905,6 +919,8 @@ public class Compiler {
             return false;
         }
 
+        String type = lexicalAnalyzer.getToken().getLexi();
+
         lexicalAnalyzer.nextToken();
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
@@ -914,6 +930,8 @@ public class Compiler {
             errorList += "Variable declarations require a valid identifier." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
+
+        String name = lexicalAnalyzer.getToken().getLexi();
 
         lexicalAnalyzer.nextToken();
         if (lexicalAnalyzer.getToken() instanceof NullTuple) {
@@ -946,8 +964,17 @@ public class Compiler {
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
+
+            symbolTable.put("@" + variableId, new Symbol(scope, "@" + variableId++, name, "lvar", new VariableData(type, "private"), ELEM_SIZE));
+            symbolAdded = true;
         }
 
+        if (!symbolAdded) {
+            symbolTable.put("V" + variableId, new Symbol(scope, "V" + variableId++, name, "lvar", new VariableData(type, "private"), ELEM_SIZE));
+        }
+        /**
+         * to this point
+         */
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
 
             lexicalAnalyzer.nextToken();
@@ -1074,7 +1101,6 @@ public class Compiler {
         }
 
         String constructorName = lexicalAnalyzer.getToken().getLexi();
-//        incrementScope(constructorName, false);
 
         lexicalAnalyzer.nextToken();
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -1096,12 +1122,30 @@ public class Compiler {
             return false;
         }
 
-        if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-            if (!parameter_list()) {
-                errorList += "Invalid parameter list for constructor declaration. 'class " + constructorName + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+        if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+            lexicalAnalyzer.nextToken();
+            symbolTable.put("M" + variableId, new Symbol(scope, "M" + variableId++, constructorName, "method", new MethodData("public", null, constructorName), ELEM_SIZE));
+            incrementScope(constructorName, false);
+
+            if (!method_body()) {
                 return false;
             }
+
+            decrementScope();
+            return true;
         }
+
+        String key = "M" + variableId;
+        symbolTable.put(key, new Symbol(scope, "M" + variableId++, constructorName, "method", new MethodData("public", null, constructorName), ELEM_SIZE));
+        incrementScope(constructorName, false);
+        List<String> parameterNames = new ArrayList<String>();
+
+        if (!parameter_list(parameterNames)) {
+            errorList += "Invalid parameter list for constructor declaration. 'class " + constructorName + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
+        ((MethodData)symbolTable.get(key).getData()).setParameters(parameterNames);
 
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
@@ -1121,11 +1165,11 @@ public class Compiler {
             return false;
         }
 
-//        decrementScope();
+        decrementScope();
         return true;
     }
 
-    public boolean field_declaration() {
+    public boolean field_declaration(String accessMod, String type, String value) {
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
         }
@@ -1144,14 +1188,28 @@ public class Compiler {
             }
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                symbolTable.put("M" + variableId, new Symbol(scope, "M" + variableId++, value, "method", new MethodData(accessMod, null, type), ELEM_SIZE));
+                incrementScope(value, false);
                 lexicalAnalyzer.nextToken();
-                return method_body();
+                if (!method_body()) {
+                    return false;
+                }
+
+                decrementScope();
+                return true;
             }
 
-            if (!parameter_list()) {
+            String methodKey = "M" + variableId;
+            symbolTable.put(methodKey, new Symbol(scope, "M" + variableId++, value, "method", new MethodData(accessMod, null, type), ELEM_SIZE));
+            incrementScope(value, false);
+            List<String> parameters = new ArrayList<String>();
+
+            if (!parameter_list(parameters)) {
                 errorList += "Invalid parameter list in field declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
+
+            ((MethodData)symbolTable.get(methodKey).getData()).setParameters(parameters);
 
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
@@ -1168,14 +1226,27 @@ public class Compiler {
                 return false;
             }
 
-            return method_body();
+            if (!method_body()) {
+                return false;
+            }
+
+            decrementScope();
+            return true;
 
         } else {
+            boolean symbolAdded = false;
+
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
             // check format: ["[" "]"] ["=" assignment_expression ] ";"
+            if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                symbolTable.put("V" + variableId, new Symbol(scope, "V" + variableId++, value, "ivar", new VariableData(type, accessMod), ELEM_SIZE));
+                lexicalAnalyzer.nextToken();
+                return true;
+            }
+
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
 
                 lexicalAnalyzer.nextToken();
@@ -1197,6 +1268,17 @@ public class Compiler {
                 if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                     return false;
                 }
+
+                symbolTable.put("@" + variableId, new Symbol(scope, "@" + variableId++, value, "ivar", new VariableData(type, accessMod), ELEM_SIZE));
+                symbolAdded = true;
+                if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                    lexicalAnalyzer.nextToken();
+                    return true;
+                }
+            }
+
+            if (!symbolAdded) {
+                symbolTable.put("V" + variableId, new Symbol(scope, "V" + variableId++, value, "ivar", new VariableData(type, accessMod), ELEM_SIZE));
             }
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
@@ -1239,6 +1321,8 @@ public class Compiler {
         if (lexicalAnalyzer.getToken().getType().equals(KeyConst.MODIFIER.getKey())) {
             // check format: modifier type identifier field_declaration
 
+            String modifier = lexicalAnalyzer.getToken().getLexi();
+
             lexicalAnalyzer.nextToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
@@ -1248,6 +1332,7 @@ public class Compiler {
                 errorList += "Invalid class member declaration. Missing a valid type." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
+            String type = lexicalAnalyzer.getToken().getLexi();
 
             lexicalAnalyzer.nextToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -1258,13 +1343,14 @@ public class Compiler {
                 errorList += "Invalid class member declaration. Missing a valid identifier." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
+            String name = lexicalAnalyzer.getToken().getLexi();
 
             lexicalAnalyzer.nextToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !field_declaration()) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple || !field_declaration(modifier, type, name)) {
                 errorList += "Invalid class member declaration. Invalid field declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
@@ -1427,8 +1513,16 @@ public class Compiler {
             return false;
         }
 
+        symbolTable.put("MAIN" + variableId, new Symbol(scope, "MAIN" + variableId++, "main", "method", new MethodData("public", null, "void"), ELEM_SIZE));
+        incrementScope("main", true);
+
         // at this point we have declared classes and "void main()"
-        return method_body();
+        if (!method_body()) {
+            return false;
+        }
+
+        decrementScope();
+        return true;
     }
 
     private boolean type(String itemType) {
@@ -1457,7 +1551,16 @@ public class Compiler {
     }
 
     private void decrementScope() {
-        scope = scope.substring(0, scope.lastIndexOf(".") + 1);
+        int scopeDepth = 0;
+        for (char c : scope.toCharArray()) {
+            if (c == '.') scopeDepth++;
+        }
+
+        if (scopeDepth > 1) {
+            scope = scope.substring(0, scope.lastIndexOf("."));
+        } else {
+            scope = scope.substring(0, scope.lastIndexOf(".") + 1);
+        }
     }
 
     private void incrementScope(String name, boolean isClass) {

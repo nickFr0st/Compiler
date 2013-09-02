@@ -1,8 +1,6 @@
 package project;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -24,6 +22,20 @@ public class StackHandler {
         this.variableId = variableId;
     }
 
+    public String getErrorList() {
+        return errorList;
+    }
+
+    public boolean EOE() {
+        while(!OS.isEmpty()) {
+            if (!handleOperation()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public void identifierPush(Identifier_SAR identifier) {
         SAS.push(identifier);
     }
@@ -37,7 +49,32 @@ public class StackHandler {
     }
 
     public boolean typeExists() {
-        return true;
+        Type_SAR itemType = (Type_SAR)SAS.pop();
+
+        if (type(itemType.getLexi().getName())) {
+            return true;
+        } else if (itemType.getLexi().getType().equals(KeyConst.CLASS_NAME.getKey())) {
+            return isInSymbolTable(itemType);
+        }
+
+        return false;
+    }
+
+    private boolean isInSymbolTable(Type_SAR itemType) {
+        for (String key : symbolTable.keySet()) {
+            Symbol temp = symbolTable.get(key);
+
+            if (!temp.getScope().equals("g.")) {
+                continue;
+            }
+
+            if (temp.getValue().equals(itemType.getName())) {
+                return true;
+            }
+        }
+
+        errorList += "type: '" + itemType.getName() + "' does not exists. Line: " + itemType.getLexi().getLineNum() + "\n";
+        return false;
     }
 
     public void variablePush(Variable_SAR variable) {
@@ -80,14 +117,33 @@ public class StackHandler {
             return divide();
         } else if (topOpr.getLexi().getName().equals("*")) {
             return multiply();
+        } else if (topOpr.getLexi().getName().equals("=")) {
+            return assignment();
         }
 
         return false;
     }
 
-    private boolean add() {
-        SAR lhs = SAS.pop();
+    private boolean assignment() {
         SAR rhs = SAS.pop();
+        SAR lhs = SAS.pop();
+
+        if (lhs instanceof Literal_SAR) {
+            errorList += "left hand side is not a valid assignable type. Line. " + lhs.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        if (!lhs.getType().toUpperCase().equals(rhs.getType().toUpperCase())) {
+            errorList += "left and right hand sides of assignment operation are incompatible types. Line: " + lhs.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean add() {
+        SAR rhs = SAS.pop();
+        SAR lhs = SAS.pop();
 
         if (!lhs.getType().equals(rhs.getType())) {
             errorList += "left and right hand sides of addition operation are incompatible types. Line: " + lhs.getLexi().getLineNum() + "\n";
@@ -112,8 +168,8 @@ public class StackHandler {
     }
 
     private boolean subtract() {
-        SAR lhs = SAS.pop();
         SAR rhs = SAS.pop();
+        SAR lhs = SAS.pop();
 
         if (!lhs.getType().equals(rhs.getType())) {
             errorList += "left and right hand sides of subtraction operation are incompatible types. Line: " + lhs.getLexi().getLineNum() + "\n";
@@ -138,8 +194,8 @@ public class StackHandler {
     }
 
     private boolean multiply() {
-        SAR lhs = SAS.pop();
         SAR rhs = SAS.pop();
+        SAR lhs = SAS.pop();
 
         if (!lhs.getType().equals(rhs.getType())) {
             errorList += "left and right hand sides of multiplication operation are incompatible types. Line: " + lhs.getLexi().getLineNum() + "\n";
@@ -164,8 +220,8 @@ public class StackHandler {
     }
 
     private boolean divide() {
-        SAR lhs = SAS.pop();
         SAR rhs = SAS.pop();
+        SAR lhs = SAS.pop();
 
         if (!lhs.getType().equals(rhs.getType())) {
             errorList += "left and right hand sides of division operation are incompatible types. Line: " + lhs.getLexi().getLineNum() + "\n";
@@ -210,5 +266,9 @@ public class StackHandler {
             return 1;
         }
         return 0;
+    }
+
+    private boolean type(String itemType) {
+        return (itemType.equals(KeyConst.INT.getKey()) || itemType.equals(KeyConst.CHAR.getKey()) || itemType.equals(KeyConst.BOOL.getKey()) || itemType.equals(KeyConst.VOID.getKey()));
     }
 }

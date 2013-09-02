@@ -7,4 +7,7 @@ package project;
  * Time: 10:11 AM
  */
 public class Literal_SAR extends SAR {
+    public Literal_SAR(Tuple lexi, String type) {
+        super(type, lexi);
+    }
 }

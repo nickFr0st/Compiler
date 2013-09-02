@@ -144,12 +144,8 @@ public class PassTwo {
     }
 
     public boolean assignment_expression() {
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
         if (lexicalAnalyzer.getToken().getType().equals(KeyConst.NEW.getKey())) {
-
+            // todo: need to do new operation
             // check format: "new" type new_declaration
             lexicalAnalyzer.nextToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -173,7 +169,7 @@ public class PassTwo {
 
             return true;
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.ATOI.getKey())) {
-
+            // todo: need to do atoi operation
             // check format: "atoi" "(" expression ")"
             lexicalAnalyzer.nextToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -218,7 +214,7 @@ public class PassTwo {
             lexicalAnalyzer.nextToken();
             return true;
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.ITOA.getKey())) {
-
+            // todo: need to do itoa operation
             // check format: "itoa" "(" expression ")"
             lexicalAnalyzer.nextToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -263,6 +259,7 @@ public class PassTwo {
             lexicalAnalyzer.nextToken();
             return true;
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.THIS.getKey())) {
+            // todo: need to do this operation
             lexicalAnalyzer.nextToken();
             return true;
         } else {
@@ -308,12 +305,8 @@ public class PassTwo {
     }
 
     public boolean expression() {
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-
+            // todo: need to do this
             // check format: "(" expression ")" [expressionz]
             lexicalAnalyzer.nextToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -350,16 +343,20 @@ public class PassTwo {
             return true;
 
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.TRUE.getKey()) || lexicalAnalyzer.getToken().getType().equals(KeyConst.FALSE.getKey()) || lexicalAnalyzer.getToken().getType().equals(KeyConst.NULL.getKey()) || lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
-
             // check format: "value" [expressionz]
-            lexicalAnalyzer.nextToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                return true;
+            String type;
+            if (lexicalAnalyzer.getToken().getType().equals(KeyConst.TRUE.getKey()) || lexicalAnalyzer.getToken().getType().equals(KeyConst.FALSE.getKey())) {
+                type = KeyConst.BOOL.name();
+            } else if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
+                type = KeyConst.INT.name();
+            } else if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
+                type = KeyConst.CHAR.name();
+            } else {
+                type = "null";
             }
 
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
+            stackHandler.literalPush(new Literal_SAR(lexicalAnalyzer.getToken(), type));
+            lexicalAnalyzer.nextToken();
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || isLogicalConnectiveExpression(lexicalAnalyzer.getToken().getType()) || isBooleanExpression(lexicalAnalyzer.getToken().getType()) || isMathematicalExpression(lexicalAnalyzer.getToken().getType())) {
                 return expressionz();
@@ -368,7 +365,7 @@ public class PassTwo {
             return true;
 
         } else if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
-
+            // todo: need to do this
             // check format: identifier [ fn_arr_member ] [ member_refz ] [ expressionz ]
             lexicalAnalyzer.nextToken();
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
@@ -904,39 +901,22 @@ public class PassTwo {
     }
 
     public boolean variable_declaration() {
-        boolean symbolAdded = false;
-
         // check format: type identifier ["[" "]"] ["=" assignment_expression ] ";"
         stackHandler.typePush(new Type_SAR(lexicalAnalyzer.getToken(), scope));
         if (!stackHandler.typeExists()) {
-            errorList += "type: " + lexicalAnalyzer.getToken().getName() + " does not exists." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            errorList += stackHandler.getErrorList();
             return false;
         }
-
 
         String type = lexicalAnalyzer.getToken().getName();
 
         lexicalAnalyzer.nextToken();
-
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
-            errorList += "Variable declarations require a valid identifier." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return false;
-        }
-
-        String name = lexicalAnalyzer.getToken().getName();
+        stackHandler.variablePush(new Variable_SAR(lexicalAnalyzer.getToken(), scope, "V" + variableId++, type));
 
         lexicalAnalyzer.nextToken();
-        if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-            errorList += "Invalid variable declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return false;
-        }
-
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
 
+            // todo: need to handle arrays
             lexicalAnalyzer.getToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
@@ -956,37 +936,19 @@ public class PassTwo {
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
-
-            symbolTable.put("@" + variableId, new Symbol(scope, "@" + variableId++, name, "lvar", new VariableData(type, "private"), ELEM_SIZE));
-            symbolAdded = true;
         }
 
-        if (!symbolAdded) {
-            symbolTable.put("V" + variableId, new Symbol(scope, "V" + variableId++, name, "lvar", new VariableData(type, "private"), ELEM_SIZE));
-        }
-        /**
-         * to this point
-         */
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+            stackHandler.operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
 
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !assignment_expression()) {
+            if (!assignment_expression()) {
                 errorList += "Invalid variable declaration. Invalid assignment expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                errorList += "Invalid variable declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
         }
 
-        if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-            errorList += "Invalid variable declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+        if (!stackHandler.EOE()) {
             return false;
         }
 
@@ -1010,8 +972,9 @@ public class PassTwo {
                 if (!type(lexicalAnalyzer.getToken().getType())) break;
             }
 
+            errorList += stackHandler.getErrorList();
+
             if (!errorCheck.equals(errorList)) {
-                errorList += "Invalid variable_declaration in method body." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
         }

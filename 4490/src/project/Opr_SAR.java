@@ -8,9 +8,11 @@ package project;
  */
 public class Opr_SAR extends SAR {
     private int precedence;
+    private String type;
 
     public Opr_SAR(Tuple lexi) {
         super(lexi);
+        type = lexi.getType();
     }
 
     public int getPrecedence() {
@@ -19,5 +21,10 @@ public class Opr_SAR extends SAR {
 
     public void setPrecedence(int precedence) {
         this.precedence = precedence;
+    }
+
+    @Override
+    public String getType() {
+        return type;
     }
 }

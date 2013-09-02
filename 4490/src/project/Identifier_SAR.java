@@ -7,4 +7,7 @@ package project;
  * Time: 10:08 AM
  */
 public class Identifier_SAR extends SAR {
+    public Identifier_SAR(Tuple lexi, String scope) {
+        super(lexi, scope);
+    }
 }

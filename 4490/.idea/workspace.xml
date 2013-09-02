@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="944" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="928" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="374" mnemonic="2" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Identifier_SAR.java" afterPath="$PROJECT_DIR$/src/project/Identifier_SAR.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Literal_SAR.java" afterPath="$PROJECT_DIR$/src/project/Literal_SAR.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Opr_SAR.java" afterPath="$PROJECT_DIR$/src/project/Opr_SAR.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/PassTwo.java" afterPath="$PROJECT_DIR$/src/project/PassTwo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/SAR.java" afterPath="$PROJECT_DIR$/src/project/SAR.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/StackHandler.java" afterPath="$PROJECT_DIR$/src/project/StackHandler.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1373949090855" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378159136001" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378159146099" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
     <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378146819191" ignored="false" />
     <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378156599339" ignored="false" />
@@ -93,13 +90,13 @@
     <file path="/POModuleClient.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377891726721" ignored="false" />
     <file path="C:/dev/trunk2/fb/swing/src/java/com/evnt/client/modules/so/SOModuleClient.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377902431234" ignored="false" />
     <file path="C:/dev/trunk2/fb/swing/src/java/com/evnt/client/modules/so/wizards/quickship/WizQuickShip.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377902431234" ignored="false" />
-    <file path="/StackHandler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378158804339" ignored="false" />
+    <file path="/StackHandler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378161081112" ignored="false" />
     <file path="/Identifier_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965315762" ignored="false" />
     <file path="/Literal_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378158566770" ignored="false" />
     <file path="/Type_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378145162900" ignored="false" />
     <file path="/Variable_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965726936" ignored="false" />
     <file path="/BAL_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965864014" ignored="false" />
-    <file path="/PassTwo.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378158866478" ignored="false" />
+    <file path="/PassTwo.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378161003953" ignored="false" />
     <file path="/Opr_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378156677653" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -168,7 +165,7 @@
       </breakpoint>
     </breakpoint_any>
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="904" class="project.PassTwo" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="888" class="project.PassTwo" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -183,7 +180,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1368" class="project.PassTwo" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1332" class="project.PassTwo" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -198,7 +195,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="940" class="project.PassTwo" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="924" class="project.PassTwo" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -213,7 +210,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/StackHandler.java" line="130" class="project.StackHandler" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/StackHandler.java" line="151" class="project.StackHandler" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -250,7 +247,7 @@
       <file leaf-file-name="PassTwo.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="954" column="58" selection-start="40371" selection-end="40371" vertical-scroll-proportion="0.7253635">
+            <state line="374" column="0" selection-start="17049" selection-end="17049" vertical-scroll-proportion="0.6231003">
               <folding />
             </state>
           </provider>
@@ -304,7 +301,7 @@
       <file leaf-file-name="StackHandler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/StackHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="35" column="43" selection-start="911" selection-end="911" vertical-scroll-proportion="0.0">
+            <state line="85" column="52" selection-start="2272" selection-end="2272" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -1513,7 +1510,11 @@
       <created>1378146966160</created>
       <updated>1378146966160</updated>
     </task>
-    <option name="localTasksCounter" value="183" />
+    <task id="LOCAL-00183" summary="hooked up a number of validations">
+      <created>1378159149368</created>
+      <updated>1378159149368</updated>
+    </task>
+    <option name="localTasksCounter" value="184" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -1554,13 +1555,13 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3258786" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15838853" sideWeight="0.58146966" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15838853" sideWeight="0.71565497" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32965213" sideWeight="0.7507987" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39977914" sideWeight="0.600639" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17328918" sideWeight="0.6741214" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28434506" sideWeight="0.49806738" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17328918" sideWeight="0.6741214" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28434506" sideWeight="0.49806738" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32854778" sideWeight="0.71565497" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1772,14 +1773,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/StackHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="43" selection-start="911" selection-end="911" vertical-scroll-proportion="0.0">
+        <state line="85" column="52" selection-start="2272" selection-end="2272" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="954" column="58" selection-start="40371" selection-end="40371" vertical-scroll-proportion="0.7253635">
+        <state line="374" column="0" selection-start="17049" selection-end="17049" vertical-scroll-proportion="0.6231003">
           <folding />
         </state>
       </provider>

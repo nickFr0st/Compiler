@@ -3,7 +3,6 @@ package project;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -365,16 +364,15 @@ public class PassTwo {
             return true;
 
         } else if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
-            // todo: need to do this
             // check format: identifier [ fn_arr_member ] [ member_refz ] [ expressionz ]
-            lexicalAnalyzer.nextToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                return true;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            stackHandler.identifierPush(new Identifier_SAR(lexicalAnalyzer.getToken(), scope));
+            if (!stackHandler.identifierExist()) {
                 return false;
             }
+
+            errorList += stackHandler.getErrorList();
+
+            lexicalAnalyzer.nextToken();
 
             String errCheck = errorList;
 
@@ -558,12 +556,8 @@ public class PassTwo {
     }
 
     public boolean statement() {
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
-
+            // todo: need to do this
             // check format: "{" {statement} "}"
             String errorCheck = errorList;
 
@@ -595,7 +589,7 @@ public class PassTwo {
             return true;
 
         } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.IF.getKey())) {
-
+            // todo: need to do this
             // check format: "if" "(" expression ")" statement [ "else" statement ]
             lexicalAnalyzer.nextToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -654,7 +648,7 @@ public class PassTwo {
             return true;
 
         } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.WHILE.getKey())) {
-
+            // todo: need to do this
             // check format: "while" "(" expression ")" statement
             lexicalAnalyzer.nextToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -698,7 +692,7 @@ public class PassTwo {
             return true;
 
         } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.RETURN.getKey())) {
-
+            // todo: need to do this
             // check format: "return" [ expression ] ";"
             lexicalAnalyzer.nextToken();
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
@@ -731,7 +725,7 @@ public class PassTwo {
             return true;
 
         } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.COUT.getKey())) {
-
+            // todo: need to do this
             // check format: "cout" "<<" expression ";"
             lexicalAnalyzer.nextToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -765,7 +759,7 @@ public class PassTwo {
             return true;
 
         } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.CIN.getKey())) {
-
+            // todo: need to do this
             // check format: "cin" ">>" expression ";"
             lexicalAnalyzer.nextToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
@@ -799,22 +793,12 @@ public class PassTwo {
             return true;
 
         } else {
-
             // check format: expression ";"
             if (!expression()) {
                 return false;
             }
 
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                errorList += INVALID_STATEMENT + " 'expression' statement must end with a ';'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            return true;
+            return stackHandler.EOE();
         }
     }
 
@@ -979,10 +963,6 @@ public class PassTwo {
             }
         }
 
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
             lexicalAnalyzer.nextToken();
             return true;
@@ -990,27 +970,11 @@ public class PassTwo {
 
         while (statement()) {
             lexicalAnalyzer.nextToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += "Method body must end with a closing block '}'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
         }
+
+        errorList += stackHandler.getErrorList();
 
         if (!errorCheck.equals(errorList)) {
-            errorList += "Invalid statement in method body." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return false;
-        }
-
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
-            errorList += "Method body must end with a closing block '}'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
 

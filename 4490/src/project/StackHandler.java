@@ -40,6 +40,10 @@ public class StackHandler {
         SAS.push(identifier);
     }
 
+    public boolean identifierExist() {
+        return isInSymbolTable((Identifier_SAR)SAS.pop());
+    }
+
     public void literalPush(Literal_SAR literal) {
         SAS.push(literal);
     }
@@ -54,13 +58,13 @@ public class StackHandler {
         if (type(itemType.getLexi().getName())) {
             return true;
         } else if (itemType.getLexi().getType().equals(KeyConst.CLASS_NAME.getKey())) {
-            return isInSymbolTable(itemType);
+            return isClassInSymbolTable(itemType);
         }
 
         return false;
     }
 
-    private boolean isInSymbolTable(Type_SAR itemType) {
+    private boolean isClassInSymbolTable(Type_SAR itemType) {
         for (String key : symbolTable.keySet()) {
             Symbol temp = symbolTable.get(key);
 
@@ -74,6 +78,23 @@ public class StackHandler {
         }
 
         errorList += "type: '" + itemType.getName() + "' does not exists. Line: " + itemType.getLexi().getLineNum() + "\n";
+        return false;
+    }
+
+    private boolean isInSymbolTable(SAR sar) {
+        String searchScope = sar.getScope();
+        while (!searchScope.equals("g.")) {
+            for (String key : symbolTable.keySet()) {
+                Symbol temp = symbolTable.get(key);
+
+                if (sar.getScope().contains(temp.getScope()) && temp.getValue().equals(sar.getLexi().getName())) {
+                    return true;
+                }
+            }
+            searchScope = decrementScope(searchScope);
+        }
+
+        errorList += "symbol: '" + sar.getLexi().getName() + "' does not exists. Line: " + sar.getLexi().getLineNum() + "\n";
         return false;
     }
 
@@ -270,5 +291,18 @@ public class StackHandler {
 
     private boolean type(String itemType) {
         return (itemType.equals(KeyConst.INT.getKey()) || itemType.equals(KeyConst.CHAR.getKey()) || itemType.equals(KeyConst.BOOL.getKey()) || itemType.equals(KeyConst.VOID.getKey()));
+    }
+
+    private String decrementScope(String scope) {
+        int scopeDepth = 0;
+        for (char c : scope.toCharArray()) {
+            if (c == '.') scopeDepth++;
+        }
+
+        if (scopeDepth > 1) {
+            return scope.substring(0, scope.lastIndexOf("."));
+        } else {
+            return scope.substring(0, scope.lastIndexOf(".") + 1);
+        }
     }
 }

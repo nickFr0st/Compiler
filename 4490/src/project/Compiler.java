@@ -52,7 +52,7 @@ public class Compiler {
 
     public void evaluate() {
         // pass one
-        if (!compiliation_unit()) {
+        if (!compilation_unit()) {
             System.out.print(errorList);
             System.exit(0);
         }
@@ -1432,7 +1432,7 @@ public class Compiler {
         return true;
     }
 
-    public boolean compiliation_unit() {
+    public boolean compilation_unit() {
         // check format: {class_declaration} "void" "main" "(" ")" method_body
         if (lexicalAnalyzer.getToken() instanceof NullTuple) {
             errorList += "Invalid compilation unit. Missing 'main' method.\n";

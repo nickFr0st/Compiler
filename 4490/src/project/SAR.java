@@ -16,6 +16,16 @@ public class SAR {
     }
 
     /**
+     * used for the Type_SAR
+     * @param lexi
+     * @param scope
+     */
+    public SAR(Tuple lexi, String scope) {
+        this.lexi = lexi;
+        this.scope = scope;
+    }
+
+    /**
      * this is used for the Opr_SAR
      * @param lexi
      */

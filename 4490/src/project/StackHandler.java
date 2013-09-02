@@ -28,16 +28,20 @@ public class StackHandler {
         SAS.push(identifier);
     }
 
-    public void literalPush(Literal_SAR identifier) {
-        SAS.push(identifier);
+    public void literalPush(Literal_SAR literal) {
+        SAS.push(literal);
     }
 
-    public void typePush(Type_SAR identifier) {
-        SAS.push(identifier);
+    public void typePush(Type_SAR type) {
+        SAS.push(type);
     }
 
-    public void variablePush(Variable_SAR identifier) {
-        SAS.push(identifier);
+    public boolean typeExists() {
+        return true;
+    }
+
+    public void variablePush(Variable_SAR variable) {
+        SAS.push(variable);
     }
 
     public void BALPush(BAL_SAR identifier) {

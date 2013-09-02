@@ -906,22 +906,17 @@ public class PassTwo {
     public boolean variable_declaration() {
         boolean symbolAdded = false;
 
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+        // check format: type identifier ["[" "]"] ["=" assignment_expression ] ";"
+        stackHandler.typePush(new Type_SAR(lexicalAnalyzer.getToken(), scope));
+        if (!stackHandler.typeExists()) {
+            errorList += "type: " + lexicalAnalyzer.getToken().getName() + " does not exists." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return false;
         }
 
-        // check format: type identifier ["[" "]"] ["=" assignment_expression ] ";"
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !type(lexicalAnalyzer.getToken().getType())) {
-            errorList += "Variable declarations must start with a valid type." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return false;
-        }
 
         String type = lexicalAnalyzer.getToken().getName();
 
         lexicalAnalyzer.nextToken();
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
 
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
             errorList += "Variable declarations require a valid identifier." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
@@ -1001,20 +996,7 @@ public class PassTwo {
 
     public boolean method_body() {
         // check format: "{" {variable_declaration} {statement} "}"
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
-            errorList += "Method body must begin with an open block '{'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return false;
-        }
-
         lexicalAnalyzer.nextToken();
-        if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-            errorList += "Method body must end with a closing block '}'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return false;
-        }
-
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
 
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
             lexicalAnalyzer.nextToken();
@@ -1025,15 +1007,6 @@ public class PassTwo {
 
         if (type(lexicalAnalyzer.getToken().getType())) {
             while (variable_declaration()) {
-                if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                    errorList += "Method body must end with a closing block '}'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                    return false;
-                }
-
-                if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                    return false;
-                }
-
                 if (!type(lexicalAnalyzer.getToken().getType())) break;
             }
 

@@ -25,6 +25,7 @@ public class Compiler {
     private static final String MISSING_CLOSING_PARENTHESIS = "Missing closing parenthesis.";
     private static final String MISSING_OPENING_PARENTHESIS = "Missing opening parenthesis.";
     private static final String LINE = " Line: ";
+    private static final String CLASS = "Class";
 
     private static final String OPERATION = " operation.";
     private static final String ARGUMENT_LIST = " argument_list.";
@@ -854,7 +855,7 @@ public class Compiler {
 
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
             parameterNames.add("P" + variableId);
-            symbolTable.put("P" + variableId, new Symbol(scope, "P" + variableId++, name, "param", new VariableData(type, "private"), ELEM_SIZE));
+            addToSymbolTable("P", name, "param", new VariableData(type, "private"));
             return true;
         }
 
@@ -869,7 +870,7 @@ public class Compiler {
         }
 
         parameterNames.add("P" + variableId);
-        symbolTable.put("P" + variableId, new Symbol(scope, "P" + variableId++, name, "param", new VariableData(type, "private"), ELEM_SIZE));
+        addToSymbolTable("P", name, "param", new VariableData(type, "private"));
         return true;
     }
 
@@ -962,12 +963,12 @@ public class Compiler {
                 return false;
             }
 
-            symbolTable.put("@" + variableId, new Symbol(scope, "@" + variableId++, name, "lvar", new VariableData(type, "private"), ELEM_SIZE));
+            addToSymbolTable("@", name, "lvar", new VariableData(type, "private"));
             symbolAdded = true;
         }
 
         if (!symbolAdded) {
-            symbolTable.put("V" + variableId, new Symbol(scope, "V" + variableId++, name, "lvar", new VariableData(type, "private"), ELEM_SIZE));
+            addToSymbolTable("V", name, "lvar", new VariableData(type, "private"));
         }
         /**
          * to this point
@@ -1121,7 +1122,7 @@ public class Compiler {
 
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
             lexicalAnalyzer.nextToken();
-            symbolTable.put("M" + variableId, new Symbol(scope, "M" + variableId++, constructorName, "method", new MethodData("public", null, constructorName), ELEM_SIZE));
+            addToSymbolTable("M", constructorName, "method", new MethodData("public", null, constructorName));
             incrementScope(constructorName, false);
 
             if (!method_body()) {
@@ -1133,7 +1134,7 @@ public class Compiler {
         }
 
         String key = "M" + variableId;
-        symbolTable.put(key, new Symbol(scope, "M" + variableId++, constructorName, "method", new MethodData("public", null, constructorName), ELEM_SIZE));
+        addToSymbolTable("M", constructorName, "method", new MethodData("public", null, constructorName));
         incrementScope(constructorName, false);
         List<String> parameterNames = new ArrayList<String>();
 
@@ -1185,7 +1186,7 @@ public class Compiler {
             }
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                symbolTable.put("M" + variableId, new Symbol(scope, "M" + variableId++, value, "method", new MethodData(accessMod, null, type), ELEM_SIZE));
+                addToSymbolTable("M", value, "method", new MethodData(accessMod, null, type));
                 incrementScope(value, false);
                 lexicalAnalyzer.nextToken();
                 if (!method_body()) {
@@ -1197,7 +1198,7 @@ public class Compiler {
             }
 
             String methodKey = "M" + variableId;
-            symbolTable.put(methodKey, new Symbol(scope, "M" + variableId++, value, "method", new MethodData(accessMod, null, type), ELEM_SIZE));
+            addToSymbolTable("M", value, "method", new MethodData(accessMod, null, type));
             incrementScope(value, false);
             List<String> parameters = new ArrayList<String>();
 
@@ -1239,7 +1240,7 @@ public class Compiler {
 
             // check format: ["[" "]"] ["=" assignment_expression ] ";"
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                symbolTable.put("V" + variableId, new Symbol(scope, "V" + variableId++, value, "ivar", new VariableData(type, accessMod), ELEM_SIZE));
+                addToSymbolTable("V", value, "ivar", new VariableData(type, accessMod));
                 lexicalAnalyzer.nextToken();
                 return true;
             }
@@ -1266,7 +1267,7 @@ public class Compiler {
                     return false;
                 }
 
-                symbolTable.put("@" + variableId, new Symbol(scope, "@" + variableId++, value, "ivar", new VariableData(type, accessMod), ELEM_SIZE));
+                addToSymbolTable("@", value, "ivar", new VariableData(type, accessMod));
                 symbolAdded = true;
                 if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                     lexicalAnalyzer.nextToken();
@@ -1275,7 +1276,7 @@ public class Compiler {
             }
 
             if (!symbolAdded) {
-                symbolTable.put("V" + variableId, new Symbol(scope, "V" + variableId++, value, "ivar", new VariableData(type, accessMod), ELEM_SIZE));
+                addToSymbolTable("V", value, "ivar", new VariableData(type, accessMod));
             }
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
@@ -1388,7 +1389,8 @@ public class Compiler {
             return false;
         }
 
-        symbolTable.put("C" + variableId, new Symbol(scope, "C" + variableId++, lexicalAnalyzer.getToken().getName(), "Class", null, 0));
+
+        addToSymbolTable("C", lexicalAnalyzer.getToken().getName(), CLASS, null);
         incrementScope(lexicalAnalyzer.getToken().getName(), true);
 
         lexicalAnalyzer.nextToken();
@@ -1510,7 +1512,7 @@ public class Compiler {
             return false;
         }
 
-        symbolTable.put("MAIN" + variableId, new Symbol(scope, "MAIN" + variableId++, "main", "method", new MethodData("public", null, "void"), ELEM_SIZE));
+        addToSymbolTable("MAIN", "main", "method", new MethodData("public", null, "void"));
         incrementScope("main", true);
 
         // at this point we have declared classes and "void main()"
@@ -1566,5 +1568,19 @@ public class Compiler {
         } else {
             scope += "." + name;
         }
+    }
+
+    private boolean addToSymbolTable(String key, String name, String kind, IData data) {
+        for (String keyItem : symbolTable.keySet()) {
+            Symbol temp = symbolTable.get(keyItem);
+
+            if (temp.getValue().equals(name) && temp.getScope().equals(scope)) {
+                errorList += "duplicate symbol: symbol: '" + name + "' already exists in symbol table." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                return false;
+            }
+        }
+
+        symbolTable.put(key + variableId, new Symbol(scope, key + variableId++, name, kind, data, ELEM_SIZE));
+        return true;
     }
 }

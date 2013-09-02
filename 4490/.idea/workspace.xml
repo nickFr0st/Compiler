@@ -4,15 +4,17 @@
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Compiler.java" afterPath="$PROJECT_DIR$/src/project/Compiler.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/PassTwo.java" afterPath="$PROJECT_DIR$/src/project/PassTwo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/ProgramDriver.java" afterPath="$PROJECT_DIR$/src/project/ProgramDriver.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/SAR.java" afterPath="$PROJECT_DIR$/src/project/SAR.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/StackHandler.java" afterPath="$PROJECT_DIR$/src/project/StackHandler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Type_SAR.java" afterPath="$PROJECT_DIR$/src/project/Type_SAR.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1373949090855" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378142295524" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378144343081" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
-    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377974732285" ignored="false" />
+    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378146819191" ignored="false" />
     <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377923606476" ignored="false" />
     <file path="/LexicalAnalizer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358821966318" ignored="false" />
     <file path="/Tuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377964110153" ignored="false" />
@@ -27,7 +29,7 @@
     <file path="/VaribleData.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377841760805" ignored="false" />
     <file path="/FunctionData.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377841725258" ignored="false" />
     <file path="/ClassData.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1360449524258" ignored="false" />
-    <file path="/SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377972916662" ignored="false" />
+    <file path="/SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378145090154" ignored="false" />
     <file path="/a.dummy" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1366950140080" ignored="false" />
     <file path="$PROJECT_DIR$/../../../testp/src/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449678062" ignored="false" />
     <file path="$PROJECT_DIR$/../../../testp/.idea/workspace.xml" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449686335" ignored="false" />
@@ -87,13 +89,13 @@
     <file path="/POModuleClient.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377891726721" ignored="false" />
     <file path="C:/dev/trunk2/fb/swing/src/java/com/evnt/client/modules/so/SOModuleClient.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377902431234" ignored="false" />
     <file path="C:/dev/trunk2/fb/swing/src/java/com/evnt/client/modules/so/wizards/quickship/WizQuickShip.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377902431234" ignored="false" />
-    <file path="/StackHandler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377975276105" ignored="false" />
+    <file path="/StackHandler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378144693932" ignored="false" />
     <file path="/Identifier_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965315762" ignored="false" />
     <file path="/Literal_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965495543" ignored="false" />
-    <file path="/Type_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965523497" ignored="false" />
+    <file path="/Type_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378145162900" ignored="false" />
     <file path="/Variable_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965726936" ignored="false" />
     <file path="/BAL_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965864014" ignored="false" />
-    <file path="/PassTwo.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378143871874" ignored="false" />
+    <file path="/PassTwo.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378145546560" ignored="false" />
     <file path="/Opr_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377967422222" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -174,7 +176,7 @@
       <file leaf-file-name="Compiler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="0" selection-start="156" selection-end="1664" vertical-scroll-proportion="0.0">
+            <state line="1577" column="70" selection-start="65109" selection-end="65109" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -189,10 +191,46 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="SAR.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/SAR.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="18" column="28" selection-start="294" selection-end="294" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="PassTwo.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1001" column="34" selection-start="41836" selection-end="41836" vertical-scroll-proportion="0.5535135">
+            <state line="914" column="0" selection-start="38044" selection-end="38044" vertical-scroll-proportion="0.5714286">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Tuple.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/Tuple.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="8" column="13" selection-start="123" selection-end="123" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="388" column="14" selection-start="14115" selection-end="14115" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Type_SAR.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/Type_SAR.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="15" column="0" selection-start="278" selection-end="278" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -207,46 +245,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SAR.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/SAR.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="48" column="29" selection-start="854" selection-end="854" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Tuple.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/Tuple.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="30" column="24" selection-start="547" selection-end="547" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="StackHandler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/StackHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="44" column="60" selection-start="1167" selection-end="1167" vertical-scroll-proportion="0.0">
+            <state line="34" column="27" selection-start="929" selection-end="929" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Variable_SAR.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/Variable_SAR.java">
+      <file leaf-file-name="Symbol.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/Symbol.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="78" selection-start="229" selection-end="229" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Opr_SAR.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/Opr_SAR.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="34" selection-start="145" selection-end="145" vertical-scroll-proportion="0.0">
+            <state line="11" column="39" selection-start="250" selection-end="250" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -279,15 +290,15 @@
         <option value="$PROJECT_DIR$/src/project/SAR112.java" />
         <option value="$PROJECT_DIR$/src/project/Identifier_SAR.java" />
         <option value="$PROJECT_DIR$/src/project/Literal_SAR.java" />
-        <option value="$PROJECT_DIR$/src/project/Type_SAR.java" />
         <option value="$PROJECT_DIR$/src/project/BAL_SAR.java" />
         <option value="$PROJECT_DIR$/src/project/Opr_SAR.java" />
-        <option value="$PROJECT_DIR$/src/project/SAR.java" />
         <option value="$PROJECT_DIR$/src/project/Variable_SAR.java" />
-        <option value="$PROJECT_DIR$/src/project/StackHandler.java" />
         <option value="$PROJECT_DIR$/src/project/ProgramDriver.java" />
-        <option value="$PROJECT_DIR$/src/project/Compiler.java" />
+        <option value="$PROJECT_DIR$/src/project/StackHandler.java" />
+        <option value="$PROJECT_DIR$/src/project/SAR.java" />
+        <option value="$PROJECT_DIR$/src/project/Type_SAR.java" />
         <option value="$PROJECT_DIR$/src/project/PassTwo.java" />
+        <option value="$PROJECT_DIR$/src/project/Compiler.java" />
       </list>
     </option>
   </component>
@@ -296,9 +307,9 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="55" />
+    <option name="x" value="54" />
     <option name="y" value="-8" />
-    <option name="width" value="1873" />
+    <option name="width" value="1874" />
     <option name="height" value="1096" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -1428,7 +1439,11 @@
       <created>1377975541245</created>
       <updated>1377975541245</updated>
     </task>
-    <option name="localTasksCounter" value="181" />
+    <task id="LOCAL-00181" summary="more stuff">
+      <created>1378144348155</created>
+      <updated>1378144348155</updated>
+    </task>
+    <option name="localTasksCounter" value="182" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1452,7 +1467,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="55" y="-8" width="1873" height="1096" extended-state="6" />
+    <frame x="54" y="-8" width="1874" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32800853" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1470,12 +1485,12 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15847598" sideWeight="0.71565497" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15838853" sideWeight="0.71565497" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32965213" sideWeight="0.7507987" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39977914" sideWeight="0.600639" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17338488" sideWeight="0.71565497" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28434506" sideWeight="0.49806738" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17328918" sideWeight="0.71565497" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28434506" sideWeight="0.49806738" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32854778" sideWeight="0.71565497" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1589,34 +1604,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/project/Symbol.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="39" selection-start="250" selection-end="250" vertical-scroll-proportion="0.14818764">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="390" column="0" selection-start="14145" selection-end="14145" vertical-scroll-proportion="0.22068231">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Tuple.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="24" selection-start="547" selection-end="547" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Type_SAR.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="33" selection-start="144" selection-end="144" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Literal_SAR.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="8" column="36" selection-start="147" selection-end="147" vertical-scroll-proportion="0.0">
@@ -1645,13 +1632,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/SAR.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="29" selection-start="854" selection-end="854" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Variable_SAR.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="9" column="78" selection-start="229" selection-end="229" vertical-scroll-proportion="0.0">
@@ -1664,23 +1644,9 @@
         <state line="943" column="28" selection-start="58277" selection-end="58285" vertical-scroll-proportion="0.33259425" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/StackHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="60" selection-start="1167" selection-end="1167" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/ProgramDriver.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="14" column="39" selection-start="338" selection-end="338" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="0" selection-start="156" selection-end="1664" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1692,9 +1658,58 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/Tuple.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="13" selection-start="123" selection-end="123" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="388" column="14" selection-start="14115" selection-end="14115" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/Symbol.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="39" selection-start="250" selection-end="250" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/SAR.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="28" selection-start="294" selection-end="294" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1577" column="70" selection-start="65109" selection-end="65109" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/StackHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="27" selection-start="929" selection-end="929" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/Type_SAR.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="0" selection-start="278" selection-end="278" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1001" column="34" selection-start="41836" selection-end="41836" vertical-scroll-proportion="0.5535135">
+        <state line="914" column="0" selection-start="38044" selection-end="38044" vertical-scroll-proportion="0.5714286">
           <folding />
         </state>
       </provider>

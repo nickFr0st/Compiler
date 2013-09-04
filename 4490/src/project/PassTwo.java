@@ -895,7 +895,7 @@ public class PassTwo {
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
 
             // todo: need to handle arrays
-            lexicalAnalyzer.getToken();
+            lexicalAnalyzer.nextToken();
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
@@ -924,6 +924,8 @@ public class PassTwo {
                 errorList += "Invalid variable declaration. Invalid assignment expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
+        } else {
+            stackHandler.popSAS();
         }
 
         if (!stackHandler.EOE()) {

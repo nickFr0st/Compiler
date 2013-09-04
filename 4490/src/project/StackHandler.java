@@ -22,6 +22,13 @@ public class StackHandler {
         this.variableId = variableId;
     }
 
+    public SAR popSAS() {
+        if (!SAS.isEmpty()) {
+            return SAS.pop();
+        }
+        return null;
+    }
+
     public String getErrorList() {
         return errorList;
     }

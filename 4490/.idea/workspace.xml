@@ -7,19 +7,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Identifier_SAR.java" afterPath="$PROJECT_DIR$/src/project/Identifier_SAR.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Compiler.java" afterPath="$PROJECT_DIR$/src/project/Compiler.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/PassTwo.java" afterPath="$PROJECT_DIR$/src/project/PassTwo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/SAR.java" afterPath="$PROJECT_DIR$/src/project/SAR.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/StackHandler.java" afterPath="$PROJECT_DIR$/src/project/StackHandler.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1373949090855" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378174279623" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378261407486" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
-    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378146819191" ignored="false" />
-    <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378156599339" ignored="false" />
+    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378261516652" ignored="false" />
+    <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378261974859" ignored="false" />
     <file path="/LexicalAnalizer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358821966318" ignored="false" />
     <file path="/Tuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377964110153" ignored="false" />
     <file path="/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1376513330205" ignored="false" />
@@ -93,13 +92,13 @@
     <file path="/POModuleClient.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377891726721" ignored="false" />
     <file path="C:/dev/trunk2/fb/swing/src/java/com/evnt/client/modules/so/SOModuleClient.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377902431234" ignored="false" />
     <file path="C:/dev/trunk2/fb/swing/src/java/com/evnt/client/modules/so/wizards/quickship/WizQuickShip.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377902431234" ignored="false" />
-    <file path="/StackHandler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378261062940" ignored="false" />
+    <file path="/StackHandler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378262511798" ignored="false" />
     <file path="/Identifier_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378261163144" ignored="false" />
     <file path="/Literal_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378158566770" ignored="false" />
     <file path="/Type_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378145162900" ignored="false" />
     <file path="/Variable_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965726936" ignored="false" />
     <file path="/BAL_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965864014" ignored="false" />
-    <file path="/PassTwo.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378260756429" ignored="false" />
+    <file path="/PassTwo.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378262518192" ignored="false" />
     <file path="/Opr_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378156677653" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -168,37 +167,7 @@
       </breakpoint>
     </breakpoint_any>
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="882" class="project.PassTwo" package="project">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1326" class="project.PassTwo" package="project">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="918" class="project.PassTwo" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1328" class="project.PassTwo" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -228,7 +197,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="964" class="project.PassTwo" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="966" class="project.PassTwo" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -243,7 +212,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/StackHandler.java" line="157" class="project.StackHandler" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/StackHandler.java" line="164" class="project.StackHandler" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -258,7 +227,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/StackHandler.java" line="165" class="project.StackHandler" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/StackHandler.java" line="172" class="project.StackHandler" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -273,7 +242,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/StackHandler.java" line="43" class="project.StackHandler" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/StackHandler.java" line="50" class="project.StackHandler" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -289,6 +258,36 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
       <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="361" class="project.PassTwo" package="project">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/project/StackHandler.java" line="125" class="project.StackHandler" package="project">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="950" class="project.PassTwo" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -322,10 +321,28 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PassTwo.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="PassTwo.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="881" column="125" selection-start="37277" selection-end="37277" vertical-scroll-proportion="0.15601504">
+            <state line="927" column="74" selection-start="39362" selection-end="39362" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ProgramDriver.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/ProgramDriver.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="16" column="0" selection-start="405" selection-end="405" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Compiler.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="1518" column="2" selection-start="63070" selection-end="63070" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -367,10 +384,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="StackHandler.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="StackHandler.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/StackHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="35" column="0" selection-start="891" selection-end="891" vertical-scroll-proportion="0.0">
+            <state line="28" column="20" selection-start="788" selection-end="788" vertical-scroll-proportion="0.44864866">
               <folding />
             </state>
           </provider>
@@ -380,15 +397,6 @@
         <entry file="file://$PROJECT_DIR$/src/project/Opr_SAR.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="14" column="29" selection-start="283" selection-end="283" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Variable_SAR.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/Variable_SAR.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="75" selection-start="199" selection-end="226" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -422,14 +430,14 @@
         <option value="$PROJECT_DIR$/src/project/BAL_SAR.java" />
         <option value="$PROJECT_DIR$/src/project/ProgramDriver.java" />
         <option value="$PROJECT_DIR$/src/project/Type_SAR.java" />
-        <option value="$PROJECT_DIR$/src/project/Compiler.java" />
         <option value="$PROJECT_DIR$/src/project/Variable_SAR.java" />
         <option value="$PROJECT_DIR$/src/project/Opr_SAR.java" />
         <option value="$PROJECT_DIR$/src/project/Literal_SAR.java" />
-        <option value="$PROJECT_DIR$/src/project/PassTwo.java" />
         <option value="$PROJECT_DIR$/src/project/SAR.java" />
-        <option value="$PROJECT_DIR$/src/project/StackHandler.java" />
         <option value="$PROJECT_DIR$/src/project/Identifier_SAR.java" />
+        <option value="$PROJECT_DIR$/src/project/Compiler.java" />
+        <option value="$PROJECT_DIR$/src/project/StackHandler.java" />
+        <option value="$PROJECT_DIR$/src/project/PassTwo.java" />
       </list>
     </option>
   </component>
@@ -1587,7 +1595,11 @@
       <created>1378161216143</created>
       <updated>1378161216143</updated>
     </task>
-    <option name="localTasksCounter" value="185" />
+    <task id="LOCAL-00185" summary="added some variable validation">
+      <created>1378261413594</created>
+      <updated>1378261413594</updated>
+    </task>
+    <option name="localTasksCounter" value="186" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -1620,7 +1632,7 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32694355" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.41853034" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41853034" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.49806738" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -1629,11 +1641,11 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15838853" sideWeight="0.58146966" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15838853" sideWeight="0.71565497" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32965213" sideWeight="0.7507987" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39977914" sideWeight="0.600639" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17328918" sideWeight="0.58146966" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17328918" sideWeight="0.58146966" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28434506" sideWeight="0.49806738" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1753,13 +1765,6 @@
         <state line="943" column="28" selection-start="58277" selection-end="58285" vertical-scroll-proportion="0.33259425" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/ProgramDriver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="39" selection-start="338" selection-end="338" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Symbol.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="39" selection-start="250" selection-end="250" vertical-scroll-proportion="0.0">
@@ -1770,13 +1775,6 @@
     <entry file="file://$PROJECT_DIR$/src/project/Tuple.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="8" column="13" selection-start="123" selection-end="123" vertical-scroll-proportion="0.20268257">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1577" column="70" selection-start="65109" selection-end="65109" vertical-scroll-proportion="0.6306991">
           <folding />
         </state>
       </provider>
@@ -1844,16 +1842,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/StackHandler.java">
+    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="0" selection-start="891" selection-end="891" vertical-scroll-proportion="0.0">
+        <state line="1518" column="2" selection-start="63070" selection-end="63070" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/ProgramDriver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="0" selection-start="405" selection-end="405" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="881" column="125" selection-start="37277" selection-end="37277" vertical-scroll-proportion="0.15601504">
+        <state line="927" column="74" selection-start="39362" selection-end="39362" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/StackHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="20" selection-start="788" selection-end="788" vertical-scroll-proportion="0.44864866">
           <folding />
         </state>
       </provider>

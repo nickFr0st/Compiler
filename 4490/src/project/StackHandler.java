@@ -41,7 +41,16 @@ public class StackHandler {
     }
 
     public boolean identifierExist() {
-        return isInSymbolTable((Identifier_SAR)SAS.pop());
+        Identifier_SAR id_sar = (Identifier_SAR)SAS.pop();
+
+        String type = isInSymbolTable(id_sar);
+        if (type != null) {
+            id_sar.setType(type);
+            SAS.push(id_sar);
+            return true;
+        }
+
+        return false;
     }
 
     public void literalPush(Literal_SAR literal) {
@@ -81,21 +90,21 @@ public class StackHandler {
         return false;
     }
 
-    private boolean isInSymbolTable(SAR sar) {
+    private String isInSymbolTable(SAR sar) {
         String searchScope = sar.getScope();
         while (!searchScope.equals("g.")) {
             for (String key : symbolTable.keySet()) {
                 Symbol temp = symbolTable.get(key);
 
                 if (sar.getScope().contains(temp.getScope()) && temp.getValue().equals(sar.getLexi().getName())) {
-                    return true;
+                    return temp.getData().getType();
                 }
             }
             searchScope = decrementScope(searchScope);
         }
 
         errorList += "symbol: '" + sar.getLexi().getName() + "' does not exists. Line: " + sar.getLexi().getLineNum() + "\n";
-        return false;
+        return null;
     }
 
     public void variablePush(Variable_SAR variable) {

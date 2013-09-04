@@ -271,29 +271,23 @@ public class PassTwo {
     }
 
     public boolean expressionz() {
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+        String errorCheck = errorList;
+        stackHandler.operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
+        errorList += stackHandler.getErrorList();
+
+        if (!errorCheck.equals(errorList)) {
             return false;
         }
 
-        Tuple token = lexicalAnalyzer.getToken();
-        if (!(token.getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || isLogicalConnectiveExpression(token.getType()) || isBooleanExpression(token.getType()) || isMathematicalExpression(token.getType()))) {
-            errorList += "Invalid expressionz." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return false;
-        }
 
-        lexicalAnalyzer.nextToken();
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            errorList += "expressionz missing right hand expression." + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
-            lexicalAnalyzer.previousToken();
-            return false;
-        }
-
-        if (token.getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+        if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+            lexicalAnalyzer.nextToken();
             if (!assignment_expression()) {
                 errorList += "Invalid assignment expression." + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
                 return false;
             }
         } else {
+            lexicalAnalyzer.nextToken();
             if (!expression()) {
                 errorList += "Invalid expressionz expression." + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
                 return false;

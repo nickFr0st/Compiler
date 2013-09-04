@@ -38,6 +38,12 @@ public class SAR {
         this.lexi = lexi;
     }
 
+    public SAR(String scope, Tuple lexi, String type) {
+        this.scope = scope;
+        this.lexi = lexi;
+        this.type = type;
+    }
+
     public SAR(Tuple lexi, String scope, String sarId, String type) {
         this.sarId = sarId;
         this.lexi = lexi;

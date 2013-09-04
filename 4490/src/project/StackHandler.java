@@ -34,7 +34,7 @@ public class StackHandler {
     }
 
     public boolean EOE() {
-        while(!OS.isEmpty()) {
+        while (!OS.isEmpty()) {
             if (!handleOperation()) {
                 return false;
             }
@@ -48,7 +48,7 @@ public class StackHandler {
     }
 
     public boolean identifierExist() {
-        Identifier_SAR id_sar = (Identifier_SAR)SAS.pop();
+        Identifier_SAR id_sar = (Identifier_SAR) SAS.pop();
 
         String type = isInSymbolTable(id_sar);
         if (type != null) {
@@ -57,6 +57,49 @@ public class StackHandler {
             return true;
         }
 
+        return false;
+    }
+
+    public boolean memberRefExists() {
+        SAR rhs = SAS.pop();
+        SAR lhs = SAS.pop();
+
+        if (lhs instanceof Literal_SAR) {
+            errorList += "left hand side of a call operation cannot be a literal value. Line: " + lhs.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        if (rhs instanceof Literal_SAR) {
+            errorList += "right hand side of a call operation cannot be a literal value. Line: " + lhs.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        if (type(lhs.getType())) {
+            errorList += "variable: '" + lhs.getLexi().getName() + "' is of type '" + lhs.getType() + "' which is un-assignable. Line: " + lhs.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        String lhsItemScope = "g." + lhs.getType();
+
+        for (String key : symbolTable.keySet()) {
+            Symbol temp = symbolTable.get(key);
+
+            if (!temp.getScope().equals(lhsItemScope)) {
+                continue;
+            }
+
+            if (temp.getValue().equals(rhs.getLexi().getName())) {
+                if (temp.getData().getAccessMod().toUpperCase().equals(KeyConst.PRIVATE.name())) {
+                    errorList += "'" + rhs.getLexi().getName() + "' must be a public variable in order to be accessed outside of its class. Line: " + rhs.getLexi().getLineNum() + "\n";
+                    return false;
+                }
+
+                SAS.push(new Ref_SAR(lhs.getScope(), new Tuple("T" + variableId, temp.getData().getType(), rhs.getLexi().getLineNum()), temp.getData().getType()));
+                return true;
+            }
+        }
+
+        errorList += "'" + rhs.getLexi().getName() + "' does not exists in '" + lhs.getLexi().getName() + "'. Line: " + rhs.getLexi().getLineNum() + "\n";
         return false;
     }
 
@@ -69,7 +112,7 @@ public class StackHandler {
     }
 
     public boolean typeExists() {
-        Type_SAR itemType = (Type_SAR)SAS.pop();
+        Type_SAR itemType = (Type_SAR) SAS.pop();
 
         if (type(itemType.getLexi().getName())) {
             return true;
@@ -148,7 +191,7 @@ public class StackHandler {
 
         if (topOpr.getLexi().getName().equals("+")) {
             return add();
-        } else if(topOpr.getLexi().getName().equals("-")) {
+        } else if (topOpr.getLexi().getName().equals("-")) {
             return subtract();
         } else if (topOpr.getLexi().getName().equals("/")) {
             return divide();

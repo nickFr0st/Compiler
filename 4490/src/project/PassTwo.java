@@ -361,10 +361,10 @@ public class PassTwo {
             // check format: identifier [ fn_arr_member ] [ member_refz ] [ expressionz ]
             stackHandler.identifierPush(new Identifier_SAR(lexicalAnalyzer.getToken(), scope));
             if (!stackHandler.identifierExist()) {
+                errorList += stackHandler.getErrorList();
                 return false;
             }
 
-            errorList += stackHandler.getErrorList();
 
             lexicalAnalyzer.nextToken();
 
@@ -375,24 +375,8 @@ public class PassTwo {
                 return false;
             }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                return true;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
             member_refz();
             if (!errCheck.equals(errorList)) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                return true;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
@@ -502,46 +486,25 @@ public class PassTwo {
     }
 
     private boolean member_refz() {
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
         // check format: "." identifier [ fn_arr_member ] [ member_refz ]
         if (!lexicalAnalyzer.getToken().getName().equals(".")) {
             return false;
         }
 
         lexicalAnalyzer.nextToken();
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
 
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
-            errorList += "Invalid member ref." + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
+        stackHandler.identifierPush(new Identifier_SAR(lexicalAnalyzer.getToken(), scope));
+        if (!stackHandler.memberRefExists()) {
+            errorList += stackHandler.getErrorList();
             return false;
         }
 
         lexicalAnalyzer.nextToken();
-        if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-            return true;
-        }
-
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
 
         String errCheck = errorList;
 
         fn_arr_member();
         if (!errCheck.equals(errorList)) {
-            return false;
-        }
-
-        if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-            return true;
-        }
-
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
         }
 
@@ -1077,7 +1040,6 @@ public class PassTwo {
             }
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                symbolTable.put("M" + variableId, new Symbol(scope, "M" + variableId++, value, "method", new MethodData(accessMod, null, type), ELEM_SIZE));
                 incrementScope(value, false);
                 lexicalAnalyzer.nextToken();
                 if (!method_body()) {
@@ -1089,7 +1051,6 @@ public class PassTwo {
             }
 
             String methodKey = "M" + variableId;
-            symbolTable.put(methodKey, new Symbol(scope, "M" + variableId++, value, "method", new MethodData(accessMod, null, type), ELEM_SIZE));
             incrementScope(value, false);
             List<String> parameters = new ArrayList<String>();
 
@@ -1098,7 +1059,6 @@ public class PassTwo {
                 return false;
             }
 
-            ((MethodData)symbolTable.get(methodKey).getData()).setParameters(parameters);
 
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
@@ -1123,15 +1083,12 @@ public class PassTwo {
             return true;
 
         } else {
-            boolean symbolAdded = false;
-
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
 
             // check format: ["[" "]"] ["=" assignment_expression ] ";"
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                symbolTable.put("V" + variableId, new Symbol(scope, "V" + variableId++, value, "ivar", new VariableData(type, accessMod), ELEM_SIZE));
                 lexicalAnalyzer.nextToken();
                 return true;
             }
@@ -1157,17 +1114,10 @@ public class PassTwo {
                 if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                     return false;
                 }
-
-                symbolTable.put("@" + variableId, new Symbol(scope, "@" + variableId++, value, "ivar", new VariableData(type, accessMod), ELEM_SIZE));
-                symbolAdded = true;
                 if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                     lexicalAnalyzer.nextToken();
                     return true;
                 }
-            }
-
-            if (!symbolAdded) {
-                symbolTable.put("V" + variableId, new Symbol(scope, "V" + variableId++, value, "ivar", new VariableData(type, accessMod), ELEM_SIZE));
             }
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {

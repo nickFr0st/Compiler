@@ -1,6 +1,10 @@
 package project;
 
+import com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser;
+
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -94,7 +98,30 @@ public class StackHandler {
                     return false;
                 }
 
-                SAS.push(new Ref_SAR(lhs.getScope(), new Tuple("T" + variableId, temp.getData().getType(), rhs.getLexi().getLineNum()), temp.getData().getType()));
+                if (temp.getData() instanceof MethodData) {
+                    ((Function_SAR)rhs).getFunction().setType(temp.getData().getType());
+
+                    if (((Function_SAR)rhs).getArguments().getArguments().size() > ((MethodData) temp.getData()).getParameters().size()) {
+                        errorList += "there are too many parameters for called method. Line: " + rhs.getLexi().getLineNum() + "\n";
+                        return false;
+                    } else if (((Function_SAR)rhs).getArguments().getArguments().size() < ((MethodData) temp.getData()).getParameters().size()) {
+                        errorList += "there are too few parameters for called method. Line: " + rhs.getLexi().getLineNum() + "\n";
+                        return false;
+                    }
+
+                    List<SAR> args = ((Function_SAR)rhs).getArguments().getArguments();
+                    int index = ((Function_SAR)rhs).getArguments().getArguments().size() - 1;
+
+                    for (String type : ((MethodData) temp.getData()).getParameters()) {
+                        if (!args.get(index).getType().equals(type)) {
+                            errorList += "invalid argument type. expected: " + type + " but was: " + args.get(index).getType() + " Line: " + rhs.getLexi().getLineNum() + "\n";
+                            return false;
+                        }
+                        index--;
+                    }
+                }
+
+                SAS.push(new Ref_SAR(lhs.getScope(), new Tuple("T" + variableId++, temp.getData().getType(), rhs.getLexi().getLineNum()), temp.getData().getType()));
                 return true;
             }
         }
@@ -163,6 +190,24 @@ public class StackHandler {
 
     public void BALPush(BAL_SAR identifier) {
         SAS.push(identifier);
+    }
+
+    public void EALPush() {
+        List<SAR> arguments = new ArrayList<SAR>();
+        while(!(SAS.peek() instanceof BAL_SAR)) {
+            arguments.add(SAS.pop());
+        }
+
+        // remove BAL_SAR
+        SAS.pop();
+
+        SAS.push(new EAL_SAR(arguments));
+    }
+
+    public void functionPush() {
+        EAL_SAR arguments = (EAL_SAR)SAS.pop();
+        Identifier_SAR function = (Identifier_SAR)SAS.pop();
+        SAS.push(new Function_SAR(function.getScope(), function.getLexi(), function.getType(), function, arguments));
     }
 
     public boolean operatorPush(Opr_SAR opr) {

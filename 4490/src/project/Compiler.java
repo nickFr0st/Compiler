@@ -854,7 +854,7 @@ public class Compiler {
         }
 
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
-            parameterNames.add("P" + variableId);
+            parameterNames.add(type);
             addToSymbolTable("P", name, "param", new VariableData(type, "private"));
             return true;
         }
@@ -869,7 +869,7 @@ public class Compiler {
             return false;
         }
 
-        parameterNames.add("P" + variableId);
+        parameterNames.add(type);
         addToSymbolTable("P", name, "param", new VariableData(type, "private"));
         return true;
     }

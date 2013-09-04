@@ -11,6 +11,10 @@ public class Identifier_SAR extends SAR {
         super(lexi, scope);
     }
 
+    public Identifier_SAR(String scope, Tuple lexi, String type) {
+        super(scope, lexi, type);
+    }
+
     public void setType(String type) {
         super.setType(type);
     }

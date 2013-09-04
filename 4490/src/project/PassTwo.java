@@ -392,10 +392,6 @@ public class PassTwo {
     }
 
     private boolean argument_list() {
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
         // check format: expression { "," expression}
         if (!expression()) {
             errorList += INVALID_ARGUMENT_LIST + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
@@ -404,12 +400,8 @@ public class PassTwo {
 
         while (!(lexicalAnalyzer.getToken() instanceof NullTuple) && lexicalAnalyzer.getToken().getName().equals(",")) {
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
 
             if (!expression()) {
-                errorList += INVALID_ARGUMENT_LIST + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
                 return false;
             }
         }
@@ -417,40 +409,29 @@ public class PassTwo {
     }
 
     private boolean fn_arr_member() {
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
         // check format: "(" [ argument_list ] ")" | "[" expression "]"
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-
+            stackHandler.BALPush(new BAL_SAR());
             //check format: "(" [ argument_list ] ")"
             lexicalAnalyzer.nextToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += INVALID_FUNCTION + " " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                stackHandler.EALPush();
+                stackHandler.functionPush();
+                if (!stackHandler.memberRefExists()) {
+                    return false;
+                }
                 lexicalAnalyzer.nextToken();
                 return true;
             }
 
             if (!argument_list()) {
-                errorList += INVALID_ARGUMENT_LIST + " in function parameter." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                errorList += INVALID_FUNCTION + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
+            stackHandler.EALPush();
+            stackHandler.functionPush();
+            if (!stackHandler.memberRefExists()) {
                 return false;
             }
 
@@ -492,20 +473,21 @@ public class PassTwo {
         }
 
         lexicalAnalyzer.nextToken();
-
         stackHandler.identifierPush(new Identifier_SAR(lexicalAnalyzer.getToken(), scope));
-        if (!stackHandler.memberRefExists()) {
-            errorList += stackHandler.getErrorList();
-            return false;
-        }
-
         lexicalAnalyzer.nextToken();
 
         String errCheck = errorList;
 
-        fn_arr_member();
+        boolean isFunc = fn_arr_member();
         if (!errCheck.equals(errorList)) {
             return false;
+        }
+
+        if (!isFunc) {
+            if (!stackHandler.memberRefExists()) {
+                errorList += stackHandler.getErrorList();
+                return false;
+            }
         }
 
         member_refz();

@@ -64,24 +64,17 @@ public class PassTwo {
     }
 
     private boolean new_declaration() {
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-
             // check format: "(" [argument_list] ")"
             lexicalAnalyzer.nextToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += ILLEGAL_NEW_DECLARATION + OPERATION + " " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
+            stackHandler.BALPush(new BAL_SAR());
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                stackHandler.EALPush();
+                if (!stackHandler.newObjPush()) {
+                    return false;
+                }
+
                 lexicalAnalyzer.nextToken();
                 return true;
             }
@@ -95,12 +88,8 @@ public class PassTwo {
                 }
             }
 
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                errorList += ILLEGAL_NEW_DECLARATION + OPERATION + " " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
+            stackHandler.EALPush();
+            if (!stackHandler.newObjPush()) {
                 return false;
             }
 
@@ -144,29 +133,18 @@ public class PassTwo {
 
     public boolean assignment_expression() {
         if (lexicalAnalyzer.getToken().getType().equals(KeyConst.NEW.getKey())) {
-            // todo: need to do new operation
             // check format: "new" type new_declaration
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !type(lexicalAnalyzer.getToken().getType())) {
-                errorList += ILLEGAL_NEW_OPERATION + " " + INVALID_TYPE + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
+            stackHandler.typePush(new Type_SAR(lexicalAnalyzer.getToken(), scope));
+            if (!stackHandler.typeExists()) {
+                errorList += stackHandler.getErrorList();
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !new_declaration()) {
-                errorList += ILLEGAL_NEW_OPERATION + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
-                return false;
-            }
+            return new_declaration();
 
-            return true;
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.ATOI.getKey())) {
             // todo: need to do atoi operation
             // check format: "atoi" "(" expression ")"
@@ -831,6 +809,7 @@ public class PassTwo {
             return false;
         }
 
+        stackHandler.popSAS();
         String type = lexicalAnalyzer.getToken().getName();
 
         lexicalAnalyzer.nextToken();
@@ -866,7 +845,6 @@ public class PassTwo {
 
             lexicalAnalyzer.nextToken();
             if (!assignment_expression()) {
-                errorList += "Invalid variable declaration. Invalid assignment expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
         } else {

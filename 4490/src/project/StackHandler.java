@@ -139,7 +139,7 @@ public class StackHandler {
     }
 
     public boolean typeExists() {
-        Type_SAR itemType = (Type_SAR) SAS.pop();
+        Type_SAR itemType = (Type_SAR) SAS.peek();
 
         if (type(itemType.getLexi().getName())) {
             return true;
@@ -229,6 +229,51 @@ public class StackHandler {
             OS.push(opr);
         }
         return true;
+    }
+
+    public boolean newObjPush() {
+        EAL_SAR parameters = (EAL_SAR)SAS.pop();
+        Type_SAR type = (Type_SAR)SAS.pop();
+
+        String constructorScope = "g." + type.getName();
+
+        for (String key : symbolTable.keySet()) {
+            Symbol temp = symbolTable.get(key);
+
+            if (!temp.getScope().equals(constructorScope)) {
+                continue;
+            }
+
+            if (temp.getValue().equals(type.getName())) {
+                if (temp.getData() instanceof MethodData) {
+                    type.setType(temp.getData().getType());
+
+                    if (parameters.getArguments().size() > ((MethodData) temp.getData()).getParameters().size()) {
+                        errorList += "there are too many parameters for called constructor. Line: " + type.getLexi().getLineNum() + "\n";
+                        return false;
+                    } else if (parameters.getArguments().size() < ((MethodData) temp.getData()).getParameters().size()) {
+                        errorList += "there are too few parameters for called constructor. Line: " + type.getLexi().getLineNum() + "\n";
+                        return false;
+                    }
+
+                    List<SAR> args = parameters.getArguments();
+                    int index = parameters.getArguments().size() - 1;
+
+                    for (String params : ((MethodData) temp.getData()).getParameters()) {
+                        if (!args.get(index).getType().equals(params)) {
+                            errorList += "invalid argument type. expected: " + params + " but was: " + args.get(index).getType() + " Line: " + type.getLexi().getLineNum() + "\n";
+                            return false;
+                        }
+                        index--;
+                    }
+                }
+                SAS.push(new New_SAR(type.getScope(), type.getLexi(), type.getType(), type, parameters));
+                return true;
+            }
+        }
+
+        errorList += "Invalid Constructor. Line: " + type.getLexi().getLineNum() + "\n";
+        return false;
     }
 
     private boolean handleOperation() {

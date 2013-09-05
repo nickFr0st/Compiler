@@ -1122,7 +1122,7 @@ public class Compiler {
 
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
             lexicalAnalyzer.nextToken();
-            addToSymbolTable("M", constructorName, "method", new MethodData("public", null, constructorName));
+            addToSymbolTable("M", constructorName, "method", new MethodData("public", new ArrayList<String>(), constructorName));
             incrementScope(constructorName, false);
 
             if (!method_body()) {
@@ -1134,7 +1134,7 @@ public class Compiler {
         }
 
         String key = "M" + variableId;
-        addToSymbolTable("M", constructorName, "method", new MethodData("public", null, constructorName));
+        addToSymbolTable("M", constructorName, "method", new MethodData("public", new ArrayList<String>(), constructorName));
         incrementScope(constructorName, false);
         List<String> parameterNames = new ArrayList<String>();
 
@@ -1186,7 +1186,7 @@ public class Compiler {
             }
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                addToSymbolTable("M", value, "method", new MethodData(accessMod, null, type));
+                addToSymbolTable("M", value, "method", new MethodData(accessMod, new ArrayList<String>(), type));
                 incrementScope(value, false);
                 lexicalAnalyzer.nextToken();
                 if (!method_body()) {
@@ -1198,7 +1198,7 @@ public class Compiler {
             }
 
             String methodKey = "M" + variableId;
-            addToSymbolTable("M", value, "method", new MethodData(accessMod, null, type));
+            addToSymbolTable("M", value, "method", new MethodData(accessMod, new ArrayList<String>(), type));
             incrementScope(value, false);
             List<String> parameters = new ArrayList<String>();
 

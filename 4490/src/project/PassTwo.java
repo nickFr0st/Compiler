@@ -94,9 +94,9 @@ public class PassTwo {
             }
 
             arrayClose();
-            newArrayPush();
-            // check for array end
-
+            if (!newArrayPush()) {
+                return false;
+            }
             lexicalAnalyzer.nextToken();
             return true;
         }
@@ -824,13 +824,13 @@ public class PassTwo {
         return true;
     }
 
-    public boolean field_declaration(String accessMod, String type, String value) {
+    public boolean field_declaration(String type, Tuple value) {
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
             // check format: "(" [parameter_list] ")" method_body
 
             lexicalAnalyzer.nextToken();
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                incrementScope(value, false);
+                incrementScope(value.getName(), false);
                 lexicalAnalyzer.nextToken();
                 if (!method_body()) {
                     return false;
@@ -840,7 +840,7 @@ public class PassTwo {
                 return true;
             }
 
-            incrementScope(value, false);
+            incrementScope(value.getName(), false);
 
             if (!parameter_list()) {
                 return false;
@@ -855,13 +855,10 @@ public class PassTwo {
             return true;
 
         } else {
-            // todo: need to do this
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
             // check format: ["[" "]"] ["=" assignment_expression ] ";"
+            boolean variableHasBeenAdded = false;
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                variablePush(new Variable_SAR(value, scope, "V" + variableId++, type));
                 lexicalAnalyzer.nextToken();
                 return true;
             }
@@ -869,55 +866,31 @@ public class PassTwo {
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
 
                 lexicalAnalyzer.nextToken();
-                if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                    return false;
-                }
-
-                if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
-                    errorList += "Invalid field declaration. Missing closing array bracket." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                    return false;
-                }
-
                 lexicalAnalyzer.nextToken();
-                if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                    errorList += "Invalid field declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                    return false;
-                }
 
-                if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                    return false;
-                }
+                variablePush(new Variable_SAR(value, scope, "V" + variableId++, "@:" + type));
                 if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                     lexicalAnalyzer.nextToken();
                     return true;
                 }
+
+                variableHasBeenAdded = true;
             }
 
-            // todo: need to do this
+            if (!variableHasBeenAdded) {
+                variablePush(new Variable_SAR(value, scope, "V" + variableId++, type));
+            }
+
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+                operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
 
                 lexicalAnalyzer.nextToken();
-                if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                    return false;
-                }
-
-                if (lexicalAnalyzer.getToken() instanceof NullTuple || !assignment_expression()) {
-                    errorList += "Invalid field declaration. Invalid assignment expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                    return false;
-                }
-
-                if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                    errorList += "Invalid field declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                    return false;
-                }
-
-                if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                if (!assignment_expression()) {
                     return false;
                 }
             }
 
-            if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                errorList += "Invalid field declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            if (!EOE()) {
                 return false;
             }
 
@@ -929,9 +902,6 @@ public class PassTwo {
     public boolean class_member_declaration() {
         if (lexicalAnalyzer.getToken().getType().equals(KeyConst.MODIFIER.getKey())) {
             // check format: modifier type identifier field_declaration
-
-            String modifier = lexicalAnalyzer.getToken().getName();
-
             lexicalAnalyzer.nextToken();
             typePush(new Type_SAR(lexicalAnalyzer.getToken(), scope));
             if (!typeExists()) {
@@ -943,11 +913,11 @@ public class PassTwo {
 
             lexicalAnalyzer.nextToken();
 
-            String name = lexicalAnalyzer.getToken().getName();
+            Tuple name = lexicalAnalyzer.getToken();
 
             lexicalAnalyzer.nextToken();
 
-            return field_declaration(modifier, type, name);
+            return field_declaration(type, name);
 
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.CLASS_NAME.getKey())) {
             // check format: constructor_declaration
@@ -1005,6 +975,7 @@ public class PassTwo {
         // look for closing parenthesis
         lexicalAnalyzer.nextToken();
 
+        lexicalAnalyzer.nextToken();
         incrementScope("main", true);
 
         // at this point we have declared classes and "void main()"

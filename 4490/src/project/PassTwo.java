@@ -81,7 +81,9 @@ public class PassTwo {
             return true;
         } else if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
             // check format: "[" expression "]"
-            operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
+            if (!operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()))) {
+                return false;
+            }
             lexicalAnalyzer.nextToken();
 
             if (!expression()) {
@@ -115,47 +117,46 @@ public class PassTwo {
             return new_declaration();
 
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.ATOI.getKey())) {
-            // todo: need to do atoi operation
             // check format: "atoi" "(" expression ")"
             lexicalAnalyzer.nextToken();
 
-            if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-                errorList += ILLEGAL_ATOI_OPERATION + " " + MISSING_OPENING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            if (!operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()))) {
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
-
             if (!expression()) {
-                errorList += ILLEGAL_ATOI_OPERATION + " Invalid Expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
-            if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                errorList += ILLEGAL_ATOI_OPERATION + " atoi can only contain one parameter. " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            if (!closingParen()) {
+                return false;
+            }
+
+            if (!atoiCheck()) {
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
             return true;
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.ITOA.getKey())) {
-            // todo: need to do itoa operation
             // check format: "itoa" "(" expression ")"
             lexicalAnalyzer.nextToken();
-            if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-                errorList += ILLEGAL_ITOA_OPERATION + " " + MISSING_OPENING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            if (!operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()))) {
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
 
             if (!expression()) {
-                errorList += ILLEGAL_ITOA_OPERATION + " Invalid Expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
-            if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                errorList += ILLEGAL_ITOA_OPERATION + " itoa can only contain one parameter. " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            if (!closingParen()) {
+                return false;
+            }
+
+            if (!itoaCheck()) {
                 return false;
             }
 
@@ -171,7 +172,9 @@ public class PassTwo {
 
     public boolean expressionz() {
         String errorCheck = errorList;
-        operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
+        if (!operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()))) {
+            return false;
+        }
         errorList += getErrorList();
 
         if (!errorCheck.equals(errorList)) {
@@ -200,7 +203,9 @@ public class PassTwo {
     public boolean expression() {
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
             // check format: "(" expression ")" [expressionz]
-            operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
+            if (!operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()))) {
+                return false;
+            }
             lexicalAnalyzer.nextToken();
 
             if (!expression()) {
@@ -317,7 +322,9 @@ public class PassTwo {
 
         } else if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
             //check format: "[" expression "]"
-            operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
+            if (!operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()))) {
+                return false;
+            }
             lexicalAnalyzer.nextToken();
 
             if (!expression()) {
@@ -662,7 +669,9 @@ public class PassTwo {
         }
 
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
-            operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
+            if (!operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()))) {
+                return false;
+            }
 
             lexicalAnalyzer.nextToken();
             if (!assignment_expression()) {
@@ -819,7 +828,9 @@ public class PassTwo {
             }
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
-                operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
+                if (!operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()))) {
+                    return false;
+                }
 
                 lexicalAnalyzer.nextToken();
                 if (!assignment_expression()) {
@@ -877,7 +888,8 @@ public class PassTwo {
 
         String errorCheck = errorList;
         //noinspection StatementWithEmptyBody
-        while (class_member_declaration()) {}
+        while (class_member_declaration()) {
+        }
 
         if (!errorCheck.equals(errorList)) {
             return false;
@@ -981,6 +993,38 @@ public class PassTwo {
         return errorList;
     }
 
+    public boolean atoiCheck() {
+        SAR sar = SAS.pop();
+
+        if (sar.getType().equalsIgnoreCase(KeyConst.INT.name())) {
+            SAS.push(new Variable_SAR(sar.getLexi(), sar.getScope(), "V" + variableId++, KeyConst.INT.name()));
+            return true;
+        }
+
+        if (sar.getType().startsWith("@:")) {
+            String type = sar.getType().substring(sar.getType().indexOf(":") + 1, sar.getType().length());
+            if (type.equalsIgnoreCase(KeyConst.INT.name())) {
+                SAS.push(new Variable_SAR(sar.getLexi(), sar.getScope(), "V" + variableId++, KeyConst.INT.name()));
+                return true;
+            }
+        }
+
+        errorList += "atoi expression must be able to evaluate to an integer type. Line: " + sar.getLexi().getLineNum() + "\n";
+        return false;
+    }
+
+    public boolean itoaCheck() {
+        SAR sar = SAS.pop();
+
+        if (sar.getType().equalsIgnoreCase(KeyConst.INT.name())) {
+            SAS.push(new Variable_SAR(sar.getLexi(), sar.getScope(), "V" + variableId++, "@:" + KeyConst.CHAR.name()));
+            return true;
+        }
+
+        errorList += "itoa expression must be of integer type. Line: " + sar.getLexi().getLineNum() + "\n";
+        return false;
+    }
+
     public boolean EOE() {
         while (!OS.isEmpty()) {
             if (!handleOperation()) {
@@ -1022,21 +1066,21 @@ public class PassTwo {
     }
 
     public boolean ArrayRefPush() {
-        Identifier_SAR value = (Identifier_SAR)SAS.pop();
+        Identifier_SAR value = (Identifier_SAR) SAS.pop();
 
         if (!value.getType().equalsIgnoreCase(KeyConst.INT.name())) {
             errorList += "array indexer must be of type int. type '" + value.getType() + "' was found. Line: " + value.getLexi().getLineNum() + "\n";
             return false;
         }
 
-        Identifier_SAR array = (Identifier_SAR)SAS.pop();
+        Identifier_SAR array = (Identifier_SAR) SAS.pop();
 
         SAS.push(new Array_SAR(array.getScope(), array.getLexi(), array.getType(), array, value));
         return identifierExist();
     }
 
     public boolean COMMA() {
-        while(!(SAS.peek() instanceof BAL_SAR) && !OS.isEmpty()) {
+        while (!(SAS.peek() instanceof BAL_SAR) && !OS.isEmpty()) {
             if (!handleOperation()) {
                 return false;
             }
@@ -1098,18 +1142,18 @@ public class PassTwo {
                 }
 
                 if (temp.getData() instanceof MethodData) {
-                    ((Function_SAR)rhs).getFunction().setType(temp.getData().getType());
+                    ((Function_SAR) rhs).getFunction().setType(temp.getData().getType());
 
-                    if (((Function_SAR)rhs).getArguments().getArguments().size() > ((MethodData) temp.getData()).getParameters().size()) {
+                    if (((Function_SAR) rhs).getArguments().getArguments().size() > ((MethodData) temp.getData()).getParameters().size()) {
                         errorList += "there are too many parameters for called method. Line: " + rhs.getLexi().getLineNum() + "\n";
                         return false;
-                    } else if (((Function_SAR)rhs).getArguments().getArguments().size() < ((MethodData) temp.getData()).getParameters().size()) {
+                    } else if (((Function_SAR) rhs).getArguments().getArguments().size() < ((MethodData) temp.getData()).getParameters().size()) {
                         errorList += "there are too few parameters for called method. Line: " + rhs.getLexi().getLineNum() + "\n";
                         return false;
                     }
 
-                    List<SAR> args = ((Function_SAR)rhs).getArguments().getArguments();
-                    int index = ((Function_SAR)rhs).getArguments().getArguments().size() - 1;
+                    List<SAR> args = ((Function_SAR) rhs).getArguments().getArguments();
+                    int index = ((Function_SAR) rhs).getArguments().getArguments().size() - 1;
 
                     for (String type : ((MethodData) temp.getData()).getParameters()) {
                         if (!args.get(index).getType().equals(type)) {
@@ -1198,7 +1242,7 @@ public class PassTwo {
 
     public void EALPush() {
         List<SAR> arguments = new ArrayList<SAR>();
-        while(!(SAS.peek() instanceof BAL_SAR)) {
+        while (!(SAS.peek() instanceof BAL_SAR)) {
             arguments.add(SAS.pop());
         }
 
@@ -1209,8 +1253,8 @@ public class PassTwo {
     }
 
     public void functionPush() {
-        EAL_SAR arguments = (EAL_SAR)SAS.pop();
-        Identifier_SAR function = (Identifier_SAR)SAS.pop();
+        EAL_SAR arguments = (EAL_SAR) SAS.pop();
+        Identifier_SAR function = (Identifier_SAR) SAS.pop();
         SAS.push(new Function_SAR(function.getScope(), function.getLexi(), function.getType(), function, arguments));
     }
 
@@ -1223,7 +1267,7 @@ public class PassTwo {
         }
 
         int lastOprPrecedence;
-        if (OS.peek().getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name()) || OS.peek().getLexi().getName().equals(".") || OS.peek().getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()))   {
+        if (OS.peek().getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name()) || OS.peek().getLexi().getName().equals(".") || OS.peek().getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
             lastOprPrecedence = -1;
         } else {
             lastOprPrecedence = OS.peek().getPrecedence();
@@ -1248,7 +1292,7 @@ public class PassTwo {
             return false;
         }
 
-        Type_SAR type = (Type_SAR)SAS.pop();
+        Type_SAR type = (Type_SAR) SAS.pop();
 
         if (type.getName().equals(KeyConst.VOID.name())) {
             errorList += "cannot create an array of void objects. Line: " + type.getLexi().getLineNum() + "\n";
@@ -1264,8 +1308,8 @@ public class PassTwo {
     }
 
     public boolean newObjPush() {
-        EAL_SAR parameters = (EAL_SAR)SAS.pop();
-        Type_SAR type = (Type_SAR)SAS.pop();
+        EAL_SAR parameters = (EAL_SAR) SAS.pop();
+        Type_SAR type = (Type_SAR) SAS.pop();
 
         String constructorScope = "g." + type.getName();
 

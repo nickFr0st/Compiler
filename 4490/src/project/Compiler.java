@@ -10,22 +10,25 @@ import java.util.*;
  * Time: 8:40 AM
  */
 public class Compiler {
+    public static final String CLASS = "Class";
+    public static final String METHOD = "Method";
+    public static final String VARIABLE = "Variable";
+
     private static final String ILLEGAL_EXPRESSION = "Illegal expression.";
     private static final String ILLEGAL_NEW_DECLARATION = "Illegal new_declaration";
     private static final String ILLEGAL_NEW_OPERATION = "Illegal new operation.";
     private static final String ILLEGAL_ATOI_OPERATION = "Illegal atoi operation.";
-    private static final String ILLEGAL_ITOA_OPERATION = "Illegal itoa operation.";
 
+    private static final String ILLEGAL_ITOA_OPERATION = "Illegal itoa operation.";
     private static final String INVALID_ARGUMENT_LIST = "Invalid argument list.";
     private static final String INVALID_FUNCTION = "Invalid function.";
     private static final String INVALID_TYPE = "Invalid type.";
     private static final String INVALID_STATEMENT = "Invalid statement.";
-    private static final String MISSING_ARRAY_CLOSE = "Array element missing array close.";
 
+    private static final String MISSING_ARRAY_CLOSE = "Array element missing array close.";
     private static final String MISSING_CLOSING_PARENTHESIS = "Missing closing parenthesis.";
     private static final String MISSING_OPENING_PARENTHESIS = "Missing opening parenthesis.";
     private static final String LINE = " Line: ";
-    private static final String CLASS = "Class";
 
     private static final String OPERATION = " operation.";
     private static final String ARGUMENT_LIST = " argument_list.";
@@ -61,7 +64,7 @@ public class Compiler {
         lexicalAnalyzer.resetList();
 
         // pass two
-        PassTwo passTwo = new PassTwo(new StackHandler(symbolTable, errorList, variableId), symbolTable, lexicalAnalyzer);
+        PassTwo passTwo = new PassTwo(symbolTable, lexicalAnalyzer);
         passTwo.evaluate();
     }
 

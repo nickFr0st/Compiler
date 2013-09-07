@@ -3,6 +3,7 @@ package project;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,49 +14,37 @@ import java.util.List;
 public class PassTwo {
     private static final String ILLEGAL_EXPRESSION = "Illegal expression.";
     private static final String ILLEGAL_NEW_DECLARATION = "Illegal new_declaration";
-    private static final String ILLEGAL_NEW_OPERATION = "Illegal new operation.";
     private static final String ILLEGAL_ATOI_OPERATION = "Illegal atoi operation.";
     private static final String ILLEGAL_ITOA_OPERATION = "Illegal itoa operation.";
 
     private static final String INVALID_ARGUMENT_LIST = "Invalid argument list.";
-    private static final String INVALID_FUNCTION = "Invalid function.";
-    private static final String INVALID_TYPE = "Invalid type.";
     private static final String INVALID_STATEMENT = "Invalid statement.";
-    private static final String MISSING_ARRAY_CLOSE = "Array element missing array close.";
 
     private static final String MISSING_CLOSING_PARENTHESIS = "Missing closing parenthesis.";
     private static final String MISSING_OPENING_PARENTHESIS = "Missing opening parenthesis.";
     private static final String LINE = " Line: ";
 
-    private static final String OPERATION = " operation.";
     private static final String ARGUMENT_LIST = " argument_list.";
     private static final String EXPRESSION = " expression.";
     private static final int ELEM_SIZE = 1;
 
     private String scope = "g.";
     private int variableId = 100;
+    private Stack<SAR> SAS = new Stack<SAR>();
+    private Stack<Opr_SAR> OS = new Stack<Opr_SAR>();
 
-    private StackHandler stackHandler;
     private LinkedHashMap<String, Symbol> symbolTable;
     private LexicalAnalyzer lexicalAnalyzer;
     private String errorList = "";
 
-    public PassTwo(StackHandler stackHandler, LinkedHashMap<String, Symbol> symbolTable, LexicalAnalyzer lexicalAnalyzer) {
-        this.stackHandler = stackHandler;
+    public PassTwo(LinkedHashMap<String, Symbol> symbolTable, LexicalAnalyzer lexicalAnalyzer) {
         this.symbolTable = symbolTable;
         this.lexicalAnalyzer = lexicalAnalyzer;
     }
 
-    public LexicalAnalyzer getLexicalAnalyzer() {
-        return lexicalAnalyzer;
-    }
-
-    public String getErrorList() {
-        return errorList;
-    }
-
     public void evaluate() {
-        // pass one
+        //todo: need to have a way to get this symbols added through the stackHandler into this Class
+        // pass two
         if (!compilation_unit()) {
             System.out.print(errorList);
             System.exit(0);
@@ -67,11 +56,11 @@ public class PassTwo {
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
             // check format: "(" [argument_list] ")"
             lexicalAnalyzer.nextToken();
-            stackHandler.BALPush(new BAL_SAR());
+            BALPush(new BAL_SAR());
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                stackHandler.EALPush();
-                if (!stackHandler.newObjPush()) {
+                EALPush();
+                if (!newObjPush()) {
                     return false;
                 }
 
@@ -88,8 +77,8 @@ public class PassTwo {
                 }
             }
 
-            stackHandler.EALPush();
-            if (!stackHandler.newObjPush()) {
+            EALPush();
+            if (!newObjPush()) {
                 return false;
             }
 
@@ -99,7 +88,7 @@ public class PassTwo {
 
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
             // check format: "[" expression "]"
-            stackHandler.operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
+            operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
             lexicalAnalyzer.nextToken();
 
             if (!expression()) {
@@ -107,7 +96,7 @@ public class PassTwo {
                 return false;
             }
 
-            stackHandler.newArrayPush();
+            newArrayPush();
             // check for array end
 
             lexicalAnalyzer.nextToken();
@@ -121,9 +110,9 @@ public class PassTwo {
         if (lexicalAnalyzer.getToken().getType().equals(KeyConst.NEW.getKey())) {
             // check format: "new" type new_declaration
             lexicalAnalyzer.nextToken();
-            stackHandler.typePush(new Type_SAR(lexicalAnalyzer.getToken(), scope));
-            if (!stackHandler.typeExists()) {
-                errorList += stackHandler.getErrorList();
+            typePush(new Type_SAR(lexicalAnalyzer.getToken(), scope));
+            if (!typeExists()) {
+                errorList += getErrorList();
                 return false;
             }
 
@@ -236,8 +225,8 @@ public class PassTwo {
 
     public boolean expressionz() {
         String errorCheck = errorList;
-        stackHandler.operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
-        errorList += stackHandler.getErrorList();
+        operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
+        errorList += getErrorList();
 
         if (!errorCheck.equals(errorList)) {
             return false;
@@ -312,7 +301,7 @@ public class PassTwo {
                 type = "null";
             }
 
-            stackHandler.literalPush(new Literal_SAR(lexicalAnalyzer.getToken(), type));
+            literalPush(new Literal_SAR(lexicalAnalyzer.getToken(), type));
             lexicalAnalyzer.nextToken();
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || isLogicalConnectiveExpression(lexicalAnalyzer.getToken().getType()) || isBooleanExpression(lexicalAnalyzer.getToken().getType()) || isMathematicalExpression(lexicalAnalyzer.getToken().getType())) {
@@ -323,9 +312,9 @@ public class PassTwo {
 
         } else if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
             // check format: identifier [ fn_arr_member ] [ member_refz ] [ expressionz ]
-            stackHandler.identifierPush(new Identifier_SAR(lexicalAnalyzer.getToken(), scope));
-            if (!stackHandler.identifierExist()) {
-                errorList += stackHandler.getErrorList();
+            identifierPush(new Identifier_SAR(lexicalAnalyzer.getToken(), scope));
+            if (!identifierExist()) {
+                errorList += getErrorList();
                 return false;
             }
 
@@ -334,7 +323,7 @@ public class PassTwo {
 
             String errCheck = errorList;
 
-            fn_arr_member();
+            fn_arr_member(false);
             if (!errCheck.equals(errorList)) {
                 return false;
             }
@@ -361,48 +350,70 @@ public class PassTwo {
         }
 
         while (!(lexicalAnalyzer.getToken() instanceof NullTuple) && lexicalAnalyzer.getToken().getName().equals(",")) {
+            if (!COMMA()) {
+                return false;
+            }
+
             lexicalAnalyzer.nextToken();
 
             if (!expression()) {
                 return false;
             }
         }
-        return true;
+        return COMMA();
     }
 
-    private boolean fn_arr_member() {
+    private boolean fn_arr_member(boolean isMemberFunc) {
         // check format: "(" [ argument_list ] ")" | "[" expression "]"
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-            stackHandler.BALPush(new BAL_SAR());
             //check format: "(" [ argument_list ] ")"
+            BALPush(new BAL_SAR());
             lexicalAnalyzer.nextToken();
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                stackHandler.EALPush();
-                stackHandler.functionPush();
-                if (!stackHandler.memberRefExists()) {
-                    return false;
+                EALPush();
+                functionPush();
+                if (isMemberFunc) {
+                    if (!memberRefExists()) {
+                        errorList += getErrorList();
+                        return false;
+                    }
+                } else {
+                    if (!identifierExist()) {
+                        errorList += getErrorList();
+                        return false;
+                    }
                 }
+
                 lexicalAnalyzer.nextToken();
                 return true;
             }
 
             if (!argument_list()) {
+                errorList += getErrorList();
                 return false;
             }
 
-            stackHandler.EALPush();
-            stackHandler.functionPush();
-            if (!stackHandler.memberRefExists()) {
-                return false;
+            EALPush();
+            functionPush();
+            if (isMemberFunc) {
+                if (!memberRefExists()) {
+                    errorList += getErrorList();
+                    return false;
+                }
+            } else {
+                if (!identifierExist()) {
+                    errorList += getErrorList();
+                    return false;
+                }
             }
 
             lexicalAnalyzer.nextToken();
             return true;
 
         } else if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
-            //todo: need to do this
             //check format: "[" expression "]"
+            operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
             lexicalAnalyzer.nextToken();
 
             if (!expression()) {
@@ -412,6 +423,9 @@ public class PassTwo {
 
             //check for array end
             lexicalAnalyzer.nextToken();
+            
+
+
             return true;
         }
         return false;
@@ -424,21 +438,14 @@ public class PassTwo {
         }
 
         lexicalAnalyzer.nextToken();
-        stackHandler.identifierPush(new Identifier_SAR(lexicalAnalyzer.getToken(), scope));
+        identifierPush(new Identifier_SAR(lexicalAnalyzer.getToken(), scope));
         lexicalAnalyzer.nextToken();
 
         String errCheck = errorList;
 
-        boolean isFunc = fn_arr_member();
+        fn_arr_member(true);
         if (!errCheck.equals(errorList)) {
             return false;
-        }
-
-        if (!isFunc) {
-            if (!stackHandler.memberRefExists()) {
-                errorList += stackHandler.getErrorList();
-                return false;
-            }
         }
 
         member_refz();
@@ -688,7 +695,7 @@ public class PassTwo {
                 return false;
             }
 
-            return stackHandler.EOE();
+            return EOE();
         }
     }
 
@@ -778,12 +785,12 @@ public class PassTwo {
         // check format: type identifier ["[" "]"] ["=" assignment_expression ] ";"
         boolean variableHasBeenAdded = false;
 
-        stackHandler.typePush(new Type_SAR(lexicalAnalyzer.getToken(), scope));
-        if (!stackHandler.typeExists()) {
-            errorList += stackHandler.getErrorList();
+        typePush(new Type_SAR(lexicalAnalyzer.getToken(), scope));
+        if (!typeExists()) {
+            errorList += getErrorList();
             return false;
         }
-        stackHandler.popSAS();
+        popSAS();
 
         String type = lexicalAnalyzer.getToken().getName();
 
@@ -792,27 +799,27 @@ public class PassTwo {
         lexicalAnalyzer.nextToken();
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
             lexicalAnalyzer.nextToken();
-            stackHandler.variablePush(new Variable_SAR(variable, scope, "V" + variableId++, "@:" + type));
+            variablePush(new Variable_SAR(variable, scope, "V" + variableId++, "@:" + type));
             variableHasBeenAdded = true;
             lexicalAnalyzer.nextToken();
         }
 
         if (!variableHasBeenAdded) {
-            stackHandler.variablePush(new Variable_SAR(variable, scope, "V" + variableId++, type));
+            variablePush(new Variable_SAR(variable, scope, "V" + variableId++, type));
         }
 
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
-            stackHandler.operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
+            operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
 
             lexicalAnalyzer.nextToken();
             if (!assignment_expression()) {
                 return false;
             }
         } else {
-            stackHandler.popSAS();
+            popSAS();
         }
 
-        if (!stackHandler.EOE()) {
+        if (!EOE()) {
             return false;
         }
 
@@ -836,7 +843,7 @@ public class PassTwo {
                 if (!type(lexicalAnalyzer.getToken().getType())) break;
             }
 
-            errorList += stackHandler.getErrorList();
+            errorList += getErrorList();
 
             if (!errorCheck.equals(errorList)) {
                 return false;
@@ -852,7 +859,7 @@ public class PassTwo {
             lexicalAnalyzer.nextToken();
         }
 
-        errorList += stackHandler.getErrorList();
+        errorList += getErrorList();
 
         if (!errorCheck.equals(errorList)) {
             return false;
@@ -1248,6 +1255,415 @@ public class PassTwo {
             scope += name;
         } else {
             scope += "." + name;
+        }
+    }
+
+    public SAR popSAS() {
+        if (!SAS.isEmpty()) {
+            return SAS.pop();
+        }
+        return null;
+    }
+
+    public String getErrorList() {
+        return errorList;
+    }
+
+    public boolean EOE() {
+        while (!OS.isEmpty()) {
+            if (!handleOperation()) {
+                return false;
+            }
+        }
+
+        if (!SAS.isEmpty() && SAS.peek() instanceof Function_SAR) {
+            SAS.pop();
+        }
+
+        return true;
+    }
+
+    public boolean COMMA() {
+        while(!(SAS.peek() instanceof BAL_SAR) && !OS.isEmpty()) {
+            if (!handleOperation()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void identifierPush(Identifier_SAR identifier) {
+        SAS.push(identifier);
+    }
+
+    public boolean identifierExist() {
+        SAR id_sar = SAS.pop();
+
+        String type = isInSymbolTable(id_sar);
+        if (type != null) {
+            id_sar.setType(type);
+            SAS.push(id_sar);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean memberRefExists() {
+        SAR rhs = SAS.pop();
+        SAR lhs = SAS.pop();
+
+        if (lhs instanceof Literal_SAR) {
+            errorList += "left hand side of a call operation cannot be a literal value. Line: " + lhs.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        if (rhs instanceof Literal_SAR) {
+            errorList += "right hand side of a call operation cannot be a literal value. Line: " + lhs.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        if (SARType(lhs.getType())) {
+            errorList += "variable: '" + lhs.getLexi().getName() + "' is of type '" + lhs.getType() + "' which is un-assignable. Line: " + lhs.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        String lhsItemScope = "g." + lhs.getType();
+
+        for (String key : symbolTable.keySet()) {
+            Symbol temp = symbolTable.get(key);
+
+            if (!temp.getScope().equals(lhsItemScope)) {
+                continue;
+            }
+
+            if (temp.getValue().equals(rhs.getLexi().getName())) {
+                if (temp.getData().getAccessMod().toUpperCase().equals(KeyConst.PRIVATE.name())) {
+                    errorList += "'" + rhs.getLexi().getName() + "' must be a public variable in order to be accessed outside of its class. Line: " + rhs.getLexi().getLineNum() + "\n";
+                    return false;
+                }
+
+                if (temp.getData() instanceof MethodData) {
+                    ((Function_SAR)rhs).getFunction().setType(temp.getData().getType());
+
+                    if (((Function_SAR)rhs).getArguments().getArguments().size() > ((MethodData) temp.getData()).getParameters().size()) {
+                        errorList += "there are too many parameters for called method. Line: " + rhs.getLexi().getLineNum() + "\n";
+                        return false;
+                    } else if (((Function_SAR)rhs).getArguments().getArguments().size() < ((MethodData) temp.getData()).getParameters().size()) {
+                        errorList += "there are too few parameters for called method. Line: " + rhs.getLexi().getLineNum() + "\n";
+                        return false;
+                    }
+
+                    List<SAR> args = ((Function_SAR)rhs).getArguments().getArguments();
+                    int index = ((Function_SAR)rhs).getArguments().getArguments().size() - 1;
+
+                    for (String type : ((MethodData) temp.getData()).getParameters()) {
+                        if (!args.get(index).getType().equals(type)) {
+                            errorList += "invalid argument type. expected: " + type + " but was: " + args.get(index).getType() + " Line: " + rhs.getLexi().getLineNum() + "\n";
+                            return false;
+                        }
+                        index--;
+                    }
+                }
+
+                SAS.push(new Ref_SAR(lhs.getScope(), new Tuple("T" + variableId++, temp.getData().getType(), rhs.getLexi().getLineNum()), temp.getData().getType()));
+                return true;
+            }
+        }
+
+        errorList += "'" + rhs.getLexi().getName() + "' does not exists in '" + lhs.getLexi().getName() + "'. Line: " + rhs.getLexi().getLineNum() + "\n";
+        return false;
+    }
+
+    public void literalPush(Literal_SAR literal) {
+        SAS.push(literal);
+    }
+
+    public void typePush(Type_SAR type) {
+        SAS.push(type);
+    }
+
+    public boolean typeExists() {
+        Type_SAR itemType = (Type_SAR) SAS.peek();
+
+        if (SARType(itemType.getLexi().getName())) {
+            return true;
+        } else if (itemType.getLexi().getType().equals(KeyConst.CLASS_NAME.getKey())) {
+            return isClassInSymbolTable(itemType);
+        }
+
+        return false;
+    }
+
+    private boolean isClassInSymbolTable(Type_SAR itemType) {
+        for (String key : symbolTable.keySet()) {
+            Symbol temp = symbolTable.get(key);
+
+            if (!temp.getScope().equals("g.")) {
+                continue;
+            }
+
+            if (temp.getValue().equals(itemType.getName())) {
+                return true;
+            }
+        }
+
+        errorList += "type: '" + itemType.getName() + "' does not exists. Line: " + itemType.getLexi().getLineNum() + "\n";
+        return false;
+    }
+
+    private String isInSymbolTable(SAR sar) {
+        String searchScope = sar.getScope();
+        while (!searchScope.equals("g.")) {
+            for (String key : symbolTable.keySet()) {
+                Symbol temp = symbolTable.get(key);
+
+                if (!temp.getScope().equals(searchScope)) {
+                    continue;
+                }
+
+                if (sar.getScope().contains(temp.getScope()) && temp.getValue().equals(sar.getLexi().getName())) {
+                    return temp.getData().getType();
+                }
+            }
+            searchScope = decrementScope(searchScope);
+        }
+
+        errorList += "symbol: '" + sar.getLexi().getName() + "' does not exists. Line: " + sar.getLexi().getLineNum() + "\n";
+        return null;
+    }
+
+    public void variablePush(Variable_SAR variable) {
+        SAS.push(variable);
+    }
+
+    public void BALPush(BAL_SAR identifier) {
+        SAS.push(identifier);
+    }
+
+    public void EALPush() {
+        List<SAR> arguments = new ArrayList<SAR>();
+        while(!(SAS.peek() instanceof BAL_SAR)) {
+            arguments.add(SAS.pop());
+        }
+
+        // remove BAL_SAR
+        SAS.pop();
+
+        SAS.push(new EAL_SAR(arguments));
+    }
+
+    public void functionPush() {
+        EAL_SAR arguments = (EAL_SAR)SAS.pop();
+        Identifier_SAR function = (Identifier_SAR)SAS.pop();
+        SAS.push(new Function_SAR(function.getScope(), function.getLexi(), function.getType(), function, arguments));
+    }
+
+    public boolean operatorPush(Opr_SAR opr) {
+        opr.setPrecedence(getOperatorPrecedence(opr.getLexi().getName()));
+
+        if (OS.isEmpty()) {
+            OS.push(opr);
+            return true;
+        }
+
+        int lastOprPrecedence = OS.peek().getPrecedence();
+
+        if (lastOprPrecedence <= opr.getPrecedence()) {
+            OS.push(opr);
+        } else {
+            if (!handleOperation()) {
+                return false;
+            }
+            OS.push(opr);
+        }
+        return true;
+    }
+
+    public boolean newArrayPush() {
+        //todo: this needs to be changed
+        OS.pop();
+        SAR element = SAS.pop();
+
+        if (!element.getType().toUpperCase().equals("INT")) {
+            errorList += "values in array declaration must be integers. Line: " + element.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        Type_SAR type = (Type_SAR)SAS.pop();
+
+        if (type.getName().equals(KeyConst.VOID.name())) {
+            errorList += "cannot create an array of void objects. Line: " + type.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        List<SAR> sarList = new ArrayList<SAR>();
+        sarList.add(element);
+        EAL_SAR eal_sar = new EAL_SAR(sarList);
+
+        SAS.push(new New_SAR(element.getScope(), new Tuple(), "@:" + type.getName(), type, eal_sar));
+        return true;
+    }
+
+    public boolean newObjPush() {
+        EAL_SAR parameters = (EAL_SAR)SAS.pop();
+        Type_SAR type = (Type_SAR)SAS.pop();
+
+        String constructorScope = "g." + type.getName();
+
+        for (String key : symbolTable.keySet()) {
+            Symbol temp = symbolTable.get(key);
+
+            if (!temp.getScope().equals(constructorScope)) {
+                continue;
+            }
+
+            if (temp.getValue().equals(type.getName())) {
+                if (temp.getData() instanceof MethodData) {
+                    type.setType(temp.getData().getType());
+
+                    if (parameters.getArguments().size() > ((MethodData) temp.getData()).getParameters().size()) {
+                        errorList += "there are too many parameters for called constructor. Line: " + type.getLexi().getLineNum() + "\n";
+                        return false;
+                    } else if (parameters.getArguments().size() < ((MethodData) temp.getData()).getParameters().size()) {
+                        errorList += "there are too few parameters for called constructor. Line: " + type.getLexi().getLineNum() + "\n";
+                        return false;
+                    }
+
+                    List<SAR> args = parameters.getArguments();
+                    int index = parameters.getArguments().size() - 1;
+
+                    for (String params : ((MethodData) temp.getData()).getParameters()) {
+                        if (!args.get(index).getType().equals(params)) {
+                            errorList += "invalid argument type. expected: " + params + " but was: " + args.get(index).getType() + " Line: " + type.getLexi().getLineNum() + "\n";
+                            return false;
+                        }
+                        index--;
+                    }
+                }
+                SAS.push(new New_SAR(type.getScope(), type.getLexi(), type.getType(), type, parameters));
+                return true;
+            }
+        }
+
+        errorList += "Invalid Constructor. Line: " + type.getLexi().getLineNum() + "\n";
+        return false;
+    }
+
+    private boolean handleOperation() {
+        Opr_SAR topOpr = OS.pop();
+
+        if (topOpr.getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
+            return mathematicalOperation();
+        } else if (topOpr.getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
+            return assignment();
+        } else if (topOpr.getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
+            return booleanOperation();
+        }
+
+        return false;
+    }
+
+    private boolean booleanOperation() {
+        SAR rhs = SAS.pop();
+        SAR lhs = SAS.pop();
+
+        if (!lhs.getType().equalsIgnoreCase("int")) {
+            errorList += "left hand side of boolean operation must an int. Line: " + lhs.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        if (!rhs.getType().equalsIgnoreCase("int")) {
+            errorList += "right hand side of boolean operation must an int. Line: " + rhs.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        String key = "T" + variableId;
+        symbolTable.put(key, new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), 1));
+        SAS.push(new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name()));
+        variableId++;
+        return true;
+    }
+
+    private boolean assignment() {
+        SAR rhs = SAS.pop();
+        SAR lhs = SAS.pop();
+
+        if (lhs instanceof Literal_SAR) {
+            errorList += "left hand side is not a valid assignable type. Line. " + lhs.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        if (!lhs.getType().equalsIgnoreCase(rhs.getType())) {
+            errorList += "left and right hand sides of assignment operation are incompatible types. Line: " + lhs.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean mathematicalOperation() {
+        SAR rhs = SAS.pop();
+        SAR lhs = SAS.pop();
+
+        if (!lhs.getType().equalsIgnoreCase("int")) {
+            errorList += "left hand side of mathematical operator must an int. Line: " + lhs.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        if (!rhs.getType().equalsIgnoreCase("int")) {
+            errorList += "right hand side of mathematical operator must an int. Line: " + rhs.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        String key = "T" + variableId;
+        symbolTable.put(key, new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.INT.name(), KeyConst.PRIVATE.name()), 1));
+        Tuple tempTuple = new Tuple(key, KeyConst.INT.name(), lhs.getLexi().getLineNum());
+        SAR temp = new Variable_SAR(tempTuple, lhs.getScope(), key, KeyConst.INT.name());
+        variableId++;
+        SAS.push(temp);
+
+        return true;
+    }
+
+    private int getOperatorPrecedence(String oprSymbol) {
+        if (oprSymbol.equals(".") || oprSymbol.equals("(") || oprSymbol.equals("[")) {
+            return 15;
+        } else if (oprSymbol.equals(")") || oprSymbol.equals("]")) {
+            return 0;
+        } else if (oprSymbol.equals("*") || oprSymbol.equals("/") || oprSymbol.equals("%")) {
+            return 13;
+        } else if (oprSymbol.equals("+") || oprSymbol.equals("-")) {
+            return 11;
+        } else if (oprSymbol.equals("<") || oprSymbol.equals(">") || oprSymbol.equals("<=") || oprSymbol.equals(">=")) {
+            return 9;
+        } else if (oprSymbol.equals("==") || oprSymbol.equals("!=")) {
+            return 7;
+        } else if (oprSymbol.equals("&&")) {
+            return 5;
+        } else if (oprSymbol.equals("||")) {
+            return 3;
+        } else if (oprSymbol.equals("=")) {
+            return 1;
+        }
+        return 0;
+    }
+
+    private boolean SARType(String itemType) {
+        return (itemType.equals(KeyConst.INT.getKey()) || itemType.equals(KeyConst.CHAR.getKey()) || itemType.equals(KeyConst.BOOL.getKey()) || itemType.equals(KeyConst.VOID.getKey()));
+    }
+
+    private String decrementScope(String scope) {
+        int scopeDepth = 0;
+        for (char c : scope.toCharArray()) {
+            if (c == '.') scopeDepth++;
+        }
+
+        if (scopeDepth > 1) {
+            return scope.substring(0, scope.lastIndexOf("."));
+        } else {
+            return scope.substring(0, scope.lastIndexOf(".") + 1);
         }
     }
 }

@@ -478,37 +478,13 @@ public class PassTwo {
             return true;
 
         } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.RETURN.getKey())) {
-            // todo: need to do this
             // check format: "return" [ expression ] ";"
             lexicalAnalyzer.nextToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += INVALID_STATEMENT + " 'return' statement must end with a ';'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                return true;
+                return EOE() && returnCheck();
             }
 
-            if (!expression()) {
-                errorList += "Invalid 'return' statement expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                errorList += INVALID_STATEMENT + " 'return' statement must end with a ';'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            return true;
+            return expression() && EOE() && returnCheck();
 
         } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.COUT.getKey())) {
             // check format: "cout" "<<" expression ";"
@@ -971,6 +947,44 @@ public class PassTwo {
         }
 
         errorList += "variable must of type 'int' or 'char' to be used in a cin statement. Line: " + sar.getLexi().getLineNum() + "\n";
+        return false;
+    }
+
+    public boolean returnCheck() {
+        String returnType;
+        int lineNum;
+        SAR sar;
+
+        if (SAS.isEmpty()) {
+            returnType = KeyConst.VOID.name();
+            lineNum = lexicalAnalyzer.peekPreviousToken().getLineNum();
+        } else {
+            sar = SAS.pop();
+            returnType = sar.getType();
+            lineNum = sar.getLexi().getLineNum();
+        }
+
+        String methodName = scope.substring(scope.lastIndexOf(".") + 1, scope.length());
+
+        String searchScope = scope.substring(0, scope.lastIndexOf("."));
+
+        for (String key : symbolTable.keySet()) {
+            Symbol temp = symbolTable.get(key);
+
+            if (!temp.getScope().equals(searchScope)) {
+                continue;
+            }
+
+            if (temp.getValue().equals(methodName) && (temp.getData() instanceof MethodData)) {
+                if (!returnType.equalsIgnoreCase(temp.getData().getType())) {
+                    errorList += "Invalid return statement. method requires return type of '" + temp.getData().getType() + "'. Found type '" + returnType + "'. Line: " + lineNum + "\n";
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        errorList += "invalid return statement. Line: " + lineNum + "\n";
         return false;
     }
 

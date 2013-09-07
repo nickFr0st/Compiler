@@ -382,10 +382,6 @@ public class LexicalAnalyzer {
         return item;
     }
 
-    public boolean hasNext() {
-        return lexPtr < lexicalList.size();
-    }
-
     public Tuple getToken() {
         try {
             return lexicalList.get(lexPtr);

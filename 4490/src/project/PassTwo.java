@@ -1324,9 +1324,32 @@ public class PassTwo {
             return assignment();
         } else if (topOpr.getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
             return booleanOperation();
+        } else if (topOpr.getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.LOGICAL_OPR.name())) {
+            return logicalOperation();
         }
 
         return false;
+    }
+
+    private boolean logicalOperation() {
+        SAR rhs = SAS.pop();
+        SAR lhs = SAS.pop();
+
+        if (!lhs.getType().equalsIgnoreCase(KeyConst.BOOL.name())) {
+            errorList += "left hand side of logical operation must a bool. Line: " + lhs.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        if (!rhs.getType().equalsIgnoreCase(KeyConst.BOOL.name())) {
+            errorList += "right hand side of logical operation must a bool. Line: " + rhs.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        String key = "T" + variableId;
+        symbolTable.put(key, new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), 1));
+        SAS.push(new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name()));
+        variableId++;
+        return true;
     }
 
     private boolean booleanOperation() {

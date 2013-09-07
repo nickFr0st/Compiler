@@ -245,36 +245,19 @@ public class PassTwo {
 
     public boolean expression() {
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-            // todo: need to do this
             // check format: "(" expression ")" [expressionz]
+            operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+
+            if (!expression()) {
                 return false;
             }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
-                errorList += ILLEGAL_EXPRESSION + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                errorList += ILLEGAL_EXPRESSION + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            if (!closingParen()) {
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                return true;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || isLogicalConnectiveExpression(lexicalAnalyzer.getToken().getType()) || isBooleanExpression(lexicalAnalyzer.getToken().getType()) || isMathematicalExpression(lexicalAnalyzer.getToken().getType())) {
                 return expressionz();
             }
@@ -1054,6 +1037,19 @@ public class PassTwo {
         if (!SAS.isEmpty() && SAS.peek() instanceof Function_SAR) {
             SAS.pop();
         }
+
+        return true;
+    }
+
+    public boolean closingParen() {
+        while (!OS.peek().getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+            if (!handleOperation()) {
+                return false;
+            }
+        }
+
+        // pop opening parenthesis
+        OS.pop();
 
         return true;
     }

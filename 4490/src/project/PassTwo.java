@@ -364,36 +364,15 @@ public class PassTwo {
 
     public boolean statement() {
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_BEGIN.name())) {
-            // todo: need to do this
             // check format: "{" {statement} "}"
             String errorCheck = errorList;
-
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
 
             while (statement()) {
                 lexicalAnalyzer.nextToken();
-                if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                    return false;
-                }
             }
 
-            if (!errorCheck.equals(errorList)) {
-                return false;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
-                errorList += INVALID_STATEMENT + " Missing a closing block." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            return true;
+            return errorCheck.equals(errorList);
 
         } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.IF.getKey())) {
             // todo: need to do this
@@ -532,72 +511,18 @@ public class PassTwo {
             return true;
 
         } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.COUT.getKey())) {
-            // todo: need to do this
             // check format: "cout" "<<" expression ";"
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getName().equals("<<")) {
-                errorList += INVALID_STATEMENT + "'cout' statement missing extraction operator." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
-                errorList += "'cout' statement requires a valid expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                errorList += INVALID_STATEMENT + " 'cout' statement must end with a ';'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            return true;
+            return expression() && EOE() && coutCheck();
 
         } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.CIN.getKey())) {
-            // todo: need to do this
             // check format: "cin" ">>" expression ";"
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getName().equals(">>")) {
-                errorList += INVALID_STATEMENT + "'cin' statement missing extraction operator." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
-                errorList += "'cin' statement requires a valid expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                errorList += INVALID_STATEMENT + " 'cin' statement must end with a ';'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            return true;
+            return expression() && EOE() && cinCheck();
 
         } else {
             // check format: expression ";"
@@ -1019,6 +944,33 @@ public class PassTwo {
         }
 
         errorList += "itoa expression must be of integer type. Line: " + sar.getLexi().getLineNum() + "\n";
+        return false;
+    }
+
+    public boolean coutCheck() {
+        SAR sar = popSAS();
+
+        if (sar.getType().equalsIgnoreCase(KeyConst.INT.name()) || sar.getType().equalsIgnoreCase(KeyConst.CHAR.name())) {
+            return true;
+        }
+
+        errorList += "variable must of type 'int' or 'char' to be used in a cout statement. Line: " + sar.getLexi().getLineNum() + "\n";
+        return false;
+    }
+
+    public boolean cinCheck() {
+        SAR sar = popSAS();
+
+        if (sar instanceof Literal_SAR) {
+            errorList += "cannot assignment values to a literal value. Line: " + sar.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        if (sar.getType().equalsIgnoreCase(KeyConst.INT.name()) || sar.getType().equalsIgnoreCase(KeyConst.CHAR.name())) {
+            return true;
+        }
+
+        errorList += "variable must of type 'int' or 'char' to be used in a cin statement. Line: " + sar.getLexi().getLineNum() + "\n";
         return false;
     }
 

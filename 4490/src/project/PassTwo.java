@@ -13,9 +13,6 @@ import java.util.Stack;
  */
 public class PassTwo {
     private static final String ILLEGAL_NEW_DECLARATION = "Illegal new_declaration";
-    private static final String ILLEGAL_ATOI_OPERATION = "Illegal atoi operation.";
-    private static final String ILLEGAL_ITOA_OPERATION = "Illegal itoa operation.";
-
     private static final String INVALID_STATEMENT = "Invalid statement.";
 
     private static final String MISSING_CLOSING_PARENTHESIS = "Missing closing parenthesis.";

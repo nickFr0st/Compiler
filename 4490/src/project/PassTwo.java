@@ -52,6 +52,7 @@ public class PassTwo {
     }
 
     private boolean new_declaration() {
+        // check format: "(" [argument_list] ")" |  "[" expression "]"
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
             // check format: "(" [argument_list] ")"
             lexicalAnalyzer.nextToken();
@@ -71,7 +72,6 @@ public class PassTwo {
 
             if (!argument_list()) {
                 if (!errorCheck.equals(errorList)) {
-                    errorList += ILLEGAL_NEW_DECLARATION + ARGUMENT_LIST + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
                     return false;
                 }
             }
@@ -83,9 +83,7 @@ public class PassTwo {
 
             lexicalAnalyzer.nextToken();
             return true;
-        }
-
-        if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+        } else if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
             // check format: "[" expression "]"
             operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
             lexicalAnalyzer.nextToken();
@@ -211,15 +209,10 @@ public class PassTwo {
             lexicalAnalyzer.nextToken();
             return true;
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.THIS.getKey())) {
-            // todo: need to do this operation
             lexicalAnalyzer.nextToken();
             return true;
         } else {
-            if (!expression()) {
-                errorList += "Invalid assignment expression." + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
-                return false;
-            }
-            return true;
+            return expression();
         }
     }
 
@@ -313,18 +306,17 @@ public class PassTwo {
         } else if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
             // check format: identifier [ fn_arr_member ] [ member_refz ] [ expressionz ]
             identifierPush(new Identifier_SAR(lexicalAnalyzer.getToken(), scope));
-            if (!identifierExist()) {
-                errorList += getErrorList();
+
+            lexicalAnalyzer.nextToken();
+            String errCheck = errorList;
+
+            fn_arr_member();
+            if (!errCheck.equals(errorList)) {
                 return false;
             }
 
-
-            lexicalAnalyzer.nextToken();
-
-            String errCheck = errorList;
-
-            fn_arr_member(false);
-            if (!errCheck.equals(errorList)) {
+            if (!identifierExist()) {
+                errorList += getErrorList();
                 return false;
             }
 
@@ -345,7 +337,6 @@ public class PassTwo {
     private boolean argument_list() {
         // check format: expression { "," expression}
         if (!expression()) {
-            errorList += INVALID_ARGUMENT_LIST + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
             return false;
         }
 
@@ -363,7 +354,7 @@ public class PassTwo {
         return COMMA();
     }
 
-    private boolean fn_arr_member(boolean isMemberFunc) {
+    private boolean fn_arr_member() {
         // check format: "(" [ argument_list ] ")" | "[" expression "]"
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
             //check format: "(" [ argument_list ] ")"
@@ -373,18 +364,6 @@ public class PassTwo {
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 EALPush();
                 functionPush();
-                if (isMemberFunc) {
-                    if (!memberRefExists()) {
-                        errorList += getErrorList();
-                        return false;
-                    }
-                } else {
-                    if (!identifierExist()) {
-                        errorList += getErrorList();
-                        return false;
-                    }
-                }
-
                 lexicalAnalyzer.nextToken();
                 return true;
             }
@@ -396,18 +375,6 @@ public class PassTwo {
 
             EALPush();
             functionPush();
-            if (isMemberFunc) {
-                if (!memberRefExists()) {
-                    errorList += getErrorList();
-                    return false;
-                }
-            } else {
-                if (!identifierExist()) {
-                    errorList += getErrorList();
-                    return false;
-                }
-            }
-
             lexicalAnalyzer.nextToken();
             return true;
 
@@ -440,8 +407,13 @@ public class PassTwo {
 
         String errCheck = errorList;
 
-        fn_arr_member(true);
+        fn_arr_member();
         if (!errCheck.equals(errorList)) {
+            return false;
+        }
+
+        if (!memberRefExists()) {
+            errorList += getErrorList();
             return false;
         }
 
@@ -688,11 +660,7 @@ public class PassTwo {
 
         } else {
             // check format: expression ";"
-            if (!expression()) {
-                return false;
-            }
-
-            return EOE();
+            return expression() && EOE();
         }
     }
 
@@ -1133,36 +1101,18 @@ public class PassTwo {
     public boolean class_declaration() {
         // check format: "class" class_name "{" {class_member_declaration} "}"
         // class declaration should be in the symbol table at this point
-
-        // look for "class"
         lexicalAnalyzer.nextToken();
-        // validate class name
-
         incrementScope(lexicalAnalyzer.getToken().getName(), true);
 
-        lexicalAnalyzer.nextToken();
         // check for block begin
-
         lexicalAnalyzer.nextToken();
 
-        while (class_member_declaration()) {
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += "Method body must end with a closing block '}'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-        }
+        lexicalAnalyzer.nextToken();
+        //noinspection StatementWithEmptyBody
+        while (class_member_declaration()) {}
 
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
-            errorList += "Invalid class declaration. Missing closing block." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return false;
-        }
-
+        // class is over now decrement scope
         decrementScope();
-
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
         lexicalAnalyzer.nextToken();
         return true;
     }
@@ -1171,32 +1121,26 @@ public class PassTwo {
         // check format: {class_declaration} "void" "main" "(" ")" method_body
         if (!lexicalAnalyzer.getToken().getName().equals(KeyConst.VOID.getKey())) {
             if (!class_declaration()) {
-                errorList += "Invalid compilation unit. Invalid class declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
             while (lexicalAnalyzer.getToken().getName().equals(KeyConst.CLASS.getKey())) {
                 if (!class_declaration()) {
-                    errorList += "Invalid compilation unit. Invalid class declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                     return false;
                 }
             }
-
-            if (!lexicalAnalyzer.getToken().getName().equals(KeyConst.VOID.getKey())) {
-                errorList += "Invalid compilation unit. Missing 'main' method.\n";
-                return false;
-            }
         }
 
-        lexicalAnalyzer.nextToken();
         // look for main method
-
         lexicalAnalyzer.nextToken();
+
         // look for open parenthesis
-
         lexicalAnalyzer.nextToken();
-        // look for closing parenthesis
 
+        // look for closing parenthesis
+        lexicalAnalyzer.nextToken();
+
+        // load opening block
         lexicalAnalyzer.nextToken();
         incrementScope("main", true);
 

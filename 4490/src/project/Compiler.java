@@ -966,7 +966,7 @@ public class Compiler {
                 return false;
             }
 
-            addToSymbolTable("@", name, "lvar", new VariableData(type, "private"));
+            addToSymbolTable("@", name, "lvar", new VariableData("@:" + type, "private"));
             symbolAdded = true;
         }
 
@@ -1270,7 +1270,7 @@ public class Compiler {
                     return false;
                 }
 
-                addToSymbolTable("@", value, "ivar", new VariableData(type, accessMod));
+                addToSymbolTable("@", value, "ivar", new VariableData("@:" + type, accessMod));
                 symbolAdded = true;
                 if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                     lexicalAnalyzer.nextToken();

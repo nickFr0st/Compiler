@@ -43,7 +43,6 @@ public class PassTwo {
     }
 
     public void evaluate() {
-        //todo: need to have a way to get this symbols added through the stackHandler into this Class
         // pass two
         if (!compilation_unit()) {
             System.out.print(errorList);
@@ -96,6 +95,7 @@ public class PassTwo {
                 return false;
             }
 
+            arrayClose();
             newArrayPush();
             // check for array end
 
@@ -420,13 +420,10 @@ public class PassTwo {
                 errorList += "Invalid array expression." + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
                 return false;
             }
-
             //check for array end
             lexicalAnalyzer.nextToken();
-            
-
-
-            return true;
+            arrayClose();
+            return ArrayRefPush();
         }
         return false;
     }
@@ -1283,6 +1280,33 @@ public class PassTwo {
         return true;
     }
 
+    public boolean arrayClose() {
+        while (!OS.peek().getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
+            if (!handleOperation()) {
+                return false;
+            }
+        }
+
+        // pop array opening
+        OS.pop();
+
+        return true;
+    }
+
+    public boolean ArrayRefPush() {
+        Identifier_SAR value = (Identifier_SAR)SAS.pop();
+
+        if (!value.getType().equalsIgnoreCase(KeyConst.INT.name())) {
+            errorList += "array indexer must be of type int. type '" + value.getType() + "' was found. Line: " + value.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        Identifier_SAR array = (Identifier_SAR)SAS.pop();
+
+        SAS.push(new Array_SAR(array.getScope(), array.getLexi(), array.getType(), array, value));
+        return identifierExist();
+    }
+
     public boolean COMMA() {
         while(!(SAS.peek() instanceof BAL_SAR) && !OS.isEmpty()) {
             if (!handleOperation()) {
@@ -1307,6 +1331,7 @@ public class PassTwo {
             return true;
         }
 
+        errorList += "identifier does not exist in the symbol table. name: '" + id_sar.getLexi().getName() + "' type: '" + id_sar.getType() + "'. Line: " + id_sar.getLexi().getLineNum() + "\n";
         return false;
     }
 
@@ -1468,7 +1493,12 @@ public class PassTwo {
             return true;
         }
 
-        int lastOprPrecedence = OS.peek().getPrecedence();
+        int lastOprPrecedence;
+        if (OS.peek().getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name()) || OS.peek().getLexi().getName().equals(".") || OS.peek().getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name()))   {
+            lastOprPrecedence = -1;
+        } else {
+            lastOprPrecedence = OS.peek().getPrecedence();
+        }
 
         if (lastOprPrecedence <= opr.getPrecedence()) {
             OS.push(opr);
@@ -1482,8 +1512,6 @@ public class PassTwo {
     }
 
     public boolean newArrayPush() {
-        //todo: this needs to be changed
-        OS.pop();
         SAR element = SAS.pop();
 
         if (!element.getType().toUpperCase().equals("INT")) {
@@ -1620,7 +1648,7 @@ public class PassTwo {
         String key = "T" + variableId;
         symbolTable.put(key, new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.INT.name(), KeyConst.PRIVATE.name()), 1));
         Tuple tempTuple = new Tuple(key, KeyConst.INT.name(), lhs.getLexi().getLineNum());
-        SAR temp = new Variable_SAR(tempTuple, lhs.getScope(), key, KeyConst.INT.name());
+        SAR temp = new Identifier_SAR(lhs.getScope(), tempTuple, KeyConst.INT.name());
         variableId++;
         SAS.push(temp);
 

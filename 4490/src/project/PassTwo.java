@@ -664,82 +664,31 @@ public class PassTwo {
         }
     }
 
-    public boolean parameter(List<String> parameterNames) {
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
+    public boolean parameter() {
         // check format: type identifier ["[" "]"]
-
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !type(lexicalAnalyzer.getToken().getType())) {
-            errorList += "Parameter declarations must start with a valid type." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+        typePush(new Type_SAR(lexicalAnalyzer.getToken(), scope));
+        if (!typeExists()) {
             return false;
         }
-
-        String type = lexicalAnalyzer.getToken().getName();
-
         lexicalAnalyzer.nextToken();
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
-            errorList += "Parameter declarations require a valid identifier." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return false;
-        }
-
-        String name = lexicalAnalyzer.getToken().getName();
-
         lexicalAnalyzer.nextToken();
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
-            parameterNames.add("P" + variableId);
-            symbolTable.put("P" + variableId, new Symbol(scope, "P" + variableId++, name, "param", new VariableData(type, "private"), ELEM_SIZE));
+        if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
             return true;
         }
-
-        lexicalAnalyzer.getToken();
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
-            errorList += "Invalid parameter declaration. Missing closing array bracket." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return false;
-        }
-
-        parameterNames.add("P" + variableId);
-        symbolTable.put("P" + variableId, new Symbol(scope, "P" + variableId++, name, "param", new VariableData(type, "private"), ELEM_SIZE));
+        lexicalAnalyzer.nextToken();
         return true;
     }
 
-    public boolean parameter_list(List<String> parameters) {
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
+    public boolean parameter_list() {
         // check format: parameter { "," parameter}
-        if (!parameter(parameters)) {
-            errorList += "Invalid parameter_list" + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
-            return false;
-        }
-
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+        if (!parameter()) {
             return false;
         }
 
         while (!(lexicalAnalyzer.getToken() instanceof NullTuple) && lexicalAnalyzer.getToken().getName().equals(",")) {
             lexicalAnalyzer.nextToken();
 
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (!parameter(parameters)) {
-                errorList += "Invalid parameter_list" + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
+            if (!parameter()) {
                 return false;
             }
         }
@@ -835,41 +784,18 @@ public class PassTwo {
     }
 
     public boolean constructor_declaration() {
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
         // check format: class_name "(" [parameter_list] ")" method_body
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(KeyConst.CLASS_NAME.getKey())) {
-            errorList += "Invalid class name in constructor declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+        if (!constructorDeclaration()) {
             return false;
         }
 
         String constructorName = lexicalAnalyzer.getToken().getName();
 
         lexicalAnalyzer.nextToken();
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-            errorList += MISSING_OPENING_PARENTHESIS + " for constructor declaration. 'class " + constructorName + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return false;
-        }
-
         lexicalAnalyzer.nextToken();
-        if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-            errorList += MISSING_CLOSING_PARENTHESIS + " for constructor declaration. 'class " + constructorName + "'\n";
-            return false;
-        }
-
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
 
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
             lexicalAnalyzer.nextToken();
-            symbolTable.put("M" + variableId, new Symbol(scope, "M" + variableId++, constructorName, "method", new MethodData("public", null, constructorName), ELEM_SIZE));
             incrementScope(constructorName, false);
 
             if (!method_body()) {
@@ -880,31 +806,13 @@ public class PassTwo {
             return true;
         }
 
-        String key = "M" + variableId;
-        symbolTable.put(key, new Symbol(scope, "M" + variableId++, constructorName, "method", new MethodData("public", null, constructorName), ELEM_SIZE));
         incrementScope(constructorName, false);
-        List<String> parameterNames = new ArrayList<String>();
 
-        if (!parameter_list(parameterNames)) {
-            errorList += "Invalid parameter list for constructor declaration. 'class " + constructorName + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return false;
-        }
-
-        ((MethodData)symbolTable.get(key).getData()).setParameters(parameterNames);
-
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
-        if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-            errorList += MISSING_CLOSING_PARENTHESIS + " for constructor declaration. 'class " + constructorName + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+        if (!parameter_list()) {
             return false;
         }
 
         lexicalAnalyzer.nextToken();
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
 
         if (!method_body()) {
             return false;
@@ -920,6 +828,7 @@ public class PassTwo {
         }
 
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
+            // todo: need to do this
             // check format: "(" [parameter_list] ")" method_body
 
             lexicalAnalyzer.nextToken();
@@ -947,7 +856,7 @@ public class PassTwo {
             incrementScope(value, false);
             List<String> parameters = new ArrayList<String>();
 
-            if (!parameter_list(parameters)) {
+            if (!parameter_list()) {
                 errorList += "Invalid parameter list in field declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
@@ -976,6 +885,7 @@ public class PassTwo {
             return true;
 
         } else {
+            // todo: need to do this
             if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
                 return false;
             }
@@ -1013,6 +923,7 @@ public class PassTwo {
                 }
             }
 
+            // todo: need to do this
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
 
                 lexicalAnalyzer.nextToken();
@@ -1047,6 +958,7 @@ public class PassTwo {
 
     public boolean class_member_declaration() {
         if (lexicalAnalyzer.getToken().getType().equals(KeyConst.MODIFIER.getKey())) {
+            // todo: need to do this
             // check format: modifier type identifier field_declaration
 
             String modifier = lexicalAnalyzer.getToken().getName();
@@ -1086,9 +998,9 @@ public class PassTwo {
             return true;
 
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.CLASS_NAME.getKey())) {
+            // todo: need to do this
             // check format: constructor_declaration
             if (!constructor_declaration()) {
-                errorList += "Invalid class member declaration. Invalid constructor declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
@@ -1108,8 +1020,14 @@ public class PassTwo {
         lexicalAnalyzer.nextToken();
 
         lexicalAnalyzer.nextToken();
+
+        String errorCheck = errorList;
         //noinspection StatementWithEmptyBody
         while (class_member_declaration()) {}
+
+        if (!errorCheck.equals(errorList)) {
+            return false;
+        }
 
         // class is over now decrement scope
         decrementScope();
@@ -1140,8 +1058,6 @@ public class PassTwo {
         // look for closing parenthesis
         lexicalAnalyzer.nextToken();
 
-        // load opening block
-        lexicalAnalyzer.nextToken();
         incrementScope("main", true);
 
         // at this point we have declared classes and "void main()"
@@ -1362,6 +1278,7 @@ public class PassTwo {
             return isClassInSymbolTable(itemType);
         }
 
+        errorList += "type: '" + itemType.getType() + "' does not exists. Line: " + itemType.getLexi().getLineNum() + "\n";
         return false;
     }
 
@@ -1555,6 +1472,14 @@ public class PassTwo {
         symbolTable.put(key, new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), 1));
         SAS.push(new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name()));
         variableId++;
+        return true;
+    }
+
+    private boolean constructorDeclaration() {
+        if (!lexicalAnalyzer.getToken().getName().equals(scope.substring(scope.lastIndexOf(".") + 1, scope.length()))) {
+            errorList += "Invalid constructor name. the name must be the same as the class that it is in. Line: " + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
         return true;
     }
 

@@ -862,7 +862,7 @@ public class Compiler {
             return true;
         }
 
-        lexicalAnalyzer.getToken();
+        lexicalAnalyzer.nextToken();
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
         }
@@ -874,6 +874,7 @@ public class Compiler {
 
         parameterNames.add(type);
         addToSymbolTable("P", name, "param", new VariableData(type, "private"));
+        lexicalAnalyzer.nextToken();
         return true;
     }
 

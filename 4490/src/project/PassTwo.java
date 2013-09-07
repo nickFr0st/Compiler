@@ -98,31 +98,17 @@ public class PassTwo {
         }
 
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
-
             // check format: "[" expression "]"
+            stackHandler.operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += ILLEGAL_NEW_DECLARATION + OPERATION + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
-                return false;
-            }
 
             if (!expression()) {
                 errorList += ILLEGAL_NEW_DECLARATION + EXPRESSION + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
                 return false;
             }
 
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
-                errorList += ILLEGAL_NEW_DECLARATION + OPERATION + ", " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
-                return false;
-            }
+            stackHandler.newArrayPush();
+            // check for array end
 
             lexicalAnalyzer.nextToken();
             return true;
@@ -363,8 +349,6 @@ public class PassTwo {
             }
 
             return true;
-        } else if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.UNKNOWN.name())) {
-            return !isUnknownSymbol(lexicalAnalyzer.getToken().getType());
         }
         return false;
     }
@@ -417,27 +401,16 @@ public class PassTwo {
             return true;
 
         } else if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
-
+            //todo: need to do this
             //check format: "[" expression "]"
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
+            if (!expression()) {
                 errorList += "Invalid array expression." + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
                 return false;
             }
 
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
-                errorList += MISSING_ARRAY_CLOSE + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
-                return false;
-            }
-
+            //check for array end
             lexicalAnalyzer.nextToken();
             return true;
         }
@@ -803,41 +776,29 @@ public class PassTwo {
 
     public boolean variable_declaration() {
         // check format: type identifier ["[" "]"] ["=" assignment_expression ] ";"
+        boolean variableHasBeenAdded = false;
+
         stackHandler.typePush(new Type_SAR(lexicalAnalyzer.getToken(), scope));
         if (!stackHandler.typeExists()) {
             errorList += stackHandler.getErrorList();
             return false;
         }
-
         stackHandler.popSAS();
+
         String type = lexicalAnalyzer.getToken().getName();
 
         lexicalAnalyzer.nextToken();
-        stackHandler.variablePush(new Variable_SAR(lexicalAnalyzer.getToken(), scope, "V" + variableId++, type));
-
+        Tuple variable = lexicalAnalyzer.getToken();
         lexicalAnalyzer.nextToken();
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
-
-            // todo: need to handle arrays
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_END.name())) {
-                errorList += "Invalid parameter declaration. Missing closing array bracket." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
+            stackHandler.variablePush(new Variable_SAR(variable, scope, "V" + variableId++, "@:" + type));
+            variableHasBeenAdded = true;
             lexicalAnalyzer.nextToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += "Invalid variable declaration. Missing semi-colon at end." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
+        }
 
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
+        if (!variableHasBeenAdded) {
+            stackHandler.variablePush(new Variable_SAR(variable, scope, "V" + variableId++, type));
         }
 
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {

@@ -1,6 +1,5 @@
 package project;
 
-import com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -228,6 +227,29 @@ public class StackHandler {
             }
             OS.push(opr);
         }
+        return true;
+    }
+
+    public boolean newArrayPush() {
+        SAR element = SAS.pop();
+
+        if (!element.getType().toUpperCase().equals("INT")) {
+            errorList += "values in array declaration must be integers. Line: " + element.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        Type_SAR type = (Type_SAR)SAS.pop();
+
+        if (type.getName().equals(KeyConst.VOID.name())) {
+            errorList += "cannot create an array of void objects. Line: " + type.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
+        List<SAR> sarList = new ArrayList<SAR>();
+        sarList.add(element);
+        EAL_SAR eal_sar = new EAL_SAR(sarList);
+
+        SAS.push(new New_SAR(element.getScope(), new Tuple(), "@:" + type.getName(), type, eal_sar));
         return true;
     }
 

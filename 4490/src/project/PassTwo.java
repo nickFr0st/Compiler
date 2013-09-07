@@ -670,6 +670,8 @@ public class PassTwo {
         if (!typeExists()) {
             return false;
         }
+        popSAS();
+
         lexicalAnalyzer.nextToken();
         lexicalAnalyzer.nextToken();
         if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
@@ -823,24 +825,10 @@ public class PassTwo {
     }
 
     public boolean field_declaration(String accessMod, String type, String value) {
-        if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-            return false;
-        }
-
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-            // todo: need to do this
             // check format: "(" [parameter_list] ")" method_body
 
             lexicalAnalyzer.nextToken();
-            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
-                errorList += "Invalid field declaration. NullTuple exception. " + MISSING_CLOSING_PARENTHESIS + "\n";
-                return false;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 incrementScope(value, false);
                 lexicalAnalyzer.nextToken();
@@ -852,31 +840,13 @@ public class PassTwo {
                 return true;
             }
 
-            String methodKey = "M" + variableId;
             incrementScope(value, false);
-            List<String> parameters = new ArrayList<String>();
 
             if (!parameter_list()) {
-                errorList += "Invalid parameter list in field declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                errorList += "Invalid field declaration." + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
             if (!method_body()) {
                 return false;
             }
@@ -958,53 +928,30 @@ public class PassTwo {
 
     public boolean class_member_declaration() {
         if (lexicalAnalyzer.getToken().getType().equals(KeyConst.MODIFIER.getKey())) {
-            // todo: need to do this
             // check format: modifier type identifier field_declaration
 
             String modifier = lexicalAnalyzer.getToken().getName();
 
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            typePush(new Type_SAR(lexicalAnalyzer.getToken(), scope));
+            if (!typeExists()) {
                 return false;
             }
+            popSAS();
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !type(lexicalAnalyzer.getToken().getType())) {
-                errorList += "Invalid class member declaration. Missing a valid type." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
             String type = lexicalAnalyzer.getToken().getName();
 
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
-                errorList += "Invalid class member declaration. Missing a valid identifier." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
             String name = lexicalAnalyzer.getToken().getName();
 
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !field_declaration(modifier, type, name)) {
-                errorList += "Invalid class member declaration. Invalid field declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            return true;
+            return field_declaration(modifier, type, name);
 
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.CLASS_NAME.getKey())) {
-            // todo: need to do this
             // check format: constructor_declaration
-            if (!constructor_declaration()) {
-                return false;
-            }
-
-            return true;
+            return constructor_declaration();
         }
 
         return false;

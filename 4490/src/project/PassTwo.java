@@ -12,15 +12,6 @@ import java.util.Stack;
  * Time: 10:30 AM
  */
 public class PassTwo {
-    private static final String ILLEGAL_NEW_DECLARATION = "Illegal new_declaration";
-    private static final String INVALID_STATEMENT = "Invalid statement.";
-
-    private static final String MISSING_CLOSING_PARENTHESIS = "Missing closing parenthesis.";
-    private static final String MISSING_OPENING_PARENTHESIS = "Missing opening parenthesis.";
-    private static final String LINE = " Line: ";
-
-    private static final String EXPRESSION = " expression.";
-
     private String scope = "g.";
     private int variableId = 100;
     private Stack<SAR> SAS = new Stack<SAR>();
@@ -84,7 +75,6 @@ public class PassTwo {
             lexicalAnalyzer.nextToken();
 
             if (!expression()) {
-                errorList += ILLEGAL_NEW_DECLARATION + EXPRESSION + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
                 return false;
             }
 
@@ -182,13 +172,11 @@ public class PassTwo {
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
             lexicalAnalyzer.nextToken();
             if (!assignment_expression()) {
-                errorList += "Invalid assignment expression." + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
                 return false;
             }
         } else {
             lexicalAnalyzer.nextToken();
             if (!expression()) {
-                errorList += "Invalid expressionz expression." + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
                 return false;
             }
         }
@@ -325,7 +313,6 @@ public class PassTwo {
             lexicalAnalyzer.nextToken();
 
             if (!expression()) {
-                errorList += "Invalid array expression." + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
                 return false;
             }
             //check for array end
@@ -375,107 +362,60 @@ public class PassTwo {
             return errorCheck.equals(errorList);
 
         } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.IF.getKey())) {
-            // todo: need to do this
             // check format: "if" "(" expression ")" statement [ "else" statement ]
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
+
+            lexicalAnalyzer.nextToken();
+            if (!expression()) {
                 return false;
             }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-                errorList += INVALID_STATEMENT + " " + MISSING_OPENING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            if (!closingParen()) {
+                return false;
+            }
+
+            if (!ifCheck()) {
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
-                errorList += "'if' statement requires a valid expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                errorList += INVALID_STATEMENT + " " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
 
             if (!statement()) {
-                errorList += INVALID_STATEMENT + " 'if' statement." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
 
             if (!(lexicalAnalyzer.peek() instanceof NullTuple) && lexicalAnalyzer.peek().getName().equals(KeyConst.ELSE.getKey())) {
-
                 lexicalAnalyzer.nextToken();
                 lexicalAnalyzer.nextToken();
 
-                if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                    return false;
-                }
-
-                if (lexicalAnalyzer.getToken() instanceof NullTuple || !statement()) {
-                    errorList += INVALID_STATEMENT + " a valid statement is required after an else statement." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                    return false;
-                }
+                return statement();
             }
 
             return true;
 
         } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.WHILE.getKey())) {
-            // todo: need to do this
             // check format: "while" "(" expression ")" statement
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+            operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
+
+
+            lexicalAnalyzer.nextToken();
+            if (!expression()) {
                 return false;
             }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
-                errorList += INVALID_STATEMENT + " " + MISSING_OPENING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            if (!closingParen()) {
+                return false;
+            }
+
+            if (!whileCheck()) {
                 return false;
             }
 
             lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !expression()) {
-                errorList += "'while' statement requires a valid expression." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                errorList += INVALID_STATEMENT + " " + MISSING_CLOSING_PARENTHESIS + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            lexicalAnalyzer.nextToken();
-            if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
-                return false;
-            }
-
-            if (!statement()) {
-                errorList += INVALID_STATEMENT + " 'while' statement." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-                return false;
-            }
-
-            return true;
+            return statement();
 
         } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.RETURN.getKey())) {
             // check format: "return" [ expression ] ";"
@@ -850,15 +790,6 @@ public class PassTwo {
         return itemType.equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name());
     }
 
-    private boolean isUnknownSymbol(String type) {
-        if (type.equals(LexicalAnalyzer.tokenTypesEnum.UNKNOWN.name())) {
-            errorList += "Unknown Symbol on" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
-            return true;
-        }
-
-        return false;
-    }
-
     private void decrementScope() {
         int scopeDepth = 0;
         for (char c : scope.toCharArray()) {
@@ -986,6 +917,24 @@ public class PassTwo {
 
         errorList += "invalid return statement. Line: " + lineNum + "\n";
         return false;
+    }
+
+    public boolean ifCheck() {
+        SAR sar = popSAS();
+        if (!sar.getType().equalsIgnoreCase(KeyConst.BOOL.name())) {
+            errorList += "the expression in the 'if' statement must evaluate to a type bool. Line: " + sar.getLexi().getLineNum() + "\n";
+            return false;
+        }
+        return true;
+    }
+
+    public boolean whileCheck() {
+        SAR sar = popSAS();
+        if (!sar.getType().equalsIgnoreCase(KeyConst.BOOL.name())) {
+            errorList += "the expression in the 'while' statement must evaluate to a type bool. Line: " + sar.getLexi().getLineNum() + "\n";
+            return false;
+        }
+        return true;
     }
 
     public boolean EOE() {

@@ -39,10 +39,16 @@ public class PassTwo {
         // check format: "(" [argument_list] ")" |  "[" expression "]"
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
             // check format: "(" [argument_list] ")"
+            if (!operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()))) {
+                return false;
+            }
             lexicalAnalyzer.nextToken();
             BALPush(new BAL_SAR());
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                if (!closingParen()) {
+                    return false;
+                }
                 EALPush();
                 if (!newObjPush()) {
                     return false;
@@ -60,6 +66,9 @@ public class PassTwo {
                 }
             }
 
+            if (!closingParen()) {
+                return false;
+            }
             EALPush();
             if (!newObjPush()) {
                 return false;
@@ -282,10 +291,16 @@ public class PassTwo {
         // check format: "(" [ argument_list ] ")" | "[" expression "]"
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
             //check format: "(" [ argument_list ] ")"
+            if (!operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()))) {
+                return false;
+            }
             BALPush(new BAL_SAR());
             lexicalAnalyzer.nextToken();
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                if (!closingParen()) {
+                    return false;
+                }
                 EALPush();
                 functionPush();
                 lexicalAnalyzer.nextToken();
@@ -296,6 +311,9 @@ public class PassTwo {
                 return false;
             }
 
+            if (!closingParen()) {
+                return false;
+            }
             EALPush();
             functionPush();
             lexicalAnalyzer.nextToken();
@@ -632,7 +650,6 @@ public class PassTwo {
             // check format: ["[" "]"] ["=" assignment_expression ] ";"
             boolean variableHasBeenAdded = false;
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                variablePush(new Variable_SAR(value, scope, "V" + variableId++, type));
                 lexicalAnalyzer.nextToken();
                 return true;
             }
@@ -930,9 +947,9 @@ public class PassTwo {
             }
         }
 
-        if (!SAS.isEmpty() && SAS.peek() instanceof Function_SAR) {
-            SAS.pop();
-        }
+//        if (!SAS.isEmpty() && SAS.peek() instanceof Function_SAR) {
+//            SAS.pop();
+//        }
 
         return true;
     }
@@ -978,7 +995,7 @@ public class PassTwo {
     }
 
     public boolean COMMA() {
-        while (!(SAS.peek() instanceof BAL_SAR) && !OS.isEmpty()) {
+        while (!OS.isEmpty() && !OS.peek().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.PAREN_OPEN.name())) {
             if (!handleOperation()) {
                 return false;
             }
@@ -1258,7 +1275,7 @@ public class PassTwo {
         } else if (topOpr.getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
             return assignment();
         } else if (topOpr.getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
-            return booleanOperation();
+            return booleanOperation(topOpr.getLexi().getName());
         } else if (topOpr.getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.LOGICAL_OPR.name())) {
             return logicalOperation();
         }
@@ -1287,18 +1304,39 @@ public class PassTwo {
         return true;
     }
 
-    private boolean booleanOperation() {
+    private boolean booleanOperation(String opr) {
         SAR rhs = SAS.pop();
         SAR lhs = SAS.pop();
 
-        if (!lhs.getType().equalsIgnoreCase("int")) {
-            errorList += "left hand side of boolean operation must an int. Line: " + lhs.getLexi().getLineNum() + "\n";
-            return false;
-        }
+        if (opr.equals("==") || opr.equals("!=")) {
 
-        if (!rhs.getType().equalsIgnoreCase("int")) {
-            errorList += "right hand side of boolean operation must an int. Line: " + rhs.getLexi().getLineNum() + "\n";
-            return false;
+            if (!SARType(lhs.getType()) && rhs.getType().equalsIgnoreCase(KeyConst.NULL.getKey())) {
+                String key = "T" + variableId;
+                symbolTable.put(key, new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), 1));
+                SAS.push(new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name()));
+                variableId++;
+                return true;
+            }
+
+            if (!lhs.getType().equalsIgnoreCase(rhs.getType())) {
+                errorList += "left and right hand sides of bool operation must be the same type. Line: " + lhs.getLexi().getLineNum() + "\n";
+                return false;
+            }
+
+            if (lhs.getType().equalsIgnoreCase(KeyConst.VOID.name())) {
+                errorList += "variable types cannot be void in a bool operation. Line: " + lhs.getLexi().getLineNum() + "\n";
+                return false;
+            }
+        } else {
+            if (!lhs.getType().equalsIgnoreCase("int")) {
+                errorList += "left hand side of boolean operation must an int. Line: " + lhs.getLexi().getLineNum() + "\n";
+                return false;
+            }
+
+            if (!rhs.getType().equalsIgnoreCase("int")) {
+                errorList += "right hand side of boolean operation must an int. Line: " + rhs.getLexi().getLineNum() + "\n";
+                return false;
+            }
         }
 
         String key = "T" + variableId;

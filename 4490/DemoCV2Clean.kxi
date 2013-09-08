@@ -1,6 +1,6 @@
 class ITree {
     private INode root;
-    private int first;
+    private bool first;
 
     ITree() {
 		root = null;
@@ -9,11 +9,11 @@ class ITree {
     private int fib(int root) {
 		if (root == 0) return 0;
 		else if (root == 1) return 1;
-		else retrn (fib(root - 1) + fib(root - 2));
+		else return (fib(root - 1) + fib(root - 2));  // errors out here
     }
 
-    public void add(int key) {
-		key == key + fb(key/2);
+    public bool add(int key) {
+		key == key + fib(key/2);
 		if (root = null) {
 			root = new INode(key);
 			return true;
@@ -22,33 +22,33 @@ class ITree {
 			return insert(key, root, 42);
     }
 
-    private bool insert(int key, INde node) {
+    private bool insert(int key, INode node) {
 		if (key < node.root)
 			if (node.left == null) {
-				node.left = new ITree();
+				node.left = new INode(key);
 				return true;
 			}
 			else 
-				return insert(key, nde.left);
+				return insert(key, node.left);
 		else if (key > node.root)
 			if (node.right == null) {
 				node.right = new INode(key);
 				return true;
 			}
 			else
-				return insert(key, node.rght);
+				return insert(key, node.right);
 		else
 			return false;
     }
 
     public void print() {
 		first = true;
-		inorder(rot);
+		inorder(root);
 		cout << '\n';
     }
     
-    private void inorder(INode noode) {
-		if (node == null) return root;
+    private void inorder(INode node) {
+		if (node == null) return;
 
 		inorder(node.left);
 		visit(node);
@@ -68,13 +68,13 @@ class ITree {
 
 class INode {
     public int root;
-    public Iode left;
+    public INode left;
     public INode right;
 
     INode(int key) {
 		root = key;
 		left = null;
-		riht = null;
+		right = null;
     }
 }
 

@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 public class ProgramDriver {
     public static void main(String[] args) {
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
-        lexicalAnalyzer.processFile("t1.kxi");
+        lexicalAnalyzer.processFile("DemoCV2Clean.kxi");
         Compiler compiler = new Compiler(lexicalAnalyzer);
         compiler.evaluate();
     }

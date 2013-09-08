@@ -95,7 +95,6 @@ public class PassTwo {
             lexicalAnalyzer.nextToken();
             typePush(new Type_SAR(lexicalAnalyzer.getToken(), scope));
             if (!typeExists()) {
-                errorList += getErrorList();
                 return false;
             }
 
@@ -162,7 +161,6 @@ public class PassTwo {
         if (!operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()))) {
             return false;
         }
-        errorList += getErrorList();
 
         if (!errorCheck.equals(errorList)) {
             return false;
@@ -243,7 +241,6 @@ public class PassTwo {
             }
 
             if (!identifierExist()) {
-                errorList += getErrorList();
                 return false;
             }
 
@@ -296,7 +293,6 @@ public class PassTwo {
             }
 
             if (!argument_list()) {
-                errorList += getErrorList();
                 return false;
             }
 
@@ -341,7 +337,6 @@ public class PassTwo {
         }
 
         if (!memberRefExists()) {
-            errorList += getErrorList();
             return false;
         }
 
@@ -485,7 +480,6 @@ public class PassTwo {
 
         typePush(new Type_SAR(lexicalAnalyzer.getToken(), scope));
         if (!typeExists()) {
-            errorList += getErrorList();
             return false;
         }
         popSAS();
@@ -543,8 +537,6 @@ public class PassTwo {
                 if (!type(lexicalAnalyzer.getToken().getType())) break;
             }
 
-            errorList += getErrorList();
-
             if (!errorCheck.equals(errorList)) {
                 return false;
             }
@@ -558,8 +550,6 @@ public class PassTwo {
         while (statement()) {
             lexicalAnalyzer.nextToken();
         }
-
-        errorList += getErrorList();
 
         if (!errorCheck.equals(errorList)) {
             return false;
@@ -816,10 +806,6 @@ public class PassTwo {
             return SAS.pop();
         }
         return null;
-    }
-
-    public String getErrorList() {
-        return errorList;
     }
 
     public boolean atoiCheck() {
@@ -1337,6 +1323,10 @@ public class PassTwo {
         if (lhs instanceof Literal_SAR) {
             errorList += "left hand side is not a valid assignable type. Line. " + lhs.getLexi().getLineNum() + "\n";
             return false;
+        }
+
+        if (!SARType(lhs.getType()) && rhs.getType().equalsIgnoreCase(KeyConst.NULL.getKey())) {
+            return true;
         }
 
         if (!lhs.getType().equalsIgnoreCase(rhs.getType())) {

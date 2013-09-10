@@ -455,7 +455,19 @@ public class PassTwo {
 
         } else {
             // check format: expression ";"
-            return expression() && EOE();
+            if (!expression()) {
+                return false;
+            }
+
+            if (!EOE()) {
+                return false;
+            }
+
+            if (!SAS.isEmpty() && SAS.peek() instanceof Function_SAR) {
+                popSAS();
+            }
+
+            return true;
         }
     }
 

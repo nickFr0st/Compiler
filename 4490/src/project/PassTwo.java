@@ -662,6 +662,7 @@ public class PassTwo {
             // check format: ["[" "]"] ["=" assignment_expression ] ";"
             boolean variableHasBeenAdded = false;
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                popSAS();
                 lexicalAnalyzer.nextToken();
                 return true;
             }
@@ -673,6 +674,7 @@ public class PassTwo {
 
                 variablePush(new Variable_SAR(value, scope, "V" + variableId++, "@:" + type));
                 if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                    popSAS();
                     lexicalAnalyzer.nextToken();
                     return true;
                 }
@@ -872,7 +874,13 @@ public class PassTwo {
     public boolean coutCheck() {
         SAR sar = popSAS();
 
-        if (sar.getType().equalsIgnoreCase(KeyConst.INT.name()) || sar.getType().equalsIgnoreCase(KeyConst.CHAR.name())) {
+        String type = sar.getType();
+
+        if (type.startsWith("@:")) {
+            type = type.substring(type.indexOf(":") + 1, type.length());
+        }
+
+        if (type.equalsIgnoreCase(KeyConst.INT.name()) || type.equalsIgnoreCase(KeyConst.CHAR.name())) {
             return true;
         }
 
@@ -888,7 +896,13 @@ public class PassTwo {
             return false;
         }
 
-        if (sar.getType().equalsIgnoreCase(KeyConst.INT.name()) || sar.getType().equalsIgnoreCase(KeyConst.CHAR.name())) {
+        String type = sar.getType();
+
+        if (!type.startsWith("@:")) {
+            type = type.substring(type.indexOf(":") + 1, type.length());
+        }
+
+        if (type.equalsIgnoreCase(KeyConst.INT.name()) || type.equalsIgnoreCase(KeyConst.CHAR.name())) {
             return true;
         }
 
@@ -959,10 +973,6 @@ public class PassTwo {
             }
         }
 
-//        if (!SAS.isEmpty() && SAS.peek() instanceof Function_SAR) {
-//            SAS.pop();
-//        }
-
         return true;
     }
 
@@ -993,17 +1003,38 @@ public class PassTwo {
     }
 
     public boolean ArrayRefPush() {
-        Identifier_SAR value = (Identifier_SAR) SAS.pop();
+        Literal_SAR literal_sar = null;
+        Identifier_SAR value = null;
 
-        if (!value.getType().equalsIgnoreCase(KeyConst.INT.name())) {
-            errorList += "array indexer must be of type int. type '" + value.getType() + "' was found. Line: " + value.getLexi().getLineNum() + "\n";
-            return false;
+        boolean useLiteral = SAS.peek() instanceof Literal_SAR;
+
+        if (useLiteral) {
+            literal_sar = (Literal_SAR) SAS.pop();
+        } else {
+            value = (Identifier_SAR) SAS.pop();
         }
 
-        Identifier_SAR array = (Identifier_SAR) SAS.pop();
+        if (!useLiteral) {
+            if (!value.getType().equalsIgnoreCase(KeyConst.INT.name())) {
+                errorList += "array indexer must be of type int. type '" + value.getType() + "' was found. Line: " + value.getLexi().getLineNum() + "\n";
+                return false;
+            }
 
-        SAS.push(new Array_SAR(array.getScope(), array.getLexi(), array.getType(), array, value));
-        return identifierExist();
+            Identifier_SAR array = (Identifier_SAR) SAS.pop();
+
+            SAS.push(new Array_SAR(array.getScope(), array.getLexi(), array.getType(), array, value));
+            return identifierExist();
+        } else {
+            if (!literal_sar.getType().equalsIgnoreCase(KeyConst.INT.name())) {
+                errorList += "array indexer must be of type int. type '" + literal_sar.getType() + "' was found. Line: " + literal_sar.getLexi().getLineNum() + "\n";
+                return false;
+            }
+
+            Identifier_SAR array = (Identifier_SAR) SAS.pop();
+
+            SAS.push(new Array_SAR(array.getScope(), array.getLexi(), array.getType(), array, literal_sar));
+            return identifierExist();
+        }
     }
 
     public boolean COMMA() {
@@ -1377,6 +1408,26 @@ public class PassTwo {
 
         if (!SARType(lhs.getType()) && rhs.getType().equalsIgnoreCase(KeyConst.NULL.getKey())) {
             return true;
+        }
+
+        if (lhs.getType().startsWith("@:") && !rhs.getType().startsWith("@:")) {
+            String lType = lhs.getType().substring(lhs.getType().indexOf(":") + 1, lhs.getType().length());
+            if (lType.equalsIgnoreCase(rhs.getType())) {
+                return true;
+            } else {
+                errorList += "left and right hand sides of assignment operation are incompatible types. Line: " + lhs.getLexi().getLineNum() + "\n";
+                return false;
+            }
+        }
+
+        if (!lhs.getType().startsWith("@:") && rhs.getType().startsWith("@:")) {
+            String rType = rhs.getType().substring(rhs.getType().indexOf(":") + 1, rhs.getType().length());
+            if (rType.equalsIgnoreCase(lhs.getType())) {
+                return true;
+            } else {
+                errorList += "left and right hand sides of assignment operation are incompatible types. Line: " + lhs.getLexi().getLineNum() + "\n";
+                return false;
+            }
         }
 
         if (!lhs.getType().equalsIgnoreCase(rhs.getType())) {

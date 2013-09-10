@@ -8,9 +8,9 @@ package project;
  */
 public class Array_SAR extends SAR {
     private Identifier_SAR array;
-    private Identifier_SAR value;
+    private SAR value;
 
-    public Array_SAR(String scope, Tuple lexi, String type, Identifier_SAR array, Identifier_SAR value) {
+    public Array_SAR(String scope, Tuple lexi, String type, Identifier_SAR array, SAR value) {
         super(scope, lexi, type);
         this.array = array;
         this.value = value;
@@ -20,7 +20,7 @@ public class Array_SAR extends SAR {
         return array;
     }
 
-    public Identifier_SAR getValue() {
+    public SAR getValue() {
         return value;
     }
 }

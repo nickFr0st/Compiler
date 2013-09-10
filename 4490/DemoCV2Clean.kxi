@@ -159,12 +159,12 @@ void main() {
     cin >> key;
     cout << '\n';
     while (key != 0) {
-		if (tree.add(ky, key)) {
+		if (tree.add(key)) {
 			msg.msg1(key);
 			tree.print();
 		}
 		else 
-			msg.msg2('k');
+			msg.msg2(key);
 
 		msg.msg3();
 		cin >> key;

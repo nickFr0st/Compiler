@@ -1,8 +1,7 @@
-class D {
-	public int i;
-}
-
 void main() {
-	D d;
-	int e = d.i;
+	int x;
+	int y;
+	int z;
+	
+	x = x + y * z;
 }

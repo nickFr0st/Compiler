@@ -13,7 +13,26 @@ import java.util.Stack;
  */
 public class PassTwo {
     private static final String MOV_OPR = "MOV";
+
     private static final String REF_OPR = "REF";
+
+    private static final String ADD_OPR = "ADD";
+    private static final String ADI_OPR = "ADI";
+    private static final String SUB_OPR = "SUB";
+    private static final String MUL_OPR = "MUL";
+    private static final String DIV_OPR = "DIV";
+
+    private static final String LT_OPR = "LT";
+    private static final String GT_OPR = "GT";
+    private static final String NE_OPR = "NE";
+    private static final String EQ_OPR = "EQ";
+    private static final String LE_OPR = "LE";
+    private static final String GE_OPR = "GE";
+
+    private static final String AND_OPR = "AND";
+    private static final String OR_OPR = "OR";
+
+
     private String scope = "g.";
     private int variableId = 100;
     private Stack<SAR> SAS = new Stack<SAR>();
@@ -1323,19 +1342,19 @@ public class PassTwo {
         Opr_SAR topOpr = OS.pop();
 
         if (topOpr.getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.MATH_OPR.name())) {
-            return mathematicalOperation();
+            return mathematicalOperation(topOpr.getLexi().getName());
         } else if (topOpr.getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
             return assignment();
         } else if (topOpr.getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.BOOLEAN_OPR.name())) {
             return booleanOperation(topOpr.getLexi().getName());
         } else if (topOpr.getLexi().getType().equals(LexicalAnalyzer.tokenTypesEnum.LOGICAL_OPR.name())) {
-            return logicalOperation();
+            return logicalOperation(topOpr.getLexi().getName());
         }
 
         return false;
     }
 
-    private boolean logicalOperation() {
+    private boolean logicalOperation(String opr) {
         SAR rhs = SAS.pop();
         SAR lhs = SAS.pop();
 
@@ -1350,9 +1369,19 @@ public class PassTwo {
         }
 
         String key = "T" + variableId;
-        symbolTable.put(key, new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), 1));
-        SAS.push(new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name()));
+        Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), 1);
+        Variable_SAR item = new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name());
+
+        symbolTable.put(key, value);
+        SAS.push(item);
         variableId++;
+
+        if (opr.equals("&&")) {
+            iCodeList.add(new ICode("", AND_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " < " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+        } else {
+            iCodeList.add(new ICode("", OR_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " < " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+        }
+
         return true;
     }
 
@@ -1364,9 +1393,19 @@ public class PassTwo {
 
             if (!SARType(lhs.getType()) && rhs.getType().equalsIgnoreCase(KeyConst.NULL.getKey())) {
                 String key = "T" + variableId;
-                symbolTable.put(key, new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), 1));
-                SAS.push(new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name()));
+                Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), 1);
+                Variable_SAR item = new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name());
+
+                symbolTable.put(key, value);
+                SAS.push(item);
                 variableId++;
+
+                if (opr.equals("!=")) {
+                    iCodeList.add(new ICode("", NE_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " != " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+                } else {
+                    iCodeList.add(new ICode("", EQ_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " == " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+                }
+
                 return true;
             }
 
@@ -1392,9 +1431,23 @@ public class PassTwo {
         }
 
         String key = "T" + variableId;
-        symbolTable.put(key, new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), 1));
-        SAS.push(new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name()));
+        Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), 1);
+        Variable_SAR item = new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name());
+
+        symbolTable.put(key, value);
+        SAS.push(item);
         variableId++;
+
+        if (opr.equals("<")) {
+            iCodeList.add(new ICode("", LT_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " < " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+        } else if (opr.equals(">")) {
+            iCodeList.add(new ICode("", GT_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " > " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+        } else if (opr.equals("<=")) {
+            iCodeList.add(new ICode("", LE_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " <= " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+        } else if (opr.equals(">=")) {
+            iCodeList.add(new ICode("", GE_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " >= " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+        }
+
         return true;
     }
 
@@ -1450,7 +1503,7 @@ public class PassTwo {
         return true;
     }
 
-    private boolean mathematicalOperation() {
+    private boolean mathematicalOperation(String opr) {
         SAR rhs = SAS.pop();
         SAR lhs = SAS.pop();
 
@@ -1465,11 +1518,26 @@ public class PassTwo {
         }
 
         String key = "T" + variableId;
-        symbolTable.put(key, new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.INT.name(), KeyConst.PRIVATE.name()), 1));
+        Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.INT.name(), KeyConst.PRIVATE.name()), 1);
+        symbolTable.put(key, value);
         Tuple tempTuple = new Tuple(key, KeyConst.INT.name(), lhs.getLexi().getLineNum());
         SAR temp = new Identifier_SAR(lhs.getScope(), tempTuple, KeyConst.INT.name());
         variableId++;
         SAS.push(temp);
+
+        if (opr.equals("+")) {
+            if (rhs instanceof Literal_SAR) {
+                iCodeList.add(new ICode("", ADI_OPR, lhs.getSarId(), rhs.getLexi().getName(), value.getSymId(), "; " + lhs.getLexi().getName() + " + " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
+            } else {
+                iCodeList.add(new ICode("", ADD_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " + " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
+            }
+        } else if (opr.equals("-")) {
+            iCodeList.add(new ICode("", SUB_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " - " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
+        } else if (opr.equals("*")) {
+            iCodeList.add(new ICode("", MUL_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " * " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
+        } else if (opr.equals("/")) {
+            iCodeList.add(new ICode("", DIV_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " / " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
+        }
 
         return true;
     }

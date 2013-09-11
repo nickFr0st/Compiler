@@ -253,7 +253,7 @@ public class LexicalAnalyzer {
 
                     if (keyWords.contains(token.trim())) {
                         String temp = token.trim();
-                        if (temp.equals(ModifierTypeConst.PRIVATE.getKey()) || temp.equals(ModifierTypeConst.PUBLIC.getKey())) {
+                        if (temp.equals(KeyConst.PRIVATE.getKey()) || temp.equals(KeyConst.PUBLIC.getKey())) {
                             tokenType = KeyConst.MODIFIER.getKey();
                         } else {
                             tokenType = temp;

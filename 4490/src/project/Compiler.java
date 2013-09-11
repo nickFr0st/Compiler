@@ -37,7 +37,7 @@ public class Compiler {
 
     private String scope = "g.";
     private LinkedHashMap<String, Symbol> symbolTable = new LinkedHashMap<String, Symbol>();
-    private int variableId = 100;
+    private int variableId = 1000;
 
     private LexicalAnalyzer lexicalAnalyzer;
     private String errorList = "";

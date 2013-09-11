@@ -12,6 +12,8 @@ import java.util.Stack;
  * Time: 10:30 AM
  */
 public class PassTwo {
+    private static final String MOV_OPR = "MOV";
+    private static final String REF_OPR = "REF";
     private String scope = "g.";
     private int variableId = 100;
     private Stack<SAR> SAS = new Stack<SAR>();
@@ -20,6 +22,7 @@ public class PassTwo {
     private LinkedHashMap<String, Symbol> symbolTable;
     private LexicalAnalyzer lexicalAnalyzer;
     private String errorList = "";
+    private List<ICode> iCodeList = new ArrayList<ICode>();
 
     public PassTwo(LinkedHashMap<String, Symbol> symbolTable, LexicalAnalyzer lexicalAnalyzer) {
         this.symbolTable = symbolTable;
@@ -1054,9 +1057,11 @@ public class PassTwo {
     public boolean identifierExist() {
         SAR id_sar = SAS.pop();
 
-        String type = isInSymbolTable(id_sar);
+        String values[] = isInSymbolTable(id_sar);
+        String type = values[0];
         if (type != null) {
             id_sar.setType(type);
+            id_sar.setSarId(values[1]);
             SAS.push(id_sar);
             return true;
         }
@@ -1122,7 +1127,11 @@ public class PassTwo {
                     }
                 }
 
-                SAS.push(new Ref_SAR(lhs.getScope(), new Tuple("T" + variableId++, temp.getData().getType(), rhs.getLexi().getLineNum()), temp.getData().getType()));
+                Ref_SAR tempItem = new Ref_SAR(lhs.getScope(), new Tuple("T" + variableId, temp.getData().getType(), rhs.getLexi().getLineNum()), temp.getData().getType());
+                tempItem.setSarId("T" + variableId);
+                SAS.push(tempItem);
+                // todo: need to add this to the symbol table
+                iCodeList.add(new ICode("", REF_OPR, lhs.getSarId(), rhs.getSarId(), tempItem.getSarId(), ""));
                 return true;
             }
         }
@@ -1169,7 +1178,7 @@ public class PassTwo {
         return false;
     }
 
-    private String isInSymbolTable(SAR sar) {
+    private String[] isInSymbolTable(SAR sar) {
         String searchScope = sar.getScope();
         while (!searchScope.equals("g.")) {
             for (String key : symbolTable.keySet()) {
@@ -1180,7 +1189,7 @@ public class PassTwo {
                 }
 
                 if (sar.getScope().contains(temp.getScope()) && temp.getValue().equals(sar.getLexi().getName())) {
-                    return temp.getData().getType();
+                    return new String[] {temp.getData().getType(), temp.getSymId()};
                 }
             }
             searchScope = decrementScope(searchScope);
@@ -1413,6 +1422,7 @@ public class PassTwo {
         if (lhs.getType().startsWith("@:") && !rhs.getType().startsWith("@:")) {
             String lType = lhs.getType().substring(lhs.getType().indexOf(":") + 1, lhs.getType().length());
             if (lType.equalsIgnoreCase(rhs.getType())) {
+                iCodeList.add(new ICode("", MOV_OPR, lhs.getSarId(), rhs.getSarId(), "", "; " + lhs.getLexi().getName() + " = " + rhs.getLexi().getName()));
                 return true;
             } else {
                 errorList += "left and right hand sides of assignment operation are incompatible types. Line: " + lhs.getLexi().getLineNum() + "\n";
@@ -1423,6 +1433,7 @@ public class PassTwo {
         if (!lhs.getType().startsWith("@:") && rhs.getType().startsWith("@:")) {
             String rType = rhs.getType().substring(rhs.getType().indexOf(":") + 1, rhs.getType().length());
             if (rType.equalsIgnoreCase(lhs.getType())) {
+                iCodeList.add(new ICode("", MOV_OPR, lhs.getSarId(), rhs.getSarId(), "", "; " + lhs.getLexi().getName() + " = " + rhs.getLexi().getName()));
                 return true;
             } else {
                 errorList += "left and right hand sides of assignment operation are incompatible types. Line: " + lhs.getLexi().getLineNum() + "\n";
@@ -1435,6 +1446,7 @@ public class PassTwo {
             return false;
         }
 
+        iCodeList.add(new ICode("", MOV_OPR, lhs.getSarId(), rhs.getSarId(), "", "; " + lhs.getLexi().getName() + " = " + rhs.getLexi().getName()));
         return true;
     }
 

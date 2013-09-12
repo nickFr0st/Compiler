@@ -13,27 +13,28 @@ public class Compiler {
     public static final String CLASS = "Class";
     public static final String METHOD = "Method";
     public static final String VARIABLE = "Variable";
+    public static final String LITERAL = "Literal";
+    public static final int ELEM_SIZE = 1;
 
     private static final String ILLEGAL_EXPRESSION = "Illegal expression.";
     private static final String ILLEGAL_NEW_DECLARATION = "Illegal new_declaration";
     private static final String ILLEGAL_NEW_OPERATION = "Illegal new operation.";
-    private static final String ILLEGAL_ATOI_OPERATION = "Illegal atoi operation.";
 
+    private static final String ILLEGAL_ATOI_OPERATION = "Illegal atoi operation.";
     private static final String ILLEGAL_ITOA_OPERATION = "Illegal itoa operation.";
     private static final String INVALID_ARGUMENT_LIST = "Invalid argument list.";
     private static final String INVALID_FUNCTION = "Invalid function.";
     private static final String INVALID_TYPE = "Invalid type.";
-    private static final String INVALID_STATEMENT = "Invalid statement.";
 
+    private static final String INVALID_STATEMENT = "Invalid statement.";
     private static final String MISSING_ARRAY_CLOSE = "Array element missing array close.";
     private static final String MISSING_CLOSING_PARENTHESIS = "Missing closing parenthesis.";
     private static final String MISSING_OPENING_PARENTHESIS = "Missing opening parenthesis.";
-    private static final String LINE = " Line: ";
 
+    private static final String LINE = " Line: ";
     private static final String OPERATION = " operation.";
     private static final String ARGUMENT_LIST = " argument_list.";
     private static final String EXPRESSION = " expression.";
-    private static final int ELEM_SIZE = 1;
 
     private String scope = "g.";
     private LinkedHashMap<String, Symbol> symbolTable = new LinkedHashMap<String, Symbol>();
@@ -64,7 +65,7 @@ public class Compiler {
         lexicalAnalyzer.resetList();
 
         // pass two
-        PassTwo passTwo = new PassTwo(symbolTable, lexicalAnalyzer);
+        PassTwo passTwo = new PassTwo(symbolTable, lexicalAnalyzer, variableId);
         passTwo.evaluate();
     }
 
@@ -356,6 +357,11 @@ public class Compiler {
         } else if (lexicalAnalyzer.getToken().getType().equals(KeyConst.TRUE.getKey()) || lexicalAnalyzer.getToken().getType().equals(KeyConst.FALSE.getKey()) || lexicalAnalyzer.getToken().getType().equals(KeyConst.NULL.getKey()) || lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.CHARACTER.name())) {
 
             // check format: "value" [expressionz]
+            if (lexicalAnalyzer.getToken().getType().equals(KeyConst.TRUE.getKey()) || lexicalAnalyzer.getToken().getType().equals(KeyConst.FALSE.getKey())) {
+                addToSymbolTable("L", lexicalAnalyzer.getToken().getName(), LITERAL, new VariableData(KeyConst.BOOL.getKey(), KeyConst.PUBLIC.getKey()));
+            } else {
+                addToSymbolTable("L", lexicalAnalyzer.getToken().getName(), LITERAL, new VariableData(lexicalAnalyzer.getToken().getType(), KeyConst.PUBLIC.getKey()));
+            }
             lexicalAnalyzer.nextToken();
             if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 return true;
@@ -1579,6 +1585,9 @@ public class Compiler {
             Symbol temp = symbolTable.get(keyItem);
 
             if (temp.getValue().equals(name) && temp.getScope().equals(scope)) {
+
+                if (kind.equals(LITERAL)) return true;
+
                 errorList += "duplicate symbol: symbol: '" + name + "' already exists in symbol table." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }

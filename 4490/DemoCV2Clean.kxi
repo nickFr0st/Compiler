@@ -1,7 +1,15 @@
+class D {
+	public E e;
+}
+
+class E {
+	public int x;
+	public int y;
+}
+
 void main() {
-	int x;
-	int y;
-	int z;
+	D a;
+	D b;
 	
-	x = x + y * z;
+	a.e.x = b.e.y;
 }

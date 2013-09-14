@@ -1,15 +1,14 @@
-class D {
-	public E e;
-}
-
-class E {
-	public int x;
-	public int y;
-}
-
 void main() {
-	D a;
-	D b;
+	int x;
+	int y;
+	int i;
 	
-	a.e.x = b.e.y;
+	while (x < y) {
+		i = 12;
+		
+		if (y >= 3) y = y + 6;
+		else y = 2;
+		i = 3;
+	}
+	x = y;
 }

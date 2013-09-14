@@ -35,6 +35,14 @@ public class PassTwo {
     private static final String BF_OPR = "BF";
     private static final String JMP_OPR = "JMP";
 
+    private static final String WRTI_OPR = "WRTI";
+    private static final String WRTC_OPR = "WRTC";
+    private static final String RDI_OPR = "RDI";
+    private static final String RDC_OPR = "RDC";
+
+    private static final String RTN_OPR = "RTN";
+    private static final String RETURN_OPR = "RETURN";
+
     private static final String SKIP_IF = "SKIPIF";
     private static final String SKIP_ELSE = "SKIPELSE";
     private static final String WHILE_BEGIN = "BEGIN";
@@ -950,6 +958,11 @@ public class PassTwo {
         }
 
         if (type.equalsIgnoreCase(KeyConst.INT.name()) || type.equalsIgnoreCase(KeyConst.CHAR.name())) {
+            if (type.equalsIgnoreCase(KeyConst.INT.name())) {
+                iCodeList.add(new ICode(useLabel(), WRTI_OPR, sar.getSarId(), "", "", "; Write int " + sar.getLexi().getName()));
+            } else {
+                iCodeList.add(new ICode(useLabel(), WRTC_OPR, sar.getSarId(), "", "", "; Write char " + sar.getLexi().getName()));
+            }
             return true;
         }
 
@@ -972,6 +985,11 @@ public class PassTwo {
         }
 
         if (type.equalsIgnoreCase(KeyConst.INT.name()) || type.equalsIgnoreCase(KeyConst.CHAR.name())) {
+            if (type.equalsIgnoreCase(KeyConst.INT.name())) {
+                iCodeList.add(new ICode(useLabel(), RDI_OPR, sar.getSarId(), "", "", "; Read int " + sar.getLexi().getName()));
+            } else {
+                iCodeList.add(new ICode(useLabel(), RDC_OPR, sar.getSarId(), "", "", "; Read char " + sar.getLexi().getName()));
+            }
             return true;
         }
 
@@ -982,7 +1000,7 @@ public class PassTwo {
     public boolean returnCheck() {
         String returnType;
         int lineNum;
-        SAR sar;
+        SAR sar = null;
 
         if (SAS.isEmpty()) {
             returnType = KeyConst.VOID.name();
@@ -1009,6 +1027,14 @@ public class PassTwo {
                     errorList += "Invalid return statement. method requires return type of '" + temp.getData().getType() + "'. Found type '" + returnType + "'. Line: " + lineNum + "\n";
                     return false;
                 }
+
+                if (returnType.equals(KeyConst.VOID.name())) {
+                    iCodeList.add(new ICode(useLabel(), RTN_OPR, "", "", "", "; return void"));
+                } else {
+                    assert sar != null;
+                    iCodeList.add(new ICode(useLabel(), RETURN_OPR, sar.getSarId(), "", "", "; return " + sar.getLexi().getName()));
+                }
+
                 return true;
             }
         }

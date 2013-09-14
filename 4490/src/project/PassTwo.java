@@ -468,7 +468,24 @@ public class PassTwo {
                     return false;
                 }
 
-                label = elseStack.pop();
+                if (label.isEmpty()) {
+                    label = elseStack.pop();
+                } else {
+                    String tempLabel = elseStack.pop();
+
+                    for (ICode item : iCodeList) {
+                        if (item.getArg1().equals(tempLabel)) {
+                            item.setArg1(label);
+                        }
+                        if (item.getArg2().equals(tempLabel)) {
+                            item.setArg2(label);
+                        }
+                        if(item.getLabel().equals(tempLabel)) {
+                            item.setLabel(label);
+                        }
+                    }
+
+                }
                 return true;
             }
 
@@ -482,7 +499,28 @@ public class PassTwo {
 
             int id = variableId++;
             whileStartStack.push(WHILE_BEGIN + id);
-            label = WHILE_BEGIN + id;
+            if (label.isEmpty()) {
+                label = WHILE_BEGIN + id;
+            } else {
+                String tempLabel = "";
+                if (!whileStartStack.isEmpty()) {
+                    tempLabel = whileStartStack.peek();
+                }
+
+                for (ICode item : iCodeList) {
+                    if (item.getArg1().equals(label)) {
+                        item.setArg1(tempLabel);
+                    }
+                    if (item.getArg2().equals(label)) {
+                        item.setArg2(tempLabel);
+                    }
+                    if(item.getLabel().equals(label)) {
+                        item.setLabel(tempLabel);
+                    }
+                }
+
+                label = tempLabel;
+            }
 
             lexicalAnalyzer.nextToken();
             if (!expression()) {

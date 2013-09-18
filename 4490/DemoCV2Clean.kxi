@@ -1,16 +1,14 @@
+
+class D {
+	public int f(int i, bool r){}
+}
+
 void main() {
-	int x;
-	int y;
-	int i;
+	D x;
+	int r;
+	int g;
+	int k;
+	int h;
 	
-	while(x < y) {
-		x = 1;
-		y = 4;
-		if(1 == 3)i = 5;
-	}
-	while(i != 3) {
-		i = 5;
-	}
-	
-	i = y;
+	x.f(k * 3, r < g);
 }

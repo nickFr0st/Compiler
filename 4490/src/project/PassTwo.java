@@ -43,6 +43,10 @@ public class PassTwo {
     private static final String RTN_OPR = "RTN";
     private static final String RETURN_OPR = "RETURN";
 
+    private static final String FRAME_OPR = "FRAME";
+    private static final String CALL_OPR = "CALL";
+    private static final String PEEK_OPR = "PEEK";
+
     private static final String SKIP_IF = "SKIPIF";
     private static final String SKIP_ELSE = "SKIPELSE";
     private static final String WHILE_BEGIN = "BEGIN";
@@ -1198,6 +1202,23 @@ public class PassTwo {
             id_sar.setType(type);
             id_sar.setSarId(values[1]);
             SAS.push(id_sar);
+
+            if (id_sar instanceof Function_SAR) {
+                iCodeList.add(new ICode(useLabel(), FRAME_OPR, id_sar.getSarId(), KeyConst.THIS.getKey(), "", ""));
+
+                for(SAR args :((Function_SAR)id_sar).getArguments().getArguments()) {
+                    iCodeList.add(new ICode(useLabel(), "PUSH", args.getSarId(), "", "", "; push " + args.getLexi().getName() + " on run-time stack"));
+                }
+                iCodeList.add(new ICode(useLabel(), CALL_OPR, id_sar.getSarId(), "", "", ""));
+
+                String itemKey = "T" + variableId;
+                symbolTable.put(itemKey, new Symbol(scope, itemKey, itemKey, values[2], new VariableData(type, values[3]), Compiler.ELEM_SIZE));
+
+                if ((!OS.isEmpty() && OS.peek().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) ||!lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                    iCodeList.add(new ICode(useLabel(), PEEK_OPR, itemKey, "", "", "; get value from method " + id_sar.getLexi().getName()));
+                }
+                variableId++;
+            }
             return true;
         }
 
@@ -1206,6 +1227,8 @@ public class PassTwo {
     }
 
     public boolean memberRefExists() {
+        boolean isMethod = false;
+
         SAR rhs = SAS.pop();
         SAR lhs = SAS.pop();
 
@@ -1240,6 +1263,7 @@ public class PassTwo {
                 }
 
                 if (temp.getData() instanceof MethodData) {
+                    isMethod = true;
                     ((Function_SAR) rhs).getFunction().setType(temp.getData().getType());
 
                     if (((Function_SAR) rhs).getArguments().getArguments().size() > ((MethodData) temp.getData()).getParameters().size()) {
@@ -1254,7 +1278,7 @@ public class PassTwo {
                     int index = ((Function_SAR) rhs).getArguments().getArguments().size() - 1;
 
                     for (String type : ((MethodData) temp.getData()).getParameters()) {
-                        if (!args.get(index).getType().equals(type)) {
+                        if (!args.get(index).getType().equalsIgnoreCase(type)) {
                             errorList += "invalid argument type. expected: " + type + " but was: " + args.get(index).getType() + " Line: " + rhs.getLexi().getLineNum() + "\n";
                             return false;
                         }
@@ -1268,7 +1292,21 @@ public class PassTwo {
 
                 symbolTable.put(itemKey, new Symbol(scope, itemKey, itemKey, temp.getKind(), temp.getData(), Compiler.ELEM_SIZE));
                 SAS.push(tempItem);
-                iCodeList.add(new ICode(useLabel(), REF_OPR, lhs.getSarId(), temp.getSymId(), tempItem.getSarId(), ""));
+
+                if (isMethod) {
+                    iCodeList.add(new ICode(useLabel(), FRAME_OPR, temp.getSymId(), lhs.getSarId(), tempItem.getSarId(), ""));
+                    for(SAR args :((Function_SAR)rhs).getArguments().getArguments()) {
+                        iCodeList.add(new ICode(useLabel(), "PUSH", args.getSarId(), "", "", "; push " + args.getLexi().getName() + " on run-time stack"));
+                    }
+
+                    iCodeList.add(new ICode(useLabel(), CALL_OPR, lhs.getSarId(), "", "", ""));
+                    if ((!OS.isEmpty() && OS.peek().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) || !lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                        iCodeList.add(new ICode(useLabel(), PEEK_OPR, itemKey, "", "", "; get value from method " + temp.getValue()));
+                    }
+
+                } else {
+                    iCodeList.add(new ICode(useLabel(), REF_OPR, lhs.getSarId(), temp.getSymId(), tempItem.getSarId(), ""));
+                }
                 variableId++;
                 return true;
             }
@@ -1327,7 +1365,7 @@ public class PassTwo {
                 }
 
                 if (sar.getScope().contains(temp.getScope()) && temp.getValue().equals(sar.getLexi().getName())) {
-                    return new String[] {temp.getData().getType(), temp.getSymId()};
+                    return new String[] {temp.getData().getType(), temp.getSymId(), temp.getKind(), temp.getData().getAccessMod()};
                 }
             }
             searchScope = decrementScope(searchScope);
@@ -1441,7 +1479,7 @@ public class PassTwo {
                     int index = parameters.getArguments().size() - 1;
 
                     for (String params : ((MethodData) temp.getData()).getParameters()) {
-                        if (!args.get(index).getType().equals(params)) {
+                        if (!args.get(index).getType().equalsIgnoreCase(params)) {
                             errorList += "invalid argument type. expected: " + params + " but was: " + args.get(index).getType() + " Line: " + type.getLexi().getLineNum() + "\n";
                             return false;
                         }

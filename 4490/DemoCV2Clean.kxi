@@ -3,5 +3,5 @@ void main() {
 	int r;
 	int c[];
 	
-	x = c[r];
+	c[r+3] = c[r-5];
 }

@@ -1225,7 +1225,27 @@ public class PassTwo {
             id_sar.setSarId(values[1]);
             SAS.push(id_sar);
 
-            if (id_sar instanceof Function_SAR) {
+            if (id_sar instanceof Array_SAR) {
+                ((Array_SAR)id_sar).getArray().setType(type);
+                ((Array_SAR)id_sar).getArray().setSarId(values[1]);
+
+                Identifier_SAR arrayName = ((Array_SAR)id_sar).getArray();
+                SAR indexName = ((Array_SAR)id_sar).getValue();
+                String tempType = arrayName.getType().substring(arrayName.getType().indexOf(":") + 1, arrayName.getType().length());
+                String tempKey = "T" + variableId;
+
+                symbolTable.put(tempKey, new Symbol(scope, tempKey, tempKey, Compiler.VARIABLE, new VariableData(tempType, KeyConst.PRIVATE.getKey()), Compiler.ELEM_SIZE));
+
+                Identifier_SAR tempSAR = new Identifier_SAR(scope, new Tuple(tempKey, tempType, id_sar.getLexi().getLineNum()), tempType);
+                tempSAR.setSarId(tempKey);
+
+                iCodeList.add(new ICode(useLabel(), ADD_OPR, arrayName.getSarId(), indexName.getSarId(), tempKey, "; base address + " + indexName.getLexi().getName()));
+                variableId++;
+
+                SAS.pop();
+                SAS.push(tempSAR);
+
+            } else if (id_sar instanceof Function_SAR) {
                 iCodeList.add(new ICode(useLabel(), FRAME_OPR, id_sar.getSarId(), KeyConst.THIS.getKey(), "", ""));
 
                 for(SAR args :((Function_SAR)id_sar).getArguments().getArguments()) {

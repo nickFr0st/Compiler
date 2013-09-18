@@ -52,6 +52,7 @@ public class PassTwo {
     private static final String WHILE_BEGIN = "BEGIN";
     private static final String END_WHILE = "ENDWHILE";
 
+    private static final String START_HERE = "STARTHERE";
 
     private String scope = "g.";
     private String label = "";
@@ -743,6 +744,8 @@ public class PassTwo {
             return false;
         }
 
+        iCodeList.add(new ICode(useLabel(), RTN_OPR, "", "", "", ""));
+
         decrementScope();
         return true;
     }
@@ -773,6 +776,8 @@ public class PassTwo {
             if (!method_body()) {
                 return false;
             }
+
+            iCodeList.add(new ICode(useLabel(), RTN_OPR, "", "", "", ""));
 
             decrementScope();
             return true;
@@ -905,10 +910,27 @@ public class PassTwo {
         lexicalAnalyzer.nextToken();
         incrementScope("main", true);
 
+        String mainKey = "";
+        String searchScope = "g.";
+        for (String key : symbolTable.keySet()) {
+            Symbol temp = symbolTable.get(key);
+
+            if (temp.getScope().equals(searchScope) && temp.getValue().equals("main") && temp.getKind().equals("method")) {
+                mainKey = temp.getSymId();
+                break;
+            }
+        }
+
+        label = START_HERE;
+        iCodeList.add(new ICode(useLabel(), FRAME_OPR, mainKey, KeyConst.THIS.getKey(), "", ""));
+        iCodeList.add(new ICode(useLabel(), CALL_OPR, mainKey, "", "", "; call method 'main'"));
+
         // at this point we have declared classes and "void main()"
         if (!method_body()) {
             return false;
         }
+
+        iCodeList.add(new ICode(useLabel(), RTN_OPR, "", "", "", "; Return from method 'main'"));
 
         decrementScope();
         return true;

@@ -1,14 +1,7 @@
-
-class D {
-	public int f(int i, bool r){}
-}
-
 void main() {
-	D x;
+	int x;
 	int r;
-	int g;
-	int k;
-	int h;
+	int c[];
 	
-	x.f(k * 3, r < g);
+	x = c[r];
 }

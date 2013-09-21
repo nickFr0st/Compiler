@@ -46,13 +46,17 @@ public class PassTwo {
     private static final String FRAME_OPR = "FRAME";
     private static final String CALL_OPR = "CALL";
     private static final String PEEK_OPR = "PEEK";
+    private static final String PUSH_OPR = "PUSH";
 
     private static final String SKIP_IF = "SKIPIF";
     private static final String SKIP_ELSE = "SKIPELSE";
     private static final String WHILE_BEGIN = "BEGIN";
     private static final String END_WHILE = "ENDWHILE";
 
-    private static final String START_HERE = "STARTHERE";
+    private static final String NEWI_OPR = "NEWI";
+    private static final String NEW_OPR = "NEW";
+
+    private String startHere = "STARTHERE";
 
     private String scope = "g.";
     private String label = "";
@@ -74,6 +78,7 @@ public class PassTwo {
         this.symbolTable = symbolTable;
         this.lexicalAnalyzer = lexicalAnalyzer;
         this.variableId = variableId;
+        startHere += this.variableId++;
     }
 
     public void evaluate() {
@@ -921,7 +926,7 @@ public class PassTwo {
             }
         }
 
-        label = START_HERE;
+        label = startHere;
         iCodeList.add(new ICode(useLabel(), FRAME_OPR, mainKey, KeyConst.THIS.getKey(), "", ""));
         iCodeList.add(new ICode(useLabel(), CALL_OPR, mainKey, "", "", "; call method 'main'"));
 
@@ -1249,7 +1254,7 @@ public class PassTwo {
                 iCodeList.add(new ICode(useLabel(), FRAME_OPR, id_sar.getSarId(), KeyConst.THIS.getKey(), "", ""));
 
                 for(SAR args :((Function_SAR)id_sar).getArguments().getArguments()) {
-                    iCodeList.add(new ICode(useLabel(), "PUSH", args.getSarId(), "", "", "; push " + args.getLexi().getName() + " on run-time stack"));
+                    iCodeList.add(new ICode(useLabel(), PUSH_OPR, args.getSarId(), "", "", "; push " + args.getLexi().getName() + " on run-time stack"));
                 }
                 iCodeList.add(new ICode(useLabel(), CALL_OPR, id_sar.getSarId(), "", "", ""));
 
@@ -1338,7 +1343,7 @@ public class PassTwo {
                 if (isMethod) {
                     iCodeList.add(new ICode(useLabel(), FRAME_OPR, temp.getSymId(), lhs.getSarId(), tempItem.getSarId(), ""));
                     for(SAR args :((Function_SAR)rhs).getArguments().getArguments()) {
-                        iCodeList.add(new ICode(useLabel(), "PUSH", args.getSarId(), "", "", "; push " + args.getLexi().getName() + " on run-time stack"));
+                        iCodeList.add(new ICode(useLabel(), PUSH_OPR, args.getSarId(), "", "", "; push " + args.getLexi().getName() + " on run-time stack"));
                     }
 
                     iCodeList.add(new ICode(useLabel(), CALL_OPR, lhs.getSarId(), "", "", ""));
@@ -1488,7 +1493,16 @@ public class PassTwo {
         sarList.add(element);
         EAL_SAR eal_sar = new EAL_SAR(sarList);
 
-        SAS.push(new New_SAR(element.getScope(), new Tuple(), "@:" + type.getName(), type, eal_sar));
+        String key = "T" + variableId;
+        Integer arrSize = Integer.parseInt(element.getLexi().getName());
+        Symbol arrSymbol = new Symbol(scope, key, key, Compiler.VARIABLE, new VariableData("@:" + type.getName(), KeyConst.PRIVATE.getKey()), arrSize);
+        symbolTable.put(key, arrSymbol);
+        variableId++;
+
+        Tuple arrTuple = new Tuple(arrSymbol.getValue(), arrSymbol.getData().getType(), type.getLexi().getLineNum());
+        iCodeList.add(new ICode(useLabel(), NEW_OPR, arrSize.toString(), arrSymbol.getSymId(), "", ""));
+
+        SAS.push(new New_SAR(arrTuple, scope, key, arrSymbol.getData().getType(), type, eal_sar));
         return true;
     }
 
@@ -1528,7 +1542,46 @@ public class PassTwo {
                         index--;
                     }
                 }
-                SAS.push(new New_SAR(type.getScope(), type.getLexi(), type.getType(), type, parameters));
+
+                List<String> argsList = new ArrayList<String>();
+                for (SAR args : parameters.getArguments()) {
+                    argsList.add(args.getSarId());
+                }
+
+                String tempSym = "T" + variableId;
+                Symbol retValue = new Symbol(scope, tempSym, tempSym, Compiler.CLASS, new MethodData(KeyConst.PRIVATE.getKey(), argsList, type.getName()), Compiler.ELEM_SIZE);
+                symbolTable.put(tempSym, retValue);
+                variableId++;
+                Tuple newObj = new Tuple(type.getName(), type.getName(), type.getLexi().getLineNum());
+
+                type.setSarId(temp.getSymId());
+                SAS.push(new New_SAR(newObj, scope, retValue.getSymId(), retValue.getData().getType(), type, parameters));
+
+                Integer objSize = 0;
+                for (String key2 : symbolTable.keySet()) {
+                    Symbol objTemp = symbolTable.get(key2);
+
+                    if (objTemp.getScope().contains(constructorScope)) {
+                        objSize += objTemp.getSize();
+                    }
+                }
+                temp.setSize(objSize);
+
+                String symId = "L" + variableId;
+                Symbol sizeSymbol = new Symbol(scope, symId, objSize.toString(), Compiler.LITERAL, new VariableData(KeyConst.INT.getKey(), KeyConst.PRIVATE.getKey()), Compiler.ELEM_SIZE);
+                symbolTable.put(symId, sizeSymbol);
+                variableId++;
+
+                iCodeList.add(new ICode(useLabel(), NEWI_OPR, objSize.toString(), sizeSymbol.getSymId(), "", "; allocate space for object '" + temp.getValue() + "'"));
+                iCodeList.add(new ICode(useLabel(), FRAME_OPR, type.getSarId(), sizeSymbol.getSymId(), "", ""));
+
+                for (SAR args : parameters.getArguments()) {
+                    iCodeList.add(new ICode(useLabel(), PUSH_OPR, args.getSarId(), "", "", ""));
+                    argsList.add(args.getSarId());
+                }
+
+                iCodeList.add(new ICode(useLabel(), CALL_OPR, type.getSarId(), "", "", ""));
+                iCodeList.add(new ICode(useLabel(), PEEK_OPR, tempSym, "", "", ""));
                 return true;
             }
         }

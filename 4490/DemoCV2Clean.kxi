@@ -1,7 +1,11 @@
+class Cat{
+	public int p;
+	private char k = 'f';
+	private int k[] = new int[15];
+	Cat(int i, int j){}
+}
+
 void main() {
 	int x;
-	int r;
-	int c[];
-	
-	c[r+3] = c[r-5];
+	Cat k = new Cat(7, x);
 }

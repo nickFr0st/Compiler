@@ -10,8 +10,9 @@ public class New_SAR extends SAR {
     private Type_SAR classObj;
     private EAL_SAR arguments;
 
-    public New_SAR(String scope, Tuple lexi, String type, Type_SAR classObj, EAL_SAR arguments) {
-        super(scope, lexi, type);
+
+    public New_SAR(Tuple lexi, String scope, String sarId, String type, Type_SAR classObj, EAL_SAR arguments) {
+        super(lexi, scope, sarId, type);
         this.classObj = classObj;
         this.arguments = arguments;
     }

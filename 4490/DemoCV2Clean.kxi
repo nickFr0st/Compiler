@@ -1,11 +1,4 @@
-class Cat{
-	public int p;
-	private char k = 'f';
-	private int k[] = new int[15];
-	Cat(int i, int j){}
-}
-
 void main() {
-	int x;
-	Cat k = new Cat(7, x);
+	int x = 1;
+	cout << x;
 }

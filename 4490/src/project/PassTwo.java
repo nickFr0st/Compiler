@@ -55,6 +55,7 @@ public class PassTwo {
 
     private static final String NEWI_OPR = "NEWI";
     private static final String NEW_OPR = "NEW";
+    private static final String CREATE_OPR = "CREATE";
 
     private String startHere = "STARTHERE";
 
@@ -88,6 +89,9 @@ public class PassTwo {
             System.exit(0);
         }
         System.out.println("Semantic Analysis Successful!");
+
+        TCode tCode = new TCode(symbolTable, iCodeList);
+        tCode.buildCode();
     }
 
     private boolean new_declaration() {
@@ -632,6 +636,7 @@ public class PassTwo {
     public boolean variable_declaration() {
         // check format: type identifier ["[" "]"] ["=" assignment_expression ] ";"
         boolean variableHasBeenAdded = false;
+        Variable_SAR variableSar = null;
 
         typePush(new Type_SAR(lexicalAnalyzer.getToken(), scope));
         if (!typeExists()) {
@@ -646,13 +651,29 @@ public class PassTwo {
         lexicalAnalyzer.nextToken();
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
             lexicalAnalyzer.nextToken();
-            variablePush(new Variable_SAR(variable, scope, "V" + variableId++, "@:" + type));
+            variableSar = new Variable_SAR(variable, scope, "V" + variableId++, "@:" + type);
+            variablePush(variableSar);
             variableHasBeenAdded = true;
             lexicalAnalyzer.nextToken();
         }
 
         if (!variableHasBeenAdded) {
-            variablePush(new Variable_SAR(variable, scope, "V" + variableId++, type));
+            variableSar = new Variable_SAR(variable, scope, "V" + variableId++, type);
+            variablePush(variableSar);
+        }
+
+        String[] values = isInSymbolTable(variableSar);
+        if (values == null) {
+            errorList += "there is an error in class 'PassTwo' line: 665.\n";
+            return false;
+        }
+
+        SAS.peek().setSarId(values[1]);
+
+        if (values[0].equalsIgnoreCase(KeyConst.INT.getKey())) {
+            iCodeList.add(new ICode(values[1], CREATE_OPR, ".INT", "", "", ""));
+        } else {
+            iCodeList.add(new ICode(values[1], CREATE_OPR, ".BYT", "", "", ""));
         }
 
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {

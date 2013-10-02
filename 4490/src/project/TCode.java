@@ -63,7 +63,7 @@ public class TCode {
 
             if (s.getSymId().startsWith("L") && Character.isDigit(s.getSymId().toCharArray()[1])) {
                 if (s.getData() instanceof VariableData) {
-                    if (((VariableData) s.getData()).getType().equals("int")) {
+                    if ((s.getData()).getType().equals("int")) {
                         tCode.add(s.getSymId() + " .INT " + s.getValue().substring(1, s.getValue().length()));
                     } else {
                         if (s.getValue().equals("\'\\n\'"))
@@ -78,7 +78,7 @@ public class TCode {
         for (ICode iCode : iCodeList) {
             if (iCode.getOperation().equals("CREATE") && !iCode.getLabel().startsWith("L")) {
                 if (symbolTable.get(iCode.getLabel()).getData() instanceof VariableData) {
-                    if (((VariableData) symbolTable.get(iCode.getLabel()).getData()).getType().equals("int")) {
+                    if ((symbolTable.get(iCode.getLabel()).getData()).getType().equals("int")) {
                         tCode.add(iCode.getLabel() + " " + iCode.getArg1() + " " + "0" + " " + iCode.getComment());
                     } else {
                         tCode.add(iCode.getLabel() + " " + iCode.getArg1() + " " + "\'0\'" + " " + iCode.getComment());

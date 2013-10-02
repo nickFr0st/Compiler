@@ -12,50 +12,6 @@ import java.util.Stack;
  * Time: 10:30 AM
  */
 public class PassTwo {
-    private static final String MOV_OPR = "MOV";
-
-    private static final String REF_OPR = "REF";
-
-    private static final String ADD_OPR = "ADD";
-    private static final String ADI_OPR = "ADI";
-    private static final String SUB_OPR = "SUB";
-    private static final String MUL_OPR = "MUL";
-    private static final String DIV_OPR = "DIV";
-
-    private static final String LT_OPR = "LT";
-    private static final String GT_OPR = "GT";
-    private static final String NE_OPR = "NE";
-    private static final String EQ_OPR = "EQ";
-    private static final String LE_OPR = "LE";
-    private static final String GE_OPR = "GE";
-
-    private static final String AND_OPR = "AND";
-    private static final String OR_OPR = "OR";
-
-    private static final String BF_OPR = "BF";
-    private static final String JMP_OPR = "JMP";
-
-    private static final String WRTI_OPR = "WRTI";
-    private static final String WRTC_OPR = "WRTC";
-    private static final String RDI_OPR = "RDI";
-    private static final String RDC_OPR = "RDC";
-
-    private static final String RTN_OPR = "RTN";
-    private static final String RETURN_OPR = "RETURN";
-
-    private static final String FRAME_OPR = "FRAME";
-    private static final String CALL_OPR = "CALL";
-    private static final String PEEK_OPR = "PEEK";
-    private static final String PUSH_OPR = "PUSH";
-
-    private static final String SKIP_IF = "SKIPIF";
-    private static final String SKIP_ELSE = "SKIPELSE";
-    private static final String WHILE_BEGIN = "BEGIN";
-    private static final String END_WHILE = "ENDWHILE";
-
-    private static final String NEWI_OPR = "NEWI";
-    private static final String NEW_OPR = "NEW";
-    private static final String CREATE_OPR = "CREATE";
 
     private String startHere = "STARTHERE";
 
@@ -90,7 +46,7 @@ public class PassTwo {
         }
         System.out.println("Semantic Analysis Successful!");
 
-        TCode tCode = new TCode(symbolTable, iCodeList);
+        TCode tCode = new TCode(symbolTable, iCodeList, startHere);
         tCode.buildCode();
     }
 
@@ -474,8 +430,8 @@ public class PassTwo {
                 lexicalAnalyzer.nextToken();
                 lexicalAnalyzer.nextToken();
 
-                iCodeList.add(new ICode(useLabel(), JMP_OPR, SKIP_ELSE + variableId, "", "", ""));
-                elseStack.push(SKIP_ELSE + variableId++);
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.JMP_OPR.getKey(), ICodeOprConst.SKIP_ELSE.getKey() + variableId, "", "", ""));
+                elseStack.push(ICodeOprConst.SKIP_ELSE.getKey() + variableId++);
 
                 label = ifStack.pop();
                 if (!statement()) {
@@ -512,9 +468,9 @@ public class PassTwo {
             operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
 
             int id = variableId++;
-            whileStartStack.push(WHILE_BEGIN + id);
+            whileStartStack.push(ICodeOprConst.WHILE_BEGIN.getKey() + id);
             if (label.isEmpty()) {
-                label = WHILE_BEGIN + id;
+                label = ICodeOprConst.WHILE_BEGIN.getKey() + id;
             } else {
                 String tempLabel = "";
                 if (!whileStartStack.isEmpty()) {
@@ -555,7 +511,7 @@ public class PassTwo {
                 return false;
             }
 
-            iCodeList.add(new ICode(useLabel(), JMP_OPR, whileStartStack.pop(), "", "", ""));
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.JMP_OPR.getKey(), whileStartStack.pop(), "", "", ""));
             label = whileEndStack.pop();
             return true;
 
@@ -671,9 +627,9 @@ public class PassTwo {
         SAS.peek().setSarId(values[1]);
 
         if (values[0].equalsIgnoreCase(KeyConst.INT.getKey())) {
-            iCodeList.add(new ICode(values[1], CREATE_OPR, ".INT", "", "", ""));
+            iCodeList.add(new ICode(values[1], ICodeOprConst.CREATE_OPR.getKey(), ".INT", "", "", ""));
         } else {
-            iCodeList.add(new ICode(values[1], CREATE_OPR, ".BYT", "", "", ""));
+            iCodeList.add(new ICode(values[1], ICodeOprConst.CREATE_OPR.getKey(), ".BYT", "", "", ""));
         }
 
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) {
@@ -770,7 +726,7 @@ public class PassTwo {
             return false;
         }
 
-        iCodeList.add(new ICode(useLabel(), RTN_OPR, "", "", "", ""));
+        iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", ""));
 
         decrementScope();
         return true;
@@ -803,7 +759,7 @@ public class PassTwo {
                 return false;
             }
 
-            iCodeList.add(new ICode(useLabel(), RTN_OPR, "", "", "", ""));
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", ""));
 
             decrementScope();
             return true;
@@ -948,15 +904,15 @@ public class PassTwo {
         }
 
         label = startHere;
-        iCodeList.add(new ICode(useLabel(), FRAME_OPR, mainKey, KeyConst.THIS.getKey(), "", ""));
-        iCodeList.add(new ICode(useLabel(), CALL_OPR, mainKey, "", "", "; call method 'main'"));
+        iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), mainKey, KeyConst.THIS.getKey(), "", ""));
+        iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), mainKey, "", "", "; call method 'main'"));
 
         // at this point we have declared classes and "void main()"
         if (!method_body()) {
             return false;
         }
 
-        iCodeList.add(new ICode(useLabel(), RTN_OPR, "", "", "", "; Return from method 'main'"));
+        iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; Return from method 'main'"));
 
         decrementScope();
         return true;
@@ -1049,9 +1005,9 @@ public class PassTwo {
 
         if (type.equalsIgnoreCase(KeyConst.INT.name()) || type.equalsIgnoreCase(KeyConst.CHAR.name())) {
             if (type.equalsIgnoreCase(KeyConst.INT.name())) {
-                iCodeList.add(new ICode(useLabel(), WRTI_OPR, sar.getSarId(), "", "", "; Write int " + sar.getLexi().getName()));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.WRTI_OPR.getKey(), sar.getSarId(), "", "", "; Write int " + sar.getLexi().getName()));
             } else {
-                iCodeList.add(new ICode(useLabel(), WRTC_OPR, sar.getSarId(), "", "", "; Write char " + sar.getLexi().getName()));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.WRTC_OPR.getKey(), sar.getSarId(), "", "", "; Write char " + sar.getLexi().getName()));
             }
             return true;
         }
@@ -1076,9 +1032,9 @@ public class PassTwo {
 
         if (type.equalsIgnoreCase(KeyConst.INT.name()) || type.equalsIgnoreCase(KeyConst.CHAR.name())) {
             if (type.equalsIgnoreCase(KeyConst.INT.name())) {
-                iCodeList.add(new ICode(useLabel(), RDI_OPR, sar.getSarId(), "", "", "; Read int " + sar.getLexi().getName()));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.RDI_OPR.getKey(), sar.getSarId(), "", "", "; Read int " + sar.getLexi().getName()));
             } else {
-                iCodeList.add(new ICode(useLabel(), RDC_OPR, sar.getSarId(), "", "", "; Read char " + sar.getLexi().getName()));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.RDC_OPR.getKey(), sar.getSarId(), "", "", "; Read char " + sar.getLexi().getName()));
             }
             return true;
         }
@@ -1119,10 +1075,10 @@ public class PassTwo {
                 }
 
                 if (returnType.equals(KeyConst.VOID.name())) {
-                    iCodeList.add(new ICode(useLabel(), RTN_OPR, "", "", "", "; return void"));
+                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; return void"));
                 } else {
                     assert sar != null;
-                    iCodeList.add(new ICode(useLabel(), RETURN_OPR, sar.getSarId(), "", "", "; return " + sar.getLexi().getName()));
+                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.RETURN_OPR.getKey(), sar.getSarId(), "", "", "; return " + sar.getLexi().getName()));
                 }
 
                 return true;
@@ -1140,8 +1096,8 @@ public class PassTwo {
             return false;
         }
 
-        iCodeList.add(new ICode(useLabel(), BF_OPR, sar.getSarId(), SKIP_IF + variableId, "", "; BranchFalse " + sar.getSarId() + ", " + SKIP_IF + variableId ));
-        ifStack.push(SKIP_IF + variableId++);
+        iCodeList.add(new ICode(useLabel(), ICodeOprConst.BF_OPR.getKey(), sar.getSarId(), ICodeOprConst.SKIP_IF.getKey() + variableId, "", "; BranchFalse " + sar.getSarId() + ", " + ICodeOprConst.SKIP_IF.getKey() + variableId ));
+        ifStack.push(ICodeOprConst.SKIP_IF.getKey() + variableId++);
         return true;
     }
 
@@ -1151,8 +1107,8 @@ public class PassTwo {
             errorList += "the expression in the 'while' statement must evaluate to a type bool. Line: " + sar.getLexi().getLineNum() + "\n";
             return false;
         }
-        iCodeList.add(new ICode(useLabel(), BF_OPR, sar.getSarId(), END_WHILE + id, "", "; BranchFalse " + sar.getSarId() + ", " + END_WHILE + id));
-        whileEndStack.push(END_WHILE + id);
+        iCodeList.add(new ICode(useLabel(), ICodeOprConst.BF_OPR.getKey(), sar.getSarId(), ICodeOprConst.END_WHILE.getKey() + id, "", "; BranchFalse " + sar.getSarId() + ", " + ICodeOprConst.END_WHILE.getKey() + id));
+        whileEndStack.push(ICodeOprConst.END_WHILE.getKey() + id);
         return true;
     }
 
@@ -1265,25 +1221,25 @@ public class PassTwo {
                 Identifier_SAR tempSAR = new Identifier_SAR(scope, new Tuple(tempKey, tempType, id_sar.getLexi().getLineNum()), tempType);
                 tempSAR.setSarId(tempKey);
 
-                iCodeList.add(new ICode(useLabel(), ADD_OPR, arrayName.getSarId(), indexName.getSarId(), tempKey, "; base address + " + indexName.getLexi().getName()));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.ADD_OPR.getKey(), arrayName.getSarId(), indexName.getSarId(), tempKey, "; base address + " + indexName.getLexi().getName()));
                 variableId++;
 
                 SAS.pop();
                 SAS.push(tempSAR);
 
             } else if (id_sar instanceof Function_SAR) {
-                iCodeList.add(new ICode(useLabel(), FRAME_OPR, id_sar.getSarId(), KeyConst.THIS.getKey(), "", ""));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), id_sar.getSarId(), KeyConst.THIS.getKey(), "", ""));
 
                 for(SAR args :((Function_SAR)id_sar).getArguments().getArguments()) {
-                    iCodeList.add(new ICode(useLabel(), PUSH_OPR, args.getSarId(), "", "", "; push " + args.getLexi().getName() + " on run-time stack"));
+                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.PUSH_OPR.getKey(), args.getSarId(), "", "", "; push " + args.getLexi().getName() + " on run-time stack"));
                 }
-                iCodeList.add(new ICode(useLabel(), CALL_OPR, id_sar.getSarId(), "", "", ""));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), id_sar.getSarId(), "", "", ""));
 
                 String itemKey = "T" + variableId;
                 symbolTable.put(itemKey, new Symbol(scope, itemKey, itemKey, values[2], new VariableData(type, values[3]), Compiler.ELEM_SIZE));
 
                 if ((!OS.isEmpty() && OS.peek().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) ||!lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                    iCodeList.add(new ICode(useLabel(), PEEK_OPR, itemKey, "", "", "; get value from method " + id_sar.getLexi().getName()));
+                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.PEEK_OPR.getKey(), itemKey, "", "", "; get value from method " + id_sar.getLexi().getName()));
                 }
                 variableId++;
             }
@@ -1362,18 +1318,18 @@ public class PassTwo {
                 SAS.push(tempItem);
 
                 if (isMethod) {
-                    iCodeList.add(new ICode(useLabel(), FRAME_OPR, temp.getSymId(), lhs.getSarId(), tempItem.getSarId(), ""));
+                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), temp.getSymId(), lhs.getSarId(), tempItem.getSarId(), ""));
                     for(SAR args :((Function_SAR)rhs).getArguments().getArguments()) {
-                        iCodeList.add(new ICode(useLabel(), PUSH_OPR, args.getSarId(), "", "", "; push " + args.getLexi().getName() + " on run-time stack"));
+                        iCodeList.add(new ICode(useLabel(), ICodeOprConst.PUSH_OPR.getKey(), args.getSarId(), "", "", "; push " + args.getLexi().getName() + " on run-time stack"));
                     }
 
-                    iCodeList.add(new ICode(useLabel(), CALL_OPR, lhs.getSarId(), "", "", ""));
+                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), lhs.getSarId(), "", "", ""));
                     if ((!OS.isEmpty() && OS.peek().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) || !lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
-                        iCodeList.add(new ICode(useLabel(), PEEK_OPR, itemKey, "", "", "; get value from method " + temp.getValue()));
+                        iCodeList.add(new ICode(useLabel(), ICodeOprConst.PEEK_OPR.getKey(), itemKey, "", "", "; get value from method " + temp.getValue()));
                     }
 
                 } else {
-                    iCodeList.add(new ICode(useLabel(), REF_OPR, lhs.getSarId(), temp.getSymId(), tempItem.getSarId(), ""));
+                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.REF_OPR.getKey(), lhs.getSarId(), temp.getSymId(), tempItem.getSarId(), ""));
                 }
                 variableId++;
                 return true;
@@ -1521,7 +1477,7 @@ public class PassTwo {
         variableId++;
 
         Tuple arrTuple = new Tuple(arrSymbol.getValue(), arrSymbol.getData().getType(), type.getLexi().getLineNum());
-        iCodeList.add(new ICode(useLabel(), NEW_OPR, arrSize.toString(), arrSymbol.getSymId(), "", ""));
+        iCodeList.add(new ICode(useLabel(), ICodeOprConst.NEW_OPR.getKey(), arrSize.toString(), arrSymbol.getSymId(), "", ""));
 
         SAS.push(new New_SAR(arrTuple, scope, key, arrSymbol.getData().getType(), type, eal_sar));
         return true;
@@ -1593,16 +1549,16 @@ public class PassTwo {
                 symbolTable.put(symId, sizeSymbol);
                 variableId++;
 
-                iCodeList.add(new ICode(useLabel(), NEWI_OPR, objSize.toString(), sizeSymbol.getSymId(), "", "; allocate space for object '" + temp.getValue() + "'"));
-                iCodeList.add(new ICode(useLabel(), FRAME_OPR, type.getSarId(), sizeSymbol.getSymId(), "", ""));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.NEWI_OPR.getKey(), objSize.toString(), sizeSymbol.getSymId(), "", "; allocate space for object '" + temp.getValue() + "'"));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), type.getSarId(), sizeSymbol.getSymId(), "", ""));
 
                 for (SAR args : parameters.getArguments()) {
-                    iCodeList.add(new ICode(useLabel(), PUSH_OPR, args.getSarId(), "", "", ""));
+                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.PUSH_OPR.getKey(), args.getSarId(), "", "", ""));
                     argsList.add(args.getSarId());
                 }
 
-                iCodeList.add(new ICode(useLabel(), CALL_OPR, type.getSarId(), "", "", ""));
-                iCodeList.add(new ICode(useLabel(), PEEK_OPR, tempSym, "", "", ""));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), type.getSarId(), "", "", ""));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.PEEK_OPR.getKey(), tempSym, "", "", ""));
                 return true;
             }
         }
@@ -1651,9 +1607,9 @@ public class PassTwo {
         variableId++;
 
         if (opr.equals("&&")) {
-            iCodeList.add(new ICode(useLabel(), AND_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " < " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.AND_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " < " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
         } else {
-            iCodeList.add(new ICode(useLabel(), OR_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " < " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.OR_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " < " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
         }
 
         return true;
@@ -1676,9 +1632,9 @@ public class PassTwo {
                 variableId++;
 
                 if (opr.equals("!=")) {
-                    iCodeList.add(new ICode(useLabel(), NE_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " != " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.NE_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " != " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
                 } else {
-                    iCodeList.add(new ICode(useLabel(), EQ_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " == " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.EQ_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " == " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
                 }
 
                 return true;
@@ -1715,17 +1671,17 @@ public class PassTwo {
         variableId++;
 
         if (opr.equals("<")) {
-            iCodeList.add(new ICode(useLabel(), LT_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " < " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.LT_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " < " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
         } else if (opr.equals(">")) {
-            iCodeList.add(new ICode(useLabel(), GT_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " > " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.GT_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " > " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
         } else if (opr.equals("<=")) {
-            iCodeList.add(new ICode(useLabel(), LE_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " <= " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.LE_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " <= " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
         } else if (opr.equals(">=")) {
-            iCodeList.add(new ICode(useLabel(), GE_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " >= " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.GE_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " >= " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
         } else if (opr.equals("!=")) {
-            iCodeList.add(new ICode(useLabel(), NE_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " != " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.NE_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " != " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
         } else if (opr.equals("==")) {
-            iCodeList.add(new ICode(useLabel(), EQ_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " == " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.EQ_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " == " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
         }
 
         return true;
@@ -1755,7 +1711,7 @@ public class PassTwo {
         if (lhs.getType().startsWith("@:") && !rhs.getType().startsWith("@:")) {
             String lType = lhs.getType().substring(lhs.getType().indexOf(":") + 1, lhs.getType().length());
             if (lType.equalsIgnoreCase(rhs.getType())) {
-                iCodeList.add(new ICode(useLabel(), MOV_OPR, lhs.getSarId(), rhs.getSarId(), "", "; " + lhs.getLexi().getName() + " = " + rhs.getLexi().getName()));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.MOV_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), "", "; " + lhs.getLexi().getName() + " = " + rhs.getLexi().getName()));
                 return true;
             } else {
                 errorList += "left and right hand sides of assignment operation are incompatible types. Line: " + lhs.getLexi().getLineNum() + "\n";
@@ -1766,7 +1722,7 @@ public class PassTwo {
         if (!lhs.getType().startsWith("@:") && rhs.getType().startsWith("@:")) {
             String rType = rhs.getType().substring(rhs.getType().indexOf(":") + 1, rhs.getType().length());
             if (rType.equalsIgnoreCase(lhs.getType())) {
-                iCodeList.add(new ICode(useLabel(), MOV_OPR, lhs.getSarId(), rhs.getSarId(), "", "; " + lhs.getLexi().getName() + " = " + rhs.getLexi().getName()));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.MOV_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), "", "; " + lhs.getLexi().getName() + " = " + rhs.getLexi().getName()));
                 return true;
             } else {
                 errorList += "left and right hand sides of assignment operation are incompatible types. Line: " + lhs.getLexi().getLineNum() + "\n";
@@ -1779,7 +1735,7 @@ public class PassTwo {
             return false;
         }
 
-        iCodeList.add(new ICode(useLabel(), MOV_OPR, lhs.getSarId(), rhs.getSarId(), "", "; " + lhs.getLexi().getName() + " = " + rhs.getLexi().getName()));
+        iCodeList.add(new ICode(useLabel(), ICodeOprConst.MOV_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), "", "; " + lhs.getLexi().getName() + " = " + rhs.getLexi().getName()));
         return true;
     }
 
@@ -1808,16 +1764,16 @@ public class PassTwo {
 
         if (opr.equals("+")) {
             if (rhs instanceof Literal_SAR) {
-                iCodeList.add(new ICode(useLabel(), ADI_OPR, lhs.getSarId(), rhs.getLexi().getName(), value.getSymId(), "; " + lhs.getLexi().getName() + " + " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.ADI_OPR.getKey(), lhs.getSarId(), rhs.getLexi().getName(), value.getSymId(), "; " + lhs.getLexi().getName() + " + " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
             } else {
-                iCodeList.add(new ICode(useLabel(), ADD_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " + " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.ADD_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " + " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
             }
         } else if (opr.equals("-")) {
-            iCodeList.add(new ICode(useLabel(), SUB_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " - " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.SUB_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " - " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
         } else if (opr.equals("*")) {
-            iCodeList.add(new ICode(useLabel(), MUL_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " * " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.MUL_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " * " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
         } else if (opr.equals("/")) {
-            iCodeList.add(new ICode(useLabel(), DIV_OPR, lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " / " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.DIV_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " / " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
         }
 
         return true;

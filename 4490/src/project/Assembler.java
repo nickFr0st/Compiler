@@ -71,6 +71,16 @@ public class Assembler {
         reg.put("8", "0");
         reg.put("9", "0");
         reg.put("10", "0");
+        reg.put("11", "0");
+        reg.put("12", "0");
+        reg.put("13", "0");
+        reg.put("14", "0");
+        reg.put("15", "0");
+        reg.put("16", "0");
+        reg.put("17", "0");
+        reg.put("18", "0");
+        reg.put("19", "0");
+        reg.put("20", "0");
     }
 
     private void loadOpcodes() {
@@ -277,7 +287,7 @@ public class Assembler {
                 return false;
             }
 
-            if (!lineInfo[1].matches("^R(\\d|10)$")) {
+            if (!isValidRegister(lineInfo[1])) {
                 System.out.println("Line " + counter + ": operand 1 must be a valid register");
                 return true;
             }
@@ -297,7 +307,7 @@ public class Assembler {
                 return false;
             }
 
-            if (!lineInfo[2].matches("^R(\\d|10)$")) {
+            if (!isValidRegister(lineInfo[2])) {
                 System.out.println("Line " + counter + ": operand 1 must be a valid register");
                 return true;
             }
@@ -317,7 +327,7 @@ public class Assembler {
 
     private boolean checkForJMRLayout(String[] lineInfo, int counter, List<Instruction> instructions) {
         if (lineInfo[0].equals("JMR")) {
-            if (!lineInfo[1].matches("^R(\\d|10)$")) {
+            if (!isValidRegister(lineInfo[1])) {
                 System.out.println("Line " + counter + ": operand 1 must be a valid register");
                 return true;
             }
@@ -328,7 +338,7 @@ public class Assembler {
 
             instructions.add(new Instruction(JMR, lineInfo[1].substring(1, lineInfo[1].length())));
         } else if (lineInfo[1].equals("JMR")) {
-            if (!lineInfo[2].matches("^R(\\d|10)$")) {
+            if (!isValidRegister(lineInfo[2])) {
                 System.out.println("Line " + counter + ": operand 1 must be a valid register");
                 return true;
             }
@@ -913,7 +923,7 @@ public class Assembler {
 
     private boolean checkForRegImmLabels(String[] lineInfo, int counter, List<Instruction> instructions) {
         if (lineInfo[0].equals("ADI")) {
-            if (!lineInfo[1].matches("^R(\\d|10)$")) {
+            if (!isValidRegister(lineInfo[1])) {
                 System.out.println("Line " + counter + ": operand 1 must be a valid register");
                 return true;
             }
@@ -923,7 +933,7 @@ public class Assembler {
             }
             instructions.add(new Instruction(ADI, lineInfo[1].substring(1, lineInfo[1].length()), lineInfo[2]));
         } else if (lineInfo[1].equals("ADI")) {
-            if (!lineInfo[2].matches("^R(\\d|10)$")) {
+            if (!isValidRegister(lineInfo[2])) {
                 System.out.println("Line " + counter + ": operand 1 must be a valid register");
                 return true;
             }
@@ -938,11 +948,11 @@ public class Assembler {
 
     private boolean checkForRegRegLabels(String[] lineInfo, int counter, List<Instruction> instructions) {
         if (lineInfo[0].equals("ADD") || lineInfo[0].equals("SUB") || lineInfo[0].equals("MUL") || lineInfo[0].equals("DIV") || lineInfo[0].equals("CMP") || lineInfo[0].equals("ADDI") || lineInfo[0].equals("MOV") || lineInfo[0].equals("STRI")) {
-            if (!lineInfo[1].matches("^R(\\d|10)$")) {
+            if (!isValidRegister(lineInfo[1])) {
                 System.out.println("Line " + counter + ": operand 1 must be a valid register");
                 return true;
             }
-            if (!lineInfo[2].matches("^R(\\d|10)$")) {
+            if (!isValidRegister(lineInfo[2])) {
                 System.out.println("Line " + counter + ": operand 2 must be a valid register");
                 return true;
             }
@@ -966,11 +976,11 @@ public class Assembler {
             }
 
         } else if (lineInfo[1].equals("ADD") || lineInfo[1].equals("SUB") || lineInfo[1].equals("MUL") || lineInfo[1].equals("DIV") || lineInfo[1].equals("CMP") || lineInfo[1].equals("ADDI") || lineInfo[1].equals("MOV") || lineInfo[1].equals("STRI")) {
-            if (!lineInfo[2].matches("^R(\\d|10)$")) {
+            if (!isValidRegister(lineInfo[2])) {
                 System.out.println("Line " + counter + ": operand 1 must be a valid register");
                 return true;
             }
-            if (!lineInfo[3].matches("^R(\\d|10)$")) {
+            if (!isValidRegister(lineInfo[3])) {
                 System.out.println("Line " + counter + ": operand 2 must be a valid register");
                 return true;
             }
@@ -999,7 +1009,7 @@ public class Assembler {
     private boolean checkForRegMemLabels(HashMap<String, Integer> symbolTable, String[] lineInfo, int counter, List<Instruction> instructions) {
         if (lineInfo[0].equals("LDR") || lineInfo[0].equals("LDA") || lineInfo[0].equals("BNZ") || lineInfo[0].equals("STR") || lineInfo[0].equals("BLT") || lineInfo[0].equals("BRZ") || lineInfo[0].equals("BGT")) {
 
-            if (!lineInfo[1].matches("^R(\\d|10)$")) {
+            if (!isValidRegister(lineInfo[1])) {
                 System.out.println("Line " + counter + ": operand 1 must be a valid register");
                 return true;
             }
@@ -1046,7 +1056,7 @@ public class Assembler {
 
         } else if (lineInfo[1].equals("LDR") || lineInfo[1].equals("LDA") || lineInfo[1].equals("BNZ") || lineInfo[1].equals("STR") || lineInfo[1].equals("BLT") || lineInfo[1].equals("BRZ") || lineInfo[1].equals("BGT")) {
 
-            if (!lineInfo[2].matches("^R(\\d|10)$")) {
+            if (!isValidRegister(lineInfo[2])) {
                 System.out.println("Line " + counter + ": operand 1 must be a valid register");
                 return true;
             }
@@ -1092,5 +1102,9 @@ public class Assembler {
             }
         }
         return false;
+    }
+
+    private boolean isValidRegister(String reg) {
+        return reg.matches("^R(\\d|20)$");
     }
 }

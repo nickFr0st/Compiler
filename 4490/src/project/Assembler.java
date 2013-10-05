@@ -1105,6 +1105,6 @@ public class Assembler {
     }
 
     private boolean isValidRegister(String reg) {
-        return reg.matches("^R(\\d|20)$");
+        return reg.matches("^R(0)*(1?\\d|20)$");
     }
 }

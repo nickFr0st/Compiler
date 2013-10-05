@@ -40,7 +40,9 @@ public enum ICodeOprConst {
     END_WHILE("ENDWHILE"),
     NEWI_OPR("NEWI"),
     NEW_OPR("NEW"),
-    CREATE_OPR("CREATE");
+    CREATE_OPR("CREATE"),
+    FUNC_OPR("FUNC"),
+    MOD_OPR("MOD");
 
     private String key;
 

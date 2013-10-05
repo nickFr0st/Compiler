@@ -894,6 +894,7 @@ public class PassTwo {
 
         String mainKey = "";
         String searchScope = "g.";
+
         for (String key : symbolTable.keySet()) {
             Symbol temp = symbolTable.get(key);
 
@@ -904,12 +905,30 @@ public class PassTwo {
         }
 
         label = startHere;
-        iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), mainKey, KeyConst.THIS.getKey(), "", ""));
-        iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), mainKey, "", "", "; call method 'main'"));
+        iCodeList.add(new ICode(useLabel(), ICodeOprConst.FUNC_OPR.getKey(), mainKey, KeyConst.THIS.getKey(), "", ""));
 
         // at this point we have declared classes and "void main()"
         if (!method_body()) {
             return false;
+        }
+
+        int mainSize = 0;
+
+        for (String key : symbolTable.keySet()) {
+            Symbol temp = symbolTable.get(key);
+
+            if (temp.getScope().contains(scope)) {
+                mainSize += temp.getSize() * -1;
+            }
+        }
+
+        for (String key : symbolTable.keySet()) {
+            Symbol temp = symbolTable.get(key);
+
+            if (temp.getScope().equals(searchScope) && temp.getValue().equals("main") && temp.getKind().equals("method")) {
+                temp.setSize(mainSize);
+                break;
+            }
         }
 
         iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; Return from method 'main'"));
@@ -1774,6 +1793,8 @@ public class PassTwo {
             iCodeList.add(new ICode(useLabel(), ICodeOprConst.MUL_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " * " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
         } else if (opr.equals("/")) {
             iCodeList.add(new ICode(useLabel(), ICodeOprConst.DIV_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " / " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
+        } else if (opr.equals("%")) {
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.MOD_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " % " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
         }
 
         return true;

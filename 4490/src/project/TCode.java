@@ -27,8 +27,8 @@ public class TCode {
     private String startLabel;
 
     private void initReg() {
-        reg.put("R0", "0");
-        reg.put("R1", "1");
+        reg.put("R0", "");
+        reg.put("R1", "");
         reg.put("R2", "");
         reg.put("R3", "");
         reg.put("R4", "");
@@ -44,10 +44,10 @@ public class TCode {
         reg.put("R14", "");
         reg.put("R15", "");
         reg.put("R16", "");
-        reg.put("R17", "");
-        reg.put("R18", "");
-        reg.put("R19", "");
-        reg.put("R20", "");
+        reg.put("R17", "0");
+        reg.put("R18", "0");
+        reg.put("R19", "0");
+        reg.put("R20", "0");
     }
 
     public TCode(LinkedHashMap<String, Symbol> symbolTable, List<ICode> iCodeList, String startLabel) {
@@ -109,14 +109,28 @@ public class TCode {
         tCode.add("");
         tCode.add(ICodeOprConst.JMP_OPR.getKey() + " " + startLabel + " ; program start");
         tCode.add("TRP 0 ; program end");
+        tCode.add(TCodeOprConst.OVERFLOW_LBL.getKey() + " TRP 0 ; overflow error");
+        tCode.add(TCodeOprConst.UNDERFLOW_LBL.getKey() + " TRP 0 ; overflow error");
         tCode.add("LDR R0 CLR");
         tCode.add("LDR R1 CLR");
 
         for (ICode iCode : iCodeList) {
-            if (iCode.getOperation().equals(ICodeOprConst.FRAME_OPR.getKey())) {
-                tCode.add(iCode.getLabel());
+            if (iCode.getOperation().equals(ICodeOprConst.FUNC_OPR.getKey())) {
+                String reg1 = getRegister(SP);
 
-            } else if (iCode.getOperation().equals("ADD")) {
+                Symbol method = symbolTable.get(iCode.getArg1());
+                if (iCode.getLabel().isEmpty()) {
+                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " " + method.getSize());
+                } else {
+                    tCode.add(iCode.getLabel() + " " + TCodeOprConst.ADI_OPR.getKey() + " " + SP + " " + method.getSize());
+                }
+
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg1 + " " + SP);
+                tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg1 + " " + SL);
+                tCode.add(TCodeOprConst.BLT_OPR.getKey() + " " + reg1 + " " + TCodeOprConst.OVERFLOW_LBL.getKey());
+                freeResource(reg1);
+
+            } else if (iCode.getOperation().equals(ICodeOprConst.ADD_OPR.getKey())) {
 
                 String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
@@ -133,7 +147,7 @@ public class TCode {
 
                 freeResource(argReg1);
                 freeResource(argReg2);
-            } else if (iCode.getOperation().equals("ADI")) {
+            } else if (iCode.getOperation().equals(ICodeOprConst.ADI_OPR.getKey())) {
                 // could merge with above
                 String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
@@ -150,7 +164,7 @@ public class TCode {
 
                 freeResource(argReg1);
                 freeResource(argReg2);
-            } else if (iCode.getOperation().equals("SUB")) {
+            } else if (iCode.getOperation().equals(ICodeOprConst.SUB_OPR.getKey())) {
 
                 String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
@@ -167,7 +181,7 @@ public class TCode {
 
                 freeResource(argReg1);
                 freeResource(argReg2);
-            } else if (iCode.getOperation().equals("MUL")) {
+            } else if (iCode.getOperation().equals(ICodeOprConst.MUL_OPR.getKey())) {
 
                 String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
@@ -184,7 +198,7 @@ public class TCode {
 
                 freeResource(argReg1);
                 freeResource(argReg2);
-            } else if (iCode.getOperation().equals("DIV")) {
+            } else if (iCode.getOperation().equals(ICodeOprConst.DIV_OPR.getKey())) {
 
                 String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
@@ -201,7 +215,7 @@ public class TCode {
 
                 freeResource(argReg1);
                 freeResource(argReg2);
-            } else if (iCode.getOperation().equals("MOD")) {
+            } else if (iCode.getOperation().equals(ICodeOprConst.MOD_OPR.getKey())) {
 
                 String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
@@ -223,6 +237,51 @@ public class TCode {
                 freeResource(argReg1);
                 freeResource(argReg2);
                 freeResource(argReg3);
+            } else if (iCode.getOperation().equals(ICodeOprConst.MOV_OPR.getKey())) {
+
+                String argReg1 = getRegister(iCode.getArg1());
+                String argReg2 = getRegister(iCode.getArg2());
+
+                if (iCode.getLabel().equals("")) {
+                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                } else {
+                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
+                }
+                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+
+                tCode.add("MOV " + argReg1 + " " + argReg2 + " " + iCode.getComment());
+                tCode.add("STR " + argReg1 + " " + iCode.getArg1());
+                freeResource(argReg1);
+                freeResource(argReg2);
+            } else if (iCode.getOperation().equals(ICodeOprConst.WRTI_OPR.getKey())) {
+
+                String argReg1 = getRegister(iCode.getArg1());
+                if (iCode.getLabel().equals("")) {
+                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                } else {
+                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
+                }
+                tCode.add("TRP 1 " + iCode.getComment());
+                freeResource(argReg1);
+            } else if (iCode.getOperation().equals(ICodeOprConst.RTN_OPR.getKey())) {
+
+                String argReg1 = getRegister(FP);
+                String argReg2 = getRegister(FP);
+
+                tCode.add("MOV " + SP + " " + FP);
+                tCode.add("MOV " + argReg1 + " " + FP);
+                tCode.add("CMP " + argReg1 + " " + SB);
+                tCode.add("BGT " + argReg1 + " " + TCodeOprConst.UNDERFLOW_LBL.getKey());
+
+                tCode.add("LDR " + argReg1 + " CLR");
+                tCode.add("ADDI " + argReg1 + " " + FP + " ; rtn addr");
+                tCode.add("MOV " + argReg2 + " " + FP);
+                tCode.add("ADI " + argReg2 + " " + -1);
+                tCode.add("ADDI " + FP + " " + argReg2 + " ; PFP -> FP");
+                tCode.add("JMR " + argReg1 + " ; GOTO rtn addr");
+
+                freeResource(argReg1);
+                freeResource(argReg2);
             }
 //            else if (iCode.getOperation().equals("EQ")) {
 //
@@ -278,10 +337,7 @@ public class TCode {
 //                continue;
 //            }
 
-//            if (iCode.getOperation().equals("RTN")) {
-//                tCode.add("JMP FINISH");
-//                continue;
-//            }
+//
 
 //            if (iCode.getOperation().equals("MOVI")) {
 //                String argReg1 = getRegister(iCode.getArg2());
@@ -295,43 +351,6 @@ public class TCode {
 //                }
 //
 //                tCode.add("STR " + argReg1 + " " + iCode.getArg1() + " " + iCode.getComment());
-//                freeResource(argReg1);
-//                continue;
-//            }
-
-//            if (iCode.getOperation().equals("MOV")) {
-//                String argReg1 = getRegister(iCode.getArg1());
-//                String argReg2 = getRegister(iCode.getArg2());
-//
-//                if (iCode.getLabel().equals("")) {
-//                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
-//                } else {
-//                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
-//                }
-//                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
-//
-//                tCode.add("MOV " + argReg1 + " " + argReg2 + " " + iCode.getComment());
-//                tCode.add("STR " + argReg1 + " " + iCode.getArg1());
-//                freeResource(argReg1);
-//                freeResource(argReg2);
-//            }
-
-//
-
-//
-
-//
-
-//
-
-//            if (iCode.getOperation().equals("WRTI")) {
-//                String argReg1 = getRegister(iCode.getArg1());
-//                if (iCode.getLabel().equals("")) {
-//                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
-//                } else {
-//                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
-//                }
-//                tCode.add("TRP 1 " + iCode.getComment());
 //                freeResource(argReg1);
 //                continue;
 //            }
@@ -376,8 +395,6 @@ public class TCode {
 //                freeResource(argReg1);
 //                continue;
 //            }
-
-//
 
 //            if (iCode.getOperation().equals("LT")) {
 //                String argReg1 = getRegister(iCode.getArg1());

@@ -13,10 +13,10 @@ import java.util.List;
  * Time: 5:30 PM
  */
 public class TCode {
-    private final static String SL = "R17";
-    private final static String SB = "R18";
-    private final static String FP = "R19";
-    private final static String SP = "R20";
+    private final static String SL = "R97";
+    private final static String SB = "R98";
+    private final static String FP = "R99";
+    private final static String SP = "R100";
 
     private LinkedHashMap<String, Symbol> symbolTable = new LinkedHashMap<String, Symbol>();
     private List<ICode> iCodeList = new ArrayList<ICode>();
@@ -27,27 +27,13 @@ public class TCode {
     private String startLabel;
 
     private void initReg() {
-        reg.put("R0", "");
-        reg.put("R1", "");
-        reg.put("R2", "");
-        reg.put("R3", "");
-        reg.put("R4", "");
-        reg.put("R5", "");
-        reg.put("R6", "");
-        reg.put("R7", "");
-        reg.put("R8", "");
-        reg.put("R9", "");
-        reg.put("R10", "");
-        reg.put("R11", "");
-        reg.put("R12", "");
-        reg.put("R13", "");
-        reg.put("R14", "");
-        reg.put("R15", "");
-        reg.put("R16", "");
-        reg.put("R17", "0");
-        reg.put("R18", "0");
-        reg.put("R19", "0");
-        reg.put("R20", "0");
+        for (int i = 0; i < 101; i++) {
+            if (i > 96) {
+                reg.put("R" + i, "0");
+            } else {
+                reg.put("R" + i, "");
+            }
+        }
     }
 
     public TCode(LinkedHashMap<String, Symbol> symbolTable, List<ICode> iCodeList, String startLabel) {

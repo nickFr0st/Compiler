@@ -60,27 +60,9 @@ public class Assembler {
         nameRegRegList.add("STRI");
     }
     private void preloadReg() {
-        reg.put("0", "0");
-        reg.put("1", "0");
-        reg.put("2", "0");
-        reg.put("3", "0");
-        reg.put("4", "0");
-        reg.put("5", "0");
-        reg.put("6", "0");
-        reg.put("7", "0");
-        reg.put("8", "0");
-        reg.put("9", "0");
-        reg.put("10", "0");
-        reg.put("11", "0");
-        reg.put("12", "0");
-        reg.put("13", "0");
-        reg.put("14", "0");
-        reg.put("15", "0");
-        reg.put("16", "0");
-        reg.put("17", "0");
-        reg.put("18", "0");
-        reg.put("19", "0");
-        reg.put("20", "0");
+        for (int i = 0; i < 101; i++) {
+            reg.put(Integer.toString(i), "0");
+        }
     }
 
     private void loadOpcodes() {
@@ -1105,6 +1087,6 @@ public class Assembler {
     }
 
     private boolean isValidRegister(String reg) {
-        return reg.matches("^R(0)*(1?\\d|20)$");
+        return reg.matches("^R(?:100|\\d{1,2})$");
     }
 }

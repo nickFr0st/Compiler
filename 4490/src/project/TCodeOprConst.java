@@ -17,6 +17,8 @@ public enum TCodeOprConst {
     OVERFLOW_LBL("OVERFLOW"),
     UNDERFLOW_LBL("UNDERFLOW"),
     CMP_OPR("CMP"),
+    LDR_OPR("LDR"),
+    JMP_OPR("JMP"),
     BLT_OPR("BLT");
 
     private String key;

@@ -244,7 +244,9 @@ public class PassTwo {
             }
 
             Literal_SAR literal = new Literal_SAR(lexicalAnalyzer.getToken(), type);
-            literal.setSarId(findLiteralId(lexicalAnalyzer.getToken().getName()));
+            String[] values = findLiteralId(lexicalAnalyzer.getToken().getName());
+            literal.setSarId(values[0]);
+            literal.setScope(values[1]);
             literalPush(literal);
             lexicalAnalyzer.nextToken();
 
@@ -284,12 +286,12 @@ public class PassTwo {
         return false;
     }
 
-    private String findLiteralId(String name) {
+    private String[] findLiteralId(String name) {
         for(String key : symbolTable.keySet()) {
             Symbol temp = symbolTable.get(key);
 
             if (temp.getValue().equals(name)) {
-                return temp.getSymId();
+                return new String[] {temp.getSymId(), temp.getScope()};
             }
         }
         return null;
@@ -1220,6 +1222,11 @@ public class PassTwo {
         SAR id_sar = SAS.pop();
 
         String values[] = isInSymbolTable(id_sar);
+        if (values == null) {
+            errorList += "Identifier does not exists. Line: " + id_sar.getLexi().getLineNum() + "\n";
+            return false;
+        }
+
         String type = values[0];
         if (type != null) {
             id_sar.setType(type);

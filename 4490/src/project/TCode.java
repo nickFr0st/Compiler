@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,9 +23,9 @@ public class TCode {
     private List<ICode> iCodeList = new ArrayList<ICode>();
     private List<String> tCode = new ArrayList<String>();
     private LinkedHashMap<String, String> reg = new LinkedHashMap<String, String>();
-    private int condIncr = 1000;
-    private boolean useCondLabel = false;
     private String startLabel;
+    private Stack<Integer> retAddressStack = new Stack<Integer>();
+    private int address = 0;
 
     private void initReg() {
         for (int i = 0; i < 101; i++) {
@@ -55,6 +56,7 @@ public class TCode {
 
     private void freeResource(String r) {
         reg.put(r, "");
+        address++;
         tCode.add("LDR " + r + " CLR");
     }
 
@@ -92,115 +94,45 @@ public class TCode {
             }
         }
 
+        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+        loadAlphabet(alphabet);
+        loadAlphabet(alphabet.toUpperCase());
+        tCode.add("CR .BYT '13'");
+        tCode.add("SP .BYT '32'");
+
         tCode.add("");
-        tCode.add(ICodeOprConst.JMP_OPR.getKey() + " " + startLabel + " ; program start");
-        tCode.add("TRP 0 ; program end");
-        tCode.add(TCodeOprConst.OVERFLOW_LBL.getKey() + " TRP 0 ; overflow error");
-        tCode.add(TCodeOprConst.UNDERFLOW_LBL.getKey() + " TRP 0 ; overflow error");
         tCode.add("LDR R0 CLR");
+        address++;
         tCode.add("LDR R1 CLR");
+        address++;
+        retAddressStack.push(address);
+        address++;
+
+        tCode.add(ICodeOprConst.JMP_OPR.getKey() + " " + startLabel + " ; program start");
+        address++;
+        tCode.add("TRP 0 ; program end");
+        address++;
+        handleUnderFlow();
 
         for (ICode iCode : iCodeList) {
             if (iCode.getOperation().equals(ICodeOprConst.FUNC_OPR.getKey())) {
+
                 String reg1 = getRegister(SP);
-
-                Symbol method = symbolTable.get(iCode.getArg1());
                 if (iCode.getLabel().isEmpty()) {
-                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " " + method.getSize());
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
                 } else {
-                    tCode.add(iCode.getLabel() + " " + TCodeOprConst.ADI_OPR.getKey() + " " + SP + " " + method.getSize());
+                    tCode.add(iCode.getLabel() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " " + " CLR");
                 }
-
-                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg1 + " " + SP);
-                tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg1 + " " + SL);
-                tCode.add(TCodeOprConst.BLT_OPR.getKey() + " " + reg1 + " " + TCodeOprConst.OVERFLOW_LBL.getKey());
+                address++;
                 freeResource(reg1);
-
-            } else if (iCode.getOperation().equals(ICodeOprConst.ADD_OPR.getKey())) {
-
-                String argReg1 = getRegister(iCode.getArg1());
-                String argReg2 = getRegister(iCode.getArg2());
-
-                if (iCode.getLabel().equals("")) {
-                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
-                } else {
-                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
-                }
-                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
-
-                tCode.add("ADD " + argReg1 + " " + argReg2);
-                tCode.add("STR " + argReg1 + " " + iCode.getResult() + " " + iCode.getComment());
-
-                freeResource(argReg1);
-                freeResource(argReg2);
-            } else if (iCode.getOperation().equals(ICodeOprConst.ADI_OPR.getKey())) {
-                // could merge with above
-                String argReg1 = getRegister(iCode.getArg1());
-                String argReg2 = getRegister(iCode.getArg2());
-
-                if (iCode.getLabel().equals("")) {
-                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
-                } else {
-                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
-                }
-                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
-
-                tCode.add("ADD " + argReg1 + " " + argReg2);
-                tCode.add("STR " + argReg1 + " " + iCode.getResult() + " " + iCode.getComment());
-
-                freeResource(argReg1);
-                freeResource(argReg2);
+            } else if (iCode.getOperation().equals(ICodeOprConst.ADD_OPR.getKey()) || iCode.getOperation().equals(ICodeOprConst.ADI_OPR.getKey())) {
+                mathOpr(iCode, ICodeOprConst.ADD_OPR.getKey());
             } else if (iCode.getOperation().equals(ICodeOprConst.SUB_OPR.getKey())) {
-
-                String argReg1 = getRegister(iCode.getArg1());
-                String argReg2 = getRegister(iCode.getArg2());
-
-                if (iCode.getLabel().equals("")) {
-                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
-                } else {
-                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
-                }
-                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
-
-                tCode.add("SUB " + argReg1 + " " + argReg2);
-                tCode.add("STR " + argReg1 + " " + iCode.getResult() + " " + iCode.getComment());
-
-                freeResource(argReg1);
-                freeResource(argReg2);
+                mathOpr(iCode, ICodeOprConst.SUB_OPR.getKey());
             } else if (iCode.getOperation().equals(ICodeOprConst.MUL_OPR.getKey())) {
-
-                String argReg1 = getRegister(iCode.getArg1());
-                String argReg2 = getRegister(iCode.getArg2());
-
-                if (iCode.getLabel().equals("")) {
-                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
-                } else {
-                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
-                }
-                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
-
-                tCode.add("MUL " + argReg1 + " " + argReg2);
-                tCode.add("STR " + argReg1 + " " + iCode.getResult() + " " + iCode.getComment());
-
-                freeResource(argReg1);
-                freeResource(argReg2);
+                mathOpr(iCode, ICodeOprConst.MUL_OPR.getKey());
             } else if (iCode.getOperation().equals(ICodeOprConst.DIV_OPR.getKey())) {
-
-                String argReg1 = getRegister(iCode.getArg1());
-                String argReg2 = getRegister(iCode.getArg2());
-
-                if (iCode.getLabel().equals("")) {
-                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
-                } else {
-                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
-                }
-                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
-
-                tCode.add("DIV " + argReg1 + " " + argReg2);
-                tCode.add("STR " + argReg1 + " " + iCode.getResult() + " " + iCode.getComment());
-
-                freeResource(argReg1);
-                freeResource(argReg2);
+                mathOpr(iCode, ICodeOprConst.DIV_OPR.getKey());
             } else if (iCode.getOperation().equals(ICodeOprConst.MOD_OPR.getKey())) {
 
                 String argReg1 = getRegister(iCode.getArg1());
@@ -212,12 +144,18 @@ public class TCode {
                 } else {
                     tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
                 }
+                address++;
                 tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+                address++;
                 tCode.add("LDR " + argReg3 + " " + iCode.getArg1());
+                address++;
 
                 tCode.add("DIV " + argReg3 + " " + argReg2);
+                address++;
                 tCode.add("MUL " + argReg3 + " " + argReg2);
+                address++;
                 tCode.add("SUB " + argReg1 + " " + argReg3);
+                address++;
                 tCode.add("STR " + argReg1 + " " + iCode.getResult() + " " + iCode.getComment());
 
                 freeResource(argReg1);
@@ -233,10 +171,14 @@ public class TCode {
                 } else {
                     tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
                 }
+                address++;
                 tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+                address++;
 
                 tCode.add("MOV " + argReg1 + " " + argReg2 + " " + iCode.getComment());
+                address++;
                 tCode.add("STR " + argReg1 + " " + iCode.getArg1());
+                address++;
                 freeResource(argReg1);
                 freeResource(argReg2);
             } else if (iCode.getOperation().equals(ICodeOprConst.WRTI_OPR.getKey())) {
@@ -247,27 +189,77 @@ public class TCode {
                 } else {
                     tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
                 }
+                address++;
                 tCode.add("TRP 1 " + iCode.getComment());
+                address++;
+                freeResource(argReg1);
+            } else if (iCode.getOperation().equals(ICodeOprConst.WRTC_OPR.getKey())) {
+
+                String argReg1 = getRegister(iCode.getArg1());
+                if (iCode.getLabel().equals("")) {
+                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                } else {
+                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
+                }
+                address++;
+
+                tCode.add("TRP 3 " + iCode.getComment());
+                address++;
                 freeResource(argReg1);
             } else if (iCode.getOperation().equals(ICodeOprConst.RTN_OPR.getKey())) {
 
                 String argReg1 = getRegister(FP);
-                String argReg2 = getRegister(FP);
-
-                tCode.add("MOV " + SP + " " + FP);
-                tCode.add("MOV " + argReg1 + " " + FP);
-                tCode.add("CMP " + argReg1 + " " + SB);
-                tCode.add("BGT " + argReg1 + " " + TCodeOprConst.UNDERFLOW_LBL.getKey());
-
-                tCode.add("LDR " + argReg1 + " CLR");
-                tCode.add("ADDI " + argReg1 + " " + FP + " ; rtn addr");
-                tCode.add("MOV " + argReg2 + " " + FP);
-                tCode.add("ADI " + argReg2 + " " + -1);
-                tCode.add("ADDI " + FP + " " + argReg2 + " ; PFP -> FP");
-                tCode.add("JMR " + argReg1 + " ; GOTO rtn addr");
+                if (retAddressStack.size() == 0) {
+                    tCode.add("JMP " + TCodeOprConst.UNDERFLOW_LBL.getKey());
+                    address++;
+                } else {
+                    Integer addr = retAddressStack.pop();
+                    tCode.add("LDR " + argReg1 + " CLR");
+                    address++;
+                    tCode.add("ADI " + argReg1 + " " + addr.toString() + " ; rtn addr");
+                    address++;
+                    tCode.add("JMR " + argReg1 + " ; GOTO rtn addr");
+                    address++;
+                }
 
                 freeResource(argReg1);
-                freeResource(argReg2);
+            } else if (iCode.getOperation().equals(TCodeOprConst.JMP_OPR.getKey())) {
+
+                if (iCode.getLabel().equals("")) {
+                    tCode.add(iCode.getOperation() + " " + iCode.getArg1() + " " + iCode.getComment());
+                } else {
+                    tCode.add(iCode.getLabel() + " " + iCode.getOperation() + " " + iCode.getArg1() + " " + iCode.getComment());
+                }
+                address++;
+            } else if (iCode.getOperation().equals("RDI")) {
+
+                if (iCode.getLabel().equals("")) {
+                    tCode.add("TRP 2");
+                } else {
+                    tCode.add(iCode.getLabel() + " TRP 2");
+                }
+                address++;
+                String argReg1 = getRegister(iCode.getArg1());
+
+                tCode.add("LDR " + argReg1 + " INII");
+                address++;
+                tCode.add("STR " + argReg1 + " " + iCode.getArg1());
+                address++;
+                freeResource(argReg1);
+            } else if (iCode.getOperation().equals("RDC")) {
+
+                if (iCode.getLabel().equals("")) {
+                    tCode.add("TRP 4");
+                } else {
+                    tCode.add(iCode.getLabel() + "TRP 4");
+                }
+                address++;
+                String argReg1 = getRegister(iCode.getArg1());
+
+                tCode.add("LDR " + argReg1 + " INPT");
+                tCode.add("STR " + argReg1 + " " + iCode.getArg1());
+                address++;
+                freeResource(argReg1);
             }
 //            else if (iCode.getOperation().equals("EQ")) {
 //
@@ -306,23 +298,6 @@ public class TCode {
 //                tCode.add(L4);
 //            }
 
-
-//            if (iCode.getOperation().equals("JMP")) {
-//                if (iCode.getLabel().equals("")) {
-//                    tCode.add(iCode.getOperation() + " " + iCode.getArg1() + " " + iCode.getComment());
-//                } else {
-//                    tCode.add(iCode.getLabel() + " " + iCode.getOperation() + " " + iCode.getArg1() + " " + iCode.getComment());
-//                }
-//                continue;
-//            }
-
-//            if (iCode.getOperation().equals("TRP")) {
-//                if (iCode.getArg1().equals("0")) {
-//                    tCode.add("FINISH " + iCode.getOperation() + " " + iCode.getArg1() + " " + iCode.getComment());
-//                }
-//                continue;
-//            }
-
 //
 
 //            if (iCode.getOperation().equals("MOVI")) {
@@ -341,46 +316,9 @@ public class TCode {
 //                continue;
 //            }
 
-//            if (iCode.getOperation().equals("WRTC")) {
-//                String argReg1 = getRegister(iCode.getArg1());
-//                if (iCode.getLabel().equals("")) {
-//                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
-//                } else {
-//                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
-//                }
 //
-//                tCode.add("TRP 3 " + iCode.getComment());
-//                freeResource(argReg1);
-//                continue;
-//            }
 
-//            if (iCode.getOperation().equals("RDI")) {
-//                if (iCode.getLabel().equals("")) {
-//                    tCode.add("TRP 2");
-//                } else {
-//                    tCode.add(iCode.getLabel() + " TRP 2");
-//                }
-//                String argReg1 = getRegister(iCode.getArg1());
 //
-//                tCode.add("LDR " + argReg1 + " INII");
-//                tCode.add("STR " + argReg1 + " " + iCode.getArg1());
-//                freeResource(argReg1);
-//                continue;
-//            }
-
-//            if (iCode.getOperation().equals("RDC")) {
-//                if (iCode.getLabel().equals("")) {
-//                    tCode.add("TRP 4");
-//                } else {
-//                    tCode.add(iCode.getLabel() + "TRP 4");
-//                }
-//                String argReg1 = getRegister(iCode.getArg1());
-//
-//                tCode.add("LDR " + argReg1 + " INPT");
-//                tCode.add("STR " + argReg1 + " " + iCode.getArg1());
-//                freeResource(argReg1);
-//                continue;
-//            }
 
 //            if (iCode.getOperation().equals("LT")) {
 //                String argReg1 = getRegister(iCode.getArg1());
@@ -685,5 +623,68 @@ public class TCode {
 
         Assembler assembler = new Assembler();
         assembler.action("NNM-program.asm");
+    }
+
+    private void mathOpr(ICode iCode, String opr) {
+        String argReg1 = getRegister(iCode.getArg1());
+        String argReg2 = getRegister(iCode.getArg2());
+
+        if (iCode.getLabel().equals("")) {
+            tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+        } else {
+            tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
+        }
+        address++;
+        tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+        address++;
+
+        tCode.add(opr + " " + argReg1 + " " + argReg2);
+        address++;
+        tCode.add("STR " + argReg1 + " " + iCode.getResult() + " " + iCode.getComment());
+        address++;
+
+        freeResource(argReg1);
+        freeResource(argReg2);
+    }
+
+    private void handleUnderFlow() {
+        printOut("Error", TCodeOprConst.UNDERFLOW_LBL.getKey());
+        String argReg1 = getRegister("SP");
+        tCode.add("LDR " + argReg1 + " SP");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        printOut("Underflow", "");
+        tCode.add("LDR " + argReg1 + " CR");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        freeResource(argReg1);
+        tCode.add("TRP 0 ; exit program with underflow error");
+        address++;
+    }
+
+    private void printOut(String error, String label) {
+        for (char c : error.toCharArray()) {
+            String argReg1 = getRegister(error);
+
+
+            if (label.isEmpty()) {
+                tCode.add("LDR " + argReg1 + " " + c);
+            } else {
+                tCode.add(label + " LDR " + argReg1 + " " + c);
+                label = "";
+            }
+            address++;
+            tCode.add("TRP 3");
+            address++;
+            freeResource(argReg1);
+        }
+    }
+
+    private void loadAlphabet(String alphabet) {
+        for (char c : alphabet.toCharArray()) {
+            tCode.add(c + " .BYT '" + c + "'");
+        }
     }
 }

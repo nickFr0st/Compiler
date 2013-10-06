@@ -74,4 +74,8 @@ public class SAR {
     public void setType(String type) {
         this.type = type;
     }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
 }

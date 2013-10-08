@@ -1243,6 +1243,11 @@ public class PassTwo {
                 String tempKey = "T" + variableId;
 
                 symbolTable.put(tempKey, new Symbol(scope, tempKey, tempKey, Compiler.VARIABLE, new VariableData(tempType, KeyConst.PRIVATE.getKey()), Compiler.ELEM_SIZE));
+                if (tempType.equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempType.equalsIgnoreCase(KeyConst.INT.getKey())) {
+                    iCodeList.add(new ICode(tempKey, ICodeOprConst.CREATE_OPR.getKey(), ".INT", "", "", ""));
+                } else {
+                    iCodeList.add(new ICode(tempKey, ICodeOprConst.CREATE_OPR.getKey(), ".BYT", "", "", ""));
+                }
 
                 Identifier_SAR tempSAR = new Identifier_SAR(scope, new Tuple(tempKey, tempType, id_sar.getLexi().getLineNum()), tempType);
                 tempSAR.setSarId(tempKey);
@@ -1263,6 +1268,11 @@ public class PassTwo {
 
                 String itemKey = "T" + variableId;
                 symbolTable.put(itemKey, new Symbol(scope, itemKey, itemKey, values[2], new VariableData(type, values[3]), Compiler.ELEM_SIZE));
+                if (type.equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || type.equalsIgnoreCase(KeyConst.INT.getKey())) {
+                    iCodeList.add(new ICode(itemKey, ICodeOprConst.CREATE_OPR.getKey(), ".INT", "", "", ""));
+                } else {
+                    iCodeList.add(new ICode(itemKey, ICodeOprConst.CREATE_OPR.getKey(), ".BYT", "", "", ""));
+                }
 
                 if ((!OS.isEmpty() && OS.peek().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) ||!lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                     iCodeList.add(new ICode(useLabel(), ICodeOprConst.PEEK_OPR.getKey(), itemKey, "", "", "; get value from method " + id_sar.getLexi().getName()));
@@ -1342,6 +1352,11 @@ public class PassTwo {
 
                 symbolTable.put(itemKey, new Symbol(scope, itemKey, itemKey, temp.getKind(), temp.getData(), Compiler.ELEM_SIZE));
                 SAS.push(tempItem);
+                if (temp.getData().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || temp.getData().getType().equalsIgnoreCase(KeyConst.INT.getKey())) {
+                    iCodeList.add(new ICode(itemKey, ICodeOprConst.CREATE_OPR.getKey(), ".INT", "", "", ""));
+                } else {
+                    iCodeList.add(new ICode(itemKey, ICodeOprConst.CREATE_OPR.getKey(), ".BYT", "", "", ""));
+                }
 
                 if (isMethod) {
                     iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), temp.getSymId(), lhs.getSarId(), tempItem.getSarId(), ""));
@@ -1500,6 +1515,11 @@ public class PassTwo {
         Integer arrSize = Integer.parseInt(element.getLexi().getName());
         Symbol arrSymbol = new Symbol(scope, key, key, Compiler.VARIABLE, new VariableData("@:" + type.getName(), KeyConst.PRIVATE.getKey()), arrSize);
         symbolTable.put(key, arrSymbol);
+        if (type.getName().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || type.getName().equalsIgnoreCase(KeyConst.INT.getKey())) {
+            iCodeList.add(new ICode(key, ICodeOprConst.CREATE_OPR.getKey(), ".INT", "", "", ""));
+        } else {
+            iCodeList.add(new ICode(key, ICodeOprConst.CREATE_OPR.getKey(), ".BYT", "", "", ""));
+        }
         variableId++;
 
         Tuple arrTuple = new Tuple(arrSymbol.getValue(), arrSymbol.getData().getType(), type.getLexi().getLineNum());
@@ -1555,6 +1575,12 @@ public class PassTwo {
                 Symbol retValue = new Symbol(scope, tempSym, tempSym, Compiler.CLASS, new MethodData(KeyConst.PRIVATE.getKey(), argsList, type.getName()), Compiler.ELEM_SIZE);
                 symbolTable.put(tempSym, retValue);
                 variableId++;
+                if (type.getName().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || type.getName().equalsIgnoreCase(KeyConst.INT.getKey())) {
+                    iCodeList.add(new ICode(key, ICodeOprConst.CREATE_OPR.getKey(), ".INT", "", "", ""));
+                } else {
+                    iCodeList.add(new ICode(key, ICodeOprConst.CREATE_OPR.getKey(), ".BYT", "", "", ""));
+                }
+
                 Tuple newObj = new Tuple(type.getName(), type.getName(), type.getLexi().getLineNum());
 
                 type.setSarId(temp.getSymId());
@@ -1632,6 +1658,8 @@ public class PassTwo {
         SAS.push(item);
         variableId++;
 
+        iCodeList.add(new ICode(key, ICodeOprConst.CREATE_OPR.getKey(), ".BYT", "", "", ""));
+
         if (opr.equals("&&")) {
             iCodeList.add(new ICode(useLabel(), ICodeOprConst.AND_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " < " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
         } else {
@@ -1656,6 +1684,8 @@ public class PassTwo {
                 symbolTable.put(key, value);
                 SAS.push(item);
                 variableId++;
+
+                iCodeList.add(new ICode(key, ICodeOprConst.CREATE_OPR.getKey(), ".BYT", "", "", ""));
 
                 if (opr.equals("!=")) {
                     iCodeList.add(new ICode(useLabel(), ICodeOprConst.NE_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " != " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
@@ -1695,6 +1725,8 @@ public class PassTwo {
         symbolTable.put(key, value);
         SAS.push(item);
         variableId++;
+
+        iCodeList.add(new ICode(key, ICodeOprConst.CREATE_OPR.getKey(), ".BYT", "", "", ""));
 
         if (opr.equals("<")) {
             iCodeList.add(new ICode(useLabel(), ICodeOprConst.LT_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " < " + rhs.getLexi().getName() + " -> " + item.getLexi().getName()));
@@ -1787,6 +1819,8 @@ public class PassTwo {
         temp.setSarId(key);
         variableId++;
         SAS.push(temp);
+
+        iCodeList.add(new ICode(key, ICodeOprConst.CREATE_OPR.getKey(), ".INT", "",  "", ""));
 
         if (opr.equals("+")) {
             if (rhs instanceof Literal_SAR) {

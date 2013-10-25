@@ -3,8 +3,10 @@ void main() {
 	
 	cout << '>';
     cin >> k;
-	k = k * 3;
 	
-	if (k > 10) cout << k * -1;
-	else cout << k;
+	if (k > 10) {
+		if (k > 15) cout << 16;
+		else cout << 11;
+	}
+	else cout << 8;
 }

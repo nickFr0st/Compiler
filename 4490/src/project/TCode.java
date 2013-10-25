@@ -24,8 +24,9 @@ public class TCode {
     private List<String> tCode = new ArrayList<String>();
     private LinkedHashMap<String, String> reg = new LinkedHashMap<String, String>();
     private String startLabel;
-    private Stack<Integer> retAddressStack = new Stack<Integer>();
     private int address = 0;
+    private int condIncr = 6000;
+    private Stack<String> L4 = new Stack<String>();
 
     private void initReg() {
         for (int i = 0; i < 101; i++) {
@@ -61,6 +62,12 @@ public class TCode {
     }
 
     public void buildCode() {
+        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+        loadAlphabet(alphabet);
+        loadAlphabet(alphabet.toUpperCase());
+
+        tCode.add("CR .BYT '13'");
+        tCode.add("SP .BYT '32'");
         tCode.add("CLR .INT 0");
 
         for (String key : symbolTable.keySet()) {
@@ -94,25 +101,19 @@ public class TCode {
             }
         }
 
-        String alphabet = "abcdefghijklmnopqrstuvwxyz";
-        loadAlphabet(alphabet);
-        loadAlphabet(alphabet.toUpperCase());
-        tCode.add("CR .BYT '13'");
-        tCode.add("SP .BYT '32'");
-
         tCode.add("");
+        address++;
         tCode.add("LDR R0 CLR");
         address++;
         tCode.add("LDR R1 CLR");
         address++;
-        retAddressStack.push(address);
+        tCode.add("ADI " + SB + " " + address);
         address++;
 
         tCode.add(ICodeOprConst.JMP_OPR.getKey() + " " + startLabel + " ; program start");
         address++;
         tCode.add("TRP 0 ; program end");
         address++;
-        handleUnderFlow();
 
         for (ICode iCode : iCodeList) {
             if (iCode.getOperation().equals(ICodeOprConst.FUNC_OPR.getKey())) {
@@ -142,7 +143,7 @@ public class TCode {
                 if (iCode.getLabel().equals("")) {
                     tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
                 } else {
-                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
+                    tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
                 }
                 address++;
                 tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
@@ -169,7 +170,7 @@ public class TCode {
                 if (iCode.getLabel().equals("")) {
                     tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
                 } else {
-                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
+                    tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
                 }
                 address++;
                 tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
@@ -181,13 +182,28 @@ public class TCode {
                 address++;
                 freeResource(argReg1);
                 freeResource(argReg2);
+            } else if (iCode.getOperation().equals("MOVI")) {
+
+                String argReg1 = getRegister(iCode.getArg2());
+                String value = symbolTable.get(iCode.getArg2()).getValue();
+
+                if (iCode.getLabel().equals("")) {
+                    tCode.add("ADI " + argReg1 + " " + value.substring(1, value.length()));
+                } else {
+                    tCode.add(setLabel(iCode.getLabel()) + " ADI " + argReg1 + " " + value.substring(1, value.length()));
+                }
+                address++;
+
+                tCode.add("STR " + argReg1 + " " + iCode.getArg1() + " " + iCode.getComment());
+                address++;
+                freeResource(argReg1);
             } else if (iCode.getOperation().equals(ICodeOprConst.WRTI_OPR.getKey())) {
 
                 String argReg1 = getRegister(iCode.getArg1());
                 if (iCode.getLabel().equals("")) {
                     tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
                 } else {
-                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
+                    tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
                 }
                 address++;
                 tCode.add("TRP 1 " + iCode.getComment());
@@ -199,7 +215,7 @@ public class TCode {
                 if (iCode.getLabel().equals("")) {
                     tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
                 } else {
-                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
+                    tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
                 }
                 address++;
 
@@ -208,21 +224,12 @@ public class TCode {
                 freeResource(argReg1);
             } else if (iCode.getOperation().equals(ICodeOprConst.RTN_OPR.getKey())) {
 
-                String argReg1 = getRegister(FP);
-                if (retAddressStack.size() == 0) {
-                    tCode.add("JMP " + TCodeOprConst.UNDERFLOW_LBL.getKey());
-                    address++;
+                if (iCode.getLabel().isEmpty()) {
+                    tCode.add("JMR " + SB + " ; GOTO rtn addr");
                 } else {
-                    Integer addr = retAddressStack.pop();
-                    tCode.add("LDR " + argReg1 + " CLR");
-                    address++;
-                    tCode.add("ADI " + argReg1 + " " + addr.toString() + " ; rtn addr");
-                    address++;
-                    tCode.add("JMR " + argReg1 + " ; GOTO rtn addr");
-                    address++;
+                    tCode.add(iCode.getLabel() + " JMR " + SB + " ; GOTO rtn addr");
                 }
-
-                freeResource(argReg1);
+                address++;
             } else if (iCode.getOperation().equals(TCodeOprConst.JMP_OPR.getKey())) {
 
                 if (iCode.getLabel().equals("")) {
@@ -251,7 +258,7 @@ public class TCode {
                 if (iCode.getLabel().equals("")) {
                     tCode.add("TRP 4");
                 } else {
-                    tCode.add(iCode.getLabel() + "TRP 4");
+                    tCode.add(setLabel(iCode.getLabel()) + "TRP 4");
                 }
                 address++;
                 String argReg1 = getRegister(iCode.getArg1());
@@ -260,7 +267,45 @@ public class TCode {
                 tCode.add("STR " + argReg1 + " " + iCode.getArg1());
                 address++;
                 freeResource(argReg1);
+            } else if (iCode.getOperation().equals("GT")) {
+                String argReg1 = getRegister(iCode.getArg1());
+                String argReg2 = getRegister(iCode.getArg2());
+                String argReg3 = getRegister(iCode.getResult());
+
+                if (iCode.getLabel().equals("")) {
+                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                } else {
+                    tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
+                }
+
+                String L3 = "L" + condIncr++;
+                L4.push("L" + condIncr);
+
+                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+                tCode.add("LDR " + argReg3 + " " + iCode.getResult());
+
+                tCode.add("MOV " + argReg3 + " " + argReg1);
+                tCode.add("CMP " + argReg3 + " " + argReg2);
+                tCode.add("BGT " + argReg3 + " " + L3 + " ; " + iCode.getArg1() + " > " + iCode.getArg2() + " GOTO " + L3);
+                tCode.add("STR R0 " + iCode.getResult() + " ; Set FALSE");
+                tCode.add("JMP " + L4.peek());
+                tCode.add(L3 + " STR R1 " + iCode.getResult() + " ; Set TRUE");
+
+                freeResource(argReg1);
+                freeResource(argReg2);
+                freeResource(argReg3);
+            } else if (iCode.getOperation().equals("BF")) {
+
+                String argReg1 = getRegister(iCode.getArg1());
+                if (iCode.getLabel().isEmpty()) {
+                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                } else {
+                    tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
+                }
+                tCode.add("BRZ " + argReg1 + " " + updateLabel(iCode.getArg2()) + " " + iCode.getComment());
+                freeResource(argReg1);
             }
+
 //            else if (iCode.getOperation().equals("EQ")) {
 //
 //                String argReg1 = getRegister(iCode.getArg1());
@@ -298,28 +343,6 @@ public class TCode {
 //                tCode.add(L4);
 //            }
 
-//
-
-//            if (iCode.getOperation().equals("MOVI")) {
-//                String argReg1 = getRegister(iCode.getArg2());
-//
-//                String value = symbolTable.get(iCode.getArg2()).getValue();
-//
-//                if (iCode.getLabel().equals("")) {
-//                    tCode.add("ADI " + argReg1 + " " + value.substring(1, value.length()));
-//                } else {
-//                    tCode.add(iCode.getLabel() + " ADI " + argReg1 + " " + value.substring(1, value.length()));
-//                }
-//
-//                tCode.add("STR " + argReg1 + " " + iCode.getArg1() + " " + iCode.getComment());
-//                freeResource(argReg1);
-//                continue;
-//            }
-
-//
-
-//
-
 //            if (iCode.getOperation().equals("LT")) {
 //                String argReg1 = getRegister(iCode.getArg1());
 //                String argReg2 = getRegister(iCode.getArg2());
@@ -356,43 +379,7 @@ public class TCode {
 //                continue;
 //            }
 //
-//            if (iCode.getOperation().equals("GT")) {
-//                String argReg1 = getRegister(iCode.getArg1());
-//                String argReg2 = getRegister(iCode.getArg2());
-//                String argReg3 = getRegister(iCode.getResult());
 //
-//
-//                if (iCode.getLabel().equals("")) {
-//                    if (useCondLabel) {
-//                        tCode.set(tCode.size() - 1, "L" + condIncr++ + " LDR " + argReg1 + " " + iCode.getArg1());
-//                    } else {
-//                        tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
-//                    }
-//                } else {
-//                    tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
-//                }
-//
-//                String L3 = "L" + condIncr++;
-//                String L4 = "L" + condIncr;
-//
-//                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
-//                tCode.add("LDR " + argReg3 + " " + iCode.getResult());
-//
-//                tCode.add("MOV " + argReg3 + " " + argReg1);
-//                tCode.add("CMP " + argReg3 + " " + argReg2);
-//                tCode.add("BGT " + argReg3 + " " + L3 + " ; " + iCode.getResult() + " > " + iCode.getArg2() + " GOTO " + L3);
-//                tCode.add("STR R0 " + iCode.getResult() + " ; Set FALSE");
-//                tCode.add("JMP " + L4);
-//                tCode.add(L3 + " STR R1 " + iCode.getResult() + " ; Set TRUE");
-//
-//                freeResource(argReg1);
-//                freeResource(argReg2);
-//                freeResource(argReg3);
-//
-//                useCondLabel = true;
-//                tCode.add(L4);
-//                continue;
-//            }
 //
 //            if (iCode.getOperation().equals("NE")) {
 //                String argReg1 = getRegister(iCode.getArg1());
@@ -577,18 +564,7 @@ public class TCode {
 //                continue;
 //            }
 //
-//            if (iCode.getOperation().equals("BF")) {
-//                String argReg1 = getRegister(iCode.getArg1());
-//                if (useCondLabel) {
-//                    tCode.set(tCode.size() - 1, "L" + condIncr++ + " LDR " + argReg1 + " " + iCode.getArg1());
-//                    useCondLabel = false;
-//                } else {
-//                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
-//                }
-//                tCode.add("BRZ " + argReg1 + " " + iCode.getArg2() + " " + iCode.getComment());
-//                freeResource(argReg1);
-//                continue;
-//            }
+//
 //
 //            if (iCode.getOperation().equals("BT")) {
 //                String argReg1 = getRegister(iCode.getArg1());
@@ -632,7 +608,7 @@ public class TCode {
         if (iCode.getLabel().equals("")) {
             tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
         } else {
-            tCode.add(iCode.getLabel() + " LDR " + argReg1 + " " + iCode.getArg1());
+            tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
         }
         address++;
         tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
@@ -647,44 +623,38 @@ public class TCode {
         freeResource(argReg2);
     }
 
-    private void handleUnderFlow() {
-        printOut("Error", TCodeOprConst.UNDERFLOW_LBL.getKey());
-        String argReg1 = getRegister("SP");
-        tCode.add("LDR " + argReg1 + " SP");
-        address++;
-        tCode.add("TRP 3");
-        address++;
-        printOut("Underflow", "");
-        tCode.add("LDR " + argReg1 + " CR");
-        address++;
-        tCode.add("TRP 3");
-        address++;
-        freeResource(argReg1);
-        tCode.add("TRP 0 ; exit program with underflow error");
-        address++;
-    }
-
-    private void printOut(String error, String label) {
-        for (char c : error.toCharArray()) {
-            String argReg1 = getRegister(error);
-
-
-            if (label.isEmpty()) {
-                tCode.add("LDR " + argReg1 + " " + c);
-            } else {
-                tCode.add(label + " LDR " + argReg1 + " " + c);
-                label = "";
-            }
-            address++;
-            tCode.add("TRP 3");
-            address++;
-            freeResource(argReg1);
-        }
-    }
-
     private void loadAlphabet(String alphabet) {
         for (char c : alphabet.toCharArray()) {
             tCode.add(c + " .BYT '" + c + "'");
         }
+    }
+
+    private String updateLabel(String label) {
+        if (labelHelper(label)) return label;
+        L4.push(label);
+        return label;
+    }
+
+    private String setLabel(String label) {
+        if (labelHelper(label)) return label;
+        return label;
+    }
+
+    private boolean labelHelper(String label) {
+        if (L4.isEmpty()) {
+            return true;
+        }
+
+        if (L4.peek().equals(label)) {
+            L4.pop();
+            return true;
+        }
+
+        for (int i = 0; i < tCode.size(); i++) {
+            tCode.set(i, tCode.get(i).replace(L4.peek(), label));
+        }
+
+        L4.pop();
+        return false;
     }
 }

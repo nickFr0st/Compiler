@@ -655,7 +655,7 @@ public class Assembler {
                     break;
                 case BLT:
                     newValue = 0;
-                    if (Integer.parseInt(reg.get(instructionList.get(i).getOpd1())) < newValue) {
+                    if (Integer.parseInt(reg.get(instructionList.get(i).getOpd1())) > newValue) {
                         for (Instruction bnxTest : instructionList) {
                             if (bnxTest.getLabel() != null && bnxTest.getLabel().equals(instructionList.get(i).getOpd2())) {
                                 i = instructionList.indexOf(bnxTest) - 1;
@@ -667,7 +667,7 @@ public class Assembler {
                     break;
                 case BGT:
                     newValue = 0;
-                    if (Integer.parseInt(reg.get(instructionList.get(i).getOpd1())) > newValue) {
+                    if (Integer.parseInt(reg.get(instructionList.get(i).getOpd1())) < newValue) {
                         for (Instruction bnxTest : instructionList) {
                             if (bnxTest.getLabel() != null && bnxTest.getLabel().equals(instructionList.get(i).getOpd2())) {
                                 i = instructionList.indexOf(bnxTest) - 1;

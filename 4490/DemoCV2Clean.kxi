@@ -1,12 +1,18 @@
 void main() {
     int k;
+	int j;
 	
 	cout << '>';
     cin >> k;
 	
-	if (k > 10) {
-		if (k > 15) cout << 16;
-		else cout << 11;
+	while (k > 0) {
+		j = k * 2;
+		while (j > k) {
+			cout << j * -1;
+			cout << ' ';
+			cout << ',';
+		}
+		cout << '\n';
+		cout << k;
 	}
-	else cout << 8;
 }

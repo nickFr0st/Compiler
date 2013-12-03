@@ -1,18 +1,9 @@
 void main() {
     int k;
-	int j;
 	
 	cout << '>';
     cin >> k;
 	
-	while (k > 0) {
-		j = k * 2;
-		while (j > k) {
-			cout << j * -1;
-			cout << ' ';
-			cout << ',';
-		}
-		cout << '\n';
-		cout << k;
-	}
+	if (k == 10) cout << k * 3;
+	else cout << k;
 }

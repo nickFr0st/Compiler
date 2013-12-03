@@ -19,7 +19,8 @@ public enum TCodeOprConst {
     CMP_OPR("CMP"),
     LDR_OPR("LDR"),
     JMP_OPR("JMP"),
-    BLT_OPR("BLT");
+    BLT_OPR("BLT"),
+    GT_OPR("GT");
 
     private String key;
 

@@ -55,18 +55,22 @@ public class Compiler {
         return errorList;
     }
 
-    public void evaluate() {
+    public void evaluate(boolean isTest) {
         // pass one
         if (!compilation_unit()) {
             System.out.print(errorList);
             System.exit(0);
         }
-        System.out.println("Syntax Analysis Successful!");
+
+        if (isTest) {
+            System.out.println("Syntax Analysis Successful!");
+        }
+
         lexicalAnalyzer.resetList();
 
         // pass two
         PassTwo passTwo = new PassTwo(symbolTable, lexicalAnalyzer, variableId);
-        passTwo.evaluate();
+        passTwo.evaluate(isTest);
     }
 
     private boolean new_declaration() {

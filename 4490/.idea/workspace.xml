@@ -2,17 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/TCode.java" afterPath="$PROJECT_DIR$/src/project/TCode.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/TCodeOprConst.java" afterPath="$PROJECT_DIR$/src/project/TCodeOprConst.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Compiler.java" afterPath="$PROJECT_DIR$/src/project/Compiler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/PassTwo.java" afterPath="$PROJECT_DIR$/src/project/PassTwo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/ProgramDriver.java" afterPath="$PROJECT_DIR$/src/project/ProgramDriver.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1380769026652" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1386133408229" ignored="false" />
+    <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1386134789411" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1386134830473" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
-    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1379478019038" ignored="false" />
-    <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1386117557983" ignored="false" />
+    <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1386134805520" ignored="false" />
+    <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1386134833891" ignored="false" />
     <file path="/LexicalAnalizer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1358821966318" ignored="false" />
     <file path="/Tuple.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377964110153" ignored="false" />
     <file path="/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378860123258" ignored="false" />
@@ -34,7 +35,7 @@
     <file path="/Operator.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1364342510144" ignored="false" />
     <file path="/ICode.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378860410655" ignored="false" />
     <file path="/TCode.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1386133781530" ignored="false" />
-    <file path="/Assembler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1381544617949" ignored="false" />
+    <file path="/Assembler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1386135691073" ignored="false" />
     <file path="$PROJECT_DIR$/../../../compiler_v2/src/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367074256181" ignored="false" />
     <file path="$PROJECT_DIR$/../../../compiler_v2/src/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367079767238" ignored="false" />
     <file path="$PROJECT_DIR$/../../../compiler_v2/src/KeyConst.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367071829643" ignored="false" />
@@ -92,7 +93,7 @@
     <file path="/Type_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378145162900" ignored="false" />
     <file path="/Variable_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965726936" ignored="false" />
     <file path="/BAL_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1377965864014" ignored="false" />
-    <file path="/PassTwo.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1381204311278" ignored="false" />
+    <file path="/PassTwo.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1386134844110" ignored="false" />
     <file path="/Opr_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378156677653" ignored="false" />
     <file path="/Ref_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378264659371" ignored="false" />
     <file path="/EAL_SAR.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378270102878" ignored="false" />
@@ -186,7 +187,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1314" class="project.PassTwo" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1317" class="project.PassTwo" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -304,7 +305,7 @@
       <file leaf-file-name="PassTwo.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="49" column="22" selection-start="1524" selection-end="1524" vertical-scroll-proportion="0.0">
+            <state line="47" column="21" selection-start="1408" selection-end="1408" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -313,7 +314,7 @@
       <file leaf-file-name="Compiler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="40" column="30" selection-start="1784" selection-end="1784" vertical-scroll-proportion="0.0">
+            <state line="64" column="21" selection-start="2336" selection-end="2336" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -337,10 +338,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TCode.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="TCode.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="520" column="66" selection-start="20082" selection-end="20082" vertical-scroll-proportion="1.434968">
+            <state line="291" column="22" selection-start="10979" selection-end="10979" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="e#616#623#0" expanded="true" />
               </folding>
@@ -348,10 +349,28 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="ProgramDriver.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/project/ProgramDriver.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="18" column="39" selection-start="430" selection-end="430" vertical-scroll-proportion="0.45535713">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="Assembler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/Assembler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="471" column="0" selection-start="20948" selection-end="20948" vertical-scroll-proportion="0.0">
+            <state line="5" column="0" selection-start="104" selection-end="104" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="148" column="43" selection-start="3343" selection-end="3351" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -377,7 +396,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/project/ProgramDriver.java" />
         <option value="$PROJECT_DIR$/src/project/Type_SAR.java" />
         <option value="$PROJECT_DIR$/src/project/Array_SAR.java" />
         <option value="$PROJECT_DIR$/src/project/ModifierTypeConst.java" />
@@ -385,14 +403,15 @@
         <option value="$PROJECT_DIR$/src/project/ICode.java" />
         <option value="$PROJECT_DIR$/src/project/Symbol.java" />
         <option value="$PROJECT_DIR$/src/project/New_SAR.java" />
-        <option value="$PROJECT_DIR$/src/project/Compiler.java" />
         <option value="$PROJECT_DIR$/src/project/SAR.java" />
         <option value="$PROJECT_DIR$/src/project/Literal_SAR.java" />
-        <option value="$PROJECT_DIR$/src/project/PassTwo.java" />
-        <option value="$PROJECT_DIR$/src/project/Assembler.java" />
         <option value="$PROJECT_DIR$/src/project/ICodeOprConst.java" />
         <option value="$PROJECT_DIR$/src/project/TCodeOprConst.java" />
+        <option value="$PROJECT_DIR$/src/project/ProgramDriver.java" />
+        <option value="$PROJECT_DIR$/src/project/Compiler.java" />
+        <option value="$PROJECT_DIR$/src/project/PassTwo.java" />
         <option value="$PROJECT_DIR$/src/project/TCode.java" />
+        <option value="$PROJECT_DIR$/src/project/Assembler.java" />
       </list>
     </option>
   </component>
@@ -508,7 +527,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="project.structure.last.edited" value="Global Libraries" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="OverrideImplement.combined" value="true" />
@@ -1741,7 +1760,11 @@
       <created>1386133412020</created>
       <updated>1386133412020</updated>
     </task>
-    <option name="localTasksCounter" value="233" />
+    <task id="LOCAL-00233" summary="more clean up">
+      <created>1386133908556</created>
+      <updated>1386133908557</updated>
+    </task>
+    <option name="localTasksCounter" value="234" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1782,12 +1805,12 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15838853" sideWeight="0.7167199" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15838853" sideWeight="0.7167199" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32965213" sideWeight="0.7507987" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39977914" sideWeight="0.600639" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17328918" sideWeight="0.71565497" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28328007" sideWeight="0.49806738" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17328918" sideWeight="0.7167199" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28328007" sideWeight="0.49806738" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1902,16 +1925,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/project/Function_SAR.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="19" selection-start="532" selection-end="532" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Identifier_SAR.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="28" selection-start="337" selection-end="337" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Symbol.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="82" column="35" selection-start="1808" selection-end="1808" vertical-scroll-proportion="0.0" />
@@ -1948,37 +1961,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="22" selection-start="1524" selection-end="1524" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="30" selection-start="1784" selection-end="1784" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="328" column="44" selection-start="11927" selection-end="11927" vertical-scroll-proportion="0.45309168">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/ICode.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="34" column="0" selection-start="757" selection-end="757" vertical-scroll-proportion="0.5618337">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Assembler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="471" column="0" selection-start="20948" selection-end="20948" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1997,12 +1982,54 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="148" column="43" selection-start="3343" selection-end="3351" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="520" column="66" selection-start="20082" selection-end="20082" vertical-scroll-proportion="1.434968">
+        <state line="291" column="22" selection-start="10979" selection-end="10979" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#616#623#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_10/src.zip!/java/io/File.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1002" column="16" selection-start="42235" selection-end="42235" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/Assembler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="0" selection-start="104" selection-end="104" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="64" column="21" selection-start="2336" selection-end="2336" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="47" column="21" selection-start="1408" selection-end="1408" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/ProgramDriver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="39" selection-start="430" selection-end="430" vertical-scroll-proportion="0.45535713">
+          <folding />
         </state>
       </provider>
     </entry>

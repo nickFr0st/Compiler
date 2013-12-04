@@ -1,7 +1,6 @@
 package project;
 
 import java.lang.*;
-import java.util.LinkedHashMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,9 +10,18 @@ import java.util.LinkedHashMap;
  */
 public class ProgramDriver {
     public static void main(String[] args) {
+        String fileName;
+        boolean testing = false;
+        if (args.length == 0 || args.length > 1) {
+            fileName = "DemoCV2Clean.kxi";
+            testing = true;
+        } else {
+            fileName = args[0];
+        }
+
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
-        lexicalAnalyzer.processFile("DemoCV2Clean.kxi");
+        lexicalAnalyzer.processFile(fileName);
         Compiler compiler = new Compiler(lexicalAnalyzer);
-        compiler.evaluate();
+        compiler.evaluate(testing);
     }
 }

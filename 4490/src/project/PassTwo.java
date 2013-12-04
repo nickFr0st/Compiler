@@ -38,13 +38,16 @@ public class PassTwo {
         startHere += this.variableId++;
     }
 
-    public void evaluate() {
+    public void evaluate(boolean isTest) {
         // pass two
         if (!compilation_unit()) {
             System.out.print(errorList);
             System.exit(0);
         }
-        System.out.println("Semantic Analysis Successful!");
+
+        if (isTest) {
+            System.out.println("Semantic Analysis Successful!");
+        }
 
         TCode tCode = new TCode(symbolTable, iCodeList, startHere);
         tCode.buildCode();

@@ -189,34 +189,6 @@ public class TCode {
 
                 addBooleanOperation(iCode, iCode.getOperation());
 
-            } else if (iCode.getOperation().equals("NE")) {
-
-                String argReg1 = getRegister(iCode.getArg1());
-                String argReg2 = getRegister(iCode.getArg2());
-                String argReg3 = getRegister(iCode.getResult());
-
-                if (iCode.getLabel().equals("")) {
-                    tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
-                } else {
-                    tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
-                }
-
-                String L3 = "L" + condIncr++;
-                L4.push("L" + condIncr);
-
-                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
-                tCode.add("LDR " + argReg3 + " " + iCode.getResult());
-
-                tCode.add("MOV " + argReg3 + " " + argReg1);
-                tCode.add("CMP " + argReg3 + " " + argReg2);
-                tCode.add("BNZ " + argReg3 + " " + L3 + " ; " + iCode.getResult() + " != " + iCode.getArg2() + " GOTO " + L3);
-                tCode.add("STR R0 " + iCode.getResult() + " ; Set FALSE");
-                tCode.add("JMP " + L4.peek());
-                tCode.add(L3 + " STR R1 " + iCode.getResult() + " ; Set TRUE");
-
-                freeResource(argReg1);
-                freeResource(argReg2);
-                freeResource(argReg3);
             } else if (iCode.getOperation().equals("LE")) {
 
                 String argReg1 = getRegister(iCode.getArg1());
@@ -435,6 +407,8 @@ public class TCode {
             tCode.add("BGT " + result + " " + jmpLabel + " ; " + arg1 + " > " + arg2 + " GOTO " + jmpLabel);
         } else if (operation.equals(ICodeOprConst.LT_OPR.getKey())) {
             tCode.add("BLT " + result + " " + jmpLabel + " ; " + arg1 + " < " + arg2 + " GOTO " + jmpLabel);
+        } else if (operation.equals(ICodeOprConst.NE_OPR.getKey())) {
+            tCode.add("BNZ " + result + " " + jmpLabel + " ; " + arg1 + " != " + arg2 + " GOTO " + jmpLabel);
         }
     }
 
@@ -599,13 +573,14 @@ public class TCode {
     }
 
     /**
-     * returns true if operation is ==, >, <
+     * returns true if operation is ==, >, <, !=
      * @param operation Icode operation
-     * @return true if operation is ==, >, <
+     * @return true if operation is ==, >, <, !=
      */
     private boolean isBooleanOperation(String operation) {
         return (operation.equals(ICodeOprConst.EQ_OPR.getKey()) ||
                 operation.equals(ICodeOprConst.GT_OPR.getKey()) ||
-                operation.equals(ICodeOprConst.LT_OPR.getKey()));
+                operation.equals(ICodeOprConst.LT_OPR.getKey()) ||
+                operation.equals(ICodeOprConst.NE_OPR.getKey()));
     }
 }

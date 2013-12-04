@@ -42,7 +42,8 @@ public enum ICodeOprConst {
     NEW_OPR("NEW"),
     CREATE_OPR("CREATE"),
     FUNC_OPR("FUNC"),
-    MOD_OPR("MOD");
+    MOD_OPR("MOD"),
+    MOVI_OPR("MOVI");
 
     private String key;
 

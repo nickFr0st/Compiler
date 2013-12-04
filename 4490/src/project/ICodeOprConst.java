@@ -23,6 +23,7 @@ public enum ICodeOprConst {
     AND_OPR("AND"),
     OR_OPR("OR"),
     BF_OPR("BF"),
+    BT_OPR("BT"),
     JMP_OPR("JMP"),
     WRTI_OPR("WRTI"),
     WRTC_OPR("WRTC"),

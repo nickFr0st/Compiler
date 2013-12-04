@@ -456,9 +456,7 @@ public class TCode {
     }
 
     private void addVariables() {
-        String alphabet = "abcdefghijklmnopqrstuvwxyz";
-        loadAlphabet(alphabet);
-        loadAlphabet(alphabet.toUpperCase());
+        loadAlphabet();
 
         tCode.add("CR .BYT '13'");
         tCode.add("SP .BYT '32'");
@@ -518,8 +516,14 @@ public class TCode {
         freeResource(argReg2);
     }
 
-    private void loadAlphabet(String alphabet) {
+    private void loadAlphabet() {
+        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+
         for (char c : alphabet.toCharArray()) {
+            tCode.add(c + " .BYT '" + c + "'");
+        }
+
+        for (char c : alphabet.toUpperCase().toCharArray()) {
             tCode.add(c + " .BYT '" + c + "'");
         }
     }

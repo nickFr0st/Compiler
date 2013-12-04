@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/ICodeOprConst.java" afterPath="$PROJECT_DIR$/src/project/ICodeOprConst.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/TCode.java" afterPath="$PROJECT_DIR$/src/project/TCode.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/TCodeOprConst.java" afterPath="$PROJECT_DIR$/src/project/TCodeOprConst.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1380769026652" ignored="false" />
-    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1386131839379" ignored="false" />
+    <file path="/Dummy.txt" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1386133408229" ignored="false" />
     <file path="/Complier.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1357673245303" ignored="false" />
     <file path="/Compiler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1379478019038" ignored="false" />
     <file path="/fragment.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1386117557983" ignored="false" />
@@ -33,7 +33,7 @@
     <file path="$PROJECT_DIR$/../../../testp/.idea/misc.xml" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1363449481722" ignored="false" />
     <file path="/Operator.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1364342510144" ignored="false" />
     <file path="/ICode.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1378860410655" ignored="false" />
-    <file path="/TCode.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1386133195488" ignored="false" />
+    <file path="/TCode.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1386133781530" ignored="false" />
     <file path="/Assembler.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1381544617949" ignored="false" />
     <file path="$PROJECT_DIR$/../../../compiler_v2/src/ProgramDriver.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367074256181" ignored="false" />
     <file path="$PROJECT_DIR$/../../../compiler_v2/src/LexicalAnalyzer.java" changelist="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" time="1367079767238" ignored="false" />
@@ -310,24 +310,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Literal_SAR.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/Literal_SAR.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="5" selection-start="232" selection-end="232" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SAR.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/SAR.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="77" column="40" selection-start="1427" selection-end="1427" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Compiler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -349,7 +331,7 @@
       <file leaf-file-name="TCodeOprConst.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/TCodeOprConst.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="4" selection-start="425" selection-end="425" vertical-scroll-proportion="0.0">
+            <state line="21" column="19" selection-start="420" selection-end="420" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -358,28 +340,10 @@
       <file leaf-file-name="TCode.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="191" column="102" selection-start="6821" selection-end="6821" vertical-scroll-proportion="0.26012793">
+            <state line="520" column="66" selection-start="20082" selection-end="20082" vertical-scroll-proportion="1.434968">
               <folding>
                 <element signature="e#616#623#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ICode.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/ICode.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="34" column="0" selection-start="757" selection-end="757" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="328" column="44" selection-start="11927" selection-end="11927" vertical-scroll-proportion="0.0">
-              <folding />
             </state>
           </provider>
         </entry>
@@ -426,8 +390,8 @@
         <option value="$PROJECT_DIR$/src/project/Literal_SAR.java" />
         <option value="$PROJECT_DIR$/src/project/PassTwo.java" />
         <option value="$PROJECT_DIR$/src/project/Assembler.java" />
-        <option value="$PROJECT_DIR$/src/project/TCodeOprConst.java" />
         <option value="$PROJECT_DIR$/src/project/ICodeOprConst.java" />
+        <option value="$PROJECT_DIR$/src/project/TCodeOprConst.java" />
         <option value="$PROJECT_DIR$/src/project/TCode.java" />
       </list>
     </option>
@@ -1773,7 +1737,11 @@
       <created>1386120261695</created>
       <updated>1386120261695</updated>
     </task>
-    <option name="localTasksCounter" value="232" />
+    <task id="LOCAL-00232" summary="more clean up">
+      <created>1386133412020</created>
+      <updated>1386133412020</updated>
+    </task>
+    <option name="localTasksCounter" value="233" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1966,16 +1934,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/SAR.java">
+    <entry file="file://$PROJECT_DIR$/src/project/Literal_SAR.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="40" selection-start="1427" selection-end="1427" vertical-scroll-proportion="0.0">
+        <state line="11" column="5" selection-start="232" selection-end="232" vertical-scroll-proportion="0.19936034">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Literal_SAR.java">
+    <entry file="file://$PROJECT_DIR$/src/project/SAR.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="5" selection-start="232" selection-end="232" vertical-scroll-proportion="0.0">
+        <state line="77" column="40" selection-start="1427" selection-end="1427" vertical-scroll-proportion="0.8187633">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="22" selection-start="1524" selection-end="1524" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1989,21 +1964,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="328" column="44" selection-start="11927" selection-end="11927" vertical-scroll-proportion="0.0">
+        <state line="328" column="44" selection-start="11927" selection-end="11927" vertical-scroll-proportion="0.45309168">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
+    <entry file="file://$PROJECT_DIR$/src/project/ICode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="22" selection-start="1524" selection-end="1524" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/TCodeOprConst.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="4" selection-start="425" selection-end="425" vertical-scroll-proportion="0.0">
+        <state line="34" column="0" selection-start="757" selection-end="757" vertical-scroll-proportion="0.5618337">
           <folding />
         </state>
       </provider>
@@ -2015,13 +1983,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/ICode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="0" selection-start="757" selection-end="757" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/ICodeOprConst.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="25" column="14" selection-start="457" selection-end="457" vertical-scroll-proportion="0.0">
@@ -2029,9 +1990,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/TCodeOprConst.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="19" selection-start="420" selection-end="420" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="191" column="102" selection-start="6821" selection-end="6821" vertical-scroll-proportion="0.26012793">
+        <state line="520" column="66" selection-start="20082" selection-end="20082" vertical-scroll-proportion="1.434968">
           <folding>
             <element signature="e#616#623#0" expanded="true" />
           </folding>

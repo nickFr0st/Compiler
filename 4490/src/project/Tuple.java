@@ -46,4 +46,8 @@ public class Tuple {
     public void setLineNum(int lineNum) {
         this.lineNum = lineNum;
     }
+
+    public String[] toArray() {
+        return new String[]{name, type, Integer.toString(lineNum), "\n"};
+    }
 }

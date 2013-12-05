@@ -12,16 +12,29 @@ public class ProgramDriver {
     public static void main(String[] args) {
         String fileName;
         boolean testing = false;
+
+        // this is put in for assignment purposes
+        boolean printList = false;
+
         if (args.length == 0 || args.length > 1) {
-            fileName = "DemoCV2Clean.kxi";
-            testing = true;
+            if (args.length > 1 && args[1].equals("lexi")) {
+                printList = true;
+                fileName = args[0];
+            } else {
+                fileName = "test.kxi";
+                testing = true;
+            }
+
         } else {
             fileName = args[0];
         }
 
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
-        lexicalAnalyzer.processFile(fileName);
-        Compiler compiler = new Compiler(lexicalAnalyzer);
-        compiler.evaluate(testing);
+        lexicalAnalyzer.processFile(fileName, printList);
+
+        if (!printList) {
+            Compiler compiler = new Compiler(lexicalAnalyzer);
+            compiler.evaluate(testing);
+        }
     }
 }

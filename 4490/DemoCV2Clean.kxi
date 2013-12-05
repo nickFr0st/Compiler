@@ -1,9 +1,0 @@
-void main() {
-    int k;
-	
-	cout << '>';
-    cin >> k;
-	
-	if (k == 10) cout << k * 3;
-	else cout << k;
-}

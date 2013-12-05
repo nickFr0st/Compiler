@@ -21,7 +21,7 @@ public class ProgramDriver {
                 printList = true;
                 fileName = args[0];
             } else {
-                fileName = "test.kxi";
+                fileName = "t1.kxi";
                 testing = true;
             }
 

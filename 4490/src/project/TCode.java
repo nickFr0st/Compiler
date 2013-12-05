@@ -231,7 +231,7 @@ public class TCode {
 
                 addBreakTrueFalse(iCode);
 
-            } else if (iCode.getOperation().equals("OR")) {
+            } else if (iCode.getOperation().equals(ICodeOprConst.OR_OPR.getKey())) {
 
                 String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
@@ -246,24 +246,33 @@ public class TCode {
                 } else {
                     tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
                 }
+                address++;
 
                 String L3 = setupL3();
                 L4.push("L" + condIncr);
 
                 tCode.add("CMP " + argReg1 + " R1 ; Check " + iCode.getArg1() +" for True");
+                address++;
                 tCode.add("BRZ  " + argReg1 + " " + L3 + " ; if TRUE GOTO " + L3);
+                address++;
                 tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+                address++;
                 tCode.add("CMP " + argReg2 + " R1 ; Check " + iCode.getArg2() +" for True");
+                address++;
                 tCode.add("BRZ  " + argReg2 + " " + L3 + " ; if TRUE GOTO " + L3);
+                address++;
                 tCode.add("STR R0 " + iCode.getResult());
+                address++;
                 tCode.add("JMP " + L4.peek());
+                address++;
                 tCode.add(L3 + " STR R1 " + iCode.getResult());
+                address++;
 
                 freeResource(argReg1);
                 freeResource(argReg2);
                 freeResource(argReg3);
 
-            } else if (iCode.getOperation().equals("AND")) {
+            } else if (iCode.getOperation().equals(ICodeOprConst.AND_OPR.getKey())) {
 
                 String argReg1 = getRegister(iCode.getArg1());
                 String argReg2 = getRegister(iCode.getArg2());
@@ -278,18 +287,27 @@ public class TCode {
                 } else {
                     tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
                 }
+                address++;
 
                 String L3 = setupL3();
                 L4.push("L" + condIncr);
 
                 tCode.add("CMP " + argReg1 + " R1 ; Check " + iCode.getArg1() +" for True");
+                address++;
                 tCode.add("BNZ  " + argReg1 + " " + L3 + " ; if FALSE GOTO " + L3);
+                address++;
                 tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+                address++;
                 tCode.add("CMP " + argReg2 + " R1 ; Check " + iCode.getArg2() +" for True");
+                address++;
                 tCode.add("BNZ  " + argReg2 + " " + L3 + " ; if FALSE GOTO " + L3);
+                address++;
                 tCode.add("STR R1 " + iCode.getResult());
+                address++;
                 tCode.add("JMP " + L4.peek());
+                address++;
                 tCode.add(L3 + " STR R0 " + iCode.getResult());
+                address++;
 
                 freeResource(argReg1);
                 freeResource(argReg2);

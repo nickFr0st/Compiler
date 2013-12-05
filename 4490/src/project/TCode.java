@@ -519,10 +519,13 @@ public class TCode {
                     if (s.getData().getType().equalsIgnoreCase("int") || s.getData().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.NUMBER.name())) {
                         tCode.add(s.getSymId() + " .INT " + s.getValue());
                     } else {
-                        if (s.getValue().equals("\'\\n\'"))
+                        if (s.getValue().equals("\'\\n\'")) {
                             tCode.add(s.getSymId() + " .BYT " + "\'13\'");
-                        else
+                        } else if ((int)s.getValue().charAt(1) == 32) {
+                            tCode.add(s.getSymId() + " .BYT " + "\'32\'");
+                        } else {
                             tCode.add(s.getSymId() + " .BYT " + s.getValue());
+                        }
                     }
                 }
             }

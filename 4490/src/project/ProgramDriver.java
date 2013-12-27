@@ -17,7 +17,7 @@ public class ProgramDriver {
         boolean printList = false;
 
         if (args.length == 0 || args.length > 1) {
-            if (args.length > 1 && args[1].equals("lexi")) {
+            if (args.length > 1 && args[1].equalsIgnoreCase("lexi")) {
                 printList = true;
                 fileName = args[0];
             } else {

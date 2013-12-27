@@ -179,7 +179,7 @@ public class TCode {
                 }
                 address++;
 
-            } else if (iCode.getOperation().equals("RDI")) {
+            } else if (iCode.getOperation().equals(ICodeOprConst.RDI_OPR.getKey())) {
 
                 if (iCode.getLabel().equals("")) {
                     if (!L4.isEmpty()) {
@@ -199,7 +199,7 @@ public class TCode {
                 address++;
                 freeResource(argReg1);
 
-            } else if (iCode.getOperation().equals("RDC")) {
+            } else if (iCode.getOperation().equals(ICodeOprConst.RDC_OPR.getKey())) {
 
                 if (iCode.getLabel().equals("")) {
                     if (!L4.isEmpty()) {
@@ -523,10 +523,6 @@ public class TCode {
     }
 
     private void addVariables() {
-        loadAlphabet();
-
-        tCode.add("CR .BYT '13'");
-        tCode.add("SP .BYT '32'");
         tCode.add("CLR .INT 0");
 
         for (String key : symbolTable.keySet()) {
@@ -588,18 +584,6 @@ public class TCode {
 
         freeResource(argReg1);
         freeResource(argReg2);
-    }
-
-    private void loadAlphabet() {
-        String alphabet = "abcdefghijklmnopqrstuvwxyz";
-
-        for (char c : alphabet.toCharArray()) {
-            tCode.add(c + " .BYT '" + c + "'");
-        }
-
-        for (char c : alphabet.toUpperCase().toCharArray()) {
-            tCode.add(c + " .BYT '" + c + "'");
-        }
     }
 
     private String updateLabel(String label) {

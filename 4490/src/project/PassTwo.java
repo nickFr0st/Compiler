@@ -409,6 +409,7 @@ public class PassTwo {
 
         } else if (lexicalAnalyzer.getToken().getName().equals(KeyConst.IF.getKey())) {
             // check format: "if" "(" expression ")" statement [ "else" statement ]
+            boolean labelHasValue = !label.isEmpty() && lexicalAnalyzer.peekPreviousToken().getName().equals(KeyConst.ELSE.getKey());
             lexicalAnalyzer.nextToken();
             operatorPush(new Opr_SAR(lexicalAnalyzer.getToken()));
 
@@ -425,6 +426,23 @@ public class PassTwo {
                 return false;
             }
 
+            if (labelHasValue && !ifStack.isEmpty() && !elseStack.isEmpty()) {
+                String replaceLabel = ifStack.peek();
+                String tempLabel = elseStack.peek();
+
+                for (ICode item : iCodeList) {
+                    if (item.getArg1().equals(tempLabel)) {
+                        item.setArg1(replaceLabel);
+                    }
+                    if (item.getArg2().equals(tempLabel)) {
+                        item.setArg2(replaceLabel);
+                    }
+                    if(item.getLabel().equals(tempLabel)) {
+                        item.setLabel(replaceLabel);
+                    }
+                }
+            }
+
             lexicalAnalyzer.nextToken();
 
             if (!statement()) {
@@ -439,6 +457,17 @@ public class PassTwo {
                 elseStack.push(ICodeOprConst.SKIP_ELSE.getKey() + variableId++);
 
                 label = ifStack.pop();
+
+                if (!lexicalAnalyzer.getToken().getName().equals(KeyConst.IF.getKey())) {
+                    String replaceLabel = elseStack.peek();
+
+                    for (ICode item : iCodeList) {
+                        if (item.getOperation().equals(ICodeOprConst.JMP_OPR.getKey()) && item.getArg1().equals(label)) {
+                            item.setArg2(replaceLabel);
+                        }
+                    }
+                }
+
                 if (!statement()) {
                     return false;
                 }
@@ -449,19 +478,35 @@ public class PassTwo {
                     String tempLabel = elseStack.pop();
 
                     for (ICode item : iCodeList) {
-                        if (item.getArg1().equals(tempLabel)) {
-                            item.setArg1(label);
+                        if (item.getArg1().equals(label)) {
+                            item.setArg1(tempLabel);
                         }
-                        if (item.getArg2().equals(tempLabel)) {
-                            item.setArg2(label);
+                        if (item.getArg2().equals(label)) {
+                            item.setArg2(tempLabel);
                         }
-                        if(item.getLabel().equals(tempLabel)) {
-                            item.setLabel(label);
+                        if(item.getLabel().equals(label)) {
+                            item.setLabel(tempLabel);
                         }
                     }
-
+                    label = tempLabel;
                 }
                 return true;
+            }
+
+            if (!label.isEmpty() && label.contains(ICodeOprConst.SKIP_ELSE.getKey()) && !elseStack.isEmpty()) {
+                String tempLabel = elseStack.peek();
+
+                for (ICode item : iCodeList) {
+                    if (item.getArg1().equals(label)) {
+                        item.setArg1(tempLabel);
+                    }
+                    if (item.getArg2().equals(label)) {
+                        item.setArg2(tempLabel);
+                    }
+                    if(item.getLabel().equals(label)) {
+                        item.setLabel(tempLabel);
+                    }
+                }
             }
 
             label = ifStack.pop();

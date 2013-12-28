@@ -1868,14 +1868,10 @@ public class PassTwo {
         variableId++;
         SAS.push(temp);
 
-        iCodeList.add(new ICode(key, ICodeOprConst.CREATE_OPR.getKey(), ".INT", "",  "", ""));
+        iCodeList.add(new ICode(key, ICodeOprConst.CREATE_OPR.getKey(), ".INT", "", "", ""));
 
         if (opr.equals("+")) {
-            if (rhs instanceof Literal_SAR) {
-                iCodeList.add(new ICode(useLabel(), ICodeOprConst.ADI_OPR.getKey(), lhs.getSarId(), rhs.getLexi().getName(), value.getSymId(), "; " + lhs.getLexi().getName() + " + " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
-            } else {
-                iCodeList.add(new ICode(useLabel(), ICodeOprConst.ADD_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " + " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
-            }
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.ADD_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " + " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
         } else if (opr.equals("-")) {
             iCodeList.add(new ICode(useLabel(), ICodeOprConst.SUB_OPR.getKey(), lhs.getSarId(), rhs.getSarId(), value.getSymId(), "; " + lhs.getLexi().getName() + " - " + rhs.getLexi().getName() + " -> " + temp.getLexi().getName()));
         } else if (opr.equals("*")) {

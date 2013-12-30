@@ -548,7 +548,7 @@ public class TCode {
         for (ICode iCode : iCodeList) {
             if (iCode.getOperation().equals(ICodeOprConst.CREATE_OPR.getKey()) && !iCode.getLabel().startsWith("L")) {
                 if (symbolTable.get(iCode.getLabel()).getData() instanceof VariableData) {
-                    if ((symbolTable.get(iCode.getLabel()).getData()).getType().equalsIgnoreCase("int")) {
+                    if ((symbolTable.get(iCode.getLabel()).getData()).getType().equalsIgnoreCase(KeyConst.INT.getKey())) {
                         tCode.add(iCode.getLabel() + " " + iCode.getArg1() + " " + "0" + " " + iCode.getComment());
                     } else {
                         tCode.add(iCode.getLabel() + " " + iCode.getArg1() + " " + "\'0\'" + " " + iCode.getComment());

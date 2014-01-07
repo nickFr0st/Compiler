@@ -398,7 +398,6 @@ public class LexicalAnalyzer {
             return lexicalList.get(lexPtr);
         } catch (Exception e) {
             return new NullTuple();
-
         }
     }
 

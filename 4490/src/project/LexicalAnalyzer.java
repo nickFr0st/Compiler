@@ -309,10 +309,10 @@ public class LexicalAnalyzer {
 
         if (printList) {
             StringBuilder sb = new StringBuilder();
-            sb.append(String.format("%-20s %-20s %-20s %s", new String[]{"Name", "Type", "LineNumber", "\n"}));
+            sb.append(String.format("%-20s %-20s %-20s %s", new Object[]{new String[]{"Name", "Type", "LineNumber", "\n"}}));
 
             for (Tuple t : lexicalList) {
-                sb.append(String.format("%-20s %-20s %-20s %s", t.toArray()));
+                sb.append(String.format("%-20s %-20s %-20s %s", new Object[]{t.toArray()}));
             }
 
             System.out.print(sb.toString());

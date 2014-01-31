@@ -799,7 +799,7 @@ public class PassTwo {
             return false;
         }
 
-        iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", ""));
+        iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; return from constructor: " + scope));
 
         decrementScope();
         return true;
@@ -810,18 +810,20 @@ public class PassTwo {
             // check format: "(" [parameter_list] ")" method_body
 
             lexicalAnalyzer.nextToken();
+            incrementScope(value.getName(), false);
+            iCodeList.add(new ICode("", ICodeOprConst.FUNC_OPR.getKey(), scope, "", "", ""));
+
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                incrementScope(value.getName(), false);
                 lexicalAnalyzer.nextToken();
                 if (!method_body()) {
                     return false;
                 }
 
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; return from function: " + scope));
+
                 decrementScope();
                 return true;
             }
-
-            incrementScope(value.getName(), false);
 
             if (!parameter_list()) {
                 return false;
@@ -832,7 +834,7 @@ public class PassTwo {
                 return false;
             }
 
-            iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", ""));
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; return from function: " + scope));
 
             decrementScope();
             return true;
@@ -965,20 +967,10 @@ public class PassTwo {
         lexicalAnalyzer.nextToken();
         incrementScope("main", true);
 
-        String mainKey = "";
         String searchScope = "g.";
 
-        for (String key : symbolTable.keySet()) {
-            Symbol temp = symbolTable.get(key);
-
-            if (temp.getScope().equals(searchScope) && temp.getValue().equals("main") && temp.getKind().equals("method")) {
-                mainKey = temp.getSymId();
-                break;
-            }
-        }
-
         label = startHere;
-        iCodeList.add(new ICode(useLabel(), ICodeOprConst.FUNC_OPR.getKey(), mainKey, KeyConst.THIS.getKey(), "", ""));
+        iCodeList.add(new ICode(useLabel(), ICodeOprConst.FUNC_OPR.getKey(), scope, KeyConst.THIS.getKey(), "", ""));
 
         // at this point we have declared classes and "void main()"
         if (!method_body()) {
@@ -1004,7 +996,7 @@ public class PassTwo {
             }
         }
 
-        iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; Return from method 'main'"));
+        iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; Return from method: " + scope));
 
         decrementScope();
         return true;
@@ -1167,10 +1159,11 @@ public class PassTwo {
                 }
 
                 if (returnType.equals(KeyConst.VOID.name())) {
-                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; return void"));
+                    assert sar != null;
+                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; return void from: " + sar.getScope()));
                 } else {
                     assert sar != null;
-                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.RETURN_OPR.getKey(), sar.getSarId(), "", "", "; return " + sar.getLexi().getName()));
+                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.RETURN_OPR.getKey(), sar.getSarId(), "", "", "; return: " + sar.getScope()));
                 }
 
                 return true;
@@ -1446,7 +1439,7 @@ public class PassTwo {
                         iCodeList.add(new ICode(useLabel(), ICodeOprConst.PUSH_OPR.getKey(), args.getSarId(), "", "", "; push " + args.getLexi().getName() + " on run-time stack"));
                     }
 
-                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), lhs.getSarId(), "", "", ""));
+                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), temp.getScope() + "." + temp.getValue(), "", "", ""));
                     if ((!OS.isEmpty() && OS.peek().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) || !lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                         iCodeList.add(new ICode(useLabel(), ICodeOprConst.PEEK_OPR.getKey(), itemKey, "", "", "; get value from method " + temp.getValue()));
                     }
@@ -1697,7 +1690,7 @@ public class PassTwo {
                     argsList.add(args.getSarId());
                 }
 
-                iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), type.getSarId(), "", "", ""));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), temp.getScope() + "." + temp.getValue(), "", "", ""));
                 iCodeList.add(new ICode(useLabel(), ICodeOprConst.PEEK_OPR.getKey(), tempSym, "", "", ""));
                 return true;
             }

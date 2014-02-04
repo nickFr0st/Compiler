@@ -146,7 +146,7 @@ public class LexicalAnalyzer {
         return symbolCheck;
     }
 
-    public void processFile(String fileName, boolean printList) {
+    public void processFile(String fileName) {
         setKeyWords();
         setSymbolCheck();
         BufferedReader file = null;
@@ -305,17 +305,6 @@ public class LexicalAnalyzer {
         } catch (IOException e) {
             System.out.println("There was an error reading in the file. Failed on line " + lineCount);
             System.exit(0);
-        }
-
-        if (printList) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(String.format("%-20s %-20s %-20s %s", new Object[]{new String[]{"Name", "Type", "LineNumber", "\n"}}));
-
-            for (Tuple t : lexicalList) {
-                sb.append(String.format("%-20s %-20s %-20s %s", new Object[]{t.toArray()}));
-            }
-
-            System.out.print(sb.toString());
         }
     }
 

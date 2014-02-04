@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="all functions now work properly">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/TCode.java" afterPath="$PROJECT_DIR$/src/project/TCode.java" />
+    <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" afterPath="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/ProgramDriver.java" afterPath="$PROJECT_DIR$/src/project/ProgramDriver.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
@@ -243,33 +244,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BAL_SAR.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/BAL_SAR.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="0" selection-start="111" selection-end="111" vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="272">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Tuple.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/Tuple.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="0" selection-start="456" selection-end="456" vertical-scroll-proportion="0.0" vertical-offset="442" max-vertical-offset="1003">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ICodeOprConst.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/ICodeOprConst.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="37" column="4" selection-start="705" selection-end="705" vertical-scroll-proportion="0.0" vertical-offset="629" max-vertical-offset="1088">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Compiler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -279,10 +253,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TCode.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="TCode.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="306" column="43" selection-start="12536" selection-end="12536" vertical-scroll-proportion="0.7175227" vertical-offset="4693" max-vertical-offset="13617">
+            <state line="298" column="30" selection-start="12198" selection-end="12198" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="13617">
               <folding>
                 <element signature="e#734#750#0" expanded="true" />
                 <element signature="e#959#968#0" expanded="true" />
@@ -300,19 +274,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="KeyConst.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/KeyConst.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="12" selection-start="306" selection-end="306" vertical-scroll-proportion="0.0" vertical-offset="306" max-vertical-offset="867">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ProgramDriver.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="ProgramDriver.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/ProgramDriver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="50" selection-start="397" selection-end="397" vertical-scroll-proportion="0.0" vertical-offset="306" max-vertical-offset="782">
+            <state line="16" column="32" selection-start="325" selection-end="325" vertical-scroll-proportion="0.40296295" vertical-offset="0" max-vertical-offset="675">
               <folding />
             </state>
           </provider>
@@ -321,7 +286,7 @@
       <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="312" column="0" selection-start="11337" selection-end="11337" vertical-scroll-proportion="0.0" vertical-offset="5304" max-vertical-offset="7480">
+            <state line="148" column="0" selection-start="3308" selection-end="3308" vertical-scroll-proportion="0.0" vertical-offset="1934" max-vertical-offset="7038">
               <folding />
             </state>
           </provider>
@@ -358,11 +323,11 @@
         <option value="$PROJECT_DIR$/src/project/Compiler.java" />
         <option value="$PROJECT_DIR$/src/project/Tuple.java" />
         <option value="$PROJECT_DIR$/src/project/Assembler.java" />
-        <option value="$PROJECT_DIR$/src/project/ProgramDriver.java" />
-        <option value="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" />
         <option value="$PROJECT_DIR$/src/project/PassTwo.java" />
         <option value="$PROJECT_DIR$/src/project/TCodeOprConst.java" />
         <option value="$PROJECT_DIR$/src/project/TCode.java" />
+        <option value="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" />
+        <option value="$PROJECT_DIR$/src/project/ProgramDriver.java" />
       </list>
     </option>
   </component>
@@ -888,7 +853,7 @@
       <workItem from="1391289650167" duration="8207000" />
       <workItem from="1391310576648" duration="526000" />
       <workItem from="1391383725480" duration="563000" />
-      <workItem from="1391484517009" duration="1350000" />
+      <workItem from="1391484517009" duration="1581000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1358823189173</created>
@@ -1878,11 +1843,15 @@
       <created>1391291313518</created>
       <updated>1391291313518</updated>
     </task>
-    <option name="localTasksCounter" value="248" />
+    <task id="LOCAL-00248" summary="all functions now work properly">
+      <created>1391485871100</created>
+      <updated>1391485871100</updated>
+    </task>
+    <option name="localTasksCounter" value="249" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27707000" />
+    <option name="totallyTimeSpent" value="27938000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -2275,13 +2244,6 @@
         <state line="34" column="0" selection-start="757" selection-end="757" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/ProgramDriver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="50" selection-start="397" selection-end="397" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/SAR.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="66" column="0" selection-start="1229" selection-end="1229" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
@@ -2311,13 +2273,6 @@
     <entry file="file://$PROJECT_DIR$/src/project/BAL_SAR.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="8" column="0" selection-start="111" selection-end="111" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="312" column="0" selection-start="11337" selection-end="11337" vertical-scroll-proportion="0.0" vertical-offset="4652" max-vertical-offset="7225">
           <folding />
         </state>
       </provider>
@@ -2352,11 +2307,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="306" column="43" selection-start="12536" selection-end="12536" vertical-scroll-proportion="0.7175227" vertical-offset="4693" max-vertical-offset="13617">
+        <state line="298" column="30" selection-start="12198" selection-end="12198" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="13617">
           <folding>
             <element signature="e#734#750#0" expanded="true" />
             <element signature="e#959#968#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="148" column="0" selection-start="3308" selection-end="3308" vertical-scroll-proportion="0.0" vertical-offset="1934" max-vertical-offset="7038">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/ProgramDriver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="32" selection-start="325" selection-end="325" vertical-scroll-proportion="0.40296295" vertical-offset="0" max-vertical-offset="675">
+          <folding />
         </state>
       </provider>
     </entry>

@@ -13,28 +13,17 @@ public class ProgramDriver {
         String fileName;
         boolean testing = false;
 
-        // this is put in for assignment purposes
-        boolean printList = false;
-
-        if (args.length == 0 || args.length > 1) {
-            if (args.length > 1 && args[1].equalsIgnoreCase("lexi")) {
-                printList = true;
-                fileName = args[0];
-            } else {
-                fileName = "t1.kxi";
-                testing = true;
-            }
-
+        if (args.length == 0) {
+            fileName = "t1.kxi";
+            testing = true;
         } else {
             fileName = args[0];
         }
 
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
-        lexicalAnalyzer.processFile(fileName, printList);
+        lexicalAnalyzer.processFile(fileName);
 
-        if (!printList) {
-            Compiler compiler = new Compiler(lexicalAnalyzer);
-            compiler.evaluate(testing);
-        }
+        Compiler compiler = new Compiler(lexicalAnalyzer);
+        compiler.evaluate(testing);
     }
 }

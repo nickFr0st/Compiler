@@ -1323,23 +1323,12 @@ public class PassTwo {
                 SAS.push(tempSAR);
 
             } else if (id_sar instanceof Function_SAR) {
-                // todo: this may be wrong
-                boolean needsToBeCreated = true;
-                for (ICode iCode : iCodeList) {
-                    if (iCode.getLabel().equals(id_sar.getSarId())) {
-                        needsToBeCreated = false;
-                        break;
-                    }
-                }
-                if (needsToBeCreated) {
-                    iCodeList.add(new ICode(id_sar.getSarId(), ICodeOprConst.CREATE_OPR.getKey(), ".BYT", "", "", ""));
-                }
-                iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), id_sar.getSarId(), KeyConst.THIS.getKey(), "", ""));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), id_sar.getScope(), KeyConst.THIS.getKey(), "", ""));
 
                 for (SAR args : ((Function_SAR) id_sar).getArguments().getArguments()) {
                     iCodeList.add(new ICode(useLabel(), ICodeOprConst.PUSH_OPR.getKey(), args.getSarId(), "", "", "; push " + args.getLexi().getName() + " on run-time stack"));
                 }
-                iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), id_sar.getSarId(), "", "", ""));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), id_sar.getScope(), "", "", ""));
 
                 String itemKey = "T" + variableId;
                 symbolTable.put(itemKey, new Symbol(scope, itemKey, itemKey, values[2], new VariableData(type, values[3]), Compiler.ELEM_SIZE));
@@ -1351,6 +1340,11 @@ public class PassTwo {
 
                 if ((!OS.isEmpty() && OS.peek().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) || !lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
                     iCodeList.add(new ICode(useLabel(), ICodeOprConst.PEEK_OPR.getKey(), itemKey, "", "", "; get value from method " + id_sar.getLexi().getName()));
+                }
+
+                if (!SAS.isEmpty()) {
+                    SAS.pop();
+                    SAS.push(new Variable_SAR(new Tuple(itemKey, type, 0), scope, itemKey, type));
                 }
                 variableId++;
             }

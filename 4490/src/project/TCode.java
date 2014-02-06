@@ -78,7 +78,7 @@ public class TCode {
         tCode.add("ADI R1 1");
         address++;
         tCode.add("ADI " + SB + " " + address);
-        addToFPStack(0);
+        addToReturnAddressStack(0);
         address++;
 
         tCode.add(ICodeOprConst.JMP_OPR.getKey() + " " + startLabel + " ; program start");
@@ -139,9 +139,9 @@ public class TCode {
                 address++;
 
                 fcnNames.put(iCode.getArg1(), address);
-                addToFPStack(0);
+                addToReturnAddressStack(0);
 
-                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + RETURN_ADDRESS_REG + " " + getNextFPAddress());
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + RETURN_ADDRESS_REG + " " + getNextReturnAddress());
                 address++;
 
                 tCode.add(TCodeOprConst.JMP_OPR.getKey() + " " + iCode.getArg1());
@@ -266,7 +266,7 @@ public class TCode {
                 if (retAddress.equals("g.main")) {
                     tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + RETURN_ADDRESS_REG + " CLR");
                     address++;
-                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + RETURN_ADDRESS_REG + " " + getNextFPAddress());
+                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + RETURN_ADDRESS_REG + " " + getNextReturnAddress());
                     address++;
                 }
 
@@ -297,7 +297,7 @@ public class TCode {
                 if (retAddress.equals("g.main")) {
                     tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + RETURN_ADDRESS_REG + " CLR");
                     address++;
-                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + RETURN_ADDRESS_REG + " " + getNextFPAddress());
+                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + RETURN_ADDRESS_REG + " " + getNextReturnAddress());
                     address++;
                 }
 
@@ -474,11 +474,11 @@ public class TCode {
         assembler.action("NNM-program.asm");
     }
 
-    private void addToFPStack(int increment) {
+    private void addToReturnAddressStack(int increment) {
         retAddressStack.push(address + increment);
     }
 
-    private Integer getNextFPAddress() {
+    private Integer getNextReturnAddress() {
         if (retAddressStack.isEmpty()) {
             return null;
         }

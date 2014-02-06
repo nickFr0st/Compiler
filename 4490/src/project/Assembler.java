@@ -18,7 +18,7 @@ public class Assembler {
     public int INT = 4;
     public int INSTRUCTION = 12;
     public int BYT = 1;
-    public HashMap<String, String> reg = new HashMap<String, String>();
+    public HashMap<String, String> reg = new LinkedHashMap<String, String>();
     public List<Memory> mem = new ArrayList<Memory>();
     HashMap<String, Integer> symbolTable = new HashMap<String, Integer>();
     ThreadGroup threadGroup = new ThreadGroup(GROUPNAME);

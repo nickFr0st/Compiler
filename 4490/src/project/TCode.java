@@ -11,6 +11,9 @@ import java.util.*;
  * Time: 5:30 PM
  */
 public class TCode {
+    private final static int UNDERFLOW_LIMIT = 10;
+    private final static int PARAM_REG_START = 96;
+    private final static int PARAM_REG_STR_START = 80;
     private final static String RETURN_VALUE_REG = "R97";
     private final static String SB = "R98";
     private final static String RETURN_ADDRESS_REG = "R99";
@@ -28,11 +31,12 @@ public class TCode {
     private Stack<Integer> retAddressStack = new Stack<Integer>();
 
     private Map<String, Integer> fcnNames = new HashMap<String, Integer>();
+    private int paramStrPtr = PARAM_REG_STR_START;
 
 
     private void initReg() {
         for (int i = 0; i < 101; i++) {
-            if (i > 96) {
+            if (i > PARAM_REG_START) {
                 reg.put("R" + i, "0");
             } else {
                 reg.put("R" + i, "");
@@ -114,18 +118,25 @@ public class TCode {
                     }
 
                     tempListCount = listCount + 1;
-                    int paramReg = 96 - paramCount;
-
+                    int paramReg = PARAM_REG_START - paramCount;
 
                     while (iCodeList.get(tempListCount).getOperation().equals(ICodeOprConst.PUSH_OPR.getKey())) {
-                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " R" + paramReg + " " + iCodeList.get(tempListCount).getArg1());
+                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " R" + paramStrPtr + " " + iCodeList.get(tempListCount).getArg1());
                         address++;
+                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " R" + paramReg + " CLR");
+                        address++;
+                        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " R" + paramReg + " " + paramStrPtr);
+                        address++;
+                        paramStrPtr--;
                         paramReg++;
                         tempListCount++;
                     }
                 }
 
             } else if (iCode.getOperation().equals(ICodeOprConst.CALL_OPR.getKey())) {
+
+                // todo: need to add return address to the paramStrPtr in other words I am creating an activation record
+                // todo: also make sure there is room for all the activation records
 
                 if (iCode.getLabel().isEmpty()) {
                     if (!L4.isEmpty()) {
@@ -165,12 +176,14 @@ public class TCode {
 
                 if (iCodeList.get(listCount + 1).getOperation().equals(ICodeOprConst.CREATE_OPR.getKey()) && !iCodeList.get(listCount + 1).getLabel().isEmpty() && iCodeList.get(listCount + 1).getLabel().startsWith("P")) {
                     int tempListCount = listCount + 1;
-                    int paramReg = 96;
+                    int paramReg = PARAM_REG_START;
 
                     while (iCodeList.get(tempListCount).getOperation().equals(ICodeOprConst.CREATE_OPR.getKey()) && !iCodeList.get(tempListCount).getLabel().isEmpty() && iCodeList.get(tempListCount).getLabel().startsWith("P")) {
-                        tCode.add(TCodeOprConst.STR_OPR.getKey() + " R" + paramReg + " " + iCodeList.get(tempListCount).getLabel());
-                        paramReg--;
+                        tCode.add(TCodeOprConst.LDA_OPR.getKey() + " " + reg1 + " R" + paramReg);
                         address++;
+                        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg1 + " " + iCodeList.get(tempListCount).getLabel());
+                        address++;
+                        paramReg--;
                         tempListCount++;
                     }
                 }
@@ -178,6 +191,8 @@ public class TCode {
                 freeResource(reg1);
 
             } else if (iCode.getOperation().equals(ICodeOprConst.PEEK_OPR.getKey())) {
+
+                //todo: rework the return value
 
                 if (iCode.getLabel().isEmpty()) {
                     if (!L4.isEmpty()) {
@@ -249,6 +264,9 @@ public class TCode {
 
             } else if (iCode.getOperation().equals(ICodeOprConst.RTN_OPR.getKey())) {
 
+                // todo: remove parameter value by moving the param reg pointer up the number of params in method you are leaving
+                // todo: also check to see if other return statement has already done this
+
                 String retAddress = iCode.getComment().substring(iCode.getComment().indexOf(":") + 2, iCode.getComment().length()).trim();
                 String reg1 = getRegister(fcnNames.get(retAddress).toString());
 
@@ -279,6 +297,8 @@ public class TCode {
                 freeResource(reg1);
 
             } else if (iCode.getOperation().equals(ICodeOprConst.RETURN_OPR.getKey())) {
+
+                // todo: remove parameter value by moving the param reg pointer up the number of params in method you are leaving
 
                 String retAddress = iCode.getComment().substring(iCode.getComment().indexOf(":") + 2, iCode.getComment().length()).trim();
                 String reg1 = getRegister(fcnNames.get(retAddress).toString());

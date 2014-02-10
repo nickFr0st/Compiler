@@ -20,7 +20,9 @@ public enum TCodeOprConst {
     LDR_OPR("LDR"),
     JMP_OPR("JMP"),
     BLT_OPR("BLT"),
-    STR_OPR("STR");
+    STR_OPR("STR"),
+    ADDI_OPR("ADDI"),
+    LDA_OPR("LDA");
 
     private String key;
 

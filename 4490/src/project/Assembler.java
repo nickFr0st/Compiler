@@ -617,7 +617,13 @@ public class Assembler {
                     break;
                 case LDA:
                     newValue = -1;
-                    if (instructionList.get(i).getOpd2().length() < 5) {
+                    if (isValidRegister(instructionList.get(i).getOpd2())) {
+
+                        newValue = Integer.parseInt(reg.get(instructionList.get(i).getOpd2().substring(1, instructionList.get(i).getOpd2().length())));
+                        String regValue = reg.get(newValue.toString());
+                        reg.put(instructionList.get(i).getOpd1(), regValue);
+
+                    } else if (instructionList.get(i).getOpd2().length() < 5) {
                         for (Memory m : mem) {
                             if (m.getLabel() != null && m.getLabel().equals(instructionList.get(i).getOpd2())) {
                                 newValue = mem.indexOf(m);
@@ -995,7 +1001,7 @@ public class Assembler {
                 System.out.println("Line " + counter + ": operand 1 must be a valid register");
                 return true;
             }
-            if (!symbolTable.containsKey(lineInfo[2])) {
+            if (!symbolTable.containsKey(lineInfo[2]) && !isValidRegister(lineInfo[2])) {
                 System.out.println("Label at line: " + counter + " operand 2 does not exist");
                 return true;
             }

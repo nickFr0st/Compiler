@@ -1323,12 +1323,14 @@ public class PassTwo {
                 SAS.push(tempSAR);
 
             } else if (id_sar instanceof Function_SAR) {
-                iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), id_sar.getScope(), KeyConst.THIS.getKey(), "", ""));
+                String symbolId = symbolTable.get(id_sar.getSarId()).getScope() + "." + id_sar.getLexi().getName();
+
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), symbolId, KeyConst.THIS.getKey(), "", ""));
 
                 for (SAR args : ((Function_SAR) id_sar).getArguments().getArguments()) {
                     iCodeList.add(new ICode(useLabel(), ICodeOprConst.PUSH_OPR.getKey(), args.getSarId(), "", "", "; push " + args.getLexi().getName() + " on run-time stack"));
                 }
-                iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), id_sar.getScope(), "", "", ""));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), symbolId, "", "", ""));
 
                 String itemKey = "T" + variableId;
                 symbolTable.put(itemKey, new Symbol(scope, itemKey, itemKey, values[2], new VariableData(type, values[3]), Compiler.ELEM_SIZE));

@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Assembler.java" afterPath="$PROJECT_DIR$/src/project/Assembler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Compiler.java" afterPath="$PROJECT_DIR$/src/project/Compiler.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/TCode.java" afterPath="$PROJECT_DIR$/src/project/TCode.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/TCodeOprConst.java" afterPath="$PROJECT_DIR$/src/project/TCodeOprConst.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
@@ -91,7 +90,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="506" class="project.TCode" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="530" class="project.TCode" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -211,7 +210,52 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="280" class="project.TCode" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="271" class="project.TCode" package="project">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="302" class="project.TCode" package="project">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="171" class="project.TCode" package="project">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="108" class="project.TCode" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -284,15 +328,13 @@
       <file leaf-file-name="TCode.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="293" column="0" selection-start="12033" selection-end="12033" vertical-scroll-proportion="0.15248227" vertical-offset="4861" max-vertical-offset="14807">
+            <state line="27" column="4" selection-start="862" selection-end="862" vertical-scroll-proportion="-5.717949" vertical-offset="4216" max-vertical-offset="15181">
               <folding>
-                <element signature="e#572#588#0" expanded="true" />
-                <element signature="e#641#648#0" expanded="true" />
-                <element signature="e#698#706#0" expanded="true" />
-                <element signature="e#775#791#0" expanded="true" />
-                <element signature="e#934#942#0" expanded="true" />
-                <element signature="e#1000#1009#0" expanded="true" />
-                <element signature="e#1102#1110#0" expanded="true" />
+                <element signature="e#536#552#0" expanded="true" />
+                <element signature="e#605#612#0" expanded="true" />
+                <element signature="e#662#670#0" expanded="true" />
+                <element signature="e#739#755#0" expanded="true" />
+                <element signature="e#898#906#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -301,7 +343,7 @@
       <file leaf-file-name="Assembler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/Assembler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="384" column="0" selection-start="15427" selection-end="15427" vertical-scroll-proportion="0.0" vertical-offset="6272" max-vertical-offset="18768">
+            <state line="410" column="0" selection-start="17105" selection-end="17105" vertical-scroll-proportion="0.0" vertical-offset="6734" max-vertical-offset="18768">
               <folding />
             </state>
           </provider>
@@ -319,7 +361,7 @@
       <file leaf-file-name="TCodeOprConst.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/TCodeOprConst.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="21" selection-start="462" selection-end="462" vertical-scroll-proportion="0.0" vertical-offset="391" max-vertical-offset="714">
+            <state line="23" column="19" selection-start="460" selection-end="460" vertical-scroll-proportion="0.0" vertical-offset="21" max-vertical-offset="697">
               <folding />
             </state>
           </provider>
@@ -365,10 +407,10 @@
         <option value="$PROJECT_DIR$/src/project/Tuple.java" />
         <option value="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" />
         <option value="$PROJECT_DIR$/src/project/ProgramDriver.java" />
-        <option value="$PROJECT_DIR$/src/project/TCodeOprConst.java" />
         <option value="$PROJECT_DIR$/src/project/PassTwo.java" />
         <option value="$PROJECT_DIR$/src/project/Assembler.java" />
         <option value="$PROJECT_DIR$/src/project/Compiler.java" />
+        <option value="$PROJECT_DIR$/src/project/TCodeOprConst.java" />
         <option value="$PROJECT_DIR$/src/project/TCode.java" />
       </list>
     </option>
@@ -909,7 +951,7 @@
       <workItem from="1392494024987" duration="617000" />
       <workItem from="1392513861795" duration="10041000" />
       <workItem from="1392526317527" duration="1401000" />
-      <workItem from="1392773880091" duration="7570000" />
+      <workItem from="1392773880091" duration="14864000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1358823189173</created>
@@ -1915,11 +1957,15 @@
       <created>1392522924013</created>
       <updated>1392522924013</updated>
     </task>
-    <option name="localTasksCounter" value="252" />
+    <task id="LOCAL-00252" summary="a great number of function handling changes">
+      <created>1392783911703</created>
+      <updated>1392783911703</updated>
+    </task>
+    <option name="localTasksCounter" value="253" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="92147000" />
+    <option name="totallyTimeSpent" value="99441000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -1952,7 +1998,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.38575983" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4473964" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36208734" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -1966,7 +2012,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32965213" sideWeight="0.7507987" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17290749" sideWeight="0.7167199" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2805526" sideWeight="0.49806738" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2805526" sideWeight="0.49806738" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1989,7 +2035,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="added some more regs" />
     <MESSAGE value="added a lot of stuff" />
     <MESSAGE value="temp variables are now created in target code" />
     <MESSAGE value="fixed assembly error" />
@@ -2014,7 +2059,8 @@
     <MESSAGE value="clean up" />
     <MESSAGE value="paramters are now added to an activation record" />
     <MESSAGE value="correcting some errors&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="correcting some errors&#10;" />
+    <MESSAGE value="a great number of function handling changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="a great number of function handling changes" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -2093,13 +2139,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="560" column="5" selection-start="21797" selection-end="21797" vertical-scroll-proportion="0.0" vertical-offset="9520" max-vertical-offset="11016">
           <folding>
-            <element signature="e#572#588#0" expanded="true" />
-            <element signature="e#641#648#0" expanded="true" />
-            <element signature="e#698#706#0" expanded="true" />
-            <element signature="e#775#791#0" expanded="true" />
-            <element signature="e#934#942#0" expanded="true" />
-            <element signature="e#1000#1009#0" expanded="true" />
-            <element signature="e#1102#1110#0" expanded="true" />
+            <element signature="e#536#552#0" expanded="true" />
+            <element signature="e#605#612#0" expanded="true" />
+            <element signature="e#662#670#0" expanded="true" />
+            <element signature="e#739#755#0" expanded="true" />
+            <element signature="e#898#906#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2161,13 +2205,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="560" column="5" selection-start="21797" selection-end="21797" vertical-scroll-proportion="0.0" vertical-offset="9520" max-vertical-offset="11016">
           <folding>
-            <element signature="e#572#588#0" expanded="true" />
-            <element signature="e#641#648#0" expanded="true" />
-            <element signature="e#698#706#0" expanded="true" />
-            <element signature="e#775#791#0" expanded="true" />
-            <element signature="e#934#942#0" expanded="true" />
-            <element signature="e#1000#1009#0" expanded="true" />
-            <element signature="e#1102#1110#0" expanded="true" />
+            <element signature="e#536#552#0" expanded="true" />
+            <element signature="e#605#612#0" expanded="true" />
+            <element signature="e#662#670#0" expanded="true" />
+            <element signature="e#739#755#0" expanded="true" />
+            <element signature="e#898#906#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2229,13 +2271,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="560" column="5" selection-start="21797" selection-end="21797" vertical-scroll-proportion="0.0" vertical-offset="9520" max-vertical-offset="11016">
           <folding>
-            <element signature="e#572#588#0" expanded="true" />
-            <element signature="e#641#648#0" expanded="true" />
-            <element signature="e#698#706#0" expanded="true" />
-            <element signature="e#775#791#0" expanded="true" />
-            <element signature="e#934#942#0" expanded="true" />
-            <element signature="e#1000#1009#0" expanded="true" />
-            <element signature="e#1102#1110#0" expanded="true" />
+            <element signature="e#536#552#0" expanded="true" />
+            <element signature="e#605#612#0" expanded="true" />
+            <element signature="e#662#670#0" expanded="true" />
+            <element signature="e#739#755#0" expanded="true" />
+            <element signature="e#898#906#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2318,13 +2358,6 @@
         <state line="417" column="13" selection-start="15507" selection-end="15507" vertical-scroll-proportion="0.0" vertical-offset="6482" max-vertical-offset="19907" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/TCodeOprConst.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="21" selection-start="462" selection-end="462" vertical-scroll-proportion="0.0" vertical-offset="5" max-vertical-offset="680">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.7.0_45/src.zip!/java/util/Stack.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="101" column="0" selection-start="2539" selection-end="2539" vertical-scroll-proportion="0.0" vertical-offset="1110" max-vertical-offset="2108" />
@@ -2351,13 +2384,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Assembler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="384" column="0" selection-start="15427" selection-end="15427" vertical-scroll-proportion="0.0" vertical-offset="6272" max-vertical-offset="18768">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="1528" column="110" selection-start="63766" selection-end="63766" vertical-scroll-proportion="0.0" vertical-offset="25567" max-vertical-offset="27285">
@@ -2365,17 +2391,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/Assembler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="410" column="0" selection-start="17105" selection-end="17105" vertical-scroll-proportion="0.0" vertical-offset="6734" max-vertical-offset="18768">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/TCodeOprConst.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="19" selection-start="460" selection-end="460" vertical-scroll-proportion="0.0" vertical-offset="103" max-vertical-offset="697">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="293" column="0" selection-start="12033" selection-end="12033" vertical-scroll-proportion="0.15248227" vertical-offset="4861" max-vertical-offset="14807">
+        <state line="27" column="4" selection-start="862" selection-end="862" vertical-scroll-proportion="-5.717949" vertical-offset="4216" max-vertical-offset="15181">
           <folding>
-            <element signature="e#572#588#0" expanded="true" />
-            <element signature="e#641#648#0" expanded="true" />
-            <element signature="e#698#706#0" expanded="true" />
-            <element signature="e#775#791#0" expanded="true" />
-            <element signature="e#934#942#0" expanded="true" />
-            <element signature="e#1000#1009#0" expanded="true" />
-            <element signature="e#1102#1110#0" expanded="true" />
+            <element signature="e#536#552#0" expanded="true" />
+            <element signature="e#605#612#0" expanded="true" />
+            <element signature="e#662#670#0" expanded="true" />
+            <element signature="e#739#755#0" expanded="true" />
+            <element signature="e#898#906#0" expanded="true" />
           </folding>
         </state>
       </provider>

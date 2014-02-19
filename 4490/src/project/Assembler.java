@@ -479,7 +479,16 @@ public class Assembler {
                 case LDR:
                     String opd2 = "";
 
-                    if (instructionList.get(i).getOpd2().length() > 4) {
+                    if (isValidRegister(instructionList.get(i).getOpd2())) {
+
+                        for (Integer p = 0; p < mem.size(); p++) {
+                            if (mem.get(p).getLabel().equals(reg.get(instructionList.get(i).getOpd2().substring(1, instructionList.get(i).getOpd2().length())))) {
+                                opd2 = p.toString();
+                                break;
+                            }
+                        }
+
+                    } else if (instructionList.get(i).getOpd2().length() > 4) {
                         String instruction = null;
                         for (Memory m : mem) {
                             if (m.getLabel().equals(instructionList.get(i).getOpd2())) {
@@ -617,13 +626,7 @@ public class Assembler {
                     break;
                 case LDA:
                     newValue = -1;
-                    if (isValidRegister(instructionList.get(i).getOpd2())) {
-
-                        newValue = Integer.parseInt(reg.get(instructionList.get(i).getOpd2().substring(1, instructionList.get(i).getOpd2().length())));
-                        String regValue = reg.get(newValue.toString());
-                        reg.put(instructionList.get(i).getOpd1(), regValue);
-
-                    } else if (instructionList.get(i).getOpd2().length() < 5) {
+                    if (instructionList.get(i).getOpd2().length() < 5) {
                         for (Memory m : mem) {
                             if (m.getLabel() != null && m.getLabel().equals(instructionList.get(i).getOpd2())) {
                                 newValue = mem.indexOf(m);
@@ -639,6 +642,7 @@ public class Assembler {
                                 break;
                             }
                         }
+
                     }
 
                     if (newValue < 0) {

@@ -11,14 +11,14 @@ import java.util.*;
  * Time: 5:30 PM
  */
 public class TCode {
-    private final static int UNDERFLOW_LIMIT = 10;
     private final static int PARAM_REG_START = 96;
-    private final static int PARAM_REG_STR_START = 80;
     private final static String RETURN_VALUE_REG = "R97";
-    private final static String SB = "R98";
-    private final static String RETURN_ADDRESS_REG = "R99";
-    private final static String SP = "R100";
+
+    private final static int SB = 20;
+
     private final int START_SIZE = 6000;
+    private final String ACTIVATION_RECORD = "AR";
+    private final String RETURN_ADDRESS = "RA";
 
     private LinkedHashMap<String, Symbol> symbolTable = new LinkedHashMap<String, Symbol>();
     private List<ICode> iCodeList = new ArrayList<ICode>();
@@ -30,8 +30,9 @@ public class TCode {
     private Stack<String> L4 = new Stack<String>();
     private Stack<Integer> retAddressStack = new Stack<Integer>();
 
-    private Map<String, Integer> fcnNames = new HashMap<String, Integer>();
-    private int paramStrPtr = PARAM_REG_STR_START;
+    private int SP = 0;
+    private int RP = 0;
+    private Stack<String> FP = new Stack<String>();
 
 
     private void initReg() {
@@ -81,12 +82,29 @@ public class TCode {
         address++;
         tCode.add("ADI R1 1");
         address++;
-        tCode.add("ADI " + SB + " " + address);
-        addToReturnAddressStack(0);
+
+        // setup mains' activation record
+        String r = getRegister("0");
+
+        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + r + " CLR");
         address++;
+        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + r + " " + (address + 5));
+        address++;
+        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + r + " " + RETURN_ADDRESS + RP);
+        address++;
+        tCode.add(TCodeOprConst.LDA_OPR.getKey() + " " + r + " " + RETURN_ADDRESS + RP++);
+        address++;
+        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + r + " " + ACTIVATION_RECORD + SP);
+        address++;
+        tCode.add(TCodeOprConst.LDA_OPR.getKey() + " R" + PARAM_REG_START + " " + ACTIVATION_RECORD + SP++);
+        address++;
+
+        freeResource(r);
 
         tCode.add(ICodeOprConst.JMP_OPR.getKey() + " " + startLabel + " ; program start");
         address++;
+
+        // end program
         tCode.add("TRP 0 ; program end");
         address++;
 
@@ -96,72 +114,59 @@ public class TCode {
             listCount++;
             if (iCode.getOperation().equals(ICodeOprConst.FRAME_OPR.getKey())) {
 
+                String reg1 = getRegister("0");
+
                 if (iCode.getLabel().isEmpty()) {
                     if (!L4.isEmpty()) {
-                        tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + RETURN_ADDRESS_REG + " CLR");
+                        tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
                     } else {
-                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + RETURN_ADDRESS_REG + " CLR");
+                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
                     }
                 } else {
-                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + RETURN_ADDRESS_REG + " CLR");
+                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
                 }
                 address++;
 
+                int tempListCount = listCount + 1;
                 if (iCodeList.get(listCount + 1).getOperation().equals(ICodeOprConst.PUSH_OPR.getKey())) {
-                    int tempListCount = listCount + 1;
-
-                    int paramCount = -1;
-
-                    while(iCodeList.get(tempListCount).getOperation().equals(ICodeOprConst.PUSH_OPR.getKey())) {
-                        paramCount++;
-                        tempListCount++;
-                    }
-
-                    tempListCount = listCount + 1;
-                    int paramReg = PARAM_REG_START - paramCount;
-
                     while (iCodeList.get(tempListCount).getOperation().equals(ICodeOprConst.PUSH_OPR.getKey())) {
-                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " R" + paramStrPtr + " " + iCodeList.get(tempListCount).getArg1());
+                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " " + iCodeList.get(tempListCount).getArg1());
                         address++;
-                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " R" + paramReg + " CLR");
+                        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg1 + " " + ACTIVATION_RECORD + SP++);
                         address++;
-                        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " R" + paramReg + " " + paramStrPtr);
-                        address++;
-                        paramStrPtr--;
-                        paramReg++;
                         tempListCount++;
                     }
                 }
 
-            } else if (iCode.getOperation().equals(ICodeOprConst.CALL_OPR.getKey())) {
+                if (iCodeList.get(tempListCount).getOperation().equals(ICodeOprConst.CALL_OPR.getKey())) {
+                    ICode iCode1 = iCodeList.get(tempListCount);
 
-                // todo: need to add return address to the paramStrPtr in other words I am creating an activation record
-                // todo: also make sure there is room for all the activation records
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
+                    address++;
+                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg1 + " " + (address + 5));
+                    address++;
+                    tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg1 + " " + RETURN_ADDRESS + RP);
+                    address++;
 
-                if (iCode.getLabel().isEmpty()) {
-                    if (!L4.isEmpty()) {
-                        tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + RETURN_ADDRESS_REG + " CLR");
-                    } else {
-                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + RETURN_ADDRESS_REG + " CLR");
-                    }
-                } else {
-                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + RETURN_ADDRESS_REG + " CLR");
+                    tCode.add(TCodeOprConst.LDA_OPR.getKey() + " " + reg1 + " " + RETURN_ADDRESS + RP++);
+                    address++;
+                    tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg1 + " " + ACTIVATION_RECORD + SP);
+                    address++;
+
+                    tCode.add(TCodeOprConst.LDA_OPR.getKey() + " R" + PARAM_REG_START + " " + ACTIVATION_RECORD + SP);
+                    address++;
+                    tCode.add(TCodeOprConst.JMP_OPR.getKey() + " " + iCode1.getArg1());
+                    address++;
+                    FP.push(ACTIVATION_RECORD + SP);
+                    SP++;
                 }
-                address++;
 
-                fcnNames.put(iCode.getArg1(), address);
-                addToReturnAddressStack(0);
-
-                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + RETURN_ADDRESS_REG + " " + getNextReturnAddress());
-                address++;
-
-                tCode.add(TCodeOprConst.JMP_OPR.getKey() + " " + iCode.getArg1());
-                address++;
+                freeResource(r);
 
             } else if (iCode.getOperation().equals(ICodeOprConst.FUNC_OPR.getKey())) {
 
                 String reg1 = getRegister(iCode.getArg1());
-                fcnNames.put(iCode.getArg1(), address);
+                String reg2 = getRegister("2");
 
                 if (iCode.getLabel().isEmpty()) {
                     if (!L4.isEmpty()) {
@@ -174,25 +179,26 @@ public class TCode {
                 }
                 address++;
 
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg1 + " R" + PARAM_REG_START);
+
                 if (iCodeList.get(listCount + 1).getOperation().equals(ICodeOprConst.CREATE_OPR.getKey()) && !iCodeList.get(listCount + 1).getLabel().isEmpty() && iCodeList.get(listCount + 1).getLabel().startsWith("P")) {
                     int tempListCount = listCount + 1;
-                    int paramReg = PARAM_REG_START;
 
                     while (iCodeList.get(tempListCount).getOperation().equals(ICodeOprConst.CREATE_OPR.getKey()) && !iCodeList.get(tempListCount).getLabel().isEmpty() && iCodeList.get(tempListCount).getLabel().startsWith("P")) {
-                        tCode.add(TCodeOprConst.LDA_OPR.getKey() + " " + reg1 + " R" + paramReg);
+                        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg1 + " -1");
                         address++;
-                        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg1 + " " + iCodeList.get(tempListCount).getLabel());
+                        tCode.add(TCodeOprConst.ADDI_OPR.getKey() + " " + reg2 + " " + reg1);
                         address++;
-                        paramReg--;
+                        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg2 + " " + iCodeList.get(tempListCount).getLabel());
+                        address++;
                         tempListCount++;
                     }
                 }
 
                 freeResource(reg1);
+                freeResource(reg2);
 
             } else if (iCode.getOperation().equals(ICodeOprConst.PEEK_OPR.getKey())) {
-
-                //todo: rework the return value
 
                 if (iCode.getLabel().isEmpty()) {
                     if (!L4.isEmpty()) {
@@ -264,64 +270,71 @@ public class TCode {
 
             } else if (iCode.getOperation().equals(ICodeOprConst.RTN_OPR.getKey())) {
 
-                // todo: remove parameter value by moving the param reg pointer up the number of params in method you are leaving
-                // todo: also check to see if other return statement has already done this
+                // todo: needs to be re-worked
 
-                String retAddress = iCode.getComment().substring(iCode.getComment().indexOf(":") + 2, iCode.getComment().length()).trim();
-                String reg1 = getRegister(fcnNames.get(retAddress).toString());
+                String methodScope = iCode.getComment().substring(iCode.getComment().indexOf(":") + 1, iCode.getComment().lastIndexOf(".")).trim();
+                if (methodScope.equals("g")) {
+                    methodScope += ".";
+                }
+                String methodName = iCode.getComment().substring(iCode.getComment().indexOf(".") + 1, iCode.getComment().length()).trim();
+
+                Symbol symbol = getSymbol(methodName, methodScope);
+
+
+                String reg1 = getRegister("0");
+                String reg2 = getRegister("0");
 
                 if (iCode.getLabel().equals("")) {
                     if (!L4.isEmpty()) {
-                        tCode.add(L4.pop() + " LDR " + reg1 + " CLR");
+                        tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
                     } else {
-                        tCode.add("LDR " + reg1 + " CLR");
+                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
                     }
                 } else {
-                    tCode.add(setLabel(iCode.getLabel()) + " LDR " + reg1 + " CLR");
+                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
                 }
                 address++;
 
-                if (retAddress.equals("g.main")) {
-                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + RETURN_ADDRESS_REG + " CLR");
-                    address++;
-                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + RETURN_ADDRESS_REG + " " + getNextReturnAddress());
-                    address++;
-                }
-
-                tCode.add(TCodeOprConst.ADD_OPR.getKey() + " " + reg1 + " " + RETURN_ADDRESS_REG);
+                tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg2 + " CLR");
+                address++;
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg1 + " R" + PARAM_REG_START);
+                address++;
+                tCode.add(TCodeOprConst.ADDI_OPR.getKey() + " " + reg2 + " " + reg1);
+                address++;
+                tCode.add(TCodeOprConst.ADDI_OPR.getKey() + " " + reg1 + " " + reg2);
                 address++;
 
                 tCode.add("JMR " + reg1 + " " + iCode.getComment());
                 address++;
 
                 freeResource(reg1);
+                freeResource(reg2);
 
             } else if (iCode.getOperation().equals(ICodeOprConst.RETURN_OPR.getKey())) {
 
                 // todo: remove parameter value by moving the param reg pointer up the number of params in method you are leaving
 
-                String retAddress = iCode.getComment().substring(iCode.getComment().indexOf(":") + 2, iCode.getComment().length()).trim();
-                String reg1 = getRegister(fcnNames.get(retAddress).toString());
+                String reg1 = getRegister("0");
+                String reg2 = getRegister("0");
 
                 if (iCode.getLabel().equals("")) {
                     if (!L4.isEmpty()) {
-                        tCode.add(L4.pop() + " LDR " + reg1 + " CLR");
+                        tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
                     } else {
-                        tCode.add("LDR " + reg1 + " CLR");
+                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
                     }
                 } else {
-                    tCode.add(setLabel(iCode.getLabel()) + " LDR " + reg1 + " CLR");
+                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
                 }
                 address++;
 
-                if (retAddress.equals("g.main")) {
-                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + RETURN_ADDRESS_REG + " CLR");
-                    address++;
-                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + RETURN_ADDRESS_REG + " " + getNextReturnAddress());
-                    address++;
-                }
-
-                tCode.add(TCodeOprConst.ADD_OPR.getKey() + " " + reg1 + " " + RETURN_ADDRESS_REG);
+                tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg2 + " CLR");
+                address++;
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg1 + " R" + PARAM_REG_START);
+                address++;
+                tCode.add(TCodeOprConst.ADDI_OPR.getKey() + " " + reg2 + " " + reg1);
+                address++;
+                tCode.add(TCodeOprConst.ADDI_OPR.getKey() + " " + reg1 + " " + reg2);
                 address++;
 
                 tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + RETURN_VALUE_REG + " " + iCode.getArg1());
@@ -331,6 +344,7 @@ public class TCode {
                 address++;
 
                 freeResource(reg1);
+                freeResource(reg2);
 
             } else if (iCode.getOperation().equals(TCodeOprConst.JMP_OPR.getKey())) {
 
@@ -492,17 +506,6 @@ public class TCode {
 
         Assembler assembler = new Assembler();
         assembler.action("NNM-program.asm");
-    }
-
-    private void addToReturnAddressStack(int increment) {
-        retAddressStack.push(address + increment);
-    }
-
-    private Integer getNextReturnAddress() {
-        if (retAddressStack.isEmpty()) {
-            return null;
-        }
-        return retAddressStack.pop();
     }
 
     private void addBreakTrueFalse(ICode iCode) {
@@ -731,6 +734,14 @@ public class TCode {
                 }
             }
         }
+
+        for (int i = 0; i < SB; i++) {
+            tCode.add(ACTIVATION_RECORD + i + " .INT 0");
+        }
+
+        for (int i = 0; i < SB; i++) {
+            tCode.add(RETURN_ADDRESS + i + " .INT 0");
+        }
     }
 
     private void mathOpr(ICode iCode, String opr) {
@@ -813,5 +824,44 @@ public class TCode {
                 operation.equals(ICodeOprConst.GT_OPR.getKey()) ||
                 operation.equals(ICodeOprConst.LT_OPR.getKey()) ||
                 operation.equals(ICodeOprConst.NE_OPR.getKey()));
+    }
+
+    private Symbol getSymbol(String name, String scope) {
+        String searchScope = scope;
+        while (!searchScope.equals("g.")) {
+            for (Symbol temp : symbolTable.values()) {
+                if (!temp.getScope().equals(searchScope)) {
+                    continue;
+                }
+
+                if (scope.contains(temp.getScope()) && temp.getValue().equals(name)) {
+                    return temp;
+                }
+            }
+            searchScope = decrementScope(searchScope);
+        }
+
+        if (searchScope.equals("g.") && name.equals("main")) {
+            for (Symbol temp : symbolTable.values()) {
+                if (temp.getValue().equals(name)) {
+                    return temp;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private String decrementScope(String scope) {
+        int scopeDepth = 0;
+        for (char c : scope.toCharArray()) {
+            if (c == '.') scopeDepth++;
+        }
+
+        if (scopeDepth > 1) {
+            return scope.substring(0, scope.lastIndexOf("."));
+        } else {
+            return scope.substring(0, scope.lastIndexOf(".") + 1);
+        }
     }
 }

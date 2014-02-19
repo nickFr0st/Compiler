@@ -1526,7 +1526,7 @@ public class Compiler {
             return false;
         }
 
-        addToSymbolTable("MAIN", "main", "method", new MethodData("public", null, "void"));
+        addToSymbolTable("MAIN", "main", "method", new MethodData("public", new ArrayList<String>(), "void"));
         incrementScope("main", true);
 
         // at this point we have declared classes and "void main()"

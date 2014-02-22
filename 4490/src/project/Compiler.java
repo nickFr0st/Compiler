@@ -1136,12 +1136,15 @@ public class Compiler {
 
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
             lexicalAnalyzer.nextToken();
+            String key = "M" + variableId;
             addToSymbolTable("M", constructorName, METHOD, new MethodData("public", new ArrayList<Parameter>(), constructorName));
             incrementScope(constructorName, false);
 
             if (!method_body()) {
                 return false;
             }
+
+            updateSymbolSize(key);
 
             decrementScope();
             return true;
@@ -1177,6 +1180,8 @@ public class Compiler {
             return false;
         }
 
+        updateSymbolSize(key);
+
         decrementScope();
         return true;
     }
@@ -1200,6 +1205,7 @@ public class Compiler {
             }
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
+                String key = "M" + variableId;
                 addToSymbolTable("M", value, "method", new MethodData(accessMod, new ArrayList<Parameter>(), type));
                 incrementScope(value, false);
                 lexicalAnalyzer.nextToken();
@@ -1207,6 +1213,7 @@ public class Compiler {
                     return false;
                 }
 
+                updateSymbolSize(key);
                 decrementScope();
                 return true;
             }
@@ -1241,6 +1248,8 @@ public class Compiler {
             if (!method_body()) {
                 return false;
             }
+
+            updateSymbolSize(methodKey);
 
             decrementScope();
             return true;
@@ -1599,5 +1608,17 @@ public class Compiler {
 
         symbolTable.put(key + variableId, new Symbol(scope, key + variableId++, name, kind, data, ELEM_SIZE));
         return true;
+    }
+
+    private void updateSymbolSize(String key) {
+        int newSize = 0;
+
+        for(Symbol temp : symbolTable.values()) {
+            if (temp.getScope().equals(scope)) {
+                newSize++;
+            }
+        }
+
+        symbolTable.get(key).setSize(newSize);
     }
 }

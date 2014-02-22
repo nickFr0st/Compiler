@@ -983,7 +983,7 @@ public class PassTwo {
             Symbol temp = symbolTable.get(key);
 
             if (temp.getScope().contains(scope)) {
-                mainSize += temp.getSize() * -1;
+                mainSize += temp.getSize();
             }
         }
 
@@ -1344,7 +1344,7 @@ public class PassTwo {
                 }
 
                 if (!SAS.isEmpty()) {
-                    SAR sar = SAS.pop();
+                    SAS.pop();
                     SAS.push(new Variable_SAR(new Tuple(itemKey, type, 0), scope, itemKey, type));
                 }
                 variableId++;

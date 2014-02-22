@@ -14,7 +14,9 @@ public class TCode {
     private final static String ACTIVATION_HEAD = "R2";
     private final static String RETURN_VALUE_REG = "R97";
     private final static String ACTIVATION_RECORD = "AR0";
-    private final static int SB = 50;
+    private final static String STACK_LIMIT = "R95";
+    private final static int STACK_SIZE = 50;
+
 
     private final int START_SIZE = 6000;
 
@@ -44,6 +46,9 @@ public class TCode {
 
         // R2 is the activation record pointer
         reg.put("R2", "0");
+
+        // R95 is the stack limit
+        reg.put("R95", "0");
     }
 
     public TCode(LinkedHashMap<String, Symbol> symbolTable, List<ICode> iCodeList, String startLabel) {
@@ -81,6 +86,12 @@ public class TCode {
         tCode.add("ADI R1 1");
         address++;
         tCode.add("LDA " + ACTIVATION_HEAD + " " + ACTIVATION_RECORD);
+        address++;
+
+        // setup Stack Limit
+        tCode.add("LDA " + STACK_LIMIT + " " + ACTIVATION_RECORD);
+        address++;
+        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + STACK_LIMIT + " " + STACK_SIZE);
         address++;
 
         // setup mains' activation record
@@ -780,7 +791,7 @@ public class TCode {
 
         tCode.add(ACTIVATION_RECORD + " .INT 0");
         String tempRec = ACTIVATION_RECORD.substring(0, ACTIVATION_RECORD.length() - 1);
-        for (int i = 1; i < SB; i++) {
+        for (int i = 1; i < STACK_SIZE; i++) {
             tCode.add(tempRec + i + " .INT 0");
         }
     }

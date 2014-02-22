@@ -301,7 +301,7 @@ public class TCode {
 
                 // move up for any parameters
                 if (symbol != null && symbol.getData() instanceof MethodData) {
-                    for (String ignored : ((MethodData) symbol.getData()).getParameters()) {
+                    for (Parameter ignored : ((MethodData) symbol.getData()).getParameters()) {
                         tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + ACTIVATION_HEAD + " -1");
                         address++;
                     }
@@ -354,7 +354,7 @@ public class TCode {
 
                 // move up for any parameters
                 if (symbol != null && symbol.getData() instanceof MethodData) {
-                    for (String ignored : ((MethodData) symbol.getData()).getParameters()) {
+                    for (Parameter ignored : ((MethodData) symbol.getData()).getParameters()) {
                         tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + ACTIVATION_HEAD + " -1");
                         address++;
                     }
@@ -363,7 +363,26 @@ public class TCode {
                 tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + RETURN_VALUE_REG + " " + iCode.getArg1());
                 address++;
 
+                String reg3 = getRegister("0");
+
+                // setup up parameters if being called recursively
+                if (symbol != null && symbol.getData() instanceof MethodData) {
+                    tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg1 + " " + ACTIVATION_HEAD);
+                    address++;
+                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg1 + " -1");
+                    address++;
+                    for (Parameter p : ((MethodData) symbol.getData()).getParameters()) {
+                        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg1 + " -1");
+                        address++;
+                        tCode.add(TCodeOprConst.ADDI_OPR.getKey() + " " + reg3 + " " + reg1);
+                        address++;
+                        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg3 + " " + p.getId());
+                        address++;
+                    }
+                }
+
                 freeResource(reg1);
+                freeResource(reg3);
 
                 tCode.add("JMR " + reg2 + " " + iCode.getComment());
                 address++;

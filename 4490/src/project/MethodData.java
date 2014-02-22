@@ -10,10 +10,10 @@ import java.util.List;
  */
 public class MethodData implements IData {
     private String returnType;
-    private List<String> parameters;
+    private List<Parameter> parameters;
     private String accessMod;
 
-    public MethodData(String accessMod, List<String> parameters, String returnType) {
+    public MethodData(String accessMod, List<Parameter> parameters, String returnType) {
         this.accessMod = accessMod;
         this.parameters = parameters;
         this.returnType = returnType;
@@ -31,11 +31,11 @@ public class MethodData implements IData {
         return accessMod;
     }
 
-    public List<String> getParameters() {
+    public List<Parameter> getParameters() {
         return parameters;
     }
 
-    public void setParameters(List<String> parameters) {
+    public void setParameters(List<Parameter> parameters) {
         this.parameters = parameters;
     }
 }

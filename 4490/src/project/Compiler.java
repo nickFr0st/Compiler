@@ -835,7 +835,7 @@ public class Compiler {
         }
     }
 
-    public boolean parameter(List<String> parameterNames) {
+    public boolean parameter(List<Parameter> parameterNames) {
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
         }
@@ -867,7 +867,7 @@ public class Compiler {
         }
 
         if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
-            parameterNames.add(type);
+            parameterNames.add(new Parameter(type, "P" + variableId));
             addToSymbolTable("P", name, "param", new VariableData(type, "private"));
             return true;
         }
@@ -882,13 +882,13 @@ public class Compiler {
             return false;
         }
 
-        parameterNames.add(type);
+        parameterNames.add(new Parameter(type, "P" + variableId));
         addToSymbolTable("P", name, "param", new VariableData(type, "private"));
         lexicalAnalyzer.nextToken();
         return true;
     }
 
-    public boolean parameter_list(List<String> parameters) {
+    public boolean parameter_list(List<Parameter> parameters) {
         if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
             return false;
         }
@@ -1136,7 +1136,7 @@ public class Compiler {
 
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
             lexicalAnalyzer.nextToken();
-            addToSymbolTable("M", constructorName, METHOD, new MethodData("public", new ArrayList<String>(), constructorName));
+            addToSymbolTable("M", constructorName, METHOD, new MethodData("public", new ArrayList<Parameter>(), constructorName));
             incrementScope(constructorName, false);
 
             if (!method_body()) {
@@ -1148,9 +1148,9 @@ public class Compiler {
         }
 
         String key = "M" + variableId;
-        addToSymbolTable("M", constructorName, METHOD, new MethodData("public", new ArrayList<String>(), constructorName));
+        addToSymbolTable("M", constructorName, METHOD, new MethodData("public", new ArrayList<Parameter>(), constructorName));
         incrementScope(constructorName, false);
-        List<String> parameterNames = new ArrayList<String>();
+        List<Parameter> parameterNames = new ArrayList<Parameter>();
 
         if (!parameter_list(parameterNames)) {
             errorList += "Invalid parameter list for constructor declaration. 'class " + constructorName + "'" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
@@ -1200,7 +1200,7 @@ public class Compiler {
             }
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                addToSymbolTable("M", value, "method", new MethodData(accessMod, new ArrayList<String>(), type));
+                addToSymbolTable("M", value, "method", new MethodData(accessMod, new ArrayList<Parameter>(), type));
                 incrementScope(value, false);
                 lexicalAnalyzer.nextToken();
                 if (!method_body()) {
@@ -1212,9 +1212,9 @@ public class Compiler {
             }
 
             String methodKey = "M" + variableId;
-            addToSymbolTable("M", value, "method", new MethodData(accessMod, new ArrayList<String>(), type));
+            addToSymbolTable("M", value, "method", new MethodData(accessMod, new ArrayList<Parameter>(), type));
             incrementScope(value, false);
-            List<String> parameters = new ArrayList<String>();
+            List<Parameter> parameters = new ArrayList<Parameter>();
 
             if (!parameter_list(parameters)) {
                 errorList += "Invalid parameter list in field declaration." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
@@ -1526,7 +1526,7 @@ public class Compiler {
             return false;
         }
 
-        addToSymbolTable("MAIN", "main", "method", new MethodData("public", new ArrayList<String>(), "void"));
+        addToSymbolTable("MAIN", "main", "method", new MethodData("public", new ArrayList<Parameter>(), "void"));
         incrementScope("main", true);
 
         // at this point we have declared classes and "void main()"

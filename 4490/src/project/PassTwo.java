@@ -1408,9 +1408,9 @@ public class PassTwo {
                     List<SAR> args = ((Function_SAR) rhs).getArguments().getArguments();
                     int index = ((Function_SAR) rhs).getArguments().getArguments().size() - 1;
 
-                    for (String type : ((MethodData) temp.getData()).getParameters()) {
-                        if (!args.get(index).getType().equalsIgnoreCase(type)) {
-                            errorList += "invalid argument type. expected: " + type + " but was: " + args.get(index).getType() + " Line: " + rhs.getLexi().getLineNum() + "\n";
+                    for (Parameter  p : ((MethodData) temp.getData()).getParameters()) {
+                        if (!args.get(index).getType().equalsIgnoreCase(p.getType())) {
+                            errorList += "invalid argument type. expected: " + p.getType() + " but was: " + args.get(index).getType() + " Line: " + rhs.getLexi().getLineNum() + "\n";
                             return false;
                         }
                         index--;
@@ -1628,18 +1628,18 @@ public class PassTwo {
                     List<SAR> args = parameters.getArguments();
                     int index = parameters.getArguments().size() - 1;
 
-                    for (String params : ((MethodData) temp.getData()).getParameters()) {
-                        if (!args.get(index).getType().equalsIgnoreCase(params)) {
-                            errorList += "invalid argument type. expected: " + params + " but was: " + args.get(index).getType() + " Line: " + type.getLexi().getLineNum() + "\n";
+                    for (Parameter params : ((MethodData) temp.getData()).getParameters()) {
+                        if (!args.get(index).getType().equalsIgnoreCase(params.getType())) {
+                            errorList += "invalid argument type. expected: " + params.getType() + " but was: " + args.get(index).getType() + " Line: " + type.getLexi().getLineNum() + "\n";
                             return false;
                         }
                         index--;
                     }
                 }
 
-                List<String> argsList = new ArrayList<String>();
+                List<Parameter> argsList = new ArrayList<Parameter>();
                 for (SAR args : parameters.getArguments()) {
-                    argsList.add(args.getSarId());
+                    argsList.add(new Parameter(args.getType(), args.getSarId()));
                 }
 
                 String tempSym = "T" + variableId;
@@ -1683,7 +1683,7 @@ public class PassTwo {
 
                 for (SAR args : parameters.getArguments()) {
                     iCodeList.add(new ICode(useLabel(), ICodeOprConst.PUSH_OPR.getKey(), args.getSarId(), "", "", ""));
-                    argsList.add(args.getSarId());
+                    argsList.add(new Parameter(args.getType(), args.getSarId()));
                 }
 
                 iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), temp.getScope() + "." + temp.getValue(), "", "", ""));

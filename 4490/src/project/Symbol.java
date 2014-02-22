@@ -76,7 +76,7 @@ public class Symbol {
      *
      * @return size
      */
-    public int getSize() {
+    public Integer getSize() {
         return size;
     }
 

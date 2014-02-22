@@ -19,7 +19,7 @@ public class SymbolTest {
     private String symId = "L106";
     private String value = "speed";
     private String kind = "lvar";
-    private int size = 6;
+    private Integer size = 6;
 
     @Before
     public void setUp() throws Exception {

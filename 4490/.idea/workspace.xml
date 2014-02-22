@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/project/Parameter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Compiler.java" afterPath="$PROJECT_DIR$/src/project/Compiler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/MethodData.java" afterPath="$PROJECT_DIR$/src/project/MethodData.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/PassTwo.java" afterPath="$PROJECT_DIR$/src/project/PassTwo.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/TCode.java" afterPath="$PROJECT_DIR$/src/project/TCode.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
@@ -78,7 +75,7 @@
       </breakpoint>
     </breakpoint_any>
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1688" class="project.PassTwo" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1687" class="project.PassTwo" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -168,7 +165,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1332" class="project.PassTwo" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1331" class="project.PassTwo" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -273,6 +270,66 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1164" class="project.PassTwo" package="project">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="569" class="project.PassTwo" package="project">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1345" class="project.PassTwo" package="project">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1437" class="project.PassTwo" package="project">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
     </line_breakpoints>
     <breakpoint_rules />
     <ui_properties />
@@ -283,13 +340,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="PassTwo.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="PassTwo.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1412" column="90" selection-start="50854" selection-end="50854" vertical-scroll-proportion="0.0" vertical-offset="23802" max-vertical-offset="33456">
+            <state line="1688" column="66" selection-start="63831" selection-end="63831" vertical-scroll-proportion="0.8131868" vertical-offset="28127" max-vertical-offset="33439">
               <folding>
                 <element signature="e#6184#6228#0" expanded="true" />
-                <element signature="e#60657#60668#0" expanded="true" />
+                <element signature="e#60783#60794#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -298,16 +355,7 @@
       <file leaf-file-name="SAR.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/SAR.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="66" column="0" selection-start="1229" selection-end="1229" vertical-scroll-proportion="0.0" vertical-offset="1122" max-vertical-offset="1479">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Tuple.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/Tuple.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="0" selection-start="456" selection-end="456" vertical-scroll-proportion="0.0" vertical-offset="442" max-vertical-offset="1003">
+            <state line="66" column="0" selection-start="1229" selection-end="1229" vertical-scroll-proportion="0.0" vertical-offset="960" max-vertical-offset="1479">
               <folding />
             </state>
           </provider>
@@ -325,10 +373,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TCode.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="TCode.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="373" column="89" selection-start="15969" selection-end="15969" vertical-scroll-proportion="1.7662141" vertical-offset="5136" max-vertical-offset="15504">
+            <state line="16" column="0" selection-start="382" selection-end="382" vertical-scroll-proportion="-8.153846" vertical-offset="26" max-vertical-offset="15504">
               <folding>
                 <element signature="e#536#552#0" expanded="true" />
                 <element signature="e#605#612#0" expanded="true" />
@@ -352,20 +400,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Parameter.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/Parameter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="46" selection-start="179" selection-end="179" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="476">
-              <folding>
-                <element signature="e#263#264#0" expanded="true" />
-                <element signature="e#290#291#0" expanded="true" />
-                <element signature="e#319#320#0" expanded="true" />
-                <element signature="e#344#345#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Assembler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/Assembler.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -379,6 +413,15 @@
         <entry file="file://$PROJECT_DIR$/src/project/Memory.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="8" column="13" selection-start="124" selection-end="124" vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="663">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="417" column="0" selection-start="14738" selection-end="14738" vertical-scroll-proportion="0.0" vertical-offset="6532" max-vertical-offset="7038">
               <folding />
             </state>
           </provider>
@@ -428,8 +471,8 @@
         <option value="$PROJECT_DIR$/src/project/TCodeOprConst.java" />
         <option value="$PROJECT_DIR$/src/project/Parameter.java" />
         <option value="$PROJECT_DIR$/src/project/MethodData.java" />
-        <option value="$PROJECT_DIR$/src/project/PassTwo.java" />
         <option value="$PROJECT_DIR$/src/project/Compiler.java" />
+        <option value="$PROJECT_DIR$/src/project/PassTwo.java" />
         <option value="$PROJECT_DIR$/src/project/TCode.java" />
       </list>
     </option>
@@ -1026,7 +1069,7 @@
       <workItem from="1392513861795" duration="10041000" />
       <workItem from="1392526317527" duration="1401000" />
       <workItem from="1392773880091" duration="15374000" />
-      <workItem from="1392857846043" duration="2914000" />
+      <workItem from="1392857846043" duration="9288000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1358823189173</created>
@@ -2040,11 +2083,15 @@
       <created>1392791205922</created>
       <updated>1392791205922</updated>
     </task>
-    <option name="localTasksCounter" value="254" />
+    <task id="LOCAL-00254" summary="parameters are now more usable">
+      <created>1393034883487</created>
+      <updated>1393034883487</updated>
+    </task>
+    <option name="localTasksCounter" value="255" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="102865000" />
+    <option name="totallyTimeSpent" value="109239000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -2114,7 +2161,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="temp variables are now created in target code" />
     <MESSAGE value="fixed assembly error" />
     <MESSAGE value="fixed some more assembly stuff and added Tcode for greater than" />
     <MESSAGE value="added more Tcode logic" />
@@ -2139,7 +2185,8 @@
     <MESSAGE value="correcting some errors&#10;" />
     <MESSAGE value="a great number of function handling changes" />
     <MESSAGE value="functions are now much closer to being done" />
-    <option name="LAST_COMMIT_MESSAGE" value="functions are now much closer to being done" />
+    <MESSAGE value="parameters are now more usable" />
+    <option name="LAST_COMMIT_MESSAGE" value="parameters are now more usable" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -2171,7 +2218,7 @@
         <state line="1669" column="17" selection-start="62096" selection-end="62096" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="33694">
           <folding>
             <element signature="e#6184#6228#0" expanded="true" />
-            <element signature="e#60657#60668#0" expanded="true" />
+            <element signature="e#60783#60794#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2243,7 +2290,7 @@
         <state line="1696" column="50" selection-start="63617" selection-end="63617" vertical-scroll-proportion="0.0" vertical-offset="28832" max-vertical-offset="33643">
           <folding>
             <element signature="e#6184#6228#0" expanded="true" />
-            <element signature="e#60657#60668#0" expanded="true" />
+            <element signature="e#60783#60794#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2315,7 +2362,7 @@
         <state line="1696" column="50" selection-start="63617" selection-end="63617" vertical-scroll-proportion="0.0" vertical-offset="28832" max-vertical-offset="33643">
           <folding>
             <element signature="e#6184#6228#0" expanded="true" />
-            <element signature="e#60657#60668#0" expanded="true" />
+            <element signature="e#60783#60794#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2469,23 +2516,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="148" column="0" selection-start="3308" selection-end="3308" vertical-scroll-proportion="0.0" vertical-offset="1934" max-vertical-offset="7038">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1412" column="90" selection-start="50854" selection-end="50854" vertical-scroll-proportion="0.0" vertical-offset="23802" max-vertical-offset="33456">
-          <folding>
-            <element signature="e#6184#6228#0" expanded="true" />
-            <element signature="e#60657#60668#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="1216" column="66" selection-start="50600" selection-end="50600" vertical-scroll-proportion="0.0" vertical-offset="20453" max-vertical-offset="27285">
@@ -2496,9 +2526,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="417" column="0" selection-start="14738" selection-end="14738" vertical-scroll-proportion="0.0" vertical-offset="6532" max-vertical-offset="7038">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Parameter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="46" selection-start="179" selection-end="179" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="476">
+        <state line="9" column="46" selection-start="179" selection-end="179" vertical-scroll-proportion="0.22633137" vertical-offset="0" max-vertical-offset="676">
           <folding>
             <element signature="e#263#264#0" expanded="true" />
             <element signature="e#290#291#0" expanded="true" />
@@ -2520,13 +2557,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="373" column="89" selection-start="15969" selection-end="15969" vertical-scroll-proportion="1.7662141" vertical-offset="5136" max-vertical-offset="15504">
+        <state line="16" column="0" selection-start="382" selection-end="382" vertical-scroll-proportion="-8.153846" vertical-offset="26" max-vertical-offset="15504">
           <folding>
             <element signature="e#536#552#0" expanded="true" />
             <element signature="e#605#612#0" expanded="true" />
             <element signature="e#662#670#0" expanded="true" />
             <element signature="e#739#755#0" expanded="true" />
             <element signature="e#898#906#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1688" column="66" selection-start="63831" selection-end="63831" vertical-scroll-proportion="0.8131868" vertical-offset="28127" max-vertical-offset="33439">
+          <folding>
+            <element signature="e#6184#6228#0" expanded="true" />
+            <element signature="e#60783#60794#0" expanded="true" />
           </folding>
         </state>
       </provider>

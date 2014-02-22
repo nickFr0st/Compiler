@@ -14,7 +14,7 @@ public class TCode {
     private final static String ACTIVATION_HEAD = "R2";
     private final static String RETURN_VALUE_REG = "R97";
     private final static String ACTIVATION_RECORD = "AR0";
-    private final static int SB = 20;
+    private final static int SB = 50;
 
     private final int START_SIZE = 6000;
 

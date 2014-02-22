@@ -1145,8 +1145,7 @@ public class PassTwo {
 
         String searchScope = scope.substring(0, scope.lastIndexOf("."));
 
-        for (String key : symbolTable.keySet()) {
-            Symbol temp = symbolTable.get(key);
+        for (Symbol temp : symbolTable.values()) {
 
             if (!temp.getScope().equals(searchScope)) {
                 continue;
@@ -1339,13 +1338,13 @@ public class PassTwo {
                 } else {
                     iCodeList.add(new ICode(itemKey, ICodeOprConst.CREATE_OPR.getKey(), ".BYT", "", "", ""));
                 }
-
-                if ((!OS.isEmpty() && OS.peek().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) || !lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                // todo: this was commented out
+                if ((!OS.isEmpty() && OS.peek().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) || !lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || (!SAS.isEmpty() && SAS.peek() instanceof Function_SAR)) {
                     iCodeList.add(new ICode(useLabel(), ICodeOprConst.PEEK_OPR.getKey(), itemKey, "", "", "; get value from method " + id_sar.getLexi().getName()));
                 }
 
                 if (!SAS.isEmpty()) {
-                    SAS.pop();
+                    SAR sar = SAS.pop();
                     SAS.push(new Variable_SAR(new Tuple(itemKey, type, 0), scope, itemKey, type));
                 }
                 variableId++;
@@ -1436,7 +1435,7 @@ public class PassTwo {
                     }
 
                     iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), temp.getScope() + "." + temp.getValue(), "", "", ""));
-                    if ((!OS.isEmpty() && OS.peek().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) || !lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.EOT.name())) {
+                    if ((!OS.isEmpty() && OS.peek().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) || !lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || (!SAS.isEmpty() && SAS.peek() instanceof Function_SAR)) {
                         iCodeList.add(new ICode(useLabel(), ICodeOprConst.PEEK_OPR.getKey(), itemKey, "", "", "; get value from method " + temp.getValue()));
                     }
 

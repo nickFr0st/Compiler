@@ -23,7 +23,13 @@ public enum TCodeOprConst {
     STR_OPR("STR"),
     STRI_OPR("STRI"),
     ADDI_OPR("ADDI"),
-    LDA_OPR("LDA");
+    LDA_OPR("LDA"),
+    BGT_OPR("BGT"),
+    JMR_OPR("JMR"),
+    TRP_2("TRP 2"),
+    TRP_4("TRP 4"),
+    BNZ_OPR("BNZ"),
+    BRZ_OPR("BRZ");
 
     private String key;
 

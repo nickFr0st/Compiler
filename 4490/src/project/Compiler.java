@@ -36,6 +36,8 @@ public class Compiler {
     private static final String ARGUMENT_LIST = " argument_list.";
     private static final String EXPRESSION = " expression.";
 
+    private Integer elemIndex = 0;
+
     private String scope = "g.";
     private LinkedHashMap<String, Symbol> symbolTable = new LinkedHashMap<String, Symbol>();
     private int variableId = 100;
@@ -1535,13 +1537,18 @@ public class Compiler {
             return false;
         }
 
+        String mainKey = "MAIN" + variableId;
+
         addToSymbolTable("MAIN", "main", "method", new MethodData("public", new ArrayList<Parameter>(), "void"));
         incrementScope("main", true);
+        elemIndex = 0;
 
         // at this point we have declared classes and "void main()"
         if (!method_body()) {
             return false;
         }
+
+        updateSymbolSize(mainKey);
 
         decrementScope();
         return true;
@@ -1606,7 +1613,8 @@ public class Compiler {
             }
         }
 
-        symbolTable.put(key + variableId, new Symbol(scope, key + variableId++, name, kind, data, ELEM_SIZE));
+        symbolTable.put(key + variableId, new Symbol(scope, key + variableId++, name, kind, data, elemIndex + ELEM_SIZE));
+        elemIndex++;
         return true;
     }
 
@@ -1614,7 +1622,7 @@ public class Compiler {
         int newSize = 0;
 
         for(Symbol temp : symbolTable.values()) {
-            if (temp.getScope().equals(scope)) {
+            if (temp.getScope().equals(scope) && !temp.getSymId().startsWith("L")) {
                 newSize++;
             }
         }

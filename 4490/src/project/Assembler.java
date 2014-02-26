@@ -482,8 +482,8 @@ public class Assembler {
                     if (isValidRegister(instructionList.get(i).getOpd2())) {
 
                         for (Integer p = 0; p < mem.size(); p++) {
-                            if (mem.get(p).getLabel().equals(reg.get(instructionList.get(i).getOpd2().substring(1, instructionList.get(i).getOpd2().length())))) {
-                                opd2 = p.toString();
+                            if (p.toString().equals(reg.get(instructionList.get(i).getOpd2().substring(1, instructionList.get(i).getOpd2().length())))) {
+                                opd2 = mem.get(p).getData();
                                 break;
                             }
                         }

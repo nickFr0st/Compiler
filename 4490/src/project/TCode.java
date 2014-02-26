@@ -11,13 +11,19 @@ import java.util.*;
  * Time: 5:30 PM
  */
 public class TCode {
-    private final static String ACTIVATION_HEAD = "R2";
-    private final static String RETURN_VALUE_REG = "R97";
-    private final static String ACTIVATION_RECORD = "AR0";
-    private final static String STACK_LIMIT = "R95";
-    private final static int STACK_SIZE = 50;
+    private final String SP = "R100";
+    private final String FP = "R99";
+    private final String SL = "R98";
+    private final String SB = "R97";
 
+    private final String REG_FALSE = "R0";
+    private final String REG_TRUE = "R1";
 
+    private final String ACTIVATION_RECORD = "AR0";
+    private final int STACK_SIZE = 50;
+    private final String OVERFLOW = "OVERFLOW";
+    private final String UNDERFLOW = "UNDERFLOW";
+    private final String END_PROGRAM = "ENDPROGRAM";
     private final int START_SIZE = 6000;
 
     private LinkedHashMap<String, Symbol> symbolTable = new LinkedHashMap<String, Symbol>();
@@ -44,11 +50,20 @@ public class TCode {
         // R1 is boolean true
         reg.put("R1", "1");
 
-        // R2 is the activation record pointer
-        reg.put("R2", "0");
+        // R7 used for something
+        reg.put("R7", "0");
 
-        // R95 is the stack limit
-        reg.put("R95", "0");
+        // R100 is the stack pointer
+        reg.put("R100", "0");
+
+        // R99 is the frame pointer
+        reg.put("R99", "0");
+
+        // R98 is the stack limit
+        reg.put("R98", "0");
+
+        // R97 is the stack base
+        reg.put("R97", "0");
     }
 
     public TCode(LinkedHashMap<String, Symbol> symbolTable, List<ICode> iCodeList, String startLabel) {
@@ -58,10 +73,20 @@ public class TCode {
         initReg();
     }
 
-    private String getRegister(String id) {
+    private String getNewRegister(String id) {
         for (String s : reg.keySet()) {
             if (reg.get(s).equals("")) {
                 reg.put(s, id);
+                return s;
+            }
+        }
+        return null;
+    }
+
+    private String getRegister(String id) {
+        for (String s : reg.keySet()) {
+            if (s.equals("R" + id)) {
+                reg.put(s, "0");
                 return s;
             }
         }
@@ -81,38 +106,41 @@ public class TCode {
         address++;
         tCode.add("LDR R0 CLR");
         address++;
+        tCode.add("LDR R7 CLR");
+        address++;
         tCode.add("LDR R1 CLR");
         address++;
         tCode.add("ADI R1 1");
         address++;
-        tCode.add("LDA " + ACTIVATION_HEAD + " " + ACTIVATION_RECORD);
+        tCode.add("LDA " + SB + " " + ACTIVATION_RECORD + " ; setup stack base: R97");
+        address++;
+        tCode.add("LDA " + SP + " " + ACTIVATION_RECORD + " ; setup stack pointer: R100");
+        address++;
+        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " 1");
+        address++;
+        tCode.add("LDA " + FP + " " + ACTIVATION_RECORD + " ; setup frame pointer: R99");
         address++;
 
         // setup Stack Limit
-        tCode.add("LDA " + STACK_LIMIT + " " + ACTIVATION_RECORD);
+        tCode.add("LDA " + SL + " " + ACTIVATION_RECORD + " ; setup stack limit: R98");
         address++;
-        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + STACK_LIMIT + " " + STACK_SIZE);
+        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SL + " " + STACK_SIZE);
         address++;
 
-        // setup mains' activation record
-        String r = getRegister("0");
-
+        String r = getNewRegister("0");
         tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + r + " CLR");
         address++;
         tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + r + " " + (address + 3));
         address++;
-        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + ACTIVATION_HEAD + " " + r);
+        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + FP + " " + r);
         address++;
-        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + ACTIVATION_HEAD + " 1");
-        address++;
-
         freeResource(r);
 
         tCode.add(ICodeOprConst.JMP_OPR.getKey() + " " + startLabel + " ; program start");
         address++;
 
         // end program
-        tCode.add("TRP 0 ; program end");
+        tCode.add(END_PROGRAM + " TRP 0 ; program end");
         address++;
 
         int listCount = -1;
@@ -121,27 +149,62 @@ public class TCode {
             listCount++;
             if (iCode.getOperation().equals(ICodeOprConst.FRAME_OPR.getKey())) {
 
-                String reg1 = getRegister("0");
+                String reg5 = getRegister("5");
+                String reg3 = getRegister("3");
+                String reg6 = getRegister("6");
+                String reg7 = getRegister("7");
 
+                // check for overflow
                 if (iCode.getLabel().isEmpty()) {
                     if (!L4.isEmpty()) {
-                        tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
+                        tCode.add(L4.pop() + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + SP);
                     } else {
-                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
+                        tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + SP);
                     }
                 } else {
-                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
+                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + SP);
                 }
                 address++;
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + iCode.getComment());
+                address++;
+                tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg5 + " " + SL);
+                address++;
+                tCode.add(TCodeOprConst.BGT_OPR.getKey() + " " + reg5 + " " + OVERFLOW);
+                address++;
+
+                // setup frame pointers
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg3 + " " + FP + " ; Old Frame");
+                address++;
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + FP + " " + SP + " ; New Frame");
+                address++;
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " 1" + " ; PFP");
+                address++;
+                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + SP + " " + reg3 + " ; Set PFP");
+                address++;
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " 1" + " ; PFP");
+                address++;
+
+                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + SP + " " + reg7 + " ; Set this on stack");
+                address++;
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " 1");
+                address++;
+
 
                 int tempListCount = listCount + 1;
                 if (iCodeList.get(listCount + 1).getOperation().equals(ICodeOprConst.PUSH_OPR.getKey())) {
+                    tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + reg3);
+                    address++;
+
                     while (iCodeList.get(tempListCount).getOperation().equals(ICodeOprConst.PUSH_OPR.getKey())) {
-                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " " + iCodeList.get(tempListCount).getArg1());
+                        Symbol parameter = symbolTable.get(iCodeList.get(tempListCount).getArg1());
+
+                        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + parameter.getSize() + " ; Address of " + parameter.getValue());
                         address++;
-                        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + ACTIVATION_HEAD + " " + reg1);
+                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + reg5 + " ; " + parameter.getValue() + " in R6");
                         address++;
-                        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + ACTIVATION_HEAD + " 1");
+                        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + SP + " " + reg6 + " ; " + parameter.getValue() + " on stack");
+                        address++;
+                        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " 1");
                         address++;
                         tempListCount++;
                     }
@@ -150,68 +213,50 @@ public class TCode {
                 if (iCodeList.get(tempListCount).getOperation().equals(ICodeOprConst.CALL_OPR.getKey())) {
                     ICode iCode1 = iCodeList.get(tempListCount);
 
-                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " CLR");
                     address++;
-                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg1 + " " + (address + 2));
+                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg6 + " " + (address + 1) + " ; compute rtn addr");
                     address++;
-                    tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + ACTIVATION_HEAD + " " + reg1);
-                    address++;
-                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + ACTIVATION_HEAD + " 1");
+                    tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + FP + " " + reg6 + " ; set rtn addr");
                     address++;
                     tCode.add(TCodeOprConst.JMP_OPR.getKey() + " " + iCode1.getArg1());
                     address++;
                 }
 
-                freeResource(r);
-
             } else if (iCode.getOperation().equals(ICodeOprConst.FUNC_OPR.getKey())) {
 
-                String reg1 = getRegister(iCode.getArg1());
-                String reg2 = getRegister("2");
+                String reg5 = getRegister("5");
 
                 if (iCode.getLabel().isEmpty()) {
                     if (!L4.isEmpty()) {
-                        tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
+                        tCode.add(L4.pop() + " " + TCodeOprConst.ADI_OPR.getKey() + " " + SP + " " + iCode.getComment());
                     } else {
-                        tCode.add(iCode.getArg1() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
+                        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " " + iCode.getComment());
                     }
                 } else {
-                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " " + " CLR");
+                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.ADI_OPR.getKey() + " " + SP + " " + iCode.getComment());
                 }
                 address++;
 
-                if (iCodeList.get(listCount + 1).getOperation().equals(ICodeOprConst.CREATE_OPR.getKey()) && !iCodeList.get(listCount + 1).getLabel().isEmpty() && iCodeList.get(listCount + 1).getLabel().startsWith("P")) {
-                    tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg1 + " " + ACTIVATION_HEAD);
-                    address++;
-                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg1 + " -1");
-                    address++;
-
-                    int tempListCount = listCount + 1;
-
-                    while (iCodeList.get(tempListCount).getOperation().equals(ICodeOprConst.CREATE_OPR.getKey()) && !iCodeList.get(tempListCount).getLabel().isEmpty() && iCodeList.get(tempListCount).getLabel().startsWith("P")) {
-                        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg1 + " -1");
-                        address++;
-                        tCode.add(TCodeOprConst.ADDI_OPR.getKey() + " " + reg2 + " " + reg1);
-                        address++;
-                        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg2 + " " + iCodeList.get(tempListCount).getLabel());
-                        address++;
-                        tempListCount++;
-                    }
-                }
-
-                freeResource(reg1);
-                freeResource(reg2);
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + SP + " ; Test Overflow");
+                address++;
+                tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg5 + " " + SL);
+                address++;
+                tCode.add(TCodeOprConst.BGT_OPR.getKey() + " " + reg5 + " " + OVERFLOW);
+                address++;
 
             } else if (iCode.getOperation().equals(ICodeOprConst.PEEK_OPR.getKey())) {
 
+                String reg6 = getRegister("6");
+
                 if (iCode.getLabel().isEmpty()) {
                     if (!L4.isEmpty()) {
-                        tCode.add(L4.pop() + " " + TCodeOprConst.STR_OPR.getKey() + " " + RETURN_VALUE_REG + " " + iCode.getArg1());
+                        tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + SP);
                     } else {
-                        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + RETURN_VALUE_REG + " " + iCode.getArg1());
+                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + SP);
                     }
                 } else {
-                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.STR_OPR.getKey() + " " + RETURN_VALUE_REG + " " + iCode.getArg1());
+                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + SP);
                 }
                 address++;
 
@@ -225,48 +270,50 @@ public class TCode {
 
             } else if (iCode.getOperation().equals(ICodeOprConst.MOV_OPR.getKey())) {
 
-                String argReg1 = getRegister(iCode.getArg1());
-                String argReg2 = getRegister(iCode.getArg2());
+                String reg5 = getRegister("5");
+                String reg6 = getRegister("6");
+
+                Symbol arg1 = symbolTable.get(iCode.getArg1());
 
                 if (iCode.getLabel().equals("")) {
                     if (!L4.isEmpty()) {
-                        tCode.add(L4.pop() + " LDR " + argReg1 + " " + iCode.getArg1());
+                        tCode.add(L4.pop() + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
                     } else {
-                        tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                        tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
                     }
                 } else {
-                    tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
+                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
                 }
                 address++;
-                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + arg1.getSize().toString() + " ; get address of " + arg1.getValue());
                 address++;
 
-                tCode.add("MOV " + argReg1 + " " + argReg2 + " " + iCode.getComment());
-                address++;
-                tCode.add("STR " + argReg1 + " " + iCode.getArg1());
-                address++;
-                freeResource(argReg1);
-                freeResource(argReg2);
+                Symbol arg2 = symbolTable.get(iCode.getArg2());
+
+                if (iCode.getArg2().startsWith("L")) {
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + iCode.getArg2() + " ; load '" + arg2.getValue() + "' into R6");
+                    address++;
+                    tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; store value into address pointed to by R5");
+                    address++;
+                } else {
+                    String regNew = getNewRegister("0");
+
+                    tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + regNew + " " + FP);
+                    address++;
+                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + regNew + " " + arg2.getSize().toString() + " ; get address of " + arg2.getValue());
+                    address++;
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + regNew + " ; load value of " + arg2.getValue() + " into R6");
+                    address++;
+                    tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; store value into address pointed to by R5");
+                    address++;
+
+                    freeResource(regNew);
+                }
 
             } else if (iCode.getOperation().equals(ICodeOprConst.MOVI_OPR.getKey())) {
 
-                String argReg1 = getRegister(iCode.getArg2());
-                String value = symbolTable.get(iCode.getArg2()).getValue();
-
-                if (iCode.getLabel().equals("")) {
-                    if (!L4.isEmpty()) {
-                        tCode.add(L4.pop() + " ADI " + argReg1 + " " + value.substring(1, value.length()));
-                    } else {
-                        tCode.add("ADI " + argReg1 + " " + value.substring(1, value.length()));
-                    }
-                } else {
-                    tCode.add(setLabel(iCode.getLabel()) + " ADI " + argReg1 + " " + value.substring(1, value.length()));
-                }
-                address++;
-
-                tCode.add("STR " + argReg1 + " " + iCode.getArg1() + " " + iCode.getComment());
-                address++;
-                freeResource(argReg1);
+                // currently not in use
 
             } else if (iCode.getOperation().equals(ICodeOprConst.WRTI_OPR.getKey()) || iCode.getOperation().equals(ICodeOprConst.WRTC_OPR.getKey())) {
 
@@ -274,180 +321,168 @@ public class TCode {
 
             } else if (iCode.getOperation().equals(ICodeOprConst.RTN_OPR.getKey())) {
 
-                String methodScope = iCode.getComment().substring(iCode.getComment().indexOf(":") + 1, iCode.getComment().lastIndexOf(".")).trim();
-                if (methodScope.equals("g")) {
-                    methodScope += ".";
+                String method = iCode.getComment().substring(iCode.getComment().indexOf(":") + 1, iCode.getComment().length()).trim();
+                if (method.equals("g.main")) {
+                    if (iCode.getLabel().equals("")) {
+                        if (!L4.isEmpty()) {
+                            tCode.add(L4.pop() + " " + TCodeOprConst.JMP_OPR.getKey() + " " + END_PROGRAM);
+                        } else {
+                            tCode.add(TCodeOprConst.JMP_OPR.getKey() + " " + END_PROGRAM);
+                        }
+                    } else {
+                        tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.JMP_OPR.getKey() + " " + END_PROGRAM);
+                    }
+                    address++;
+                    continue;
                 }
-                String methodName = iCode.getComment().substring(iCode.getComment().lastIndexOf(".") + 1, iCode.getComment().length()).trim();
 
-                Symbol symbol = getSymbol(methodName, methodScope);
-
-                String reg1 = getRegister("0");
-                String reg2 = getRegister("0");
+                String reg5 = getRegister("5");
+                String reg6 = getRegister("6");
 
                 if (iCode.getLabel().equals("")) {
                     if (!L4.isEmpty()) {
-                        tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
+                        tCode.add(L4.pop() + " " + TCodeOprConst.MOV_OPR.getKey() + " " + SP + " " + FP);
                     } else {
-                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
+                        tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + SP + " " + FP);
                     }
                 } else {
-                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
+                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.MOV_OPR.getKey() + " " + SP + " " + FP);
                 }
                 address++;
 
-                // get return address and load it into reg1
-                tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg2 + " CLR");
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg6 + " " + FP);
                 address++;
-                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg1 + " " + ACTIVATION_HEAD);
+                tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg6 + " " + SB);
                 address++;
-                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg1 + " -1");
-                address++;
-                tCode.add(TCodeOprConst.ADDI_OPR.getKey() + " " + reg2 + " " + reg1);
+                tCode.add(TCodeOprConst.BLT_OPR.getKey() + " " + reg6 + " " + UNDERFLOW);
                 address++;
 
-                // move up activation record
-                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + ACTIVATION_HEAD + " -1");
+                tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + FP + " ; rtn address");
                 address++;
-
-                // move up for any parameters
-                if (symbol != null && symbol.getData() instanceof MethodData) {
-                    for (Parameter ignored : ((MethodData) symbol.getData()).getParameters()) {
-                        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + ACTIVATION_HEAD + " -1");
-                        address++;
-                    }
-                }
-
-                freeResource(reg1);
-
-                tCode.add("JMR " + reg2 + " " + iCode.getComment());
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
                 address++;
-
-                freeResource(reg2);
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " 1");
+                address++;
+                tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + FP + " " + reg5 + " ; PFP into FP");
+                address++;
+                tCode.add(TCodeOprConst.JMR_OPR.getKey() + " " + reg6 + " " + iCode.getComment());
+                address++;
 
             } else if (iCode.getOperation().equals(ICodeOprConst.RETURN_OPR.getKey())) {
 
-                String methodScope = iCode.getComment().substring(iCode.getComment().indexOf(":") + 1, iCode.getComment().lastIndexOf(".")).trim();
-                if (methodScope.equals("g")) {
-                    methodScope += ".";
-                }
-                String methodName = iCode.getComment().substring(iCode.getComment().lastIndexOf(".") + 1, iCode.getComment().length()).trim();
+                String reg4 = getRegister("4");
+                String reg5 = getRegister("5");
+                String reg6 = getRegister("6");
 
-                Symbol symbol = getSymbol(methodName, methodScope);
+                Symbol arg1 = symbolTable.get(iCode.getArg1());
 
-                String reg1 = getRegister("0");
-                String reg2 = getRegister("0");
-
-                if (iCode.getLabel().equals("")) {
-                    if (!L4.isEmpty()) {
-                        tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
+                if (iCode.getArg1().startsWith("L")) {
+                    if (iCode.getLabel().equals("")) {
+                        if (!L4.isEmpty()) {
+                            tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg4 + " " + iCode.getArg1() + " ; load '" + arg1.getValue() + "' into R4");
+                        } else {
+                            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg4 + " " + iCode.getArg1() + " ; load '" + arg1.getValue() + "' into R4");
+                        }
                     } else {
-                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
+                        tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg4 + " " + iCode.getArg1() + " ; load '" + arg1.getValue() + "' into R4");
                     }
+                    address++;
                 } else {
-                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg1 + " CLR");
-                }
-                address++;
-
-                // get return address and load it into reg1
-                tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg2 + " CLR");
-                address++;
-                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg1 + " " + ACTIVATION_HEAD);
-                address++;
-                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg1 + " -1");
-                address++;
-                tCode.add(TCodeOprConst.ADDI_OPR.getKey() + " " + reg2 + " " + reg1);
-                address++;
-
-                // move up activation record
-                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + ACTIVATION_HEAD + " -1");
-                address++;
-
-                // move up for any parameters
-                if (symbol != null && symbol.getData() instanceof MethodData) {
-                    for (Parameter ignored : ((MethodData) symbol.getData()).getParameters()) {
-                        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + ACTIVATION_HEAD + " -1");
-                        address++;
+                    if (iCode.getLabel().equals("")) {
+                        if (!L4.isEmpty()) {
+                            tCode.add(L4.pop() + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                        } else {
+                            tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                        }
+                    } else {
+                        tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
                     }
+                    address++;
+                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + arg1.getSize().toString() + " ; get address of " + arg1.getValue());
+                    address++;
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg4 + " " + reg5 + " ; load value of " + arg1.getValue() + " into R4");
+                    address++;
                 }
 
-                tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + RETURN_VALUE_REG + " " + iCode.getArg1());
+
+                // check for underflow
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + SP + " " + FP);
+                address++;
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg6 + " " + FP);
+                address++;
+                tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg6 + " " + SB);
+                address++;
+                tCode.add(TCodeOprConst.BLT_OPR.getKey() + " " + reg6 + " " + UNDERFLOW);
                 address++;
 
-                String reg3 = getRegister("0");
-
-                // setup up parameters if being called recursively
-                if (symbol != null && symbol.getData() instanceof MethodData) {
-                    tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg1 + " " + ACTIVATION_HEAD);
-                    address++;
-                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg1 + " -1");
-                    address++;
-                    for (Parameter p : ((MethodData) symbol.getData()).getParameters()) {
-                        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg1 + " -1");
-                        address++;
-                        tCode.add(TCodeOprConst.ADDI_OPR.getKey() + " " + reg3 + " " + reg1);
-                        address++;
-                        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg3 + " " + p.getId());
-                        address++;
-                    }
-                }
-
-                freeResource(reg1);
-                freeResource(reg3);
-
-                tCode.add("JMR " + reg2 + " " + iCode.getComment());
+                tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + FP + " ; ret address");
                 address++;
-
-                freeResource(reg2);
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                address++;
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " 1");
+                address++;
+                tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + FP + " " + reg5 + " ; PFP into FP");
+                address++;
+                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + SP + " " + reg4 + " ; return " + arg1.getValue());
+                address++;
+                tCode.add(TCodeOprConst.JMR_OPR.getKey() + " " + reg6 + " " + iCode.getComment());
+                address++;
 
             } else if (iCode.getOperation().equals(TCodeOprConst.JMP_OPR.getKey())) {
 
-                if (iCode.getLabel().equals("")) {
-                    tCode.add(iCode.getOperation() + " " + iCode.getArg1() + " " + iCode.getComment());
-                } else {
-                    tCode.add(iCode.getLabel() + " " + iCode.getOperation() + " " + iCode.getArg1() + " " + iCode.getComment());
-                }
-                address++;
+                // currently not in use
 
             } else if (iCode.getOperation().equals(ICodeOprConst.RDI_OPR.getKey())) {
 
                 if (iCode.getLabel().equals("")) {
                     if (!L4.isEmpty()) {
-                        tCode.add(L4.pop() + " TRP 2");
+                        tCode.add(L4.pop() + " " + TCodeOprConst.TRP_2.getKey());
                     } else {
-                        tCode.add("TRP 2");
+                        tCode.add(TCodeOprConst.TRP_2.getKey());
                     }
                 } else {
-                    tCode.add(iCode.getLabel() + " TRP 2");
+                    tCode.add(iCode.getLabel() + " " + TCodeOprConst.TRP_2.getKey());
                 }
                 address++;
-                String argReg1 = getRegister(iCode.getArg1());
 
-                tCode.add("LDR " + argReg1 + " INII");
+                String reg5 = getRegister("5");
+                String reg6 = getRegister("6");
+                Symbol arg1 = symbolTable.get(iCode.getArg1());
+
+                tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " INII");
                 address++;
-                tCode.add("STR " + argReg1 + " " + iCode.getArg1());
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
                 address++;
-                freeResource(argReg1);
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + arg1.getSize().toString() + " ; get address of " + arg1.getValue());
+                address++;
+                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; store user input into the address pointed to by R5");
+                address++;
 
             } else if (iCode.getOperation().equals(ICodeOprConst.RDC_OPR.getKey())) {
 
                 if (iCode.getLabel().equals("")) {
                     if (!L4.isEmpty()) {
-                        tCode.add(L4.pop() + " TRP 4");
+                        tCode.add(L4.pop() + " " + TCodeOprConst.TRP_4.getKey());
                     } else {
-                        tCode.add("TRP 4");
+                        tCode.add(TCodeOprConst.TRP_4.getKey());
                     }
                 } else {
-                    tCode.add(setLabel(iCode.getLabel()) + "TRP 4");
+                    tCode.add(iCode.getLabel() + " " + TCodeOprConst.TRP_4.getKey());
                 }
                 address++;
-                String argReg1 = getRegister(iCode.getArg1());
 
-                tCode.add("LDR " + argReg1 + " INPT");
+                String reg5 = getRegister("5");
+                String reg6 = getRegister("6");
+                Symbol arg1 = symbolTable.get(iCode.getArg1());
+
+                tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " INII");
                 address++;
-                tCode.add("STR " + argReg1 + " " + iCode.getArg1());
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
                 address++;
-                freeResource(argReg1);
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + arg1.getSize().toString() + " ; get address of " + arg1.getValue());
+                address++;
+                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; store user input into the address pointed to by R5");
+                address++;
 
             } else if (isBooleanOperation(iCode.getOperation())) {
 
@@ -463,87 +498,197 @@ public class TCode {
 
             } else if (iCode.getOperation().equals(ICodeOprConst.OR_OPR.getKey())) {
 
-                String argReg1 = getRegister(iCode.getArg1());
-                String argReg2 = getRegister(iCode.getArg2());
-                String argReg3 = getRegister(iCode.getResult());
+                String reg5 = getRegister("5");
+                String reg6 = getRegister("6");
+                String reg7 = getRegister("7");
 
-                if (iCode.getLabel().isEmpty()) {
-                    if (!L4.isEmpty()) {
-                        tCode.add(L4.pop() + " LDR " + argReg1 + " " + iCode.getArg1());
+                Symbol arg1 = symbolTable.get(iCode.getArg1());
+                if (iCode.getArg1().startsWith("L")) {
+                    String value;
+                    if (arg1.getValue().equalsIgnoreCase("true")) {
+                        value = "ONE";
+                    } else if (arg1.getValue().equalsIgnoreCase("false")) {
+                        value = "CLR";
                     } else {
-                        tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                        value = iCode.getArg1();
                     }
+
+                    if (iCode.getLabel().isEmpty()) {
+                        if (!L4.isEmpty()) {
+                            tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + value + " ; load '" + arg1.getValue() + "' into R7");
+                        } else {
+                            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + value + " ; load '" + arg1.getValue() + "' into R7");
+                        }
+                    } else {
+                        tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + value + " ; load '" + arg1.getValue() + "' into R7");
+                    }
+                    address++;
                 } else {
-                    tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
+                    if (iCode.getLabel().isEmpty()) {
+                        if (!L4.isEmpty()) {
+                            tCode.add(L4.pop() + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                        } else {
+                            tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                        }
+                    } else {
+                        tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                    }
+                    address++;
+                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + arg1.getSize().toString() + " ; get address of " + arg1.getValue());
+                    address++;
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + reg5 + " ; load value of " + arg1.getValue() + " into R7");
+                    address++;
                 }
-                address++;
+
+                Symbol arg2 = symbolTable.get(iCode.getArg2());
+                if (iCode.getArg2().startsWith("L")) {
+                    String value;
+                    if (arg2.getValue().equalsIgnoreCase("true")) {
+                        value = "ONE";
+                    } else if (arg2.getValue().equalsIgnoreCase("false")) {
+                        value = "CLR";
+                    } else {
+                        value = iCode.getArg2();
+                    }
+
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + value + " ; load '" + arg2.getValue() + "' into R6");
+                    address++;
+                } else {
+                    tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                    address++;
+                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + arg2.getSize().toString() + " ; get address of " + arg2.getValue());
+                    address++;
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + reg5 + " ; load value of " + arg2.getValue() + " into R6");
+                    address++;
+                }
 
                 String L3 = setupL3();
                 L4.push("L" + condIncr);
 
-                tCode.add("CMP " + argReg1 + " R1 ; Check " + iCode.getArg1() + " for True");
+                // check boolean value of arg1
+                tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg7 + " " + REG_TRUE + " ; see if '" + arg1.getValue() + "' is true");
                 address++;
-                tCode.add("BRZ  " + argReg1 + " " + L3 + " ; if TRUE GOTO " + L3);
-                address++;
-                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
-                address++;
-                tCode.add("CMP " + argReg2 + " R1 ; Check " + iCode.getArg2() + " for True");
-                address++;
-                tCode.add("BRZ  " + argReg2 + " " + L3 + " ; if TRUE GOTO " + L3);
-                address++;
-                tCode.add("STR R0 " + iCode.getResult());
-                address++;
-                tCode.add("JMP " + L4.peek());
-                address++;
-                tCode.add(L3 + " STR R1 " + iCode.getResult());
+                tCode.add(TCodeOprConst.BRZ_OPR.getKey() + "  " + reg7 + " " + L3 + " ; if '" + arg1.getValue() + "' is true then GOTO " + L3);
                 address++;
 
-                freeResource(argReg1);
-                freeResource(argReg2);
-                freeResource(argReg3);
+                // check boolean value of arg2
+                tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg6 + " " + REG_TRUE + " ; see if '" + arg2.getValue() + "' is true");
+                address++;
+                tCode.add(TCodeOprConst.BRZ_OPR.getKey() + "  " + reg6 + " " + L3 + " ; if '" + arg2.getValue() + "' is true then GOTO " + L3);
+                address++;
+
+                // store result
+                Symbol result = symbolTable.get(iCode.getResult());
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                address++;
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize().toString() + " ; get address of " + result.getValue());
+                address++;
+                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + REG_FALSE + " ; set result to false");
+                address++;
+                tCode.add(TCodeOprConst.JMP_OPR.getKey() + " " + L4.peek());
+                address++;
+                tCode.add(L3 + " " + TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + REG_TRUE + " ; set result to true");
+                address++;
 
             } else if (iCode.getOperation().equals(ICodeOprConst.AND_OPR.getKey())) {
 
-                String argReg1 = getRegister(iCode.getArg1());
-                String argReg2 = getRegister(iCode.getArg2());
-                String argReg3 = getRegister(iCode.getResult());
+                String reg5 = getRegister("5");
+                String reg6 = getRegister("6");
+                String reg7 = getRegister("7");
 
-                if (iCode.getLabel().isEmpty()) {
-                    if (!L4.isEmpty()) {
-                        tCode.add(L4.pop() + " LDR " + argReg1 + " " + iCode.getArg1());
+                Symbol arg1 = symbolTable.get(iCode.getArg1());
+                if (iCode.getArg1().startsWith("L")) {
+                    String value;
+                    if (arg1.getValue().equalsIgnoreCase("true")) {
+                        value = "ONE";
+                    } else if (arg1.getValue().equalsIgnoreCase("false")) {
+                        value = "CLR";
                     } else {
-                        tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                        value = iCode.getArg1();
                     }
+
+                    if (iCode.getLabel().isEmpty()) {
+                        if (!L4.isEmpty()) {
+                            tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + value + " ; load '" + arg1.getValue() + "' into R7");
+                        } else {
+                            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + value + " ; load '" + arg1.getValue() + "' into R7");
+                        }
+                    } else {
+                        tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + value + " ; load '" + arg1.getValue() + "' into R7");
+                    }
+                    address++;
                 } else {
-                    tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
+                    if (iCode.getLabel().isEmpty()) {
+                        if (!L4.isEmpty()) {
+                            tCode.add(L4.pop() + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                        } else {
+                            tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                        }
+                    } else {
+                        tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                    }
+                    address++;
+                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + arg1.getSize().toString() + " ; get address of " + arg1.getValue());
+                    address++;
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + reg5 + " ; load value of " + arg1.getValue() + " into R7");
+                    address++;
                 }
-                address++;
+
+                Symbol arg2 = symbolTable.get(iCode.getArg2());
+                if (iCode.getArg2().startsWith("L")) {
+                    String value;
+                    if (arg2.getValue().equalsIgnoreCase("true")) {
+                        value = "ONE";
+                    } else if (arg2.getValue().equalsIgnoreCase("false")) {
+                        value = "CLR";
+                    } else {
+                        value = iCode.getArg2();
+                    }
+
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + value + " ; load '" + arg2.getValue() + "' into R6");
+                    address++;
+                } else {
+                    tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                    address++;
+                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + arg2.getSize().toString() + " ; get address of " + arg2.getValue());
+                    address++;
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + reg5 + " ; load value of " + arg2.getValue() + " into R6");
+                    address++;
+                }
 
                 String L3 = setupL3();
                 L4.push("L" + condIncr);
 
-                tCode.add("CMP " + argReg1 + " R1 ; Check " + iCode.getArg1() + " for True");
+                // check boolean value of arg1
+                tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg7 + " " + REG_TRUE + " ; see if '" + arg1.getValue() + "' is true");
                 address++;
-                tCode.add("BNZ  " + argReg1 + " " + L3 + " ; if FALSE GOTO " + L3);
-                address++;
-                tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
-                address++;
-                tCode.add("CMP " + argReg2 + " R1 ; Check " + iCode.getArg2() + " for True");
-                address++;
-                tCode.add("BNZ  " + argReg2 + " " + L3 + " ; if FALSE GOTO " + L3);
-                address++;
-                tCode.add("STR R1 " + iCode.getResult());
-                address++;
-                tCode.add("JMP " + L4.peek());
-                address++;
-                tCode.add(L3 + " STR R0 " + iCode.getResult());
+                tCode.add(TCodeOprConst.BNZ_OPR.getKey() + "  " + reg7 + " " + L3 + " ; if '" + arg1.getValue() + "' is false then GOTO " + L3);
                 address++;
 
-                freeResource(argReg1);
-                freeResource(argReg2);
-                freeResource(argReg3);
+                // check boolean value of arg2
+                tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg6 + " " + REG_TRUE + " ; see if '" + arg2.getValue() + "' is true");
+                address++;
+                tCode.add(TCodeOprConst.BNZ_OPR.getKey() + "  " + reg6 + " " + L3 + " ; if '" + arg2.getValue() + "' is false then GOTO " + L3);
+                address++;
+
+                // store result
+                Symbol result = symbolTable.get(iCode.getResult());
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                address++;
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize().toString() + " ; get address of " + result.getValue());
+                address++;
+                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + REG_TRUE + " ; set result to true");
+                address++;
+                tCode.add(TCodeOprConst.JMP_OPR.getKey() + " " + L4.peek());
+                address++;
+                tCode.add(L3 + " " + TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + REG_FALSE + " ; set result to false");
+                address++;
+
             }
         }
+
+        addOverflow();
+        addUnderflow();
 
         try {
             FileWriter fWriter = new FileWriter("NNM-program.asm");
@@ -562,6 +707,152 @@ public class TCode {
         assembler.action("NNM-program.asm");
     }
 
+    private void addUnderflow() {
+        String reg = getNewRegister("0");
+        tCode.add(UNDERFLOW + " LDR " + reg + " RC");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " U");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " N");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " D");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " E");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " R");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " F");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " L");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " O");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " W");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " SP");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " E");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " R");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " R");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " O");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " R");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " RC");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        freeResource(reg);
+        tCode.add(TCodeOprConst.JMP_OPR.getKey() + " " + END_PROGRAM);
+        address++;
+    }
+
+    private void addOverflow() {
+        String reg = getNewRegister("0");
+        tCode.add(OVERFLOW + " LDR " + reg + " RC");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " O");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " V");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " E");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " R");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " F");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " L");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " O");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " W");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " SP");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " E");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " R");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " R");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " O");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " R");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        tCode.add("LDR " + reg + " RC");
+        address++;
+        tCode.add("TRP 3");
+        address++;
+        freeResource(reg);
+        tCode.add(TCodeOprConst.JMP_OPR.getKey() + " " + END_PROGRAM);
+        address++;
+    }
+
     private void addBreakTrueFalse(ICode iCode) {
         String branchType;
         if (iCode.getOperation().equals(ICodeOprConst.BF_OPR.getKey())) {
@@ -570,68 +861,138 @@ public class TCode {
             branchType = "BNZ ";
         }
 
-        String argReg1 = getRegister(iCode.getArg1());
-        if (iCode.getLabel().isEmpty()) {
-            if (!L4.isEmpty()) {
-                tCode.add(L4.pop() + " LDR " + argReg1 + " " + iCode.getArg1());
+        String reg5 = getRegister("5");
+        String reg6 = getRegister("6");
+
+        Symbol arg1 = symbolTable.get(iCode.getArg1());
+        if (iCode.getArg1().startsWith("L")) {
+            String value;
+            if (arg1.getValue().equalsIgnoreCase("true")) {
+                value = "ONE";
+            } else if (arg1.getValue().equalsIgnoreCase("false")) {
+                value = "CLR";
             } else {
-                tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                value = iCode.getArg1();
             }
+
+            if (iCode.getLabel().isEmpty()) {
+                if (!L4.isEmpty()) {
+                    tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + value + " ; load '" + arg1.getValue() + "' into R6");
+                } else {
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + value + " ; load '" + arg1.getValue() + "' into R6");
+                }
+            } else {
+                tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + value + " ; load '" + arg1.getValue() + "' into R6");
+            }
+            address++;
         } else {
-            tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
+            if (iCode.getLabel().isEmpty()) {
+                if (!L4.isEmpty()) {
+                    tCode.add(L4.pop() + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                } else {
+                    tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                }
+            } else {
+                tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+            }
+            address++;
+            tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + arg1.getSize().toString() + " ; get address of " + arg1.getValue());
+            address++;
+            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + reg5 + " ; load value of " + arg1.getValue() + " into R6");
+            address++;
         }
+        tCode.add(branchType + " " + reg6 + " " + updateLabel(iCode.getArg2()) + " " + iCode.getComment());
         address++;
-        tCode.add(branchType + argReg1 + " " + updateLabel(iCode.getArg2()) + " " + iCode.getComment());
-        address++;
-        freeResource(argReg1);
     }
 
     private void addGEorLEOperation(ICode iCode, String operation) {
-        String argReg1 = getRegister(iCode.getArg1());
-        String argReg2 = getRegister(iCode.getArg2());
-        String argReg3 = getRegister(iCode.getResult());
+        String reg4 = getRegister("4");
+        String reg5 = getRegister("5");
+        String reg6 = getRegister("6");
+        String reg7 = getRegister("7");
 
-        if (iCode.getLabel().equals("")) {
-            if (!L4.isEmpty()) {
-                tCode.add(L4.pop() + " LDR " + argReg1 + " " + iCode.getArg1());
+        Symbol lhs = symbolTable.get(iCode.getArg1());
+        if (iCode.getArg1().startsWith("L")) {
+            if (iCode.getLabel().equals("")) {
+                if (!L4.isEmpty()) {
+                    tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + iCode.getArg1() + " ; load '" + lhs.getValue() + "; into R7");
+                } else {
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + iCode.getArg1() + " ; load '" + lhs.getValue() + "; into R7");
+                }
             } else {
-                tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + iCode.getArg1() + " ; load '" + lhs.getValue() + "; into R7");
             }
+            address++;
         } else {
-            tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
+            if (iCode.getLabel().equals("")) {
+                if (!L4.isEmpty()) {
+                    tCode.add(L4.pop() + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                } else {
+                    tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                }
+            } else {
+                tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+            }
+            address++;
+
+            tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + lhs.getSize() + " ; get address of " + lhs.getValue());
+            address++;
+            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + reg5 + " ; put value of " + lhs.getValue() + " into R7");
+            address++;
         }
-        address++;
+
+
+        Symbol rhs = symbolTable.get(iCode.getArg2());
+        if (iCode.getArg2().startsWith("L")) {
+            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + iCode.getArg2());
+            address++;
+        } else {
+            tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+            address++;
+            tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + rhs.getSize() + " ; get address of " + rhs.getValue());
+            address++;
+            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + reg5 + " ; put value of " + rhs.getValue() + " into R6");
+            address++;
+        }
 
         String L3 = setupL3();
         L4.push("L" + condIncr);
 
-        tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+        tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg4 + " " + reg7 + " ; Test " + lhs.getValue() + " > " + rhs.getValue());
         address++;
-        tCode.add("LDR " + argReg3 + " " + iCode.getResult());
+        tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg4 + " " + reg6);
+        address++;
+        addBranchInstruction(lhs.getValue(), rhs.getValue(), reg4, L3, operation);
         address++;
 
-        tCode.add("MOV " + argReg3 + " " + argReg1 + " ; Test " + iCode.getArg1() + " > " + iCode.getArg2());
+        tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg4 + " " + reg7 + " ; Test " + lhs.getValue() + " == " + rhs.getValue());
         address++;
-        tCode.add("CMP " + argReg3 + " " + argReg2);
+        tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg4 + " " + reg6);
         address++;
-        addBranchInstruction(argReg1, argReg2, argReg3, L3, operation);
+        addBranchInstruction(lhs.getValue(), rhs.getValue(), reg4, L3, ICodeOprConst.EQ_OPR.getKey());
         address++;
-        tCode.add("MOV " + argReg3 + " " + argReg1 + " ; Test " + iCode.getArg1() + " == " + iCode.getArg2());
+
+        Symbol result = symbolTable.get(iCode.getResult());
+        tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg6 + " " + REG_FALSE + " ; set False");
         address++;
-        tCode.add("CMP " + argReg3 + " " + argReg2);
+        tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
         address++;
-        addBranchInstruction(argReg1, argReg2, argReg3, L3, ICodeOprConst.EQ_OPR.getKey());
+        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize().toString() + " ; get address of " + result.getValue());
         address++;
-        tCode.add("STR R0 " + iCode.getResult() + " ; Set FALSE");
+        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; set " + result.getValue() + " to false");
         address++;
+
         tCode.add("JMP " + L4.peek());
         address++;
-        tCode.add(L3 + " STR R1 " + iCode.getResult() + " ; Set TRUE");
-        address++;
 
-        freeResource(argReg1);
-        freeResource(argReg2);
-        freeResource(argReg3);
+        tCode.add(L3 + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg6 + " " + REG_TRUE + " ; set True");
+        address++;
+        tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+        address++;
+        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize().toString() + " ; get address of " + result.getValue());
+        address++;
+        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; set " + result.getValue() + " to true");
+        address++;
     }
 
     private String setupL3() {
@@ -642,45 +1003,82 @@ public class TCode {
     }
 
     private void addBooleanOperation(ICode iCode, String operation) {
-        String argReg1 = getRegister(iCode.getArg1());
-        String argReg2 = getRegister(iCode.getArg2());
-        String argReg3 = getRegister(iCode.getResult());
+        String reg5 = getRegister("5");
+        String reg6 = getRegister("6");
+        String reg7 = getRegister("7");
 
-        if (iCode.getLabel().equals("")) {
-            if (!L4.isEmpty()) {
-                tCode.add(L4.pop() + " LDR " + argReg1 + " " + iCode.getArg1());
+        Symbol arg1 = symbolTable.get(iCode.getArg1());
+        if (iCode.getArg1().startsWith("L")) {
+            if (iCode.getLabel().equals("")) {
+                if (!L4.isEmpty()) {
+                    tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + iCode.getArg1() + " ; load '" + arg1.getValue() + "' into R7");
+                } else {
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + iCode.getArg1() + " ; load '" + arg1.getValue() + "' into R7");
+                }
             } else {
-                tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + iCode.getArg1() + " ; load '" + arg1.getValue() + "' into R7");
             }
+            address++;
         } else {
-            tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
+            if (iCode.getLabel().equals("")) {
+                if (!L4.isEmpty()) {
+                    tCode.add(L4.pop() + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                } else {
+                    tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                }
+            } else {
+                tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+            }
+            address++;
+            tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + arg1.getSize().toString() + " ; get address of " + arg1.getValue());
+            address++;
+            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + reg5 + " ; load value of " + arg1.getValue() + " into R7");
+            address++;
         }
-        address++;
+
+        Symbol arg2 = symbolTable.get(iCode.getArg2());
+        if (iCode.getArg2().startsWith("L")) {
+            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + iCode.getArg2() + " ; load '" + arg2.getValue() + "' into R6");
+            address++;
+        } else {
+            tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+            address++;
+            tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + arg2.getSize().toString() + " ; get address of " + arg2.getValue());
+            address++;
+            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + reg5 + " ; load value of " + arg2.getValue() + " into R6");
+            address++;
+        }
 
         String L3 = setupL3();
         L4.push("L" + condIncr);
 
-        tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+        tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg7 + " " + reg6);
         address++;
-        tCode.add("LDR " + argReg3 + " " + iCode.getResult());
+        addBranchInstruction(arg1.getValue(), arg2.getValue(), reg7, L3, operation);
         address++;
 
-        tCode.add("MOV " + argReg3 + " " + argReg1);
+        Symbol result = symbolTable.get(iCode.getResult());
+        tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg6 + " " + REG_FALSE + " ; set False");
         address++;
-        tCode.add("CMP " + argReg3 + " " + argReg2);
+        tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
         address++;
-        addBranchInstruction(argReg1, argReg2, argReg3, L3, operation);
+        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize().toString() + " ; get address of " + result.getValue());
         address++;
-        tCode.add("STR R0 " + iCode.getResult() + " ; Set FALSE");
+        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; set " + result.getValue() + " to false");
         address++;
+
         tCode.add("JMP " + L4.peek());
         address++;
-        tCode.add(L3 + " STR R1 " + iCode.getResult() + " ; Set TRUE");
+
+        tCode.add(L3 + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg6 + " " + REG_TRUE + " ; set True");
+        address++;
+        tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+        address++;
+        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize().toString() + " ; get address of " + result.getValue());
+        address++;
+        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; set " + result.getValue() + " to true");
         address++;
 
-        freeResource(argReg1);
-        freeResource(argReg2);
-        freeResource(argReg3);
     }
 
     private void addBranchInstruction(String arg1, String arg2, String result, String jmpLabel, String operation) {
@@ -696,51 +1094,98 @@ public class TCode {
     }
 
     private void mathModOpr(ICode iCode) {
-        String argReg1 = getRegister(iCode.getArg1());
-        String argReg2 = getRegister(iCode.getArg2());
-        String argReg3 = getRegister(iCode.getResult());
+        String reg5 = getRegister("5");
+        String reg6 = getRegister("6");
+        String reg7 = getRegister("7");
 
-        if (iCode.getLabel().equals("")) {
-            if (!L4.isEmpty()) {
-                tCode.add(L4.pop() + " LDR " + argReg1 + " " + iCode.getArg1());
+        Symbol lhs = symbolTable.get(iCode.getArg1());
+        if (iCode.getArg1().startsWith("L")) {
+            if (iCode.getLabel().equals("")) {
+                if (!L4.isEmpty()) {
+                    tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + iCode.getArg1() + " ; load '" + lhs.getValue() + "; into R7");
+                } else {
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + iCode.getArg1() + " ; load '" + lhs.getValue() + "; into R7");
+                }
             } else {
-                tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + iCode.getArg1() + " ; load '" + lhs.getValue() + "; into R7");
             }
+            address++;
         } else {
-            tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
+            if (iCode.getLabel().equals("")) {
+                if (!L4.isEmpty()) {
+                    tCode.add(L4.pop() + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                } else {
+                    tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                }
+            } else {
+                tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+            }
+            address++;
+
+            tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + lhs.getSize() + " ; get address of " + lhs.getValue());
+            address++;
+            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + reg5 + " ; put value of " + lhs.getValue() + " into R7");
+            address++;
         }
+
+
+        Symbol rhs = symbolTable.get(iCode.getArg2());
+        if (iCode.getArg2().startsWith("L")) {
+            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + iCode.getArg2());
+            address++;
+        } else {
+            tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+            address++;
+            tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + rhs.getSize() + " ; get address of " + rhs.getValue());
+            address++;
+            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + reg5 + " ; put value of " + rhs.getValue() + " into R6");
+            address++;
+        }
+
+        tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + reg7);
         address++;
-        tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+        tCode.add(TCodeOprConst.DIV_OPR.getKey() + " " + reg5 + " " + reg6);
         address++;
-        tCode.add("LDR " + argReg3 + " " + iCode.getArg1());
+        tCode.add(TCodeOprConst.MUL_OPR.getKey() + " " + reg5 + " " + reg6);
+        address++;
+        tCode.add(TCodeOprConst.SUB_OPR.getKey() + " " + reg7 + " " + reg5);
         address++;
 
-        tCode.add("DIV " + argReg3 + " " + argReg2);
+        Symbol result = symbolTable.get(iCode.getResult());
+        tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
         address++;
-        tCode.add("MUL " + argReg3 + " " + argReg2);
+        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize() + " ; get address of " + result.getValue());
         address++;
-        tCode.add("SUB " + argReg1 + " " + argReg3);
+        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg7 + " " + iCode.getComment());
         address++;
-        tCode.add("STR " + argReg1 + " " + iCode.getResult() + " " + iCode.getComment());
-        address++;
-
-        freeResource(argReg1);
-        freeResource(argReg2);
-        freeResource(argReg3);
     }
 
     private void addWriteInstruction(ICode iCode, String operation) {
-        String argReg1 = getRegister(iCode.getArg1());
+        String reg5 = getRegister("5");
+        String reg6 = getRegister("6");
+
         if (iCode.getLabel().equals("")) {
             if (!L4.isEmpty()) {
-                tCode.add(L4.pop() + " LDR " + argReg1 + " " + iCode.getArg1());
+                tCode.add(L4.pop() + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
             } else {
-                tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
             }
         } else {
-            tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
+            tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
         }
         address++;
+
+        Symbol arg1 = symbolTable.get(iCode.getArg1());
+
+        if (iCode.getArg1().startsWith("L")) {
+            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + iCode.getArg1() + " ; load '" + arg1.getValue() + "' into R6");
+            address++;
+        } else {
+            tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + arg1.getSize().toString() + " ; get address of " + arg1.getValue());
+            address++;
+            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + reg5 + " ; load value of " + arg1.getValue() + " into R6");
+            address++;
+        }
 
         if (operation.equals(ICodeOprConst.WRTC_OPR.getKey())) {
             tCode.add("TRP 3 " + iCode.getComment());
@@ -748,12 +1193,15 @@ public class TCode {
             tCode.add("TRP 1 " + iCode.getComment());
         }
         address++;
-
-        freeResource(argReg1);
     }
 
     private void addVariables() {
         tCode.add("CLR .INT 0");
+        tCode.add("ONE .INT 1");
+        tCode.add("RC .BYT '13'");
+        tCode.add("SP .BYT '32'");
+
+        addErrorLetters();
 
         for (String key : symbolTable.keySet()) {
             Symbol s = symbolTable.get(key);
@@ -796,30 +1244,78 @@ public class TCode {
         }
     }
 
+    private void addErrorLetters() {
+        tCode.add("O .BYT 'O'");
+        tCode.add("V .BYT 'V'");
+        tCode.add("E .BYT 'E'");
+        tCode.add("R .BYT 'R'");
+        tCode.add("F .BYT 'F'");
+        tCode.add("L .BYT 'L'");
+        tCode.add("W .BYT 'W'");
+        tCode.add("U .BYT 'U'");
+        tCode.add("N .BYT 'N'");
+        tCode.add("D .BYT 'D'");
+    }
+
     private void mathOpr(ICode iCode, String opr) {
-        String argReg1 = getRegister(iCode.getArg1());
-        String argReg2 = getRegister(iCode.getArg2());
+        String reg5 = getRegister("5");
+        String reg6 = getRegister("6");
+        String reg7 = getRegister("7");
 
-        if (iCode.getLabel().equals("")) {
-            if (!L4.isEmpty()) {
-                tCode.add(L4.pop() + " LDR " + argReg1 + " " + iCode.getArg1());
+        Symbol lhs = symbolTable.get(iCode.getArg1());
+        if (iCode.getArg1().startsWith("L")) {
+            if (iCode.getLabel().equals("")) {
+                if (!L4.isEmpty()) {
+                    tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + iCode.getArg1() + " ; load '" + lhs.getValue() + "; into R7");
+                } else {
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + iCode.getArg1() + " ; load '" + lhs.getValue() + "; into R7");
+                }
             } else {
-                tCode.add("LDR " + argReg1 + " " + iCode.getArg1());
+                tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + iCode.getArg1() + " ; load '" + lhs.getValue() + "; into R7");
             }
+            address++;
         } else {
-            tCode.add(setLabel(iCode.getLabel()) + " LDR " + argReg1 + " " + iCode.getArg1());
+            if (iCode.getLabel().equals("")) {
+                if (!L4.isEmpty()) {
+                    tCode.add(L4.pop() + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                } else {
+                    tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                }
+            } else {
+                tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+            }
+            address++;
+
+            tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + lhs.getSize() + " ; get address of " + lhs.getValue());
+            address++;
+            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg7 + " " + reg5 + " ; put value of " + lhs.getValue() + " into R7");
+            address++;
         }
-        address++;
-        tCode.add("LDR " + argReg2 + " " + iCode.getArg2());
+
+
+        Symbol rhs = symbolTable.get(iCode.getArg2());
+        if (iCode.getArg2().startsWith("L")) {
+            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + iCode.getArg2());
+            address++;
+        } else {
+            tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+            address++;
+            tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + rhs.getSize() + " ; get address of " + rhs.getValue());
+            address++;
+            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + reg5 + " ; put value of " + rhs.getValue() + " into R6");
+            address++;
+        }
+
+        tCode.add(opr + " " + reg7 + " " + reg6 + " ; " + opr + " " + lhs.getValue() + " and " + rhs.getValue());
         address++;
 
-        tCode.add(opr + " " + argReg1 + " " + argReg2);
+        Symbol result = symbolTable.get(iCode.getResult());
+        tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
         address++;
-        tCode.add("STR " + argReg1 + " " + iCode.getResult() + " " + iCode.getComment());
+        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize() + " ; get address of " + result.getValue());
         address++;
-
-        freeResource(argReg1);
-        freeResource(argReg2);
+        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg7 + " ; store result into address pointed to by R5");
+        address++;
     }
 
     private String updateLabel(String label) {
@@ -878,42 +1374,42 @@ public class TCode {
                 operation.equals(ICodeOprConst.NE_OPR.getKey()));
     }
 
-    private Symbol getSymbol(String name, String scope) {
-        String searchScope = scope;
-        while (!searchScope.equals("g.")) {
-            for (Symbol temp : symbolTable.values()) {
-                if (!temp.getScope().equals(searchScope)) {
-                    continue;
-                }
-
-                if (scope.contains(temp.getScope()) && temp.getValue().equals(name)) {
-                    return temp;
-                }
-            }
-            searchScope = decrementScope(searchScope);
-        }
-
-        if (searchScope.equals("g.") && name.equals("main")) {
-            for (Symbol temp : symbolTable.values()) {
-                if (temp.getValue().equals(name)) {
-                    return temp;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private String decrementScope(String scope) {
-        int scopeDepth = 0;
-        for (char c : scope.toCharArray()) {
-            if (c == '.') scopeDepth++;
-        }
-
-        if (scopeDepth > 1) {
-            return scope.substring(0, scope.lastIndexOf("."));
-        } else {
-            return scope.substring(0, scope.lastIndexOf(".") + 1);
-        }
-    }
+//    private Symbol getSymbol(String name, String scope) {
+//        String searchScope = scope;
+//        while (!searchScope.equals("g.")) {
+//            for (Symbol temp : symbolTable.values()) {
+//                if (!temp.getScope().equals(searchScope)) {
+//                    continue;
+//                }
+//
+//                if (scope.contains(temp.getScope()) && temp.getValue().equals(name)) {
+//                    return temp;
+//                }
+//            }
+//            searchScope = decrementScope(searchScope);
+//        }
+//
+//        if (searchScope.equals("g.") && name.equals("main")) {
+//            for (Symbol temp : symbolTable.values()) {
+//                if (temp.getValue().equals(name)) {
+//                    return temp;
+//                }
+//            }
+//        }
+//
+//        return null;
+//    }
+//
+//    private String decrementScope(String scope) {
+//        int scopeDepth = 0;
+//        for (char c : scope.toCharArray()) {
+//            if (c == '.') scopeDepth++;
+//        }
+//
+//        if (scopeDepth > 1) {
+//            return scope.substring(0, scope.lastIndexOf("."));
+//        } else {
+//            return scope.substring(0, scope.lastIndexOf(".") + 1);
+//        }
+//    }
 }

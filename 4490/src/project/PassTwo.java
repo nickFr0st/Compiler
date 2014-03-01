@@ -817,6 +817,7 @@ public class PassTwo {
             // check format: "(" [parameter_list] ")" method_body
 
             lexicalAnalyzer.nextToken();
+            String methodId = getSymbolFromTable(value.getName(), scope);
             incrementScope(value.getName(), false);
             iCodeList.add(new ICode(scope, ICodeOprConst.FUNC_OPR.getKey(), scope, "", "", ""));
             int methodIndex = iCodeList.size() -1;
@@ -827,6 +828,9 @@ public class PassTwo {
                 if (!method_body()) {
                     return false;
                 }
+
+//                updateSymbolSize(methodId);
+                iCodeList.get(methodIndex).setComment(symbolTable.get(methodId).getSize().toString());
 
                 iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; return from function: " + scope));
 
@@ -842,6 +846,9 @@ public class PassTwo {
             if (!method_body()) {
                 return false;
             }
+
+//            updateSymbolSize(methodId);
+            iCodeList.get(methodIndex).setComment(symbolTable.get(methodId).getSize().toString());
 
             iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; return from function: " + scope));
 
@@ -1607,8 +1614,8 @@ public class PassTwo {
         Symbol method = getSymbol();
         Integer arrSize = Integer.parseInt(element.getLexi().getName());
         Symbol arrSymbol = new Symbol(scope, key, key, Compiler.VARIABLE, new VariableData("@:" + type.getName(), KeyConst.PRIVATE.getKey()), method.getSize() + arrSize);
-        updateSymbolSize(method.getSymId());
         symbolTable.put(key, arrSymbol);
+        updateSymbolSize(method.getSymId());
         if (type.getName().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || type.getName().equalsIgnoreCase(KeyConst.INT.getKey())) {
             iCodeList.add(new ICode(key, ICodeOprConst.CREATE_OPR.getKey(), ".INT", "", "", ""));
         } else {
@@ -1669,7 +1676,6 @@ public class PassTwo {
                 elemIndex++;
                 Symbol method = getSymbol();
                 Symbol retValue = new Symbol(scope, tempSym, tempSym, Compiler.CLASS, new MethodData(KeyConst.PRIVATE.getKey(), argsList, type.getName()), method.getSize() + Compiler.ELEM_SIZE);
-                updateSymbolSize(method.getSymId());
                 // todo: could be wrong
                 if (type.getName().equals(KeyConst.INT.getKey())) {
                     iCodeList.add(new ICode(tempSym, ICodeOprConst.CREATE_OPR.getKey(), ".INT", "", "", ""));
@@ -1678,6 +1684,7 @@ public class PassTwo {
                 }
                 symbolTable.put(tempSym, retValue);
                 variableId++;
+                updateSymbolSize(method.getSymId());
                 if (type.getName().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || type.getName().equalsIgnoreCase(KeyConst.INT.getKey())) {
                     iCodeList.add(new ICode(key, ICodeOprConst.CREATE_OPR.getKey(), ".INT", "", "", ""));
                 } else {
@@ -1756,11 +1763,11 @@ public class PassTwo {
         elemIndex++;
         Symbol method = getSymbol();
         Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), method.getSize() + Compiler.ELEM_SIZE);
-        updateSymbolSize(method.getSymId());
         Variable_SAR item = new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name());
         item.setSarId(key);
 
         symbolTable.put(key, value);
+        updateSymbolSize(method.getSymId());
         SAS.push(item);
         variableId++;
 
@@ -1786,11 +1793,11 @@ public class PassTwo {
                 elemIndex++;
                 Symbol method = getSymbol();
                 Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), method.getSize() + Compiler.ELEM_SIZE);
-                updateSymbolSize(method.getSymId());
                 Variable_SAR item = new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name());
                 item.setSarId(key);
 
                 symbolTable.put(key, value);
+                updateSymbolSize(method.getSymId());
                 SAS.push(item);
                 variableId++;
 
@@ -1830,11 +1837,11 @@ public class PassTwo {
         elemIndex++;
         Symbol method = getSymbol();
         Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), method.getSize() + Compiler.ELEM_SIZE);
-        updateSymbolSize(method.getSymId());
         Variable_SAR item = new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name());
         item.setSarId(key);
 
         symbolTable.put(key, value);
+        updateSymbolSize(method.getSymId());
         SAS.push(item);
         variableId++;
 
@@ -1927,8 +1934,8 @@ public class PassTwo {
         elemIndex++;
         Symbol method = getSymbol();
         Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.INT.name(), KeyConst.PRIVATE.name()), method.getSize() + 1);
-        updateSymbolSize(method.getSymId());
         symbolTable.put(key, value);
+        updateSymbolSize(method.getSymId());
         Tuple tempTuple = new Tuple(key, KeyConst.INT.name(), lhs.getLexi().getLineNum());
         SAR temp = new Identifier_SAR(lhs.getScope(), tempTuple, KeyConst.INT.name());
         temp.setSarId(key);
@@ -2002,7 +2009,7 @@ public class PassTwo {
     }
 
     private void updateSymbolSize(String key) {
-        int newSize = 0;
+        int newSize = 2;
 
         for(Symbol temp : symbolTable.values()) {
             if (temp.getScope().equals(scope) && !temp.getSymId().startsWith("L")) {

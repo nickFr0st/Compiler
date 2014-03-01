@@ -1541,7 +1541,7 @@ public class Compiler {
 
         addToSymbolTable("MAIN", "main", "method", new MethodData("public", new ArrayList<Parameter>(), "void"));
         incrementScope("main", true);
-        elemIndex = 0;
+        elemIndex = 2;
 
         // at this point we have declared classes and "void main()"
         if (!method_body()) {
@@ -1613,13 +1613,17 @@ public class Compiler {
             }
         }
 
-        symbolTable.put(key + variableId, new Symbol(scope, key + variableId++, name, kind, data, elemIndex + ELEM_SIZE));
-        elemIndex++;
+        if (kind.equals(LITERAL)) {
+            symbolTable.put(key + variableId, new Symbol(scope, key + variableId++, name, kind, data, ELEM_SIZE));
+        } else {
+            symbolTable.put(key + variableId, new Symbol(scope, key + variableId++, name, kind, data, elemIndex + ELEM_SIZE));
+            elemIndex++;
+        }
         return true;
     }
 
     private void updateSymbolSize(String key) {
-        int newSize = 0;
+        int newSize = 2;
 
         for(Symbol temp : symbolTable.values()) {
             if (temp.getScope().equals(scope) && !temp.getSymId().startsWith("L")) {

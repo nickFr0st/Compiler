@@ -127,14 +127,11 @@ public class TCode {
         tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SL + " " + STACK_SIZE);
         address++;
 
-        String r = getNewRegister("0");
-        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + r + " CLR");
-        address++;
-        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + r + " " + (address + 3));
+        String r = getRegister("5");
+        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + r + " " + (address + 2));
         address++;
         tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + FP + " " + r);
         address++;
-        freeResource(r);
 
         tCode.add(ICodeOprConst.JMP_OPR.getKey() + " " + startLabel + " ; program start");
         address++;
@@ -297,18 +294,16 @@ public class TCode {
                     tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; store value into address pointed to by R5");
                     address++;
                 } else {
-                    String regNew = getNewRegister("0");
+                    String reg7 = getRegister("7");
 
-                    tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + regNew + " " + FP);
+                    tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg7 + " " + FP);
                     address++;
-                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + regNew + " " + arg2.getSize().toString() + " ; get address of " + arg2.getValue());
+                    tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg7 + " " + arg2.getSize().toString() + " ; get address of " + arg2.getValue());
                     address++;
-                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + regNew + " ; load value of " + arg2.getValue() + " into R6");
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + reg7 + " ; load value of " + arg2.getValue() + " into R6");
                     address++;
                     tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; store value into address pointed to by R5");
                     address++;
-
-                    freeResource(regNew);
                 }
 
             } else if (iCode.getOperation().equals(ICodeOprConst.MOVI_OPR.getKey())) {
@@ -430,7 +425,12 @@ public class TCode {
 
             } else if (iCode.getOperation().equals(TCodeOprConst.JMP_OPR.getKey())) {
 
-                // currently not in use
+                if (iCode.getLabel().equals("")) {
+                    tCode.add(iCode.getOperation() + " " + iCode.getArg1() + " " + iCode.getComment());
+                } else {
+                    tCode.add(iCode.getLabel() + " " + iCode.getOperation() + " " + iCode.getArg1() + " " + iCode.getComment());
+                }
+                address++;
 
             } else if (iCode.getOperation().equals(ICodeOprConst.RDI_OPR.getKey())) {
 
@@ -540,6 +540,15 @@ public class TCode {
                     address++;
                 }
 
+                String L3 = setupL3();
+                L4.push("L" + condIncr);
+
+                // check boolean value of arg1
+                tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg7 + " " + REG_TRUE + " ; see if '" + arg1.getValue() + "' is true");
+                address++;
+                tCode.add(TCodeOprConst.BRZ_OPR.getKey() + " " + reg7 + " " + L3 + " ; if '" + arg1.getValue() + "' is true then GOTO " + L3);
+                address++;
+
                 Symbol arg2 = symbolTable.get(iCode.getArg2());
                 if (iCode.getArg2().startsWith("L")) {
                     String value;
@@ -562,19 +571,10 @@ public class TCode {
                     address++;
                 }
 
-                String L3 = setupL3();
-                L4.push("L" + condIncr);
-
-                // check boolean value of arg1
-                tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg7 + " " + REG_TRUE + " ; see if '" + arg1.getValue() + "' is true");
-                address++;
-                tCode.add(TCodeOprConst.BRZ_OPR.getKey() + "  " + reg7 + " " + L3 + " ; if '" + arg1.getValue() + "' is true then GOTO " + L3);
-                address++;
-
                 // check boolean value of arg2
                 tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg6 + " " + REG_TRUE + " ; see if '" + arg2.getValue() + "' is true");
                 address++;
-                tCode.add(TCodeOprConst.BRZ_OPR.getKey() + "  " + reg6 + " " + L3 + " ; if '" + arg2.getValue() + "' is true then GOTO " + L3);
+                tCode.add(TCodeOprConst.BRZ_OPR.getKey() + " " + reg6 + " " + L3 + " ; if '" + arg2.getValue() + "' is true then GOTO " + L3);
                 address++;
 
                 // store result
@@ -587,7 +587,12 @@ public class TCode {
                 address++;
                 tCode.add(TCodeOprConst.JMP_OPR.getKey() + " " + L4.peek());
                 address++;
-                tCode.add(L3 + " " + TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + REG_TRUE + " ; set result to true");
+
+                tCode.add(L3 + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                address++;
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize().toString() + " ; get address of " + result.getValue());
+                address++;
+                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + REG_TRUE + " ; set result to true");
                 address++;
 
             } else if (iCode.getOperation().equals(ICodeOprConst.AND_OPR.getKey())) {
@@ -856,9 +861,9 @@ public class TCode {
     private void addBreakTrueFalse(ICode iCode) {
         String branchType;
         if (iCode.getOperation().equals(ICodeOprConst.BF_OPR.getKey())) {
-            branchType = "BRZ ";
+            branchType = TCodeOprConst.BRZ_OPR.getKey();
         } else {
-            branchType = "BNZ ";
+            branchType = TCodeOprConst.BNZ_OPR.getKey();
         }
 
         String reg5 = getRegister("5");
@@ -1187,6 +1192,7 @@ public class TCode {
             address++;
         }
 
+        // todo: add these to the const class
         if (operation.equals(ICodeOprConst.WRTC_OPR.getKey())) {
             tCode.add("TRP 3 " + iCode.getComment());
         } else {

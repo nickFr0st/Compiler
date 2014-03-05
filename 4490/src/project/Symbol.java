@@ -97,4 +97,8 @@ public class Symbol {
     public int getTotalSize() {
         return objectSize + size;
     }
+
+    public void updateSize(int update) {
+        size += update;
+    }
 }

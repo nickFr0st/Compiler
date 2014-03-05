@@ -1,6 +1,5 @@
 package project;
 
-import javax.swing.plaf.synth.SynthButtonUI;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,8 +14,6 @@ import java.util.Stack;
 public class PassTwo {
 
     private String startHere = "STARTHERE";
-
-    private Integer elemIndex = 0;
 
     private String scope = "g.";
     private String label = "";
@@ -255,7 +252,6 @@ public class PassTwo {
             literal.setScope(values[1]);
             literalPush(literal);
             lexicalAnalyzer.nextToken();
-            elemIndex++;
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name()) || isLogicalConnectiveExpression(lexicalAnalyzer.getToken().getType()) || isBooleanExpression(lexicalAnalyzer.getToken().getType()) || isMathematicalExpression(lexicalAnalyzer.getToken().getType())) {
                 return expressionz();
@@ -619,7 +615,6 @@ public class PassTwo {
 
         lexicalAnalyzer.nextToken();
         lexicalAnalyzer.nextToken();
-        elemIndex++;
 
         if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.ARRAY_BEGIN.name())) {
             String parameterId = getSymbolFromTable(lexicalAnalyzer.peekPreviousToken().getName(), SAS.peek().getScope());
@@ -695,8 +690,6 @@ public class PassTwo {
             variableSar = new Variable_SAR(variable, scope, "V" + variableId++, type);
             variablePush(variableSar);
         }
-
-        elemIndex++;
 
         String[] values = isInSymbolTable(variableSar);
         if (values == null) {
@@ -820,7 +813,6 @@ public class PassTwo {
             String methodId = getSymbolFromTable(value.getName(), scope);
             incrementScope(value.getName(), false);
             iCodeList.add(new ICode(methodId, ICodeOprConst.FUNC_OPR.getKey(), methodId, "", "", ""));
-            elemIndex = 0;
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 lexicalAnalyzer.nextToken();
@@ -871,8 +863,6 @@ public class PassTwo {
 
                 variableHasBeenAdded = true;
             }
-
-            elemIndex++;
 
             if (!variableHasBeenAdded) {
                 variablePush(new Variable_SAR(value, scope, "V" + variableId++, type));
@@ -1303,7 +1293,6 @@ public class PassTwo {
                 SAR indexName = ((Array_SAR) id_sar).getValue();
                 String tempType = arrayName.getType().substring(arrayName.getType().indexOf(":") + 1, arrayName.getType().length());
                 String tempKey = "T" + variableId;
-                elemIndex++;
                 Symbol method = getSymbol();
 
                 symbolTable.put(tempKey, new Symbol(scope, tempKey, tempKey, Compiler.VARIABLE, new VariableData(tempType, KeyConst.PRIVATE.getKey()), method.getTotalSize(), 1));
@@ -1334,7 +1323,6 @@ public class PassTwo {
                 iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), symbolId, "", "", ""));
 
                 String itemKey = "T" + variableId;
-                elemIndex++;
                 Symbol method = getSymbol();
                 symbolTable.put(itemKey, new Symbol(scope, itemKey, itemKey, values[2], new VariableData(type, values[3]), method.getTotalSize(), 1));
                 method.updateSize(Compiler.ELEM_SIZE);
@@ -1422,7 +1410,6 @@ public class PassTwo {
                 }
 
                 String itemKey = "T" + variableId;
-                elemIndex++;
                 Symbol method = getSymbol();
                 Ref_SAR tempItem = new Ref_SAR(lhs.getScope(), new Tuple(itemKey, temp.getData().getType(), rhs.getLexi().getLineNum()), temp.getData().getType());
                 tempItem.setSarId(itemKey);
@@ -1592,7 +1579,6 @@ public class PassTwo {
 
         // todo: this could be wrong
         String key = "T" + variableId;
-        elemIndex++;
         Symbol method = getSymbol();
         Integer arrSize = Integer.parseInt(element.getLexi().getName());
         Symbol arrSymbol = new Symbol(scope, key, key, Compiler.VARIABLE, new VariableData("@:" + type.getName(), KeyConst.PRIVATE.getKey()), method.getTotalSize() + arrSize, 1);
@@ -1655,7 +1641,6 @@ public class PassTwo {
                 }
 
                 String tempSym = "T" + variableId;
-                elemIndex++;
                 Symbol method = getSymbol();
                 Symbol retValue = new Symbol(scope, tempSym, tempSym, Compiler.CLASS, new MethodData(KeyConst.PRIVATE.getKey(), argsList, type.getName()), method.getTotalSize(), 1);
                 // todo: could be wrong
@@ -1743,7 +1728,6 @@ public class PassTwo {
         }
 
         String key = "T" + variableId;
-        elemIndex++;
         Symbol method = getSymbol();
         Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), method.getTotalSize(), 1);
         Variable_SAR item = new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name());
@@ -1773,7 +1757,6 @@ public class PassTwo {
 
             if (!SARType(lhs.getType()) && rhs.getType().equalsIgnoreCase(KeyConst.NULL.getKey())) {
                 String key = "T" + variableId;
-                elemIndex++;
                 Symbol method = getSymbol();
                 Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), method.getTotalSize(), 1);
                 Variable_SAR item = new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name());
@@ -1817,7 +1800,6 @@ public class PassTwo {
         }
 
         String key = "T" + variableId;
-        elemIndex++;
         Symbol method = getSymbol();
         Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), method.getTotalSize(), 1);
         Variable_SAR item = new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name());
@@ -1914,7 +1896,6 @@ public class PassTwo {
         }
 
         String key = "T" + variableId;
-        elemIndex++;
         Symbol method = getSymbol();
         Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.INT.name(), KeyConst.PRIVATE.name()), method.getTotalSize(), 1);
         symbolTable.put(key, value);
@@ -1989,18 +1970,6 @@ public class PassTwo {
         String tempLabel = label;
         label = "";
         return tempLabel;
-    }
-
-    private void updateSymbolSize(String key) {
-        int newSize = 0;
-
-        for(Symbol temp : symbolTable.values()) {
-            if (temp.getScope().equals(scope) && !(temp.getSymId().startsWith("L") || temp.getSymId().startsWith("P"))) {
-                newSize++;
-            }
-        }
-
-        symbolTable.get(key).setSize(newSize);
     }
 
     private Symbol getSymbol() {

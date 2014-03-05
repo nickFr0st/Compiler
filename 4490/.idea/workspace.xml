@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/PassTwo.java" afterPath="$PROJECT_DIR$/src/project/PassTwo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Symbol.java" afterPath="$PROJECT_DIR$/src/project/Symbol.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
@@ -228,7 +227,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1777" class="project.PassTwo" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1760" class="project.PassTwo" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -243,7 +242,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1308" class="project.PassTwo" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1297" class="project.PassTwo" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -258,7 +257,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1429" class="project.PassTwo" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1416" class="project.PassTwo" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -273,7 +272,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1597" class="project.PassTwo" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1583" class="project.PassTwo" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -288,7 +287,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1659" class="project.PassTwo" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1644" class="project.PassTwo" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -303,7 +302,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1691" class="project.PassTwo" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1676" class="project.PassTwo" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -363,7 +362,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1747" class="project.PassTwo" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1731" class="project.PassTwo" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -428,7 +427,7 @@
       <file leaf-file-name="Compiler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1151" column="0" selection-start="47798" selection-end="47798" vertical-scroll-proportion="-7.8076925" vertical-offset="19296" max-vertical-offset="28050">
+            <state line="345" column="0" selection-start="14543" selection-end="14543" vertical-scroll-proportion="1.3461539" vertical-offset="5832" max-vertical-offset="28050">
               <folding />
             </state>
           </provider>
@@ -450,9 +449,9 @@
       <file leaf-file-name="PassTwo.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1998" column="0" selection-start="79621" selection-end="79621" vertical-scroll-proportion="0.6415094" vertical-offset="33320" max-vertical-offset="34425">
+            <state line="1967" column="22" selection-start="78846" selection-end="78846" vertical-scroll-proportion="0.5447681" vertical-offset="32883" max-vertical-offset="33915">
               <folding>
-                <element signature="e#6265#6309#0" expanded="true" />
+                <element signature="e#6184#6228#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1100,7 +1099,7 @@
       <workItem from="1393649795400" duration="1001000" />
       <workItem from="1393686368304" duration="8689000" />
       <workItem from="1393731143226" duration="9000" />
-      <workItem from="1393890307903" duration="21393000" />
+      <workItem from="1393890307903" duration="21547000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1358823189173</created>
@@ -2142,11 +2141,15 @@
       <created>1393988075543</created>
       <updated>1393988075543</updated>
     </task>
-    <option name="localTasksCounter" value="261" />
+    <task id="LOCAL-00261" summary="addressing cleanup">
+      <created>1393990529591</created>
+      <updated>1393990529591</updated>
+    </task>
+    <option name="localTasksCounter" value="262" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="186953000" />
+    <option name="totallyTimeSpent" value="187107000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -2216,7 +2219,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="added ease of use for testing code and running from command line" />
     <MESSAGE value="setup for the lexi assignment" />
     <MESSAGE value="added AND and OR tCode generation" />
     <MESSAGE value="fixed spaces bug" />
@@ -2241,7 +2243,8 @@
     <MESSAGE value="re write of the TCode Class" />
     <MESSAGE value="c- program once again working" />
     <MESSAGE value="c program once again working&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="c program once again working&#10;" />
+    <MESSAGE value="addressing cleanup" />
+    <option name="LAST_COMMIT_MESSAGE" value="addressing cleanup" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -2316,7 +2319,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="1696" column="50" selection-start="63617" selection-end="63617" vertical-scroll-proportion="0.0" vertical-offset="28832" max-vertical-offset="33643">
           <folding>
-            <element signature="e#6265#6309#0" expanded="true" />
+            <element signature="e#6184#6228#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2374,7 +2377,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="1696" column="50" selection-start="63617" selection-end="63617" vertical-scroll-proportion="0.0" vertical-offset="28832" max-vertical-offset="33643">
           <folding>
-            <element signature="e#6265#6309#0" expanded="true" />
+            <element signature="e#6184#6228#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2558,13 +2561,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1151" column="0" selection-start="47798" selection-end="47798" vertical-scroll-proportion="-7.8076925" vertical-offset="19296" max-vertical-offset="28050">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Symbol.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="40" column="0" selection-start="1008" selection-end="1008" vertical-scroll-proportion="0.0" vertical-offset="430" max-vertical-offset="1530">
@@ -2576,11 +2572,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="345" column="0" selection-start="14543" selection-end="14543" vertical-scroll-proportion="1.3461539" vertical-offset="5832" max-vertical-offset="28050">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1998" column="0" selection-start="79621" selection-end="79621" vertical-scroll-proportion="0.6415094" vertical-offset="33320" max-vertical-offset="34425">
+        <state line="1967" column="22" selection-start="78846" selection-end="78846" vertical-scroll-proportion="0.5447681" vertical-offset="32883" max-vertical-offset="33915">
           <folding>
-            <element signature="e#6265#6309#0" expanded="true" />
+            <element signature="e#6184#6228#0" expanded="true" />
           </folding>
         </state>
       </provider>

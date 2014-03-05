@@ -23,7 +23,7 @@ public class SymbolTest {
 
     @Before
     public void setUp() throws Exception {
-        symbol = new Symbol(scope, symId, value, kind, null, size);
+        symbol = new Symbol(scope, symId, value, kind, null, size, 1);
     }
 
     @Test

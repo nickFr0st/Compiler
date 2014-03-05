@@ -819,18 +819,14 @@ public class PassTwo {
             lexicalAnalyzer.nextToken();
             String methodId = getSymbolFromTable(value.getName(), scope);
             incrementScope(value.getName(), false);
-            iCodeList.add(new ICode(scope, ICodeOprConst.FUNC_OPR.getKey(), scope, "", "", ""));
-            int methodIndex = iCodeList.size() -1;
-            elemIndex = 1;
+            iCodeList.add(new ICode(methodId, ICodeOprConst.FUNC_OPR.getKey(), methodId, "", "", ""));
+            elemIndex = 0;
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
                 lexicalAnalyzer.nextToken();
                 if (!method_body()) {
                     return false;
                 }
-
-//                updateSymbolSize(methodId);
-                iCodeList.get(methodIndex).setComment(symbolTable.get(methodId).getSize().toString());
 
                 iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; return from function: " + scope));
 
@@ -847,8 +843,7 @@ public class PassTwo {
                 return false;
             }
 
-//            updateSymbolSize(methodId);
-            iCodeList.get(methodIndex).setComment(symbolTable.get(methodId).getSize().toString());
+            updateSymbolSize(methodId);
 
             iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; return from function: " + scope));
 
@@ -961,9 +956,13 @@ public class PassTwo {
 
     public boolean compilation_unit() {
         label = startHere;
-        iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), "g.main", KeyConst.THIS.getKey(), "", ""));
-        int methodFrameIndex = iCodeList.size() -1;
-        iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), "g.main", "", "", ""));
+
+        incrementScope("main", false);
+        Symbol method = getSymbol();
+        decrementScope();
+
+        iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), method.getSymId(), KeyConst.THIS.getKey(), "", ""));
+        iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), method.getSymId(), "", "", ""));
 
         // check format: {class_declaration} "void" "main" "(" ")" method_body
         if (!lexicalAnalyzer.getToken().getName().equals(KeyConst.VOID.getKey())) {
@@ -992,9 +991,8 @@ public class PassTwo {
 
         String searchScope = "g.";
 
-        label = "g.main";
-        iCodeList.add(new ICode(useLabel(), ICodeOprConst.FUNC_OPR.getKey(), scope, KeyConst.THIS.getKey(), "", ""));
-        int methodFuncIndex = iCodeList.size() -1;
+        label = method.getSymId();
+        iCodeList.add(new ICode(useLabel(), ICodeOprConst.FUNC_OPR.getKey(), method.getSymId(), KeyConst.THIS.getKey(), "", ""));
 
         // at this point we have declared classes and "void main()"
         if (!method_body()) {
@@ -1012,8 +1010,6 @@ public class PassTwo {
         }
 
         updateSymbolSize(mainId);
-        iCodeList.get(methodFrameIndex).setComment(symbolTable.get(mainId).getSize().toString());
-        iCodeList.get(methodFuncIndex).setComment(symbolTable.get(mainId).getSize().toString());
 
         iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; Return from method: " + scope));
 
@@ -1326,7 +1322,7 @@ public class PassTwo {
                 elemIndex++;
                 Symbol method = getSymbol();
 
-                symbolTable.put(tempKey, new Symbol(scope, tempKey, tempKey, Compiler.VARIABLE, new VariableData(tempType, KeyConst.PRIVATE.getKey()), method.getSize() + Compiler.ELEM_SIZE));
+                symbolTable.put(tempKey, new Symbol(scope, tempKey, tempKey, Compiler.VARIABLE, new VariableData(tempType, KeyConst.PRIVATE.getKey()), method.getTotalSize() + Compiler.ELEM_SIZE, 1));
                 updateSymbolSize(method.getSymId());
                 if (tempType.equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || tempType.equalsIgnoreCase(KeyConst.INT.getKey())) {
                     iCodeList.add(new ICode(tempKey, ICodeOprConst.CREATE_OPR.getKey(), ".INT", "", "", ""));
@@ -1344,7 +1340,7 @@ public class PassTwo {
                 SAS.push(tempSAR);
 
             } else if (id_sar instanceof Function_SAR) {
-                String symbolId = symbolTable.get(id_sar.getSarId()).getScope() + "." + id_sar.getLexi().getName();
+                String symbolId = symbolTable.get(id_sar.getSarId()).getSymId();
 
                 iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), symbolId, KeyConst.THIS.getKey(), "", ""));
 
@@ -1356,7 +1352,7 @@ public class PassTwo {
                 String itemKey = "T" + variableId;
                 elemIndex++;
                 Symbol method = getSymbol();
-                symbolTable.put(itemKey, new Symbol(scope, itemKey, itemKey, values[2], new VariableData(type, values[3]), method.getSize() + Compiler.ELEM_SIZE));
+                symbolTable.put(itemKey, new Symbol(scope, itemKey, itemKey, values[2], new VariableData(type, values[3]), method.getTotalSize() + Compiler.ELEM_SIZE, 1));
                 updateSymbolSize(method.getSymId());
                 if (type.equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || type.equalsIgnoreCase(KeyConst.INT.getKey())) {
                     iCodeList.add(new ICode(itemKey, ICodeOprConst.CREATE_OPR.getKey(), ".INT", "", "", ""));
@@ -1447,7 +1443,7 @@ public class PassTwo {
                 Ref_SAR tempItem = new Ref_SAR(lhs.getScope(), new Tuple(itemKey, temp.getData().getType(), rhs.getLexi().getLineNum()), temp.getData().getType());
                 tempItem.setSarId(itemKey);
 
-                symbolTable.put(itemKey, new Symbol(scope, itemKey, itemKey, temp.getKind(), temp.getData(), method.getSize() + Compiler.ELEM_SIZE));
+                symbolTable.put(itemKey, new Symbol(scope, itemKey, itemKey, temp.getKind(), temp.getData(), method.getTotalSize() + Compiler.ELEM_SIZE, 1));
                 updateSymbolSize(method.getSymId());
                 SAS.push(tempItem);
                 if (temp.getData().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || temp.getData().getType().equalsIgnoreCase(KeyConst.INT.getKey())) {
@@ -1457,12 +1453,13 @@ public class PassTwo {
                 }
 
                 if (isMethod) {
+                    // todo: this could be wrong
                     iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), temp.getSymId(), lhs.getSarId(), tempItem.getSarId(), ""));
                     for (SAR args : ((Function_SAR) rhs).getArguments().getArguments()) {
                         iCodeList.add(new ICode(useLabel(), ICodeOprConst.PUSH_OPR.getKey(), args.getSarId(), "", "", "; push " + args.getLexi().getName() + " on run-time stack"));
                     }
 
-                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), temp.getScope() + "." + temp.getValue(), "", "", ""));
+                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), temp.getSymId(), "", "", ""));
                     if ((!OS.isEmpty() && OS.peek().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) || !lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || (!SAS.isEmpty() && SAS.peek() instanceof Function_SAR)) {
                         iCodeList.add(new ICode(useLabel(), ICodeOprConst.PEEK_OPR.getKey(), itemKey, "", "", "; get value from method " + temp.getValue()));
                     }
@@ -1613,7 +1610,7 @@ public class PassTwo {
         elemIndex++;
         Symbol method = getSymbol();
         Integer arrSize = Integer.parseInt(element.getLexi().getName());
-        Symbol arrSymbol = new Symbol(scope, key, key, Compiler.VARIABLE, new VariableData("@:" + type.getName(), KeyConst.PRIVATE.getKey()), method.getSize() + arrSize);
+        Symbol arrSymbol = new Symbol(scope, key, key, Compiler.VARIABLE, new VariableData("@:" + type.getName(), KeyConst.PRIVATE.getKey()), method.getTotalSize() + arrSize, 1);
         symbolTable.put(key, arrSymbol);
         updateSymbolSize(method.getSymId());
         if (type.getName().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || type.getName().equalsIgnoreCase(KeyConst.INT.getKey())) {
@@ -1675,7 +1672,7 @@ public class PassTwo {
                 String tempSym = "T" + variableId;
                 elemIndex++;
                 Symbol method = getSymbol();
-                Symbol retValue = new Symbol(scope, tempSym, tempSym, Compiler.CLASS, new MethodData(KeyConst.PRIVATE.getKey(), argsList, type.getName()), method.getSize() + Compiler.ELEM_SIZE);
+                Symbol retValue = new Symbol(scope, tempSym, tempSym, Compiler.CLASS, new MethodData(KeyConst.PRIVATE.getKey(), argsList, type.getName()), method.getTotalSize() + Compiler.ELEM_SIZE, 1);
                 // todo: could be wrong
                 if (type.getName().equals(KeyConst.INT.getKey())) {
                     iCodeList.add(new ICode(tempSym, ICodeOprConst.CREATE_OPR.getKey(), ".INT", "", "", ""));
@@ -1707,7 +1704,7 @@ public class PassTwo {
                 temp.setSize(objSize);
 
                 String symId = "L" + variableId;
-                Symbol sizeSymbol = new Symbol(scope, symId, objSize.toString(), Compiler.LITERAL, new VariableData(KeyConst.INT.getKey(), KeyConst.PRIVATE.getKey()), Compiler.ELEM_SIZE);
+                Symbol sizeSymbol = new Symbol(scope, symId, objSize.toString(), Compiler.LITERAL, new VariableData(KeyConst.INT.getKey(), KeyConst.PRIVATE.getKey()), Compiler.ELEM_SIZE, 1);
                 symbolTable.put(symId, sizeSymbol);
                 variableId++;
 
@@ -1719,7 +1716,8 @@ public class PassTwo {
                     argsList.add(new Parameter(args.getType(), args.getSarId()));
                 }
 
-                iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), temp.getScope() + "." + temp.getValue(), "", "", ""));
+                // todo: could be wrong
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), temp.getSymId(), "", "", ""));
                 iCodeList.add(new ICode(useLabel(), ICodeOprConst.PEEK_OPR.getKey(), tempSym, "", "", ""));
                 return true;
             }
@@ -1762,7 +1760,7 @@ public class PassTwo {
         String key = "T" + variableId;
         elemIndex++;
         Symbol method = getSymbol();
-        Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), method.getSize() + Compiler.ELEM_SIZE);
+        Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), method.getTotalSize() + Compiler.ELEM_SIZE, 1);
         Variable_SAR item = new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name());
         item.setSarId(key);
 
@@ -1792,7 +1790,7 @@ public class PassTwo {
                 String key = "T" + variableId;
                 elemIndex++;
                 Symbol method = getSymbol();
-                Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), method.getSize() + Compiler.ELEM_SIZE);
+                Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), method.getTotalSize() + Compiler.ELEM_SIZE, 1);
                 Variable_SAR item = new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name());
                 item.setSarId(key);
 
@@ -1836,7 +1834,7 @@ public class PassTwo {
         String key = "T" + variableId;
         elemIndex++;
         Symbol method = getSymbol();
-        Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), method.getSize() + Compiler.ELEM_SIZE);
+        Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.BOOL.name(), KeyConst.PRIVATE.name()), method.getTotalSize() + Compiler.ELEM_SIZE, 1);
         Variable_SAR item = new Variable_SAR(new Tuple(key, KeyConst.BOOL.name(), rhs.getLexi().getLineNum()), rhs.getScope(), key, KeyConst.BOOL.name());
         item.setSarId(key);
 
@@ -1933,7 +1931,7 @@ public class PassTwo {
         String key = "T" + variableId;
         elemIndex++;
         Symbol method = getSymbol();
-        Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.INT.name(), KeyConst.PRIVATE.name()), method.getSize() + 1);
+        Symbol value = new Symbol(lhs.getScope(), key, key, Compiler.VARIABLE, new VariableData(KeyConst.INT.name(), KeyConst.PRIVATE.name()), method.getTotalSize() + Compiler.ELEM_SIZE, 1);
         symbolTable.put(key, value);
         updateSymbolSize(method.getSymId());
         Tuple tempTuple = new Tuple(key, KeyConst.INT.name(), lhs.getLexi().getLineNum());
@@ -2009,10 +2007,10 @@ public class PassTwo {
     }
 
     private void updateSymbolSize(String key) {
-        int newSize = 2;
+        int newSize = symbolTable.get(key).getSize();
 
         for(Symbol temp : symbolTable.values()) {
-            if (temp.getScope().equals(scope) && !temp.getSymId().startsWith("L")) {
+            if (temp.getScope().equals(scope) && !temp.getSymId().startsWith("L") && !temp.getSymId().startsWith("P")) {
                 newSize++;
             }
         }

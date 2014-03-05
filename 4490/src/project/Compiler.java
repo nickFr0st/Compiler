@@ -41,6 +41,7 @@ public class Compiler {
     private String scope = "g.";
     private LinkedHashMap<String, Symbol> symbolTable = new LinkedHashMap<String, Symbol>();
     private int variableId = 100;
+    private int methodId = 1000;
 
     private LexicalAnalyzer lexicalAnalyzer;
     private String errorList = "";
@@ -1138,7 +1139,7 @@ public class Compiler {
 
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
             lexicalAnalyzer.nextToken();
-            String key = "M" + variableId;
+            String key = "M" + methodId;
             addToSymbolTable("M", constructorName, METHOD, new MethodData("public", new ArrayList<Parameter>(), constructorName));
             incrementScope(constructorName, false);
 
@@ -1152,7 +1153,7 @@ public class Compiler {
             return true;
         }
 
-        String key = "M" + variableId;
+        String key = "M" + methodId;
         addToSymbolTable("M", constructorName, METHOD, new MethodData("public", new ArrayList<Parameter>(), constructorName));
         incrementScope(constructorName, false);
         List<Parameter> parameterNames = new ArrayList<Parameter>();
@@ -1207,7 +1208,7 @@ public class Compiler {
             }
 
             if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
-                String key = "M" + variableId;
+                String key = "M" + methodId;
                 addToSymbolTable("M", value, "method", new MethodData(accessMod, new ArrayList<Parameter>(), type));
                 incrementScope(value, false);
                 lexicalAnalyzer.nextToken();
@@ -1220,7 +1221,7 @@ public class Compiler {
                 return true;
             }
 
-            String methodKey = "M" + variableId;
+            String methodKey = "M" + methodId;
             addToSymbolTable("M", value, "method", new MethodData(accessMod, new ArrayList<Parameter>(), type));
             incrementScope(value, false);
             List<Parameter> parameters = new ArrayList<Parameter>();
@@ -1537,11 +1538,11 @@ public class Compiler {
             return false;
         }
 
-        String mainKey = "MAIN" + variableId;
+        String mainKey = "M" + methodId;
 
-        addToSymbolTable("MAIN", "main", "method", new MethodData("public", new ArrayList<Parameter>(), "void"));
+        addToSymbolTable("M", "main", "method", new MethodData("public", new ArrayList<Parameter>(), "void"));
         incrementScope("main", true);
-        elemIndex = 2;
+        elemIndex = 3;
 
         // at this point we have declared classes and "void main()"
         if (!method_body()) {
@@ -1614,23 +1615,34 @@ public class Compiler {
         }
 
         if (kind.equals(LITERAL)) {
-            symbolTable.put(key + variableId, new Symbol(scope, key + variableId++, name, kind, data, ELEM_SIZE));
+            symbolTable.put(key + variableId, new Symbol(scope, key + variableId++, name, kind, data, ELEM_SIZE, 1));
+        } else if (key.equals("M")) {
+            symbolTable.put(key + methodId, new Symbol(scope, key + methodId++, name, kind, data, elemIndex, 1));
+            elemIndex++;
         } else {
-            symbolTable.put(key + variableId, new Symbol(scope, key + variableId++, name, kind, data, elemIndex + ELEM_SIZE));
+            symbolTable.put(key + variableId, new Symbol(scope, key + variableId++, name, kind, data, elemIndex, 1));
             elemIndex++;
         }
         return true;
     }
 
     private void updateSymbolSize(String key) {
-        int newSize = 2;
+        int newSize = 0;
 
         for(Symbol temp : symbolTable.values()) {
-            if (temp.getScope().equals(scope) && !temp.getSymId().startsWith("L")) {
+            if (temp.getScope().equals(scope) && !temp.getSymId().startsWith("L") && !temp.getSymId().startsWith("P")) {
                 newSize++;
             }
         }
 
+        int objectSize = 3;
+        for(Symbol temp : symbolTable.values()) {
+            if (temp.getScope().equals(scope) && temp.getSymId().startsWith("P")) {
+                objectSize++;
+            }
+        }
+
         symbolTable.get(key).setSize(newSize);
+        symbolTable.get(key).setObjectSize(objectSize);
     }
 }

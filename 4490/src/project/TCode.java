@@ -19,8 +19,8 @@ public class TCode {
     private final String REG_FALSE = "R0";
     private final String REG_TRUE = "R1";
 
-    private final String ACTIVATION_RECORD = "AR0";
-    private final int STACK_SIZE = 50;
+    private final String ACTIVATION_RECORD = "A0";
+    private final int STACK_SIZE = 999;
     private final String OVERFLOW = "OVERFLOW";
     private final String UNDERFLOW = "UNDERFLOW";
     private final String END_PROGRAM = "ENDPROGRAM";
@@ -34,6 +34,7 @@ public class TCode {
     private int address = 0;
     private int condIncr = START_SIZE;
     private Stack<String> L4 = new Stack<String>();
+    private boolean skipMov = false;
 
     private void initReg() {
         for (int i = 0; i < 101; i++) {
@@ -104,13 +105,13 @@ public class TCode {
 
         tCode.add("");
         address++;
-        tCode.add("LDR R0 CLR");
-        address++;
-        tCode.add("LDR R7 CLR");
+        tCode.add("LDR R0 CLR ; Setup false reg");
         address++;
         tCode.add("LDR R1 CLR");
         address++;
-        tCode.add("ADI R1 1");
+        tCode.add("ADI R1 1 ; Setup true reg");
+        address++;
+        tCode.add("LDR R7 CLR");
         address++;
         tCode.add("LDA " + SB + " " + ACTIVATION_RECORD + " ; setup stack base: R97");
         address++;
@@ -146,6 +147,8 @@ public class TCode {
             listCount++;
             if (iCode.getOperation().equals(ICodeOprConst.FRAME_OPR.getKey())) {
 
+                Symbol method = symbolTable.get(iCode.getArg1());
+
                 String reg5 = getRegister("5");
                 String reg3 = getRegister("3");
                 String reg6 = getRegister("6");
@@ -162,7 +165,7 @@ public class TCode {
                     tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + SP);
                 }
                 address++;
-                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + iCode.getComment());
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + method.getObjectSize());
                 address++;
                 tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg5 + " " + SL);
                 address++;
@@ -188,22 +191,36 @@ public class TCode {
 
 
                 int tempListCount = listCount + 1;
-                if (iCodeList.get(listCount + 1).getOperation().equals(ICodeOprConst.PUSH_OPR.getKey())) {
-                    tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + reg3);
-                    address++;
+                if (iCodeList.get(tempListCount).getOperation().equals(ICodeOprConst.PUSH_OPR.getKey())) {
 
+                    List<Integer> paramList = new ArrayList<Integer>();
                     while (iCodeList.get(tempListCount).getOperation().equals(ICodeOprConst.PUSH_OPR.getKey())) {
-                        Symbol parameter = symbolTable.get(iCodeList.get(tempListCount).getArg1());
+                        paramList.add(tempListCount++);
+                    }
+                    Collections.reverse(paramList);
 
-                        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + parameter.getSize() + " ; Address of " + parameter.getValue());
-                        address++;
-                        tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + reg5 + " ; " + parameter.getValue() + " in R6");
-                        address++;
-                        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + SP + " " + reg6 + " ; " + parameter.getValue() + " on stack");
-                        address++;
-                        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " 1");
-                        address++;
-                        tempListCount++;
+                    for(Integer p : paramList) {
+                        Symbol parameter = symbolTable.get(iCodeList.get(p).getArg1());
+
+                        if (iCodeList.get(p).getArg1().startsWith("L")) {
+                            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + iCodeList.get(p).getArg1() + " ; load '" + parameter.getValue() + "' into R6");
+                            address++;
+                            tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + SP + " " + reg6 + " ; store ' " + parameter.getValue() + "' on the stack");
+                            address++;
+                            tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " 1");
+                            address++;
+                        } else {
+                            tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + reg3);
+                            address++;
+                            tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + parameter.getSize() + " ; Address of " + parameter.getValue());
+                            address++;
+                            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + reg5 + " ; load value of " + parameter.getValue() + " into R6");
+                            address++;
+                            tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + SP + " " + reg6 + " ; store " + parameter.getValue() + " on stack");
+                            address++;
+                            tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " 1");
+                            address++;
+                        }
                     }
                 }
 
@@ -224,14 +241,16 @@ public class TCode {
 
                 String reg5 = getRegister("5");
 
+                Symbol method = symbolTable.get(iCode.getArg1());
+
                 if (iCode.getLabel().isEmpty()) {
                     if (!L4.isEmpty()) {
-                        tCode.add(L4.pop() + " " + TCodeOprConst.ADI_OPR.getKey() + " " + SP + " " + iCode.getComment());
+                        tCode.add(L4.pop() + " " + TCodeOprConst.ADI_OPR.getKey() + " " + SP + " " + method.getSize());
                     } else {
-                        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " " + iCode.getComment());
+                        tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " " + method.getSize());
                     }
                 } else {
-                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.ADI_OPR.getKey() + " " + SP + " " + iCode.getComment());
+                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.ADI_OPR.getKey() + " " + SP + " " + method.getSize());
                 }
                 address++;
 
@@ -245,6 +264,7 @@ public class TCode {
             } else if (iCode.getOperation().equals(ICodeOprConst.PEEK_OPR.getKey())) {
 
                 String reg6 = getRegister("6");
+                String reg3 = getRegister("3");
 
                 if (iCode.getLabel().isEmpty()) {
                     if (!L4.isEmpty()) {
@@ -255,6 +275,14 @@ public class TCode {
                 } else {
                     tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + SP);
                 }
+                address++;
+
+                Symbol arg1 = symbolTable.get(iCode.getArg1());
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg3 + " " + FP);
+                address++;
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg3 + " " + arg1.getSize());
+                address++;
+                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg3 + " " + reg6);
                 address++;
 
             } else if (isMathOperation(iCode.getOperation())) {
@@ -1168,24 +1196,30 @@ public class TCode {
     private void addWriteInstruction(ICode iCode, String operation) {
         String reg5 = getRegister("5");
         String reg6 = getRegister("6");
-
-        if (iCode.getLabel().equals("")) {
-            if (!L4.isEmpty()) {
-                tCode.add(L4.pop() + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
-            } else {
-                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
-            }
-        } else {
-            tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
-        }
-        address++;
-
         Symbol arg1 = symbolTable.get(iCode.getArg1());
 
         if (iCode.getArg1().startsWith("L")) {
-            tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + iCode.getArg1() + " ; load '" + arg1.getValue() + "' into R6");
+            if (iCode.getLabel().equals("")) {
+                if (!L4.isEmpty()) {
+                    tCode.add(L4.pop() + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + iCode.getArg1() + " ; load '" + arg1.getValue() + "' into R6");
+                } else {
+                    tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + iCode.getArg1() + " ; load '" + arg1.getValue() + "' into R6");
+                }
+            } else {
+                tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + iCode.getArg1() + " ; load '" + arg1.getValue() + "' into R6");
+            }
             address++;
         } else {
+            if (iCode.getLabel().equals("")) {
+                if (!L4.isEmpty()) {
+                    tCode.add(L4.pop() + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                } else {
+                    tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                }
+            } else {
+                tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+            }
+            address++;
             tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + arg1.getSize().toString() + " ; get address of " + arg1.getValue());
             address++;
             tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + reg5 + " ; load value of " + arg1.getValue() + " into R6");
@@ -1245,7 +1279,7 @@ public class TCode {
 
         tCode.add(ACTIVATION_RECORD + " .INT 0");
         String tempRec = ACTIVATION_RECORD.substring(0, ACTIVATION_RECORD.length() - 1);
-        for (int i = 1; i < STACK_SIZE; i++) {
+        for (int i = 1; i <= STACK_SIZE; i++) {
             tCode.add(tempRec + i + " .INT 0");
         }
     }
@@ -1380,42 +1414,42 @@ public class TCode {
                 operation.equals(ICodeOprConst.NE_OPR.getKey()));
     }
 
-//    private Symbol getSymbol(String name, String scope) {
-//        String searchScope = scope;
-//        while (!searchScope.equals("g.")) {
-//            for (Symbol temp : symbolTable.values()) {
-//                if (!temp.getScope().equals(searchScope)) {
-//                    continue;
-//                }
-//
-//                if (scope.contains(temp.getScope()) && temp.getValue().equals(name)) {
-//                    return temp;
-//                }
-//            }
-//            searchScope = decrementScope(searchScope);
-//        }
-//
-//        if (searchScope.equals("g.") && name.equals("main")) {
-//            for (Symbol temp : symbolTable.values()) {
-//                if (temp.getValue().equals(name)) {
-//                    return temp;
-//                }
-//            }
-//        }
-//
-//        return null;
-//    }
-//
-//    private String decrementScope(String scope) {
-//        int scopeDepth = 0;
-//        for (char c : scope.toCharArray()) {
-//            if (c == '.') scopeDepth++;
-//        }
-//
-//        if (scopeDepth > 1) {
-//            return scope.substring(0, scope.lastIndexOf("."));
-//        } else {
-//            return scope.substring(0, scope.lastIndexOf(".") + 1);
-//        }
-//    }
+    private Symbol getSymbol(String name, String scope) {
+        String searchScope = scope;
+        while (!searchScope.equals("g.")) {
+            for (Symbol temp : symbolTable.values()) {
+                if (!temp.getScope().equals(searchScope)) {
+                    continue;
+                }
+
+                if (scope.contains(temp.getScope()) && temp.getValue().equals(name)) {
+                    return temp;
+                }
+            }
+            searchScope = decrementScope(searchScope);
+        }
+
+        if (searchScope.equals("g.") && name.equals("main")) {
+            for (Symbol temp : symbolTable.values()) {
+                if (temp.getValue().equals(name)) {
+                    return temp;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private String decrementScope(String scope) {
+        int scopeDepth = 0;
+        for (char c : scope.toCharArray()) {
+            if (c == '.') scopeDepth++;
+        }
+
+        if (scopeDepth > 1) {
+            return scope.substring(0, scope.lastIndexOf("."));
+        } else {
+            return scope.substring(0, scope.lastIndexOf(".") + 1);
+        }
+    }
 }

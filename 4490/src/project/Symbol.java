@@ -13,14 +13,16 @@ public class Symbol {
     private String kind;        // type
     private IData data;         // kind specific data
     private int size;           // size of element
+    private int objectSize;
 
-    public Symbol(String scope, String symId, String value, String kind, IData data, int size) {
+    public Symbol(String scope, String symId, String value, String kind, IData data, int size, int objectSize) {
         this.scope = scope;
         this.symId = symId;
         this.value = value;
         this.kind = kind;
         this.data = data;
         this.size = size;
+        this.objectSize = objectSize;
     }
 
     /**
@@ -82,5 +84,17 @@ public class Symbol {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    public int getObjectSize() {
+        return objectSize;
+    }
+
+    public void setObjectSize(int objectSize) {
+        this.objectSize = objectSize;
+    }
+
+    public int getTotalSize() {
+        return objectSize + size;
     }
 }

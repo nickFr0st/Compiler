@@ -21,8 +21,6 @@ public class TCode {
 
     private final String ACTIVATION_RECORD = "A0";
     private final int STACK_SIZE = 999;
-    private final String OVERFLOW = "OVERFLOW";
-    private final String UNDERFLOW = "UNDERFLOW";
     private final String END_PROGRAM = "ENDPROGRAM";
     private final int START_SIZE = 6000;
 
@@ -168,7 +166,7 @@ public class TCode {
                 address++;
                 tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg5 + " " + SL);
                 address++;
-                tCode.add(TCodeOprConst.BGT_OPR.getKey() + " " + reg5 + " " + OVERFLOW);
+                tCode.add(TCodeOprConst.BGT_OPR.getKey() + " " + reg5 + " " + TCodeOprConst.OVERFLOW_LBL.getKey());
                 address++;
 
                 // setup frame pointers
@@ -257,7 +255,7 @@ public class TCode {
                 address++;
                 tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg5 + " " + SL);
                 address++;
-                tCode.add(TCodeOprConst.BGT_OPR.getKey() + " " + reg5 + " " + OVERFLOW);
+                tCode.add(TCodeOprConst.BGT_OPR.getKey() + " " + reg5 + " " + TCodeOprConst.OVERFLOW_LBL.getKey());
                 address++;
 
             } else if (iCode.getOperation().equals(ICodeOprConst.PEEK_OPR.getKey())) {
@@ -376,7 +374,7 @@ public class TCode {
                 address++;
                 tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg6 + " " + SB);
                 address++;
-                tCode.add(TCodeOprConst.BLT_OPR.getKey() + " " + reg6 + " " + UNDERFLOW);
+                tCode.add(TCodeOprConst.BLT_OPR.getKey() + " " + reg6 + " " + TCodeOprConst.UNDERFLOW_LBL.getKey());
                 address++;
 
                 tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + FP + " ; rtn address");
@@ -434,7 +432,7 @@ public class TCode {
                 address++;
                 tCode.add(TCodeOprConst.CMP_OPR.getKey() + " " + reg6 + " " + SB);
                 address++;
-                tCode.add(TCodeOprConst.BLT_OPR.getKey() + " " + reg6 + " " + UNDERFLOW);
+                tCode.add(TCodeOprConst.BLT_OPR.getKey() + " " + reg6 + " " + TCodeOprConst.UNDERFLOW_LBL.getKey());
                 address++;
 
                 tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + FP + " ; ret address");
@@ -741,7 +739,7 @@ public class TCode {
 
     private void addUnderflow() {
         String reg = getNewRegister("0");
-        tCode.add(UNDERFLOW + " LDR " + reg + " RC");
+        tCode.add(TCodeOprConst.UNDERFLOW_LBL.getKey() + " LDR " + reg + " RC");
         address++;
         tCode.add("TRP 3");
         address++;
@@ -816,7 +814,7 @@ public class TCode {
 
     private void addOverflow() {
         String reg = getNewRegister("0");
-        tCode.add(OVERFLOW + " LDR " + reg + " RC");
+        tCode.add(TCodeOprConst.OVERFLOW_LBL.getKey() + " LDR " + reg + " RC");
         address++;
         tCode.add("TRP 3");
         address++;

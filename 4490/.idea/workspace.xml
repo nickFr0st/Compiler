@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Assembler.java" afterPath="$PROJECT_DIR$/src/project/Assembler.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/TCode.java" afterPath="$PROJECT_DIR$/src/project/TCode.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/TCodeOprConst.java" afterPath="$PROJECT_DIR$/src/project/TCodeOprConst.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
@@ -76,7 +74,7 @@
       </breakpoint>
     </breakpoint_any>
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="737" class="project.TCode" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="735" class="project.TCode" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -196,7 +194,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="628" class="project.TCode" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="626" class="project.TCode" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -331,7 +329,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="148" class="project.TCode" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="146" class="project.TCode" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -346,7 +344,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="166" class="project.TCode" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="164" class="project.TCode" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -386,22 +384,22 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="TCode.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="TCode.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1226" column="0" selection-start="55596" selection-end="55596" vertical-scroll-proportion="0.0" vertical-offset="20704" max-vertical-offset="24106">
+            <state line="258" column="26" selection-start="10337" selection-end="10337" vertical-scroll-proportion="0.30204964" vertical-offset="4072" max-vertical-offset="24072">
               <folding>
-                <element signature="e#1005#1021#0" expanded="true" />
-                <element signature="e#6595#6604#0" expanded="true" />
+                <element signature="e#907#923#0" expanded="true" />
+                <element signature="e#6524#6533#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TCodeOprConst.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="TCodeOprConst.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/TCodeOprConst.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="29" selection-start="308" selection-end="308" vertical-scroll-proportion="0.11703958" vertical-offset="204" max-vertical-offset="833">
+            <state line="11" column="12" selection-start="191" selection-end="191" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="833">
               <folding />
             </state>
           </provider>
@@ -1093,7 +1091,7 @@
       <workItem from="1393649795400" duration="1001000" />
       <workItem from="1393686368304" duration="8689000" />
       <workItem from="1393731143226" duration="9000" />
-      <workItem from="1393890307903" duration="22621000" />
+      <workItem from="1393890307903" duration="22813000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1358823189173</created>
@@ -2143,11 +2141,15 @@
       <created>1393990681111</created>
       <updated>1393990681111</updated>
     </task>
-    <option name="localTasksCounter" value="263" />
+    <task id="LOCAL-00263" summary="clean up&#10;">
+      <created>1393991770515</created>
+      <updated>1393991770515</updated>
+    </task>
+    <option name="localTasksCounter" value="264" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="188181000" />
+    <option name="totallyTimeSpent" value="188373000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -2194,7 +2196,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32965213" sideWeight="0.7507987" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17290749" sideWeight="0.7167199" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.38150904" sideWeight="0.49806738" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38150904" sideWeight="0.49806738" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32819384" sideWeight="0.71565497" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
@@ -2217,7 +2219,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="setup for the lexi assignment" />
     <MESSAGE value="added AND and OR tCode generation" />
     <MESSAGE value="fixed spaces bug" />
     <MESSAGE value="added instruction increments" />
@@ -2242,7 +2243,8 @@
     <MESSAGE value="c program once again working&#10;" />
     <MESSAGE value="addressing cleanup" />
     <MESSAGE value="clean up" />
-    <option name="LAST_COMMIT_MESSAGE" value="clean up" />
+    <MESSAGE value="clean up&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="clean up&#10;" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -2293,8 +2295,8 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="560" column="5" selection-start="21797" selection-end="21797" vertical-scroll-proportion="0.0" vertical-offset="9520" max-vertical-offset="11016">
           <folding>
-            <element signature="e#1005#1021#0" expanded="true" />
-            <element signature="e#6595#6604#0" expanded="true" />
+            <element signature="e#907#923#0" expanded="true" />
+            <element signature="e#6524#6533#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2352,8 +2354,8 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="560" column="5" selection-start="21797" selection-end="21797" vertical-scroll-proportion="0.0" vertical-offset="9520" max-vertical-offset="11016">
           <folding>
-            <element signature="e#1005#1021#0" expanded="true" />
-            <element signature="e#6595#6604#0" expanded="true" />
+            <element signature="e#907#923#0" expanded="true" />
+            <element signature="e#6524#6533#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2411,8 +2413,8 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="560" column="5" selection-start="21797" selection-end="21797" vertical-scroll-proportion="0.0" vertical-offset="9520" max-vertical-offset="11016">
           <folding>
-            <element signature="e#1005#1021#0" expanded="true" />
-            <element signature="e#6595#6604#0" expanded="true" />
+            <element signature="e#907#923#0" expanded="true" />
+            <element signature="e#6524#6533#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2562,16 +2564,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1226" column="0" selection-start="55596" selection-end="55596" vertical-scroll-proportion="0.0" vertical-offset="20704" max-vertical-offset="24106">
-          <folding>
-            <element signature="e#1005#1021#0" expanded="true" />
-            <element signature="e#6595#6604#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Assembler.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="154" column="113" selection-start="5235" selection-end="5235" vertical-scroll-proportion="-14.115385" vertical-offset="2183" max-vertical-offset="18802">
@@ -2583,8 +2575,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/TCodeOprConst.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="29" selection-start="308" selection-end="308" vertical-scroll-proportion="0.11703958" vertical-offset="204" max-vertical-offset="833">
+        <state line="11" column="12" selection-start="191" selection-end="191" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="833">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="258" column="26" selection-start="10337" selection-end="10337" vertical-scroll-proportion="0.30204964" vertical-offset="4072" max-vertical-offset="24072">
+          <folding>
+            <element signature="e#907#923#0" expanded="true" />
+            <element signature="e#6524#6533#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

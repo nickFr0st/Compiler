@@ -138,8 +138,10 @@ public class Assembler {
             String line;
             String[] lineInfo;
             int byteCount = 0;
+            int num = 0;
 
             while ((line = reader.readLine()) != null) {
+                num++;
                 if (line.trim().length() == 0) {
                     continue;
                 }
@@ -150,7 +152,7 @@ public class Assembler {
                 if (!preLoadedOpcodes.contains(lineInfo[0])) {
 
                     if (symbolTable.containsKey(lineInfo[0].trim())) {
-                        System.out.println("Assembly file cannot have duplicate Label names");
+                        System.out.println("Assembly file cannot have duplicate Label names: line number: " + num);
                         return;
                     }
 

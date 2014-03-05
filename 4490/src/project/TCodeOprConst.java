@@ -29,7 +29,9 @@ public enum TCodeOprConst {
     TRP_2("TRP 2"),
     TRP_4("TRP 4"),
     BNZ_OPR("BNZ"),
-    BRZ_OPR("BRZ");
+    BRZ_OPR("BRZ"),
+    TRP_3("TRP 3"),
+    TRP_1("TRP 1");
 
     private String key;
 

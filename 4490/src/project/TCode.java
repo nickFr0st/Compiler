@@ -34,7 +34,6 @@ public class TCode {
     private int address = 0;
     private int condIncr = START_SIZE;
     private Stack<String> L4 = new Stack<String>();
-    private boolean skipMov = false;
 
     private void initReg() {
         for (int i = 0; i < 101; i++) {
@@ -1226,11 +1225,10 @@ public class TCode {
             address++;
         }
 
-        // todo: add these to the const class
         if (operation.equals(ICodeOprConst.WRTC_OPR.getKey())) {
-            tCode.add("TRP 3 " + iCode.getComment());
+            tCode.add(TCodeOprConst.TRP_3.getKey() + " " + iCode.getComment());
         } else {
-            tCode.add("TRP 1 " + iCode.getComment());
+            tCode.add(TCodeOprConst.TRP_1.getKey() + " " + iCode.getComment());
         }
         address++;
     }
@@ -1412,44 +1410,5 @@ public class TCode {
                 operation.equals(ICodeOprConst.GT_OPR.getKey()) ||
                 operation.equals(ICodeOprConst.LT_OPR.getKey()) ||
                 operation.equals(ICodeOprConst.NE_OPR.getKey()));
-    }
-
-    private Symbol getSymbol(String name, String scope) {
-        String searchScope = scope;
-        while (!searchScope.equals("g.")) {
-            for (Symbol temp : symbolTable.values()) {
-                if (!temp.getScope().equals(searchScope)) {
-                    continue;
-                }
-
-                if (scope.contains(temp.getScope()) && temp.getValue().equals(name)) {
-                    return temp;
-                }
-            }
-            searchScope = decrementScope(searchScope);
-        }
-
-        if (searchScope.equals("g.") && name.equals("main")) {
-            for (Symbol temp : symbolTable.values()) {
-                if (temp.getValue().equals(name)) {
-                    return temp;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private String decrementScope(String scope) {
-        int scopeDepth = 0;
-        for (char c : scope.toCharArray()) {
-            if (c == '.') scopeDepth++;
-        }
-
-        if (scopeDepth > 1) {
-            return scope.substring(0, scope.lastIndexOf("."));
-        } else {
-            return scope.substring(0, scope.lastIndexOf(".") + 1);
-        }
     }
 }

@@ -21,7 +21,6 @@ public enum TCodeOprConst {
     JMP_OPR("JMP"),
     BLT_OPR("BLT"),
     STR_OPR("STR"),
-    STRI_OPR("STRI"),
     ADDI_OPR("ADDI"),
     LDA_OPR("LDA"),
     BGT_OPR("BGT"),

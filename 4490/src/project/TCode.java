@@ -128,7 +128,7 @@ public class TCode {
         String r = getRegister("5");
         tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + r + " " + (address + 2));
         address++;
-        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + FP + " " + r);
+        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + FP + " " + r);
         address++;
 
         tCode.add(ICodeOprConst.JMP_OPR.getKey() + " " + startLabel + " ; program start");
@@ -176,12 +176,12 @@ public class TCode {
                 address++;
                 tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " 1" + " ; PFP");
                 address++;
-                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + SP + " " + reg3 + " ; Set PFP");
+                tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + SP + " " + reg3 + " ; Set PFP");
                 address++;
                 tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " 1" + " ; PFP");
                 address++;
 
-                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + SP + " " + reg7 + " ; Set this on stack");
+                tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + SP + " " + reg7 + " ; Set this on stack");
                 address++;
                 tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " 1");
                 address++;
@@ -202,7 +202,7 @@ public class TCode {
                         if (iCodeList.get(p).getArg1().startsWith("L")) {
                             tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + iCodeList.get(p).getArg1() + " ; load '" + parameter.getValue() + "' into R6");
                             address++;
-                            tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + SP + " " + reg6 + " ; store ' " + parameter.getValue() + "' on the stack");
+                            tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + SP + " " + reg6 + " ; store ' " + parameter.getValue() + "' on the stack");
                             address++;
                             tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " 1");
                             address++;
@@ -213,7 +213,7 @@ public class TCode {
                             address++;
                             tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + reg5 + " ; load value of " + parameter.getValue() + " into R6");
                             address++;
-                            tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + SP + " " + reg6 + " ; store " + parameter.getValue() + " on stack");
+                            tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + SP + " " + reg6 + " ; store " + parameter.getValue() + " on stack");
                             address++;
                             tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " 1");
                             address++;
@@ -228,7 +228,7 @@ public class TCode {
                     address++;
                     tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg6 + " " + (address + 1) + " ; compute rtn addr");
                     address++;
-                    tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + FP + " " + reg6 + " ; set rtn addr");
+                    tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + FP + " " + reg6 + " ; set rtn addr");
                     address++;
                     tCode.add(TCodeOprConst.JMP_OPR.getKey() + " " + iCode1.getArg1());
                     address++;
@@ -279,7 +279,7 @@ public class TCode {
                 address++;
                 tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg3 + " " + arg1.getSize());
                 address++;
-                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg3 + " " + reg6);
+                tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg3 + " " + reg6);
                 address++;
 
             } else if (isMathOperation(iCode.getOperation())) {
@@ -316,7 +316,7 @@ public class TCode {
                 if (iCode.getArg2().startsWith("L")) {
                     tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + iCode.getArg2() + " ; load '" + arg2.getValue() + "' into R6");
                     address++;
-                    tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; store value into address pointed to by R5");
+                    tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + reg6 + " ; store value into address pointed to by R5");
                     address++;
                 } else {
                     String reg7 = getRegister("7");
@@ -327,7 +327,7 @@ public class TCode {
                     address++;
                     tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " " + reg7 + " ; load value of " + arg2.getValue() + " into R6");
                     address++;
-                    tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; store value into address pointed to by R5");
+                    tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + reg6 + " ; store value into address pointed to by R5");
                     address++;
                 }
 
@@ -443,7 +443,7 @@ public class TCode {
                 address++;
                 tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + FP + " " + reg5 + " ; PFP into FP");
                 address++;
-                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + SP + " " + reg4 + " ; return " + arg1.getValue());
+                tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + SP + " " + reg4 + " ; return " + arg1.getValue());
                 address++;
                 tCode.add(TCodeOprConst.JMR_OPR.getKey() + " " + reg6 + " " + iCode.getComment());
                 address++;
@@ -480,7 +480,7 @@ public class TCode {
                 address++;
                 tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + arg1.getSize().toString() + " ; get address of " + arg1.getValue());
                 address++;
-                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; store user input into the address pointed to by R5");
+                tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + reg6 + " ; store user input into the address pointed to by R5");
                 address++;
 
             } else if (iCode.getOperation().equals(ICodeOprConst.RDC_OPR.getKey())) {
@@ -506,7 +506,7 @@ public class TCode {
                 address++;
                 tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + arg1.getSize().toString() + " ; get address of " + arg1.getValue());
                 address++;
-                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; store user input into the address pointed to by R5");
+                tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + reg6 + " ; store user input into the address pointed to by R5");
                 address++;
 
             } else if (isBooleanOperation(iCode.getOperation())) {
@@ -608,7 +608,7 @@ public class TCode {
                 address++;
                 tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize().toString() + " ; get address of " + result.getValue());
                 address++;
-                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + REG_FALSE + " ; set result to false");
+                tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + REG_FALSE + " ; set result to false");
                 address++;
                 tCode.add(TCodeOprConst.JMP_OPR.getKey() + " " + L4.peek());
                 address++;
@@ -617,7 +617,7 @@ public class TCode {
                 address++;
                 tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize().toString() + " ; get address of " + result.getValue());
                 address++;
-                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + REG_TRUE + " ; set result to true");
+                tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + REG_TRUE + " ; set result to true");
                 address++;
 
             } else if (iCode.getOperation().equals(ICodeOprConst.AND_OPR.getKey())) {
@@ -707,11 +707,11 @@ public class TCode {
                 address++;
                 tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize().toString() + " ; get address of " + result.getValue());
                 address++;
-                tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + REG_TRUE + " ; set result to true");
+                tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + REG_TRUE + " ; set result to true");
                 address++;
                 tCode.add(TCodeOprConst.JMP_OPR.getKey() + " " + L4.peek());
                 address++;
-                tCode.add(L3 + " " + TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + REG_FALSE + " ; set result to false");
+                tCode.add(L3 + " " + TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + REG_FALSE + " ; set result to false");
                 address++;
 
             }
@@ -1009,7 +1009,7 @@ public class TCode {
         address++;
         tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize().toString() + " ; get address of " + result.getValue());
         address++;
-        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; set " + result.getValue() + " to false");
+        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + reg6 + " ; set " + result.getValue() + " to false");
         address++;
 
         tCode.add("JMP " + L4.peek());
@@ -1021,7 +1021,7 @@ public class TCode {
         address++;
         tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize().toString() + " ; get address of " + result.getValue());
         address++;
-        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; set " + result.getValue() + " to true");
+        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + reg6 + " ; set " + result.getValue() + " to true");
         address++;
     }
 
@@ -1094,7 +1094,7 @@ public class TCode {
         address++;
         tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize().toString() + " ; get address of " + result.getValue());
         address++;
-        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; set " + result.getValue() + " to false");
+        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + reg6 + " ; set " + result.getValue() + " to false");
         address++;
 
         tCode.add("JMP " + L4.peek());
@@ -1106,7 +1106,7 @@ public class TCode {
         address++;
         tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize().toString() + " ; get address of " + result.getValue());
         address++;
-        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg6 + " ; set " + result.getValue() + " to true");
+        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + reg6 + " ; set " + result.getValue() + " to true");
         address++;
 
     }
@@ -1186,7 +1186,7 @@ public class TCode {
         address++;
         tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize() + " ; get address of " + result.getValue());
         address++;
-        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg7 + " " + iCode.getComment());
+        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + reg7 + " " + iCode.getComment());
         address++;
     }
 
@@ -1350,7 +1350,7 @@ public class TCode {
         address++;
         tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + result.getSize() + " ; get address of " + result.getValue());
         address++;
-        tCode.add(TCodeOprConst.STRI_OPR.getKey() + " " + reg5 + " " + reg7 + " ; store result into address pointed to by R5");
+        tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + reg7 + " ; store result into address pointed to by R5");
         address++;
     }
 

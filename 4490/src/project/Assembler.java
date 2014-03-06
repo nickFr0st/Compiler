@@ -458,19 +458,31 @@ public class Assembler {
 
                     break;
                 case STR:
-                    if (instructionList.get(i).getOpd2().trim().length() > 4) {
-                        System.out.println("Error on instruction: " + instructionList.get(i).getOpCode() + " " + instructionList.get(i).getOpd1() + " " + instructionList.get(i).getOpd2() + " operand two must be a label for a directive");
-                        stopVM = true;
-                        break;
-                    }
 
-                    for (Memory m : mem) {
+                    if (isValidRegister(instructionList.get(i).getOpd2())) {
 
-                        if (m.getLabel() != null && m.getLabel().equals(instructionList.get(i).getOpd2())) {
-                            m.setData(reg.get(instructionList.get(i).getOpd1()));
+                        String r2 = instructionList.get(i).getOpd2().substring(1, instructionList.get(i).getOpd2().length());
+
+                        mem.get(Integer.parseInt(reg.get(instructionList.get(i).getOpd1()))).setData(reg.get(r2));
+                        lastRegUsedChar = reg.get(instructionList.get(i).getOpd2());
+
+                    } else {
+
+                        if (instructionList.get(i).getOpd2().trim().length() > 4) {
+                            System.out.println("Error on instruction: " + instructionList.get(i).getOpCode() + " " + instructionList.get(i).getOpd1() + " " + instructionList.get(i).getOpd2() + " operand two must be a label for a directive");
+                            stopVM = true;
                             break;
                         }
+
+                        for (Memory m : mem) {
+
+                            if (m.getLabel() != null && m.getLabel().equals(instructionList.get(i).getOpd2())) {
+                                m.setData(reg.get(instructionList.get(i).getOpd1()));
+                                break;
+                            }
+                        }
                     }
+
                     break;
                 case STRI:
                     // oprand 1 must be an index to a value in mem
@@ -509,7 +521,7 @@ public class Assembler {
                     }
 
                     if (opd2 == null) {
-                        System.out.println("Error: unknown error has occurred with LDR operation");
+                        System.out.println("Error: unknown error has occurred with LDR operation. Instruction num: " + i);
                         stopVM = true;
                         break;
                     }
@@ -1007,7 +1019,8 @@ public class Assembler {
                 System.out.println("Line " + counter + ": operand 1 must be a valid register");
                 return true;
             }
-            if (!symbolTable.containsKey(lineInfo[2]) && !isValidRegister(lineInfo[2])) {
+
+            if (!symbolTable.containsKey(lineInfo[2]) && !isValidRegister(lineInfo[2]) && !lineInfo[0].equals("STR")) {
                 System.out.println("Label at line: " + counter + " operand 2 does not exist");
                 return true;
             }
@@ -1054,7 +1067,8 @@ public class Assembler {
                 System.out.println("Line " + counter + ": operand 1 must be a valid register");
                 return true;
             }
-            if (!symbolTable.containsKey(lineInfo[3])) {
+
+            if (!symbolTable.containsKey(lineInfo[3]) && !lineInfo[1].equals("STR")) {
                 System.out.println("Label at line: " + counter + " operand 2 does not exist");
                 return true;
             }

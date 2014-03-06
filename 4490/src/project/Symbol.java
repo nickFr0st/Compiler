@@ -101,4 +101,8 @@ public class Symbol {
     public void updateSize(int update) {
         size += update;
     }
+
+    public void updateObjectSize(int update) {
+        objectSize += update;
+    }
 }

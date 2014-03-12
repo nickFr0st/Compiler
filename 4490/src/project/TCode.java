@@ -19,6 +19,7 @@ public class TCode {
     private final String FP = "R99";
     private final String SL = "R98";
     private final String SB = "R97";
+    private final String FREE = "R96";
 
     private final String REG_FALSE = "R0";
     private final String REG_TRUE = "R1";
@@ -36,11 +37,7 @@ public class TCode {
 
     private void initReg() {
         for (int i = 0; i < 101; i++) {
-            if (i > 97) {
-                reg.put("R" + i, "0");
-            } else {
-                reg.put("R" + i, "");
-            }
+            reg.put("R" + i, "");
         }
 
         // R0 is boolean false
@@ -48,9 +45,6 @@ public class TCode {
 
         // R1 is boolean true
         reg.put("R1", "1");
-
-        // R7 used for something
-        reg.put("R7", "0");
 
         // R100 is the stack pointer
         reg.put("R100", "0");
@@ -63,6 +57,12 @@ public class TCode {
 
         // R97 is the stack base
         reg.put("R97", "0");
+
+        // R96 is the pointer for the heap
+        reg.put("R97", "0");
+
+        // R7 used for something
+        reg.put("R7", "0");
     }
 
     public TCode(LinkedHashMap<String, Symbol> symbolTable, List<ICode> iCodeList, String startLabel) {
@@ -110,6 +110,8 @@ public class TCode {
         tCode.add("ADI R1 1 ; Setup true reg");
         address++;
         tCode.add("LDR R7 CLR");
+        address++;
+        tCode.add("LDA " + FREE + " " + THE_HEAP + " ; setup the heap: R96");
         address++;
         tCode.add("LDA " + SB + " " + RUN_TIME_STACK + " ; setup stack base: R97");
         address++;

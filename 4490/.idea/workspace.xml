@@ -164,7 +164,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="627" class="project.TCode" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="629" class="project.TCode" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -402,7 +402,7 @@
       <file leaf-file-name="TCode.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="52" selection-start="649" selection-end="649" vertical-scroll-proportion="0.34244373" vertical-offset="161" max-vertical-offset="24038">
+            <state line="112" column="18" selection-start="3020" selection-end="3020" vertical-scroll-proportion="0.27508092" vertical-offset="1615" max-vertical-offset="24072">
               <folding />
             </state>
           </provider>
@@ -1051,7 +1051,7 @@
       <workItem from="1393731143226" duration="9000" />
       <workItem from="1393890307903" duration="22969000" />
       <workItem from="1394072213684" duration="5229000" />
-      <workItem from="1394587244029" duration="794000" />
+      <workItem from="1394587244029" duration="1189000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1358823189173</created>
@@ -2121,11 +2121,15 @@
       <created>1394587891459</created>
       <updated>1394587891459</updated>
     </task>
-    <option name="localTasksCounter" value="268" />
+    <task id="LOCAL-00268" summary="clean up">
+      <created>1394588059202</created>
+      <updated>1394588059202</updated>
+    </task>
+    <option name="localTasksCounter" value="269" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="194552000" />
+    <option name="totallyTimeSpent" value="194947000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -2156,7 +2160,7 @@
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32412326" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32412326" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37194473" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -2216,11 +2220,11 @@
     <MESSAGE value="c- program once again working" />
     <MESSAGE value="c program once again working&#10;" />
     <MESSAGE value="addressing cleanup" />
-    <MESSAGE value="clean up" />
     <MESSAGE value="clean up&#10;" />
     <MESSAGE value="added some method validation" />
     <MESSAGE value="made the run time stack better and added the heap" />
-    <option name="LAST_COMMIT_MESSAGE" value="made the run time stack better and added the heap" />
+    <MESSAGE value="clean up" />
+    <option name="LAST_COMMIT_MESSAGE" value="clean up" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -2535,7 +2539,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="52" selection-start="649" selection-end="649" vertical-scroll-proportion="0.34244373" vertical-offset="161" max-vertical-offset="24038">
+        <state line="112" column="18" selection-start="3020" selection-end="3020" vertical-scroll-proportion="0.27508092" vertical-offset="1615" max-vertical-offset="24072">
           <folding />
         </state>
       </provider>

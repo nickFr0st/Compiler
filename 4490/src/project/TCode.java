@@ -13,18 +13,17 @@ import java.util.*;
 public class TCode {
     public static final String RUN_TIME_STACK = "RTS";
     public static final String THE_HEAP = "HEAP";
-    public static final int STACK_SIZE = 6000;
+    public static final int STACK_SIZE = 5000;
 
     private final String SP = "R100";
     private final String FP = "R99";
-
     private final String SL = "R98";
     private final String SB = "R97";
 
     private final String REG_FALSE = "R0";
     private final String REG_TRUE = "R1";
     private final String END_PROGRAM = "ENDPROGRAM";
-    private final int START_SIZE = 6000;
+    private final int COND_INCR_INDEX_START = 6000;
 
     private LinkedHashMap<String, Symbol> symbolTable = new LinkedHashMap<String, Symbol>();
     private List<ICode> iCodeList = new ArrayList<ICode>();
@@ -32,7 +31,7 @@ public class TCode {
     private LinkedHashMap<String, String> reg = new LinkedHashMap<String, String>();
     private String startLabel;
     private int address = 0;
-    private int condIncr = START_SIZE;
+    private int condIncr = COND_INCR_INDEX_START;
     private Stack<String> L4 = new Stack<String>();
 
     private void initReg() {
@@ -1028,7 +1027,7 @@ public class TCode {
     }
 
     private String setupL3() {
-        if (condIncr != START_SIZE) {
+        if (condIncr != COND_INCR_INDEX_START) {
             condIncr++;
         }
         return "L" + condIncr++;

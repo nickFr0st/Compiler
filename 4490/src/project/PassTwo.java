@@ -775,19 +775,23 @@ public class PassTwo {
         lexicalAnalyzer.nextToken();
         lexicalAnalyzer.nextToken();
 
+        incrementScope(constructorName, false);
+        Symbol method = getSymbol();
+        iCodeList.add(new ICode(method.getSymId() , ICodeOprConst.FUNC_OPR.getKey(), method.getSymId(), "", "", ""));
+
         if (lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name())) {
             lexicalAnalyzer.nextToken();
-            incrementScope(constructorName, false);
 
             if (!method_body()) {
                 return false;
             }
 
+            // todo: may need to change return type
+            iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; return from constructor: " + scope));
+
             decrementScope();
             return true;
         }
-
-        incrementScope(constructorName, false);
 
         if (!parameter_list()) {
             return false;
@@ -1151,7 +1155,7 @@ public class PassTwo {
                     iCodeList.add(new ICode(useLabel(), ICodeOprConst.RTN_OPR.getKey(), "", "", "", "; return void from: " + sar.getScope()));
                 } else {
                     assert sar != null;
-                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.RETURN_OPR.getKey(), sar.getSarId(), "", "", "; return: " + sar.getScope()));
+                    iCodeList.add(new ICode(useLabel(), ICodeOprConst.RETURN_OPR.getKey(), sar.getSarId(), "", "", "; return from function: " + sar.getScope()));
                 }
 
                 return true;
@@ -1331,7 +1335,7 @@ public class PassTwo {
                 } else {
                     iCodeList.add(new ICode(itemKey, ICodeOprConst.CREATE_OPR.getKey(), ".BYT", "", "", ""));
                 }
-                // todo: this was commented out
+
                 if ((!OS.isEmpty() && OS.peek().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.ASSIGNMENT_OPR.name())) || !lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.EOT.name()) || (!SAS.isEmpty() && SAS.peek() instanceof Function_SAR)) {
                     iCodeList.add(new ICode(useLabel(), ICodeOprConst.PEEK_OPR.getKey(), itemKey, "", "", "; get value from method " + id_sar.getLexi().getName()));
                 }
@@ -1642,8 +1646,8 @@ public class PassTwo {
 
                 String tempSym = "T" + variableId;
                 Symbol method = getSymbol();
-                Symbol retValue = new Symbol(scope, tempSym, tempSym, Compiler.CLASS, new MethodData(KeyConst.PRIVATE.getKey(), argsList, type.getName()), method.getTotalSize(), 1);
-                // todo: could be wrong
+                Symbol retValue = new Symbol(scope, tempSym, tempSym, Compiler.METHOD, new MethodData(KeyConst.PRIVATE.getKey(), argsList, type.getName()), method.getTotalSize(), 1);
+
                 if (type.getName().equals(KeyConst.INT.getKey())) {
                     iCodeList.add(new ICode(tempSym, ICodeOprConst.CREATE_OPR.getKey(), ".INT", "", "", ""));
                 } else {
@@ -1652,41 +1656,20 @@ public class PassTwo {
                 symbolTable.put(tempSym, retValue);
                 variableId++;
                 method.updateSize(Compiler.ELEM_SIZE);
-                if (type.getName().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || type.getName().equalsIgnoreCase(KeyConst.INT.getKey())) {
-                    iCodeList.add(new ICode(key, ICodeOprConst.CREATE_OPR.getKey(), ".INT", "", "", ""));
-                } else {
-                    iCodeList.add(new ICode(key, ICodeOprConst.CREATE_OPR.getKey(), ".BYT", "", "", ""));
-                }
 
                 Tuple newObj = new Tuple(type.getName(), type.getName(), type.getLexi().getLineNum());
 
                 type.setSarId(temp.getSymId());
                 SAS.push(new New_SAR(newObj, scope, retValue.getSymId(), retValue.getData().getType(), type, parameters));
 
-                Integer objSize = 0;
-                for (String key2 : symbolTable.keySet()) {
-                    Symbol objTemp = symbolTable.get(key2);
-
-                    if (objTemp.getScope().contains(constructorScope)) {
-                        objSize += objTemp.getSize();
-                    }
-                }
-                temp.setSize(objSize);
-
-                String symId = "L" + variableId;
-                Symbol sizeSymbol = new Symbol(scope, symId, objSize.toString(), Compiler.LITERAL, new VariableData(KeyConst.INT.getKey(), KeyConst.PRIVATE.getKey()), Compiler.ELEM_SIZE, 1);
-                symbolTable.put(symId, sizeSymbol);
-                variableId++;
-
-                iCodeList.add(new ICode(useLabel(), ICodeOprConst.NEWI_OPR.getKey(), objSize.toString(), sizeSymbol.getSymId(), "", "; allocate space for object '" + temp.getValue() + "'"));
-                iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), type.getSarId(), sizeSymbol.getSymId(), "", ""));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.NEWI_OPR.getKey(), method.getTotalSize().toString(), tempSym, "", "; allocate space for object '" + temp.getValue() + "'"));
+                iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), type.getSarId(), tempSym, "", ""));
 
                 for (SAR args : parameters.getArguments()) {
                     iCodeList.add(new ICode(useLabel(), ICodeOprConst.PUSH_OPR.getKey(), args.getSarId(), "", "", ""));
                     argsList.add(new Parameter(args.getType(), args.getSarId()));
                 }
 
-                // todo: could be wrong
                 iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), temp.getSymId(), "", "", ""));
                 iCodeList.add(new ICode(useLabel(), ICodeOprConst.PEEK_OPR.getKey(), tempSym, "", "", ""));
                 return true;
@@ -1974,7 +1957,7 @@ public class PassTwo {
 
     private Symbol getSymbol() {
         String name = scope.substring(scope.lastIndexOf(".") + 1, scope.length());
-        String localScope = scope.replace("." + name, "");
+        String localScope = scope.substring(0, scope.lastIndexOf("."));
         if (localScope.equals("g")) {
             localScope += ".";
         }

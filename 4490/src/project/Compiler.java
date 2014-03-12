@@ -1639,12 +1639,16 @@ public class Compiler {
             symbolTable.get(key + methodId).setObjectSize(3);
             methodId++;
         } else if (key.equals("C")) {
-            symbolTable.put(key + variableId, new Symbol(scope, key + variableId++, name, kind, data, 0, 1));
+            symbolTable.put(key + variableId, new Symbol(scope, key + variableId++, name, kind, data, 1, 0));
         } else {
-            Symbol method = getSymbol();
+            Symbol method = getMethodSymbol();
             if (key.equals("P")) {
                 symbolTable.put(key + variableId, new Symbol(scope, key + variableId++, name, kind, data, method.getObjectSize(), 1));
                 method.updateObjectSize(1);
+            } else if (kind.equals("ivar")) {
+                Symbol classObj = getClassSymbol();
+                symbolTable.put(key + variableId, new Symbol(scope, key + variableId++, name, kind, data, classObj.getSize(), 1));
+                classObj.updateSize(1);
             } else {
                 symbolTable.put(key + variableId, new Symbol(scope, key + variableId++, name, kind, data, method.getSize(), 1));
                 method.updateSize(1);
@@ -1653,7 +1657,7 @@ public class Compiler {
         return true;
     }
 
-    private Symbol getSymbol() {
+    private Symbol getMethodSymbol() {
         String name = scope.substring(scope.lastIndexOf(".") + 1, scope.length());
         String localScope = scope.substring(0, scope.lastIndexOf("."));
         if (localScope.equals("g")) {
@@ -1662,6 +1666,24 @@ public class Compiler {
 
         for (Symbol symbol : symbolTable.values()) {
             if (symbol.getData() instanceof MethodData) {
+                if (symbol.getScope().equals(localScope) && symbol.getValue().equals(name)) {
+                    return symbol;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private Symbol getClassSymbol() {
+        String name = scope.substring(scope.lastIndexOf(".") + 1, scope.length());
+        String localScope = scope.substring(0, scope.lastIndexOf("."));
+        if (localScope.equals("g")) {
+            localScope += ".";
+        }
+
+        for (Symbol symbol : symbolTable.values()) {
+            if (symbol.getKind().equals(Compiler.CLASS)) {
                 if (symbol.getScope().equals(localScope) && symbol.getValue().equals(name)) {
                     return symbol;
                 }

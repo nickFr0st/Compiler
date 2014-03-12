@@ -94,7 +94,7 @@ public class Symbol {
         this.objectSize = objectSize;
     }
 
-    public int getTotalSize() {
+    public Integer getTotalSize() {
         return objectSize + size;
     }
 

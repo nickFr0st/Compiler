@@ -181,6 +181,13 @@ public class Assembler {
 
                         lastDirectiveLoaded = lineInfo[1].trim();
                         lastLabelLoaded = lineInfo[0].trim();
+
+                        if (lineInfo[0].equals(TCode.RUN_TIME_STACK) || lineInfo[0].equals(TCode.THE_HEAP)) {
+                            for (int i = 0; i < TCode.STACK_SIZE; i++) {
+                                mem.add(new Memory("", ""));
+                            }
+                        }
+
                     } else if (lineInfo[1].equals(".BYT")) {
                         byteCount += BYT;
                         int asciiTest;

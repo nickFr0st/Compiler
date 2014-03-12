@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/project/Compiler.java" line="1402" mnemonic="1" />
-  </component>
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Compiler.java" afterPath="$PROJECT_DIR$/src/project/Compiler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Symbol.java" afterPath="$PROJECT_DIR$/src/project/Symbol.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Assembler.java" afterPath="$PROJECT_DIR$/src/project/Assembler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/TCode.java" afterPath="$PROJECT_DIR$/src/project/TCode.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
@@ -26,8 +23,8 @@
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/Complier$TupleTest.coverage" NAME="TupleTest Coverage Results" MODIFIED="1376518875129" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/Complier$ProgramDriver.coverage" NAME="ProgramDriver Coverage Results" MODIFIED="1393698950335" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/Complier$LexicalAnalyzerTest.coverage" NAME="LexicalAnalyzerTest Coverage Results" MODIFIED="1376518520229" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/Complier$CompilerTest.coverage" NAME="CompilerTest Coverage Results" MODIFIED="1376518600256" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/Complier$LexicalAnalyzerTest.coverage" NAME="LexicalAnalyzerTest Coverage Results" MODIFIED="1376518520229" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/Complier$SymbolTest.coverage" NAME="SymbolTest Coverage Results" MODIFIED="1377841233840" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true">
       <FILTER>project.tests.*</FILTER>
       <FILTER>project.*</FILTER>
@@ -78,7 +75,7 @@
       </breakpoint>
     </breakpoint_any>
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/project/Assembler.java" line="528" class="project.Assembler" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/Assembler.java" line="535" class="project.Assembler" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -93,7 +90,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/Assembler.java" line="631" class="project.Assembler" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/Assembler.java" line="638" class="project.Assembler" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -108,7 +105,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/Assembler.java" line="708" class="project.Assembler" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/Assembler.java" line="715" class="project.Assembler" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -123,7 +120,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/Assembler.java" line="412" class="project.Assembler" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/Assembler.java" line="419" class="project.Assembler" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -138,7 +135,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/Assembler.java" line="386" class="project.Assembler" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/Assembler.java" line="393" class="project.Assembler" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -153,7 +150,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/Assembler.java" line="684" class="project.Assembler" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/Assembler.java" line="691" class="project.Assembler" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -168,7 +165,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="626" class="project.TCode" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/TCode.java" line="628" class="project.TCode" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -183,7 +180,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/Assembler.java" line="696" class="project.Assembler" package="project">
+      <breakpoint url="file://$PROJECT_DIR$/src/project/Assembler.java" line="703" class="project.Assembler" package="project">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -403,10 +400,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="TCode.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="TCode.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="735" column="0" selection-start="34671" selection-end="34671" vertical-scroll-proportion="0.0" vertical-offset="12269" max-vertical-offset="24072">
+            <state line="19" column="0" selection-start="437" selection-end="437" vertical-scroll-proportion="0.31175837" vertical-offset="0" max-vertical-offset="24055">
               <folding />
             </state>
           </provider>
@@ -415,10 +412,8 @@
       <file leaf-file-name="Assembler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/Assembler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="463" column="69" selection-start="20442" selection-end="20442" vertical-scroll-proportion="0.0" vertical-offset="7543" max-vertical-offset="19040">
-              <folding>
-                <element signature="e#8337#8350#0" expanded="true" />
-              </folding>
+            <state line="185" column="72" selection-start="6633" selection-end="6633" vertical-scroll-proportion="0.0" vertical-offset="2472" max-vertical-offset="19159">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -426,16 +421,16 @@
       <file leaf-file-name="TCodeOprConst.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/TCodeOprConst.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="10" selection-start="169" selection-end="169" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="816">
+            <state line="10" column="10" selection-start="169" selection-end="169" vertical-scroll-proportion="0.0" vertical-offset="170" max-vertical-offset="850">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Compiler.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Compiler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1623" column="36" selection-start="66621" selection-end="66637" vertical-scroll-proportion="0.3323442" vertical-offset="27299" max-vertical-offset="28815">
+            <state line="1402" column="34" selection-start="58144" selection-end="58144" vertical-scroll-proportion="0.0" vertical-offset="23834" max-vertical-offset="28815">
               <folding />
             </state>
           </provider>
@@ -444,7 +439,7 @@
       <file leaf-file-name="VariableData.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/VariableData.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="0" selection-start="329" selection-end="329" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="527">
+            <state line="15" column="0" selection-start="329" selection-end="329" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="595">
               <folding />
             </state>
           </provider>
@@ -453,11 +448,8 @@
       <file leaf-file-name="Symbol.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/Symbol.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="105" column="18" selection-start="2298" selection-end="2298" vertical-scroll-proportion="0.0" vertical-offset="974" max-vertical-offset="1632">
-              <folding>
-                <element signature="e#850#851#0" expanded="true" />
-                <element signature="e#878#879#0" expanded="true" />
-              </folding>
+            <state line="105" column="18" selection-start="2298" selection-end="2298" vertical-scroll-proportion="0.0" vertical-offset="1785" max-vertical-offset="1938">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -465,7 +457,7 @@
       <file leaf-file-name="PassTwo.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1970" column="19" selection-start="78910" selection-end="78910" vertical-scroll-proportion="0.0" vertical-offset="33338" max-vertical-offset="33915">
+            <state line="1970" column="19" selection-start="78910" selection-end="78910" vertical-scroll-proportion="0.0" vertical-offset="33490" max-vertical-offset="33966">
               <folding />
             </state>
           </provider>
@@ -505,11 +497,11 @@
         <option value="$PROJECT_DIR$/src/project/MethodData.java" />
         <option value="$PROJECT_DIR$/src/project/tests/SymbolTest.java" />
         <option value="$PROJECT_DIR$/src/project/PassTwo.java" />
-        <option value="$PROJECT_DIR$/src/project/TCode.java" />
         <option value="$PROJECT_DIR$/src/project/TCodeOprConst.java" />
-        <option value="$PROJECT_DIR$/src/project/Assembler.java" />
         <option value="$PROJECT_DIR$/src/project/Symbol.java" />
         <option value="$PROJECT_DIR$/src/project/Compiler.java" />
+        <option value="$PROJECT_DIR$/src/project/TCode.java" />
+        <option value="$PROJECT_DIR$/src/project/Assembler.java" />
       </list>
     </option>
   </component>
@@ -803,17 +795,23 @@
       <option name="trusted" value="true" />
       <method />
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
+    <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="myFilePath" />
+      <option name="GLUE" />
+      <option name="myNameFilter" />
+      <option name="myGeneratedName" />
       <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
       <method />
     </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
@@ -844,23 +842,17 @@
       <listeners />
       <method />
     </configuration>
-    <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="myFilePath" />
-      <option name="GLUE" />
-      <option name="myNameFilter" />
-      <option name="myGeneratedName" />
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
       <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -899,6 +891,25 @@
       <patterns />
       <method />
     </configuration>
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
     <configuration default="true" type="FlashRunConfigurationType" factoryName="Flash App">
       <option name="BCName" value="" />
       <option name="IOSSimulatorSdkPath" value="" />
@@ -932,25 +943,6 @@
       <option name="screenWidth" value="0" />
       <option name="url" value="http://" />
       <option name="usbDebugPort" value="7936" />
-      <method />
-    </configuration>
-    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
-      <module name="" />
-      <option name="ACTIVITY_CLASS" value="" />
-      <option name="MODE" value="default_activity" />
-      <option name="DEPLOY" value="true" />
-      <option name="ARTIFACT_NAME" value="" />
-      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="USE_COMMAND_LINE" value="true" />
-      <option name="COMMAND_LINE" value="" />
-      <option name="WIPE_USER_DATA" value="false" />
-      <option name="DISABLE_BOOT_ANIMATION" value="false" />
-      <option name="NETWORK_SPEED" value="full" />
-      <option name="NETWORK_LATENCY" value="none" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
       <method />
     </configuration>
     <configuration default="false" name="TupleTest" type="JUnit" factoryName="JUnit">
@@ -1114,7 +1106,8 @@
       <workItem from="1393686368304" duration="8689000" />
       <workItem from="1393731143226" duration="9000" />
       <workItem from="1393890307903" duration="22969000" />
-      <workItem from="1394072213684" duration="5151000" />
+      <workItem from="1394072213684" duration="5229000" />
+      <workItem from="1394587244029" duration="613000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1358823189173</created>
@@ -2176,11 +2169,15 @@
       <created>1394074370587</created>
       <updated>1394074370588</updated>
     </task>
-    <option name="localTasksCounter" value="266" />
+    <task id="LOCAL-00266" summary="added some method validation">
+      <created>1394077470709</created>
+      <updated>1394077470709</updated>
+    </task>
+    <option name="localTasksCounter" value="267" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="193680000" />
+    <option name="totallyTimeSpent" value="194371000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -2204,7 +2201,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="54" y="-8" width="1874" height="1096" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47608927" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -2226,7 +2223,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32965213" sideWeight="0.7507987" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17290749" sideWeight="0.7167199" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24123274" sideWeight="0.49806738" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2869288" sideWeight="0.49806738" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32819384" sideWeight="0.71565497" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
@@ -2250,7 +2247,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="added AND and OR tCode generation" />
     <MESSAGE value="fixed spaces bug" />
     <MESSAGE value="added instruction increments" />
     <MESSAGE value="if statements now work properly" />
@@ -2275,7 +2271,8 @@
     <MESSAGE value="addressing cleanup" />
     <MESSAGE value="clean up" />
     <MESSAGE value="clean up&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="clean up&#10;" />
+    <MESSAGE value="added some method validation" />
+    <option name="LAST_COMMIT_MESSAGE" value="added some method validation" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -2531,9 +2528,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="386" column="0" selection-start="14045" selection-end="14045" vertical-scroll-proportion="0.21143474" vertical-offset="6111" max-vertical-offset="7038">
-          <folding />
-        </state>
+        <state line="386" column="0" selection-start="14045" selection-end="14045" vertical-scroll-proportion="0.21143474" vertical-offset="6111" max-vertical-offset="7038" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/ICode.java">
@@ -2555,22 +2550,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Assembler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="463" column="69" selection-start="20442" selection-end="20442" vertical-scroll-proportion="0.0" vertical-offset="7543" max-vertical-offset="19040">
-          <folding>
-            <element signature="e#8337#8350#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="735" column="0" selection-start="34671" selection-end="34671" vertical-scroll-proportion="0.0" vertical-offset="12269" max-vertical-offset="24072">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/VariableData.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="15" column="0" selection-start="329" selection-end="329" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="527">
@@ -2588,16 +2567,27 @@
     <entry file="file://$PROJECT_DIR$/src/project/Symbol.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="105" column="18" selection-start="2298" selection-end="2298" vertical-scroll-proportion="0.0" vertical-offset="974" max-vertical-offset="1632">
-          <folding>
-            <element signature="e#850#851#0" expanded="true" />
-            <element signature="e#878#879#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1623" column="36" selection-start="66621" selection-end="66637" vertical-scroll-proportion="0.3323442" vertical-offset="27299" max-vertical-offset="28815">
+        <state line="1402" column="34" selection-start="58144" selection-end="58144" vertical-scroll-proportion="0.0" vertical-offset="23834" max-vertical-offset="28815">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/Assembler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="185" column="72" selection-start="6633" selection-end="6633" vertical-scroll-proportion="0.0" vertical-offset="2472" max-vertical-offset="19159">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="0" selection-start="437" selection-end="437" vertical-scroll-proportion="0.31175837" vertical-offset="0" max-vertical-offset="24055">
           <folding />
         </state>
       </provider>

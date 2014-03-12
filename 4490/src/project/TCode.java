@@ -11,16 +11,18 @@ import java.util.*;
  * Time: 5:30 PM
  */
 public class TCode {
+    public static final String RUN_TIME_STACK = "RTS";
+    public static final String THE_HEAP = "HEAP";
+    public static final int STACK_SIZE = 6000;
+
     private final String SP = "R100";
     private final String FP = "R99";
+
     private final String SL = "R98";
     private final String SB = "R97";
 
     private final String REG_FALSE = "R0";
     private final String REG_TRUE = "R1";
-
-    private final String ACTIVATION_RECORD = "A0";
-    private final int STACK_SIZE = 999;
     private final String END_PROGRAM = "ENDPROGRAM";
     private final int START_SIZE = 6000;
 
@@ -110,17 +112,17 @@ public class TCode {
         address++;
         tCode.add("LDR R7 CLR");
         address++;
-        tCode.add("LDA " + SB + " " + ACTIVATION_RECORD + " ; setup stack base: R97");
+        tCode.add("LDA " + SB + " " + RUN_TIME_STACK + " ; setup stack base: R97");
         address++;
-        tCode.add("LDA " + SP + " " + ACTIVATION_RECORD + " ; setup stack pointer: R100");
+        tCode.add("LDA " + SP + " " + RUN_TIME_STACK + " ; setup stack pointer: R100");
         address++;
         tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " 1");
         address++;
-        tCode.add("LDA " + FP + " " + ACTIVATION_RECORD + " ; setup frame pointer: R99");
+        tCode.add("LDA " + FP + " " + RUN_TIME_STACK + " ; setup frame pointer: R99");
         address++;
 
         // setup Stack Limit
-        tCode.add("LDA " + SL + " " + ACTIVATION_RECORD + " ; setup stack limit: R98");
+        tCode.add("LDA " + SL + " " + RUN_TIME_STACK + " ; setup stack limit: R98");
         address++;
         tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SL + " " + STACK_SIZE);
         address++;
@@ -1273,11 +1275,8 @@ public class TCode {
             }
         }
 
-        tCode.add(ACTIVATION_RECORD + " .INT 0");
-        String tempRec = ACTIVATION_RECORD.substring(0, ACTIVATION_RECORD.length() - 1);
-        for (int i = 1; i <= STACK_SIZE; i++) {
-            tCode.add(tempRec + i + " .INT 0");
-        }
+        tCode.add(RUN_TIME_STACK + " .INT 0");
+        tCode.add(THE_HEAP + " .INT 0");
     }
 
     private void addErrorLetters() {

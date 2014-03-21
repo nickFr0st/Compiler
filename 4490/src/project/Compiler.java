@@ -1516,8 +1516,13 @@ public class Compiler {
                 }
             }
 
-            if (lexicalAnalyzer.getToken() instanceof NullTuple || !lexicalAnalyzer.getToken().getName().equals(KeyConst.VOID.getKey())) {
+            if (lexicalAnalyzer.getToken() instanceof NullTuple) {
                 errorList += "Invalid compilation unit. Missing 'main' method.\n";
+                return false;
+            }
+
+            if (!lexicalAnalyzer.getToken().getName().equals(KeyConst.VOID.getKey())) {
+                errorList += "Invalid compilation unit. expected 'void' but found '" + lexicalAnalyzer.getToken().getName() + "'."  + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
         }

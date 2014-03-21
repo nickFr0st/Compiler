@@ -2,6 +2,7 @@ package project;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -221,7 +222,7 @@ public class LexicalAnalyzer {
                                 if (tokenizer[i].endsWith(";")) {
                                     breaker = breaker.substring(0, breaker.length() - 1);
                                 }
-                                tokenizer[i] = breakDownToken(tokenizer[i], breaker);
+                                tokenizer[i] = breakDownToken(tokenizer[i].trim(), breaker);
                                 continue;
                             }
 
@@ -230,11 +231,11 @@ public class LexicalAnalyzer {
                                 if (tokenizer[i].endsWith(";")) {
                                     breaker = breaker.substring(0, breaker.length() - 1);
                                 }
-                                tokenizer[i] = breakDownToken(tokenizer[i], breaker);
+                                tokenizer[i] = breakDownToken(tokenizer[i].trim(), breaker);
                                 continue;
                             }
 
-                            tokenizer[i] = breakDownToken(tokenizer[i], s);
+                            tokenizer[i] = breakDownToken(tokenizer[i].trim(), s);
                         }
                     }
 
@@ -314,7 +315,7 @@ public class LexicalAnalyzer {
 
         if (index < size - 3) {
             if (item.charAt(index + 2) == '\'') {
-                if (Pattern.matches("\\p{Print}", item.substring(index + 1, index + 2))) {
+                if (Pattern.matches("^\\P{C}*$", item.substring(index + 1, index + 2))) {
                     breakDownItem = item.substring(index, index + 3);
                 }
             } else if (item.charAt(index + 1) == '\\' && item.charAt(index + 3) == '\'') {
@@ -327,7 +328,7 @@ public class LexicalAnalyzer {
 
         if (index < size - 2) {
             if (item.charAt(index + 2) == '\'') {
-                if (item.substring(index + 1, index + 2).matches("\\p{Print}]")) {
+                if (item.substring(index + 1, index + 2).matches("^\\P{C}*$")) {
                     breakDownItem = item.substring(index, index + 3);
                 }
             }
@@ -337,7 +338,7 @@ public class LexicalAnalyzer {
     }
 
     private String breakDownToken(String item, String breakDownItem) {
-        if (item.contains(breakDownItem) && item.trim().length() > 0) {
+        if (item.contains(breakDownItem) && item.length() > 0) {
             int size = tokenList.size();
             int breakLength = 1;
             if (breakDownItem.equals("'")) {
@@ -347,10 +348,14 @@ public class LexicalAnalyzer {
                 breakLength = breakDownItem.length();
             }
 
-            String temp = item.trim().substring(0, item.indexOf(breakDownItem));
-            if (!temp.trim().isEmpty()) {
+            String temp = item.substring(0, item.indexOf(breakDownItem)).trim();
+            if (!temp.isEmpty()) {
                 for (String s : symbolCheck) {
                     while (temp.contains(s) && temp.length() > 0) {
+                        String negativeCheck = temp.substring(1, temp.length());
+                        if (temp.toCharArray()[0] == '-' && negativeCheck.matches("^[0-9]+?") && !tokenList.get(tokenList.size() -1).matches("^[0-9]+?")) {
+                            break;
+                        }
                         temp = breakDownToken(temp, s);
                     }
                 }
@@ -365,10 +370,15 @@ public class LexicalAnalyzer {
             }
 
             size = tokenList.size();
-            item = item.trim().substring(item.indexOf(breakDownItem) + breakLength, item.length());
-            if (!item.trim().isEmpty()) {
+            item = item.substring(item.indexOf(breakDownItem) + breakLength, item.length()).trim();
+
+            if (!item.isEmpty()) {
                 for (String s : symbolCheck) {
                     while (item.contains(s) && item.length() > 0) {
+                        String negativeCheck = item.substring(1, item.length());
+                        if (item.toCharArray()[0] == '-' && negativeCheck.matches("^[0-9]+?") && !tokenList.get(tokenList.size() -1).matches("^[0-9]+?")) {
+                            break;
+                        }
                         item = breakDownToken(item, s);
                     }
                 }

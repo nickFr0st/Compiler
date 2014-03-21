@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Compiler.java" afterPath="$PROJECT_DIR$/src/project/Compiler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/PassTwo.java" afterPath="$PROJECT_DIR$/src/project/PassTwo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Symbol.java" afterPath="$PROJECT_DIR$/src/project/Symbol.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" afterPath="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
@@ -26,7 +25,7 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/Complier$TupleTest.coverage" NAME="TupleTest Coverage Results" MODIFIED="1376518875129" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
-    <SUITE FILE_PATH="coverage/Complier$ProgramDriver.coverage" NAME="ProgramDriver Coverage Results" MODIFIED="1393698950335" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/Complier$ProgramDriver.coverage" NAME="ProgramDriver Coverage Results" MODIFIED="1395377657537" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/Complier$CompilerTest.coverage" NAME="CompilerTest Coverage Results" MODIFIED="1376518600256" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/Complier$LexicalAnalyzerTest.coverage" NAME="LexicalAnalyzerTest Coverage Results" MODIFIED="1376518520229" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/Complier$SymbolTest.coverage" NAME="SymbolTest Coverage Results" MODIFIED="1377841233840" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true">
@@ -304,6 +303,66 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/project/Compiler.java" line="442" class="project.Compiler" package="project">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/project/Compiler.java" line="453" class="project.Compiler" package="project">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/project/Compiler.java" line="441" class="project.Compiler" package="project">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java" line="192" class="project.LexicalAnalyzer" package="project">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
     </line_breakpoints>
     <breakpoint_rules />
     <ui_properties />
@@ -317,7 +376,7 @@
       <file leaf-file-name="TCode.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="393" column="71" selection-start="16929" selection-end="16935" vertical-scroll-proportion="-7.0384617" vertical-offset="6464" max-vertical-offset="24072">
+            <state line="393" column="71" selection-start="16929" selection-end="16935" vertical-scroll-proportion="0.0" vertical-offset="6681" max-vertical-offset="24106">
               <folding />
             </state>
           </provider>
@@ -326,7 +385,7 @@
       <file leaf-file-name="Assembler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/Assembler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="638" column="0" selection-start="28904" selection-end="28904" vertical-scroll-proportion="0.0" vertical-offset="10586" max-vertical-offset="19159">
+            <state line="638" column="0" selection-start="28904" selection-end="28904" vertical-scroll-proportion="0.0" vertical-offset="10846" max-vertical-offset="19227">
               <folding />
             </state>
           </provider>
@@ -344,11 +403,8 @@
       <file leaf-file-name="Compiler.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1661" column="28" selection-start="68562" selection-end="68605" vertical-scroll-proportion="0.0" vertical-offset="28238" max-vertical-offset="29223">
-              <folding>
-                <element signature="e#2061#2062#0" expanded="true" />
-                <element signature="e#2099#2100#0" expanded="true" />
-              </folding>
+            <state line="453" column="0" selection-start="19397" selection-end="19397" vertical-scroll-proportion="-7.0384617" vertical-offset="7450" max-vertical-offset="29274">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -356,18 +412,16 @@
       <file leaf-file-name="Tuple.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/Tuple.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="0" selection-start="456" selection-end="456" vertical-scroll-proportion="0.0" vertical-offset="243" max-vertical-offset="833">
-              <folding>
-                <element signature="e#481#482#0" expanded="true" />
-              </folding>
+            <state line="26" column="0" selection-start="456" selection-end="456" vertical-scroll-proportion="0.0" vertical-offset="442" max-vertical-offset="1003">
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="386" column="0" selection-start="14045" selection-end="14045" vertical-scroll-proportion="0.0" vertical-offset="6111" max-vertical-offset="7038">
+            <state line="236" column="0" selection-start="7391" selection-end="7391" vertical-scroll-proportion="-3.2985075" vertical-offset="5950" max-vertical-offset="7191">
               <folding />
             </state>
           </provider>
@@ -382,10 +436,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Symbol.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Symbol.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/Symbol.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="96" column="21" selection-start="2109" selection-end="2109" vertical-scroll-proportion="0.61694914" vertical-offset="928" max-vertical-offset="1598">
+            <state line="61" column="5" selection-start="1412" selection-end="1412" vertical-scroll-proportion="0.0" vertical-offset="482" max-vertical-offset="1598">
               <folding />
             </state>
           </provider>
@@ -394,11 +448,8 @@
       <file leaf-file-name="PassTwo.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="788" column="51" selection-start="26809" selection-end="26809" vertical-scroll-proportion="0.0" vertical-offset="13187" max-vertical-offset="33626">
-              <folding>
-                <element signature="e#6184#6228#0" expanded="true" />
-                <element signature="e#61352#61363#0" expanded="true" />
-              </folding>
+            <state line="788" column="51" selection-start="26809" selection-end="26809" vertical-scroll-proportion="0.0" vertical-offset="13396" max-vertical-offset="33677">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -440,7 +491,6 @@
         <option value="$PROJECT_DIR$/src/project/Literal_SAR.java" />
         <option value="$PROJECT_DIR$/src/project/ICodeOprConst.java" />
         <option value="$PROJECT_DIR$/src/project/Tuple.java" />
-        <option value="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" />
         <option value="$PROJECT_DIR$/src/project/ProgramDriver.java" />
         <option value="$PROJECT_DIR$/src/project/Parameter.java" />
         <option value="$PROJECT_DIR$/src/project/MethodData.java" />
@@ -448,9 +498,10 @@
         <option value="$PROJECT_DIR$/src/project/TCodeOprConst.java" />
         <option value="$PROJECT_DIR$/src/project/Assembler.java" />
         <option value="$PROJECT_DIR$/src/project/TCode.java" />
-        <option value="$PROJECT_DIR$/src/project/Compiler.java" />
         <option value="$PROJECT_DIR$/src/project/Symbol.java" />
         <option value="$PROJECT_DIR$/src/project/PassTwo.java" />
+        <option value="$PROJECT_DIR$/src/project/Compiler.java" />
+        <option value="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" />
       </list>
     </option>
   </component>
@@ -1001,7 +1052,9 @@
       <workItem from="1393731143226" duration="9000" />
       <workItem from="1393890307903" duration="22969000" />
       <workItem from="1394072213684" duration="5229000" />
-      <workItem from="1394587244029" duration="7408000" />
+      <workItem from="1394587244029" duration="7437000" />
+      <workItem from="1395323030501" duration="120000" />
+      <workItem from="1395375191093" duration="9611000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1358823189173</created>
@@ -2079,11 +2132,15 @@
       <created>1394588469462</created>
       <updated>1394588469462</updated>
     </task>
-    <option name="localTasksCounter" value="270" />
+    <task id="LOCAL-00270" summary="Icode setup for classes">
+      <created>1394594705294</created>
+      <updated>1394594705294</updated>
+    </task>
+    <option name="localTasksCounter" value="271" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="201166000" />
+    <option name="totallyTimeSpent" value="210926000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -2117,28 +2174,59 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32412326" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.37194473" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.46652496" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36208734" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32518598" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32819384" sideWeight="0.71565497" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16189428" sideWeight="0.7167199" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39977914" sideWeight="0.600639" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32965213" sideWeight="0.7507987" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17290749" sideWeight="0.7167199" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2869288" sideWeight="0.49806738" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2869288" sideWeight="0.49806738" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32819384" sideWeight="0.71565497" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
+    <layout-to-restore>
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47608927" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36208734" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32819384" sideWeight="0.71565497" order="10" side_tool="true" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3258786" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17290749" sideWeight="0.7167199" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2869288" sideWeight="0.49806738" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32412326" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37194473" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32518598" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16189428" sideWeight="0.7167199" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39977914" sideWeight="0.600639" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32965213" sideWeight="0.7507987" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USERS">
@@ -2153,7 +2241,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="if statements now work properly" />
     <MESSAGE value="fixed a literal value bug" />
     <MESSAGE value="test" />
     <MESSAGE value="test2&#10;" />
@@ -2178,7 +2265,8 @@
     <MESSAGE value="made the run time stack better and added the heap" />
     <MESSAGE value="clean up" />
     <MESSAGE value="setup the heap in TCode" />
-    <option name="LAST_COMMIT_MESSAGE" value="setup the heap in TCode" />
+    <MESSAGE value="Icode setup for classes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Icode setup for classes" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -2205,11 +2293,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/project/ICodeOprConst.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="4" selection-start="705" selection-end="705" vertical-scroll-proportion="0.0" vertical-offset="629" max-vertical-offset="1088" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/SAR.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="66" column="0" selection-start="1229" selection-end="1229" vertical-scroll-proportion="0.0" vertical-offset="1122" max-vertical-offset="1479" />
@@ -2245,10 +2328,7 @@
     <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="1696" column="50" selection-start="63617" selection-end="63617" vertical-scroll-proportion="0.0" vertical-offset="28832" max-vertical-offset="33643">
-          <folding>
-            <element signature="e#6184#6228#0" expanded="true" />
-            <element signature="e#61352#61363#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2302,10 +2382,7 @@
     <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="1696" column="50" selection-start="63617" selection-end="63617" vertical-scroll-proportion="0.0" vertical-offset="28832" max-vertical-offset="33643">
-          <folding>
-            <element signature="e#6184#6228#0" expanded="true" />
-            <element signature="e#61352#61363#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2398,9 +2475,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Memory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="13" selection-start="124" selection-end="124" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="527">
-          <folding />
-        </state>
+        <state line="8" column="13" selection-start="124" selection-end="124" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="527" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Parameter.java">
@@ -2410,23 +2485,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/MethodData.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="26" selection-start="776" selection-end="776" vertical-scroll-proportion="0.0" vertical-offset="144" max-vertical-offset="697">
-          <folding />
-        </state>
+        <state line="34" column="26" selection-start="776" selection-end="776" vertical-scroll-proportion="0.0" vertical-offset="144" max-vertical-offset="697" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/ICodeOprConst.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="8" selection-start="469" selection-end="469" vertical-scroll-proportion="0.0" vertical-offset="114" max-vertical-offset="1054">
-          <folding />
-        </state>
+        <state line="26" column="8" selection-start="469" selection-end="469" vertical-scroll-proportion="0.0" vertical-offset="114" max-vertical-offset="1054" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/ICode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="18" selection-start="604" selection-end="604" vertical-scroll-proportion="0.24042553" vertical-offset="199" max-vertical-offset="1139">
-          <folding />
-        </state>
+        <state line="25" column="18" selection-start="604" selection-end="604" vertical-scroll-proportion="0.24042553" vertical-offset="199" max-vertical-offset="1139" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/tests/SymbolTest.java">
@@ -2448,19 +2517,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="386" column="0" selection-start="14045" selection-end="14045" vertical-scroll-proportion="0.0" vertical-offset="6111" max-vertical-offset="7038">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Tuple.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="26" column="0" selection-start="456" selection-end="456" vertical-scroll-proportion="0.0" vertical-offset="243" max-vertical-offset="833">
-          <folding>
-            <element signature="e#481#482#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2480,34 +2540,42 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/TCode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="393" column="71" selection-start="16929" selection-end="16935" vertical-scroll-proportion="-7.0384617" vertical-offset="6464" max-vertical-offset="24072">
+        <state line="393" column="71" selection-start="16929" selection-end="16935" vertical-scroll-proportion="0.0" vertical-offset="6681" max-vertical-offset="24106">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1661" column="28" selection-start="68562" selection-end="68605" vertical-scroll-proportion="0.0" vertical-offset="28034" max-vertical-offset="29223">
-          <folding>
-            <element signature="e#2061#2062#0" expanded="true" />
-            <element signature="e#2099#2100#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="788" column="51" selection-start="26809" selection-end="26809" vertical-scroll-proportion="0.0" vertical-offset="13187" max-vertical-offset="33626">
-          <folding>
-            <element signature="e#6184#6228#0" expanded="true" />
-            <element signature="e#61352#61363#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Symbol.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="96" column="21" selection-start="2109" selection-end="2109" vertical-scroll-proportion="0.61694914" vertical-offset="928" max-vertical-offset="1598">
+        <state line="61" column="5" selection-start="1412" selection-end="1412" vertical-scroll-proportion="0.0" vertical-offset="482" max-vertical-offset="1598">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="453" column="0" selection-start="19397" selection-end="19397" vertical-scroll-proportion="-7.0384617" vertical-offset="7450" max-vertical-offset="29274">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_45/src.zip!/java/lang/String.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2750" column="18" selection-start="109635" selection-end="109635" vertical-scroll-proportion="0.0" vertical-offset="45993" max-vertical-offset="52292">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="236" column="0" selection-start="7391" selection-end="7391" vertical-scroll-proportion="-3.2985075" vertical-offset="5950" max-vertical-offset="7191">
           <folding />
         </state>
       </provider>

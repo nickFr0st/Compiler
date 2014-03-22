@@ -1063,6 +1063,11 @@ public class Compiler {
 
         String errorCheck = errorList;
 
+        if (lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && !type(lexicalAnalyzer.getToken().getType()) && lexicalAnalyzer.peek().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
+            errorList += "Invalid variable declaration type. " + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
         if (type(lexicalAnalyzer.getToken().getType())) {
             while (variable_declaration()) {
                 if (lexicalAnalyzer.getToken() instanceof NullTuple) {
@@ -1076,6 +1081,11 @@ public class Compiler {
 
                 if (lexicalAnalyzer.getToken().getType().equalsIgnoreCase(KeyConst.MODIFIER.name())) {
                     errorList += "Method Body Error: cannot use modifier tags inside methods. " + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+                    return false;
+                }
+
+                if (lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name()) && !type(lexicalAnalyzer.getToken().getType()) && lexicalAnalyzer.peek().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.IDENTIFIER.name())) {
+                    errorList += "Invalid variable declaration type. " + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                     return false;
                 }
 

@@ -1046,6 +1046,11 @@ public class Compiler {
             return true;
         }
 
+        if (lexicalAnalyzer.getToken().getType().equalsIgnoreCase(KeyConst.MODIFIER.name())) {
+            errorList += "Method Body Error: cannot use modifier tags inside methods. " + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
         String errorCheck = errorList;
 
         if (type(lexicalAnalyzer.getToken().getType())) {
@@ -1056,6 +1061,11 @@ public class Compiler {
                 }
 
                 if (isUnknownSymbol(lexicalAnalyzer.getToken().getType())) {
+                    return false;
+                }
+
+                if (lexicalAnalyzer.getToken().getType().equalsIgnoreCase(KeyConst.MODIFIER.name())) {
+                    errorList += "Method Body Error: cannot use modifier tags inside methods. " + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                     return false;
                 }
 

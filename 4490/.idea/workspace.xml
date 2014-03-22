@@ -507,7 +507,7 @@
       <file leaf-file-name="Compiler.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="927" column="13" selection-start="39110" selection-end="39110" vertical-scroll-proportion="0.94824964" vertical-offset="15068" max-vertical-offset="29648">
+            <state line="936" column="25" selection-start="39297" selection-end="39297" vertical-scroll-proportion="0.7153729" vertical-offset="15374" max-vertical-offset="29648">
               <folding />
             </state>
           </provider>
@@ -1189,7 +1189,7 @@
       <workItem from="1395375191093" duration="9656000" />
       <workItem from="1395409208353" duration="668000" />
       <workItem from="1395456045484" duration="6503000" />
-      <workItem from="1395509041036" duration="1766000" />
+      <workItem from="1395509041036" duration="1822000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1358823189173</created>
@@ -2295,11 +2295,15 @@
       <created>1395510231944</created>
       <updated>1395510231945</updated>
     </task>
-    <option name="localTasksCounter" value="277" />
+    <task id="LOCAL-00277" summary="better error messaging&#10;">
+      <created>1395510844102</created>
+      <updated>1395510844102</updated>
+    </task>
+    <option name="localTasksCounter" value="278" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="219908000" />
+    <option name="totallyTimeSpent" value="219964000" />
   </component>
   <component name="TodoView" selected-index="4">
     <todo-panel id="selected-file">
@@ -2400,7 +2404,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="I can now handle a function that return a value but with no params&#10;" />
     <MESSAGE value="all functions now work properly" />
     <MESSAGE value="paramters are now added to an activation record" />
     <MESSAGE value="correcting some errors&#10;" />
@@ -2425,7 +2428,8 @@
     <MESSAGE value="better validation for instance variables" />
     <MESSAGE value="clean up" />
     <MESSAGE value="better error messaging" />
-    <option name="LAST_COMMIT_MESSAGE" value="better error messaging" />
+    <MESSAGE value="better error messaging&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="better error messaging&#10;" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -2740,7 +2744,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="927" column="13" selection-start="39110" selection-end="39110" vertical-scroll-proportion="0.94824964" vertical-offset="15068" max-vertical-offset="29648">
+        <state line="936" column="25" selection-start="39297" selection-end="39297" vertical-scroll-proportion="0.7153729" vertical-offset="15374" max-vertical-offset="29648">
           <folding />
         </state>
       </provider>

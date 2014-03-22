@@ -4,9 +4,8 @@
     <bookmark url="file://$PROJECT_DIR$/src/project/PassTwo.java" line="1671" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="string merging and better parameter checking">
+    <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" afterPath="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/PassTwo.java" afterPath="$PROJECT_DIR$/src/project/PassTwo.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
@@ -453,6 +452,21 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java" line="247" class="project.LexicalAnalyzer" package="project">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
     </line_breakpoints>
     <breakpoint_rules />
     <ui_properties />
@@ -508,13 +522,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="272" column="0" selection-start="9117" selection-end="9117" vertical-scroll-proportion="0.0" vertical-offset="4165" max-vertical-offset="7616">
-              <folding>
-                <element signature="e#5043#5051#0" expanded="true" />
-              </folding>
+            <state line="248" column="0" selection-start="7763" selection-end="7763" vertical-scroll-proportion="0.28462708" vertical-offset="3740" max-vertical-offset="7191">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -537,10 +549,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PassTwo.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="PassTwo.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="348" column="13" selection-start="11941" selection-end="11941" vertical-scroll-proportion="0.33277312" vertical-offset="5667" max-vertical-offset="34034">
+            <state line="348" column="13" selection-start="11941" selection-end="11941" vertical-scroll-proportion="-7.6153846" vertical-offset="5667" max-vertical-offset="34034">
               <folding>
                 <element signature="e#6184#6228#0" expanded="true" />
               </folding>
@@ -613,8 +625,8 @@
         <option value="$PROJECT_DIR$/src/project/Symbol.java" />
         <option value="$PROJECT_DIR$/src/project/Compiler.java" />
         <option value="$PROJECT_DIR$/src/project/tests/LexicalAnalyzerTest.java" />
-        <option value="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" />
         <option value="$PROJECT_DIR$/src/project/PassTwo.java" />
+        <option value="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" />
       </list>
     </option>
   </component>
@@ -1246,7 +1258,7 @@
       <workItem from="1395323030501" duration="120000" />
       <workItem from="1395375191093" duration="9656000" />
       <workItem from="1395409208353" duration="668000" />
-      <workItem from="1395456045484" duration="4949000" />
+      <workItem from="1395456045484" duration="5229000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1358823189173</created>
@@ -2332,11 +2344,15 @@
       <created>1395384856263</created>
       <updated>1395384856263</updated>
     </task>
-    <option name="localTasksCounter" value="272" />
+    <task id="LOCAL-00272" summary="string merging and better parameter checking">
+      <created>1395461026999</created>
+      <updated>1395461026999</updated>
+    </task>
+    <option name="localTasksCounter" value="273" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="216588000" />
+    <option name="totallyTimeSpent" value="216868000" />
   </component>
   <component name="TodoView" selected-index="4">
     <todo-panel id="selected-file">
@@ -2377,13 +2393,13 @@
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32518598" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32518598" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32518598" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16189428" sideWeight="0.7167199" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39977914" sideWeight="0.600639" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32965213" sideWeight="0.7507987" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17290749" sideWeight="0.7167199" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2869288" sideWeight="0.49806738" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2869288" sideWeight="0.49806738" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32819384" sideWeight="0.71565497" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
@@ -2744,13 +2760,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="441" column="0" selection-start="18905" selection-end="18905" vertical-scroll-proportion="0.0" vertical-offset="7267" max-vertical-offset="29274">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/MethodData.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="25" column="18" selection-start="591" selection-end="591" vertical-scroll-proportion="0.0" vertical-offset="162" max-vertical-offset="663">
@@ -2772,21 +2781,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
+    <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="272" column="0" selection-start="9117" selection-end="9117" vertical-scroll-proportion="0.0" vertical-offset="4165" max-vertical-offset="7616">
+        <state line="348" column="13" selection-start="11941" selection-end="11941" vertical-scroll-proportion="-7.6153846" vertical-offset="5667" max-vertical-offset="34034">
           <folding>
-            <element signature="e#5043#5051#0" expanded="true" />
+            <element signature="e#6184#6228#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/PassTwo.java">
+    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="348" column="13" selection-start="11941" selection-end="11941" vertical-scroll-proportion="0.33277312" vertical-offset="5667" max-vertical-offset="34034">
-          <folding>
-            <element signature="e#6184#6228#0" expanded="true" />
-          </folding>
+        <state line="441" column="0" selection-start="18905" selection-end="18905" vertical-scroll-proportion="0.0" vertical-offset="7267" max-vertical-offset="29274">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="248" column="0" selection-start="7763" selection-end="7763" vertical-scroll-proportion="0.28462708" vertical-offset="3740" max-vertical-offset="7191">
+          <folding />
         </state>
       </provider>
     </entry>

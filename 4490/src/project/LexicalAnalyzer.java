@@ -190,31 +190,6 @@ public class LexicalAnalyzer {
                 }
 
                 String[] tokenizer = line.split("[\\s\\t]");
-                if (tokenizer.length >= 3) {
-                    List<String> tempTest = new ArrayList<String>();
-                    for (String s : tokenizer) {
-                        tempTest.add(s);
-                    }
-
-                    for (int i = 0; i < tempTest.size(); i++) {
-                        for (int j = i; j <= tempTest.size() - 2; j++) {
-                            String previousItem = "ƒ";
-                            if (j == 0 && !lexicalList.isEmpty()) {
-                                previousItem = lexicalList.get(lexicalList.size() -1).getName().trim();
-                            } else if (j > 0) {
-                                previousItem = tempTest.get(j - 1).trim();
-                            }
-
-                            if (tempTest.get(j).equals("-") && Character.isDigit(tempTest.get(j + 1).toCharArray()[0]) && (previousItem.isEmpty() || previousItem.equals("ƒ") || (!Character.isDigit(previousItem.toCharArray()[previousItem.length() -1]) && !Character.isAlphabetic(previousItem.toCharArray()[previousItem.length() -1])))) {
-                                tempTest.set(j, tempTest.get(j) + tempTest.get(j + 1));
-                                tempTest.remove(j + 1);
-                            }
-                        }
-                    }
-
-                    tokenizer = tempTest.toArray(new String[tempTest.size()]);
-                }
-
 
                 for (int j = 0; j < tokenizer.length; j++) {
                     if (tokenizer[j].contains("ƒ")) {

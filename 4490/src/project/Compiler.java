@@ -905,6 +905,11 @@ public class Compiler {
             return false;
         }
 
+        if (!(lexicalAnalyzer.getToken().getName().equals(",") || lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()))) {
+            errorList += "Invalid parameter_list: invalid argument separator. expected ',' but found '" + lexicalAnalyzer.getToken().getName() + "'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            return false;
+        }
+
         while (!(lexicalAnalyzer.getToken() instanceof NullTuple) && lexicalAnalyzer.getToken().getName().equals(",")) {
             lexicalAnalyzer.nextToken();
 
@@ -914,6 +919,11 @@ public class Compiler {
 
             if (!parameter(parameters)) {
                 errorList += "Invalid parameter_list" + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
+                return false;
+            }
+
+            if (!(lexicalAnalyzer.getToken().getName().equals(",") || lexicalAnalyzer.getToken().getType().equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.PAREN_CLOSE.name()))) {
+                errorList += "Invalid parameter_list: invalid argument separator. expected ',' but found '" + lexicalAnalyzer.getToken().getName() + "'." + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
                 return false;
             }
         }

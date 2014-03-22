@@ -1317,8 +1317,32 @@ public class PassTwo {
                 SAS.push(tempSAR);
 
             } else if (id_sar instanceof Function_SAR) {
-                String symbolId = symbolTable.get(id_sar.getSarId()).getSymId();
+                Symbol method = symbolTable.get(id_sar.getSarId());
 
+                if (method.getData() instanceof MethodData) {
+                    ((Function_SAR) id_sar).getFunction().setType(method.getData().getType());
+
+                    if (((Function_SAR) id_sar).getArguments().getArguments().size() > ((MethodData) method.getData()).getParameters().size()) {
+                        errorList += "there are too many parameters for called method. Line: " + id_sar.getLexi().getLineNum() + "\n";
+                        return false;
+                    } else if (((Function_SAR) id_sar).getArguments().getArguments().size() < ((MethodData) method.getData()).getParameters().size()) {
+                        errorList += "there are too few parameters for called method. Line: " + id_sar.getLexi().getLineNum() + "\n";
+                        return false;
+                    }
+
+                    List<SAR> args = ((Function_SAR) id_sar).getArguments().getArguments();
+                    int index = ((Function_SAR) id_sar).getArguments().getArguments().size() - 1;
+
+                    for (Parameter  p : ((MethodData) method.getData()).getParameters()) {
+                        if (!args.get(index).getType().equalsIgnoreCase(p.getType())) {
+                            errorList += "invalid argument type. expected: '" + p.getType() + "' but was: '" + args.get(index).getType() + "' Line: " + id_sar.getLexi().getLineNum() + "\n";
+                            return false;
+                        }
+                        index--;
+                    }
+                }
+
+                String symbolId = method.getSymId();
                 iCodeList.add(new ICode(useLabel(), ICodeOprConst.FRAME_OPR.getKey(), symbolId, KeyConst.THIS.getKey(), "", ""));
 
                 for (SAR args : ((Function_SAR) id_sar).getArguments().getArguments()) {
@@ -1327,7 +1351,7 @@ public class PassTwo {
                 iCodeList.add(new ICode(useLabel(), ICodeOprConst.CALL_OPR.getKey(), symbolId, "", "", ""));
 
                 String itemKey = "T" + variableId;
-                Symbol method = getSymbol();
+                //Symbol method = getSymbol();
                 symbolTable.put(itemKey, new Symbol(scope, itemKey, itemKey, values[2], new VariableData(type, values[3]), method.getTotalSize(), 1));
                 method.updateSize(Compiler.ELEM_SIZE);
                 if (type.equalsIgnoreCase(LexicalAnalyzer.tokenTypesEnum.NUMBER.name()) || type.equalsIgnoreCase(KeyConst.INT.getKey())) {

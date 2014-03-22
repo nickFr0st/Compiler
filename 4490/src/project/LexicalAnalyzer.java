@@ -1,6 +1,7 @@
 package project;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -189,6 +190,31 @@ public class LexicalAnalyzer {
                 }
 
                 String[] tokenizer = line.split("[\\s\\t]");
+                if (tokenizer.length >= 3) {
+                    List<String> tempTest = new ArrayList<String>();
+                    for (String s : tokenizer) {
+                        tempTest.add(s);
+                    }
+
+                    for (int i = 0; i < tempTest.size(); i++) {
+                        for (int j = i; j <= tempTest.size() - 2; j++) {
+                            String previousItem = "ƒ";
+                            if (j == 0 && !lexicalList.isEmpty()) {
+                                previousItem = lexicalList.get(lexicalList.size() -1).getName().trim();
+                            } else if (j > 0) {
+                                previousItem = tempTest.get(j - 1).trim();
+                            }
+
+                            if (tempTest.get(j).equals("-") && Character.isDigit(tempTest.get(j + 1).toCharArray()[0]) && (previousItem.isEmpty() || previousItem.equals("ƒ") || (!Character.isDigit(previousItem.toCharArray()[previousItem.length() -1]) && !Character.isAlphabetic(previousItem.toCharArray()[previousItem.length() -1])))) {
+                                tempTest.set(j, tempTest.get(j) + tempTest.get(j + 1));
+                                tempTest.remove(j + 1);
+                            }
+                        }
+                    }
+
+                    tokenizer = tempTest.toArray(new String[tempTest.size()]);
+                }
+
 
                 for (int j = 0; j < tokenizer.length; j++) {
                     if (tokenizer[j].contains("ƒ")) {
@@ -353,7 +379,7 @@ public class LexicalAnalyzer {
                 for (String s : symbolCheck) {
                     while (temp.contains(s) && temp.length() > 0) {
                         String negativeCheck = temp.substring(1, temp.length());
-                        if (temp.toCharArray()[0] == '-' && negativeCheck.matches("^[0-9]+?") && !tokenList.get(tokenList.size() -1).matches("^[0-9]+?")) {
+                        if (temp.toCharArray()[0] == '-' && negativeCheck.matches("^[0-9]+?") && !tokenList.isEmpty() && (!tokenList.get(tokenList.size() -1).matches("^[0-9]+?") || !tokenList.get(tokenList.size() -1).matches("^[a-z]+?"))) {
                             break;
                         }
                         temp = breakDownToken(temp, s);
@@ -376,7 +402,7 @@ public class LexicalAnalyzer {
                 for (String s : symbolCheck) {
                     while (item.contains(s) && item.length() > 0) {
                         String negativeCheck = item.substring(1, item.length());
-                        if (item.toCharArray()[0] == '-' && negativeCheck.matches("^[0-9]+?") && !tokenList.get(tokenList.size() -1).matches("^[0-9]+?")) {
+                        if (item.toCharArray()[0] == '-' && negativeCheck.matches("^[0-9]+?") && !tokenList.isEmpty() && (!tokenList.get(tokenList.size() -1).matches("^[0-9]+?") || !tokenList.get(tokenList.size() -1).matches("^[a-z]+?"))) {
                             break;
                         }
                         item = breakDownToken(item, s);

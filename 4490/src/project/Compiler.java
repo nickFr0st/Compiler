@@ -1406,6 +1406,8 @@ public class Compiler {
             }
 
             return true;
+        } else if (!lexicalAnalyzer.getToken().getType().equals(LexicalAnalyzer.tokenTypesEnum.BLOCK_END.name())) {
+            errorList += "Class methods and instance variables must start with a valid modifier. " + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
         }
 
         return false;

@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="32f9e6d3-a3e6-4908-bba1-fe1c45f66608" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" afterPath="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/Compiler.java" afterPath="$PROJECT_DIR$/src/project/Compiler.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Complier.iws" />
@@ -452,21 +452,6 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java" line="247" class="project.LexicalAnalyzer" package="project">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
     </line_breakpoints>
     <breakpoint_rules />
     <ui_properties />
@@ -504,10 +489,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Compiler.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Compiler.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="441" column="0" selection-start="18905" selection-end="18905" vertical-scroll-proportion="0.0" vertical-offset="7267" max-vertical-offset="29274">
+            <state line="1409" column="27" selection-start="58524" selection-end="58524" vertical-scroll-proportion="0.7503805" vertical-offset="23392" max-vertical-offset="29308">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="KeyConst.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/KeyConst.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="32" column="4" selection-start="570" selection-end="570" vertical-scroll-proportion="0.0" vertical-offset="61" max-vertical-offset="833">
               <folding />
             </state>
           </provider>
@@ -522,10 +516,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="LexicalAnalyzer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="248" column="0" selection-start="7763" selection-end="7763" vertical-scroll-proportion="0.28462708" vertical-offset="3740" max-vertical-offset="7191">
+            <state line="247" column="0" selection-start="7714" selection-end="7714" vertical-scroll-proportion="0.0" vertical-offset="3740" max-vertical-offset="7191">
               <folding />
             </state>
           </provider>
@@ -623,10 +617,10 @@
         <option value="$PROJECT_DIR$/src/project/Assembler.java" />
         <option value="$PROJECT_DIR$/src/project/TCode.java" />
         <option value="$PROJECT_DIR$/src/project/Symbol.java" />
-        <option value="$PROJECT_DIR$/src/project/Compiler.java" />
         <option value="$PROJECT_DIR$/src/project/tests/LexicalAnalyzerTest.java" />
         <option value="$PROJECT_DIR$/src/project/PassTwo.java" />
         <option value="$PROJECT_DIR$/src/project/LexicalAnalyzer.java" />
+        <option value="$PROJECT_DIR$/src/project/Compiler.java" />
       </list>
     </option>
   </component>
@@ -1258,7 +1252,7 @@
       <workItem from="1395323030501" duration="120000" />
       <workItem from="1395375191093" duration="9656000" />
       <workItem from="1395409208353" duration="668000" />
-      <workItem from="1395456045484" duration="5229000" />
+      <workItem from="1395456045484" duration="5851000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1358823189173</created>
@@ -2348,11 +2342,15 @@
       <created>1395461026999</created>
       <updated>1395461026999</updated>
     </task>
-    <option name="localTasksCounter" value="273" />
+    <task id="LOCAL-00273" summary="remove negative check">
+      <created>1395461318881</created>
+      <updated>1395461318881</updated>
+    </task>
+    <option name="localTasksCounter" value="274" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="216868000" />
+    <option name="totallyTimeSpent" value="217490000" />
   </component>
   <component name="TodoView" selected-index="4">
     <todo-panel id="selected-file">
@@ -2394,11 +2392,11 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32518598" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32518598" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16189428" sideWeight="0.7167199" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16189428" sideWeight="0.7167199" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39977914" sideWeight="0.600639" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32965213" sideWeight="0.7507987" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17290749" sideWeight="0.7167199" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17290749" sideWeight="0.7167199" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2869288" sideWeight="0.49806738" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32819384" sideWeight="0.71565497" order="10" side_tool="true" content_ui="tabs" />
@@ -2453,7 +2451,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="test2&#10;" />
     <MESSAGE value="I can now handle a void function call with no params" />
     <MESSAGE value="I can now handle a void function call with no params&#10;" />
     <MESSAGE value="I can now handle a function that return a value but with no params&#10;" />
@@ -2478,7 +2475,8 @@
     <MESSAGE value="Icode setup for classes" />
     <MESSAGE value="better validation for negative numbers and characters" />
     <MESSAGE value="string merging and better parameter checking" />
-    <option name="LAST_COMMIT_MESSAGE" value="string merging and better parameter checking" />
+    <MESSAGE value="remove negative check" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove negative check" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -2649,11 +2647,6 @@
         <state line="11" column="5" selection-start="232" selection-end="232" vertical-scroll-proportion="0.19936034" vertical-offset="0" max-vertical-offset="0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/KeyConst.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="12" selection-start="306" selection-end="306" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/BAL_SAR.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="8" column="0" selection-start="111" selection-end="111" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
@@ -2790,16 +2783,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
+    <entry file="file://$PROJECT_DIR$/src/project/KeyConst.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="441" column="0" selection-start="18905" selection-end="18905" vertical-scroll-proportion="0.0" vertical-offset="7267" max-vertical-offset="29274">
+        <state line="32" column="4" selection-start="570" selection-end="570" vertical-scroll-proportion="0.0" vertical-offset="61" max-vertical-offset="833">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/LexicalAnalyzer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="248" column="0" selection-start="7763" selection-end="7763" vertical-scroll-proportion="0.28462708" vertical-offset="3740" max-vertical-offset="7191">
+        <state line="247" column="0" selection-start="7714" selection-end="7714" vertical-scroll-proportion="0.0" vertical-offset="3740" max-vertical-offset="7191">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/Compiler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1409" column="27" selection-start="58524" selection-end="58524" vertical-scroll-proportion="0.7503805" vertical-offset="23392" max-vertical-offset="29308">
           <folding />
         </state>
       </provider>

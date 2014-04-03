@@ -99,6 +99,12 @@ public class TCode {
     }
 
     public void buildCode() {
+        String reg3 = getRegister("3");
+        String reg4 = getRegister("4");
+        String reg5 = getRegister("5");
+        String reg6 = getRegister("6");
+        String reg7 = getRegister("7");
+
         addVariables();
 
         tCode.add("");
@@ -149,11 +155,6 @@ public class TCode {
 
                 Symbol method = symbolTable.get(iCode.getArg1());
 
-                String reg5 = getRegister("5");
-                String reg3 = getRegister("3");
-                String reg6 = getRegister("6");
-                String reg7 = getRegister("7");
-
                 // check for overflow
                 if (iCode.getLabel().isEmpty()) {
                     if (!L4.isEmpty()) {
@@ -184,7 +185,7 @@ public class TCode {
                 tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " 1" + " ; PFP");
                 address++;
 
-                tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + SP + " " + reg7 + " ; Set this on stack");
+                tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + SP + " " + reg7 + " ; Set 'this' on stack");
                 address++;
                 tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + SP + " 1");
                 address++;
@@ -239,8 +240,6 @@ public class TCode {
 
             } else if (iCode.getOperation().equals(ICodeOprConst.FUNC_OPR.getKey())) {
 
-                String reg5 = getRegister("5");
-
                 Symbol method = symbolTable.get(iCode.getArg1());
 
                 if (iCode.getLabel().isEmpty()) {
@@ -262,9 +261,6 @@ public class TCode {
                 address++;
 
             } else if (iCode.getOperation().equals(ICodeOprConst.PEEK_OPR.getKey())) {
-
-                String reg6 = getRegister("6");
-                String reg3 = getRegister("3");
 
                 if (iCode.getLabel().isEmpty()) {
                     if (!L4.isEmpty()) {
@@ -295,9 +291,6 @@ public class TCode {
 
             } else if (iCode.getOperation().equals(ICodeOprConst.MOV_OPR.getKey())) {
 
-                String reg5 = getRegister("5");
-                String reg6 = getRegister("6");
-
                 Symbol arg1 = symbolTable.get(iCode.getArg1());
 
                 if (iCode.getLabel().equals("")) {
@@ -322,8 +315,6 @@ public class TCode {
                     tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + reg6 + " ; store value into address pointed to by R5");
                     address++;
                 } else {
-                    String reg7 = getRegister("7");
-
                     tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg7 + " " + FP);
                     address++;
                     tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg7 + " " + arg2.getSize().toString() + " ; get address of " + arg2.getValue());
@@ -359,9 +350,6 @@ public class TCode {
                     continue;
                 }
 
-                String reg5 = getRegister("5");
-                String reg6 = getRegister("6");
-
                 if (iCode.getLabel().equals("")) {
                     if (!L4.isEmpty()) {
                         tCode.add(L4.pop() + " " + TCodeOprConst.MOV_OPR.getKey() + " " + SP + " " + FP);
@@ -392,10 +380,6 @@ public class TCode {
                 address++;
 
             } else if (iCode.getOperation().equals(ICodeOprConst.RETURN_OPR.getKey())) {
-
-                String reg4 = getRegister("4");
-                String reg5 = getRegister("5");
-                String reg6 = getRegister("6");
 
                 Symbol arg1 = symbolTable.get(iCode.getArg1());
 
@@ -473,8 +457,6 @@ public class TCode {
                 }
                 address++;
 
-                String reg5 = getRegister("5");
-                String reg6 = getRegister("6");
                 Symbol arg1 = symbolTable.get(iCode.getArg1());
 
                 tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " INII");
@@ -499,8 +481,6 @@ public class TCode {
                 }
                 address++;
 
-                String reg5 = getRegister("5");
-                String reg6 = getRegister("6");
                 Symbol arg1 = symbolTable.get(iCode.getArg1());
 
                 tCode.add(TCodeOprConst.LDR_OPR.getKey() + " " + reg6 + " INII");
@@ -525,10 +505,6 @@ public class TCode {
                 addBreakTrueFalse(iCode);
 
             } else if (iCode.getOperation().equals(ICodeOprConst.OR_OPR.getKey())) {
-
-                String reg5 = getRegister("5");
-                String reg6 = getRegister("6");
-                String reg7 = getRegister("7");
 
                 Symbol arg1 = symbolTable.get(iCode.getArg1());
                 if (iCode.getArg1().startsWith("L")) {
@@ -625,10 +601,6 @@ public class TCode {
 
             } else if (iCode.getOperation().equals(ICodeOprConst.AND_OPR.getKey())) {
 
-                String reg5 = getRegister("5");
-                String reg6 = getRegister("6");
-                String reg7 = getRegister("7");
-
                 Symbol arg1 = symbolTable.get(iCode.getArg1());
                 if (iCode.getArg1().startsWith("L")) {
                     String value;
@@ -715,6 +687,34 @@ public class TCode {
                 tCode.add(TCodeOprConst.JMP_OPR.getKey() + " " + L4.peek());
                 address++;
                 tCode.add(L3 + " " + TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + REG_FALSE + " ; set result to false");
+                address++;
+
+            } else if (iCode.getOperation().equals(ICodeOprConst.NEWI_OPR.getKey())) {
+
+                if (iCode.getLabel().equals("")) {
+                    if (!L4.isEmpty()) {
+                        tCode.add(L4.pop() + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg6 + " " + FREE + " ; get 'this' pointer");
+                    } else {
+                        tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg6 + " " + FREE + " ; get 'this' pointer");
+                    }
+                } else {
+                    tCode.add(setLabel(iCode.getLabel()) + " " + TCodeOprConst.MOV_OPR.getKey() + " " + reg6 + " " + FREE + " ; get 'this' pointer");
+                }
+                address++;
+
+                Symbol symbol = symbolTable.get(iCode.getArg2());
+
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg7 + " " + reg6 + " ; put 'this' pointer into R7");
+                address++;
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg6 + " " + iCode.getArg1());
+                address++;
+                tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + FREE + " " + reg6);
+                address++;
+                tCode.add(TCodeOprConst.MOV_OPR.getKey() + " " + reg5 + " " + FP);
+                address++;
+                tCode.add(TCodeOprConst.ADI_OPR.getKey() + " " + reg5 + " " + symbol.getSize());
+                address++;
+                tCode.add(TCodeOprConst.STR_OPR.getKey() + " " + reg5 + " " + reg7 + " ; store 'this' pointer into: " + symbol.getValue());
                 address++;
 
             }

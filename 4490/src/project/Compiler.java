@@ -38,7 +38,7 @@ public class Compiler {
 
     private String scope = "g.";
     private LinkedHashMap<String, Symbol> symbolTable = new LinkedHashMap<String, Symbol>();
-    private int variableId = 100;
+    private int variableId = 1;
     private int methodId = 1000;
 
     private LexicalAnalyzer lexicalAnalyzer;
@@ -451,7 +451,7 @@ public class Compiler {
             }
 
             if (!expression()) {
-                errorList += INVALID_ARGUMENT_LIST + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
+                errorList += INVALID_ARGUMENT_LIST + " failed on expression: '" + lexicalAnalyzer.getToken().getName() + "'." + LINE + lexicalAnalyzer.peekPreviousToken().getLineNum() + "\n";
                 return false;
             }
         }
@@ -1630,7 +1630,7 @@ public class Compiler {
 
     private boolean isUnknownSymbol(String type) {
         if (type.equals(LexicalAnalyzer.tokenTypesEnum.UNKNOWN.name())) {
-            errorList += "Unknown Symbol on" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
+            errorList += "Unknown Symbol: '" + lexicalAnalyzer.getToken().getName() +"' on" + LINE + lexicalAnalyzer.getToken().getLineNum() + "\n";
             return true;
         }
 
